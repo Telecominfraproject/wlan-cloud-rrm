@@ -1,0 +1,463 @@
+/*
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+package com.facebook.openwifirrm.modules;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.TreeSet;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInfo;
+import org.junit.jupiter.api.TestMethodOrder;
+
+import com.facebook.openwifirrm.DeviceConfig;
+import com.facebook.openwifirrm.DeviceDataManager;
+import com.facebook.openwifirrm.DeviceLayeredConfig;
+import com.facebook.openwifirrm.DeviceTopology;
+import com.facebook.openwifirrm.RRMConfig;
+import com.facebook.openwifirrm.mysql.DatabaseManager;
+import com.facebook.openwifirrm.ucentral.UCentralClient;
+import com.facebook.openwifirrm.ucentral.UCentralKafkaConsumer;
+import com.google.gson.Gson;
+
+import kong.unirest.HttpResponse;
+import kong.unirest.JsonNode;
+import kong.unirest.Unirest;
+import kong.unirest.json.JSONObject;
+import spark.Spark;
+
+@TestMethodOrder(OrderAnnotation.class)
+public class ApiServerTest {
+	/** The test server port. */
+	private static final int TEST_PORT = spark.Service.SPARK_DEFAULT_PORT;
+
+	/** Test device data manager. */
+	private DeviceDataManager deviceDataManager;
+
+	/** Test RRM config. */
+	private RRMConfig rrmConfig;
+
+	/** Test API server instance. */
+	private ApiServer server;
+
+	/** Test modeler instance. */
+	private Modeler modeler;
+
+	/** The Gson instance. */
+	private final Gson gson = new Gson();
+
+	/** Build an endpoint URL. */
+	private String endpoint(String path) {
+		return String.format("http://localhost:%d%s", TEST_PORT, path);
+	}
+
+	@BeforeEach
+	void setup(TestInfo testInfo) {
+		this.deviceDataManager = new DeviceDataManager();
+
+		// Create config
+		this.rrmConfig = new RRMConfig();
+		rrmConfig.moduleConfig.apiServerParams.httpPort = TEST_PORT;
+		rrmConfig.moduleConfig.apiServerParams.useBasicAuth = false;
+		rrmConfig.moduleConfig.apiServerParams.basicAuthUser = "";
+		rrmConfig.moduleConfig.apiServerParams.basicAuthPassword = "";
+
+		// Create clients (null for now)
+		UCentralClient client = null;
+		UCentralKafkaConsumer consumer = null;
+		DatabaseManager dbManager = null;
+
+		// Instantiate dependent instances
+		ConfigManager configManager = new ConfigManager(
+			rrmConfig.moduleConfig.configManagerParams,
+			deviceDataManager,
+			client
+		);
+		DataCollector dataCollector = new DataCollector(
+			rrmConfig.moduleConfig.dataCollectorParams,
+			deviceDataManager,
+			client,
+			consumer,
+			configManager,
+			dbManager
+		);
+		this.modeler = new Modeler(
+			rrmConfig.moduleConfig.modelerParams,
+			deviceDataManager,
+			consumer,
+			client,
+			dataCollector,
+			configManager
+		);
+
+		// Instantiate ApiServer
+		this.server = new ApiServer(
+			rrmConfig.moduleConfig.apiServerParams,
+			deviceDataManager,
+			configManager,
+			modeler
+		);
+		try {
+			server.run();
+			Spark.awaitInitialization();
+		} catch (Exception e) {
+			fail("Could not instantiate ApiServer.", e);
+		}
+	}
+
+	@AfterEach
+	void tearDown() {
+		// Destroy ApiServer
+		if (server != null) {
+			server.shutdown();
+			Spark.awaitStop();
+		}
+		server = null;
+
+		// Reset Unirest client
+		// Without this, Unirest randomly throws:
+		// kong.unirest.UnirestException: java.net.SocketException: Software caused connection abort: recv failed
+		Unirest.shutDown();
+	}
+
+	@Test
+	@Order(1)
+	void test_getTopology() throws Exception {
+		// Create topology
+		DeviceTopology topology = new DeviceTopology();
+		topology.put("test-zone", new TreeSet<>(Arrays.asList("aaaaaaaaaaa")));
+		deviceDataManager.setTopology(topology);
+
+		// Fetch topology
+		HttpResponse<String> resp = Unirest.get(endpoint("/api/v1/getTopology")).asString();
+		assertEquals(200, resp.getStatus());
+		assertEquals(deviceDataManager.getTopologyJson(), resp.getBody());
+	}
+
+	@Test
+	@Order(2)
+	void test_setTopology() throws Exception {
+		String url = endpoint("/api/v1/setTopology");
+
+		// Create topology
+		DeviceTopology topology = new DeviceTopology();
+		topology.put("test-zone", new TreeSet<>(Arrays.asList("aaaaaaaaaaa")));
+
+		// Set topology
+		HttpResponse<String> resp = Unirest
+			.post(url)
+			.body(gson.toJson(topology))
+			.asString();
+		assertEquals(200, resp.getStatus());
+		assertEquals(gson.toJson(topology), deviceDataManager.getTopologyJson());
+
+		// Missing/wrong parameters
+		assertEquals(400, Unirest.post(url).body("not json").asString().getStatus());
+	}
+
+	@Test
+	@Order(3)
+	void test_getDeviceLayeredConfig() throws Exception {
+		// Create topology and configs
+		final String zone = "test-zone";
+		final String ap = "aaaaaaaaaaa";
+		DeviceTopology topology = new DeviceTopology();
+		topology.put(zone, new TreeSet<>(Arrays.asList(ap)));
+		deviceDataManager.setTopology(topology);
+		DeviceLayeredConfig cfg = new DeviceLayeredConfig();
+		cfg.networkConfig.enableRRM = true;
+		DeviceConfig zoneConfig = new DeviceConfig();
+		zoneConfig.enableWifiScan = false;
+		cfg.zoneConfig.put(zone, zoneConfig);
+		DeviceConfig apConfig = new DeviceConfig();
+		apConfig.enableConfig = false;
+		cfg.apConfig.put(ap, apConfig);
+		deviceDataManager.setDeviceApConfig(ap, apConfig);
+
+		// Fetch config
+		HttpResponse<String> resp = Unirest.get(endpoint("/api/v1/getDeviceLayeredConfig")).asString();
+		assertEquals(200, resp.getStatus());
+		assertEquals(deviceDataManager.getDeviceLayeredConfigJson(), resp.getBody());
+	}
+
+	@Test
+	@Order(4)
+	void test_getDeviceConfig() throws Exception {
+		String url = endpoint("/api/v1/getDeviceConfig");
+
+		// Create topology
+		final String zone = "test-zone";
+		final String ap = "aaaaaaaaaaa";
+		DeviceTopology topology = new DeviceTopology();
+		topology.put(zone, new TreeSet<>(Arrays.asList(ap)));
+		deviceDataManager.setTopology(topology);
+
+		// Fetch config
+		HttpResponse<String> resp = Unirest.get(url + "?serial=" + ap).asString();
+		assertEquals(200, resp.getStatus());
+		String normalizedResp = gson.toJson(gson.fromJson(resp.getBody(), DeviceConfig.class));
+		assertEquals(gson.toJson(deviceDataManager.getDeviceConfig(ap)), normalizedResp);
+
+		// Missing/wrong parameters
+		assertEquals(400, Unirest.get(url).asString().getStatus());
+		assertEquals(400, Unirest.get(url + "?serial=asdf").asString().getStatus());
+	}
+
+	@Test
+	@Order(5)
+	void test_setDeviceNetworkConfig() throws Exception {
+		DeviceConfig config = new DeviceConfig();
+		config.enableConfig = false;
+
+		// Set config
+		HttpResponse<String> resp = Unirest
+			.post(endpoint("/api/v1/setDeviceNetworkConfig"))
+			.body(gson.toJson(config))
+			.asString();
+		assertEquals(200, resp.getStatus());
+		DeviceLayeredConfig fullCfg = gson.fromJson(
+			deviceDataManager.getDeviceLayeredConfigJson(),
+			DeviceLayeredConfig.class
+		);
+		assertEquals(gson.toJson(config), gson.toJson(fullCfg.networkConfig));
+	}
+
+	@Test
+	@Order(6)
+	void test_setDeviceZoneConfig() throws Exception {
+		String url = endpoint("/api/v1/setDeviceZoneConfig");
+
+		// Create topology
+		final String zone = "test-zone";
+		final String ap = "aaaaaaaaaaa";
+		DeviceTopology topology = new DeviceTopology();
+		topology.put(zone, new TreeSet<>(Arrays.asList(ap)));
+		deviceDataManager.setTopology(topology);
+
+		DeviceConfig config = new DeviceConfig();
+		config.enableConfig = false;
+
+		// Set config
+		HttpResponse<String> resp = Unirest
+			.post(url + "?zone=" + zone)
+			.body(gson.toJson(config))
+			.asString();
+		assertEquals(200, resp.getStatus());
+		DeviceLayeredConfig fullCfg = gson.fromJson(
+			deviceDataManager.getDeviceLayeredConfigJson(),
+			DeviceLayeredConfig.class
+		);
+		assertEquals(1, fullCfg.zoneConfig.size());
+		assertTrue(fullCfg.zoneConfig.containsKey(zone));
+		assertEquals(gson.toJson(config), gson.toJson(fullCfg.zoneConfig.get(zone)));
+
+		// Missing/wrong parameters
+		assertEquals(400, Unirest.post(url).body(gson.toJson(config)).asString().getStatus());
+		assertEquals(400, Unirest.post(url + "?zone=asdf").body(gson.toJson(config)).asString().getStatus());
+		assertEquals(400, Unirest.post(url + "?zone=" + zone).body("not json").asString().getStatus());
+	}
+
+	@Test
+	@Order(7)
+	void test_setDeviceApConfig() throws Exception {
+		String url = endpoint("/api/v1/setDeviceApConfig");
+
+		// Create topology
+		final String zone = "test-zone";
+		final String ap = "aaaaaaaaaaa";
+		DeviceTopology topology = new DeviceTopology();
+		topology.put(zone, new TreeSet<>(Arrays.asList(ap)));
+		deviceDataManager.setTopology(topology);
+
+		DeviceConfig config = new DeviceConfig();
+		config.enableConfig = false;
+
+		// Set config
+		HttpResponse<String> resp = Unirest
+			.post(url + "?serial=" + ap)
+			.body(gson.toJson(config))
+			.asString();
+		assertEquals(200, resp.getStatus());
+		DeviceLayeredConfig fullCfg = gson.fromJson(
+			deviceDataManager.getDeviceLayeredConfigJson(),
+			DeviceLayeredConfig.class
+		);
+		assertEquals(1, fullCfg.apConfig.size());
+		assertTrue(fullCfg.apConfig.containsKey(ap));
+		assertEquals(gson.toJson(config), gson.toJson(fullCfg.apConfig.get(ap)));
+
+		// Missing/wrong parameters
+		assertEquals(400, Unirest.post(url).body(gson.toJson(config)).asString().getStatus());
+		assertEquals(400, Unirest.post(url + "?serial=asdf").body(gson.toJson(config)).asString().getStatus());
+		assertEquals(400, Unirest.post(url + "?serial=" + ap).body("not json").asString().getStatus());
+	}
+
+	@Test
+	@Order(8)
+	void test_modifyDeviceApConfig() throws Exception {
+		String url = endpoint("/api/v1/modifyDeviceApConfig");
+
+		// Create topology
+		final String zone = "test-zone";
+		final String ap = "aaaaaaaaaaa";
+		DeviceTopology topology = new DeviceTopology();
+		topology.put(zone, new TreeSet<>(Arrays.asList(ap)));
+		deviceDataManager.setTopology(topology);
+
+		// Set initial AP config
+		DeviceConfig apConfig = new DeviceConfig();
+		apConfig.enableConfig = false;
+		apConfig.autoChannels = new HashMap<>();
+		apConfig.autoChannels.put("2G", 7);
+		apConfig.autoChannels.put("5G", 165);
+		deviceDataManager.setDeviceApConfig(ap, apConfig);
+
+		// Construct config request
+		DeviceConfig configReq = new DeviceConfig();
+		configReq.enableConfig = true;
+		configReq.autoTxPowers = new HashMap<>();
+		configReq.autoTxPowers.put("2G", 20);
+		configReq.autoTxPowers.put("5G", 28);
+
+		// Merge config objects (expected result)
+		apConfig.apply(configReq);
+
+		// Set config
+		HttpResponse<String> resp = Unirest
+			.post(url + "?serial=" + ap)
+			.body(gson.toJson(configReq))
+			.asString();
+		assertEquals(200, resp.getStatus());
+		DeviceLayeredConfig fullCfg = gson.fromJson(
+			deviceDataManager.getDeviceLayeredConfigJson(),
+			DeviceLayeredConfig.class
+		);
+		assertTrue(fullCfg.apConfig.containsKey(ap));
+		assertEquals(gson.toJson(apConfig), gson.toJson(fullCfg.apConfig.get(ap)));
+
+		// Missing/wrong parameters
+		assertEquals(400, Unirest.post(url).body(gson.toJson(configReq)).asString().getStatus());
+		assertEquals(400, Unirest.post(url + "?serial=asdf").body(gson.toJson(configReq)).asString().getStatus());
+		assertEquals(400, Unirest.post(url + "?serial=" + ap).body("not json").asString().getStatus());
+		assertEquals(400, Unirest.post(url + "?serial=" + ap).body("{}").asString().getStatus());
+	}
+
+	@Test
+	@Order(100)
+	void test_currentModel() throws Exception {
+		// Fetch RRM model
+		HttpResponse<String> resp = Unirest.get(endpoint("/api/v1/currentModel")).asString();
+		assertEquals(200, resp.getStatus());
+		assertEquals(gson.toJson(modeler.getDataModel()), resp.getBody());
+	}
+
+	@Test
+	@Order(101)
+	void test_optimizeChannel() throws Exception {
+		String url = endpoint("/api/v1/optimizeChannel");
+
+		// Create topology
+		final String zone = "test-zone";
+		DeviceTopology topology = new DeviceTopology();
+		topology.put(zone, new TreeSet<>(Arrays.asList("aaaaaaaaaaa")));
+		deviceDataManager.setTopology(topology);
+
+		// Correct requests
+		final String[] modes = new String[] { "random", "least_used", "unmanaged_aware" };
+		for (String mode : modes) {
+			String endpoint = String.format("%s?mode=%s&zone=%s", url, mode, zone);
+			HttpResponse<JsonNode> simpleResp = Unirest.get(endpoint).asJson();
+			assertEquals(200, simpleResp.getStatus());
+			assertNotNull(simpleResp.getBody().getObject().getJSONObject("data"));
+		}
+
+		// Missing/wrong parameters
+		assertEquals(400, Unirest.get(url).asString().getStatus());
+		assertEquals(400, Unirest.get(url + "?mode=test123&zone=" + zone).asString().getStatus());
+		assertEquals(400, Unirest.get(url + "?zone=asdf&mode=" + modes[0]).asString().getStatus());
+	}
+
+	@Test
+	@Order(102)
+	void test_optimizeTxPower() throws Exception {
+		String url = endpoint("/api/v1/optimizeTxPower");
+
+		// Create topology
+		final String zone = "test-zone";
+		DeviceTopology topology = new DeviceTopology();
+		topology.put(zone, new TreeSet<>(Arrays.asList("aaaaaaaaaaa")));
+		deviceDataManager.setTopology(topology);
+
+		// Correct requests
+		final String[] modes = new String[] { "random", "measure_ap_client", "measure_ap_ap", "location_optimal" };
+		for (String mode : modes) {
+			String endpoint = String.format("%s?mode=%s&zone=%s", url, mode, zone);
+			HttpResponse<JsonNode> simpleResp = Unirest.get(endpoint).asJson();
+			assertEquals(200, simpleResp.getStatus());
+			assertNotNull(simpleResp.getBody().getObject().getJSONObject("data"));
+		}
+
+		// Missing/wrong parameters
+		assertEquals(400, Unirest.get(url).asString().getStatus());
+		assertEquals(400, Unirest.get(url + "?mode=test123&zone=" + zone).asString().getStatus());
+		assertEquals(400, Unirest.get(url + "?zone=asdf&mode=" + modes[0]).asString().getStatus());
+	}
+
+	@Test
+	@Order(1000)
+	void testDocs() throws Exception {
+		// Index page paths
+		assertEquals(200, Unirest.get(endpoint("/")).asString().getStatus());
+		assertEquals(200, Unirest.get(endpoint("/index.html")).asString().getStatus());
+
+		// OpenAPI YAML/JSON
+		HttpResponse<String> yamlResp = Unirest.get(endpoint("/openapi.yaml")).asString();
+		assertEquals(200, yamlResp.getStatus());
+		HttpResponse<JsonNode> jsonResp = Unirest.get(endpoint("/openapi.json")).asJson();
+		assertEquals(200, jsonResp.getStatus());
+		// Check that we got the OpenAPI 3.x version string
+		assertTrue(
+			Arrays.stream(
+				yamlResp.getBody().split("\\R+")
+			).filter(line -> line.matches("^openapi: 3[0-9.]*$"))
+			.findFirst()
+			.isPresent()
+		);
+		assertTrue(
+			jsonResp.getBody().getObject().getString("openapi").matches("^3[0-9.]*$")
+		);
+		// Check that we got some endpoint paths
+		JSONObject paths = jsonResp.getBody().getObject().getJSONObject("paths");
+		assertFalse(paths.isEmpty());
+		assertTrue(paths.keys().next().startsWith("/api/"));
+	}
+
+	@Test
+	@Order(1001)
+	void test404() throws Exception {
+		final String fakeEndpoint = endpoint("/test123");
+		assertEquals(404, Unirest.get(fakeEndpoint).asString().getStatus());
+		assertEquals(404, Unirest.post(fakeEndpoint).asString().getStatus());
+		assertEquals(404, Unirest.put(fakeEndpoint).asString().getStatus());
+		assertEquals(404, Unirest.delete(fakeEndpoint).asString().getStatus());
+		assertEquals(404, Unirest.options(fakeEndpoint).asString().getStatus());
+		assertEquals(404, Unirest.head(fakeEndpoint).asString().getStatus());
+		assertEquals(404, Unirest.patch(fakeEndpoint).asString().getStatus());
+	}
+}

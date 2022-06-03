@@ -1,0 +1,19 @@
+/target
+/*.log*
+/device_config.json
+/settings.json
+/topology.json
+
+# Eclipse
+/.settings/
+/bin/
+.metadata
+.classpath
+.project
+.externalToolBuilders/
+
+# IntelliJ
+.idea/
+*.iml
+*.iws
+*.ipr
