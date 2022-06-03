@@ -28,6 +28,12 @@ public class RRMConfig {
 		/** uCentralSec port */
 		public int uCentralSecPort = 16001;
 
+		/** uCentralSec public microservice endpoint */
+		public String publicEndpoint = "https://owrrm.wlan.local:16006";
+
+		/** uCentralSec private  microservice endpoint */
+		public String privateEndpoint = "https://owrrm.wlan.local:17006";
+
 		/**
 		 * uCentral socket parameters
 		 */

@@ -142,10 +142,7 @@ public class Launcher implements Callable<Integer> {
 
 		// Instantiate clients
 		UCentralClient client = new UCentralClient(
-				config.uCentralConfig.user,
-				config.uCentralConfig.password,
-				config.uCentralConfig.uCentralSecHost,
-				config.uCentralConfig.uCentralSecPort,
+				config.uCentralConfig.privateEndpoint,
 				config.uCentralConfig.uCentralSocketParams
 		);
 		UCentralKafkaConsumer consumer;
