@@ -63,6 +63,8 @@ public class RRMConfig {
 		/** Kafka topic holding uCentral wifi scan results */
 		public String wifiScanTopic = "wifiscan";
 
+		public String serviceEventsTopic = "service_events";
+
 		/** Kafka consumer group ID */
 		public String groupId = "rrm-service";
 

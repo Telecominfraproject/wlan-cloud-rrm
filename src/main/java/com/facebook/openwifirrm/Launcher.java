@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
+import java.util.List;
 import java.util.concurrent.Callable;
 
 import org.json.JSONObject;
@@ -141,11 +142,11 @@ public class Launcher implements Callable<Integer> {
 
 		// Instantiate clients
 		UCentralClient client = new UCentralClient(
-			config.uCentralConfig.user,
-			config.uCentralConfig.password,
-			config.uCentralConfig.uCentralSecHost,
-			config.uCentralConfig.uCentralSecPort,
-			config.uCentralConfig.uCentralSocketParams
+				config.uCentralConfig.user,
+				config.uCentralConfig.password,
+				config.uCentralConfig.uCentralSecHost,
+				config.uCentralConfig.uCentralSecPort,
+				config.uCentralConfig.uCentralSocketParams
 		);
 		UCentralKafkaConsumer consumer;
 		if (config.kafkaConfig.bootstrapServer.isEmpty()) {
@@ -153,11 +154,13 @@ public class Launcher implements Callable<Integer> {
 			consumer = null;
 		} else {
 			consumer = new UCentralKafkaConsumer(
+				client,
 				config.kafkaConfig.bootstrapServer,
 				config.kafkaConfig.groupId,
 				config.kafkaConfig.autoOffsetReset,
 				config.kafkaConfig.stateTopic,
-				config.kafkaConfig.wifiScanTopic
+				config.kafkaConfig.wifiScanTopic,
+				config.kafkaConfig.serviceEventsTopic
 			);
 		}
 		DatabaseManager dbManager;

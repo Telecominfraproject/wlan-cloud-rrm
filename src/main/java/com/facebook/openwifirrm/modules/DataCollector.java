@@ -20,6 +20,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
+import com.facebook.openwifirrm.ucentral.gw.models.ServiceEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -143,6 +144,11 @@ public class DataCollector implements Runnable {
 					public void handleWifiScanRecords(
 						List<KafkaRecord> records
 					) {
+						// ignored here, handled directly from UCentralClient
+					}
+
+					@Override
+					public void handleServiceEventRecords(List<ServiceEvent> serviceEventRecords) {
 						// ignored here, handled directly from UCentralClient
 					}
 				}

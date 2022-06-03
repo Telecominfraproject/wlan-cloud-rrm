@@ -16,6 +16,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import com.facebook.openwifirrm.ucentral.gw.models.ServiceEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -162,6 +163,11 @@ public class Modeler implements Runnable {
 						dataQueue.offer(
 							new InputData(InputDataType.WIFISCAN, records)
 						);
+					}
+
+					@Override
+					public void handleServiceEventRecords(List<ServiceEvent> serviceEventRecords) {
+						// ignored
 					}
 				}
 			);

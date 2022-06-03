@@ -8,12 +8,10 @@
 
 package com.facebook.openwifirrm.ucentral;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
+import com.facebook.openwifirrm.ucentral.gw.models.*;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -21,14 +19,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.facebook.openwifirrm.RRMConfig.UCentralConfig.UCentralSocketParams;
-import com.facebook.openwifirrm.ucentral.gw.models.CommandInfo;
-import com.facebook.openwifirrm.ucentral.gw.models.DeviceCapabilities;
-import com.facebook.openwifirrm.ucentral.gw.models.DeviceConfigureRequest;
-import com.facebook.openwifirrm.ucentral.gw.models.DeviceListWithStatus;
-import com.facebook.openwifirrm.ucentral.gw.models.DeviceWithStatus;
-import com.facebook.openwifirrm.ucentral.gw.models.StatisticsRecords;
-import com.facebook.openwifirrm.ucentral.gw.models.SystemInfoResults;
-import com.facebook.openwifirrm.ucentral.gw.models.WifiScanRequest;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
@@ -88,6 +78,8 @@ public class UCentralClient {
 	/** Socket parameters */
 	private final UCentralSocketParams socketParams;
 
+	private final TreeMap<String, ServiceEvent> serviceEndpoints;
+
 	/** Access token */
 	private String accessToken;
 	/** uCentralGw URL */
@@ -113,6 +105,7 @@ public class UCentralClient {
 		this.uCentralSecHost = uCentralSecHost;
 		this.uCentralSecPort = uCentralSecPort;
 		this.socketParams = socketParams;
+		this.serviceEndpoints = new TreeMap<>();
 	}
 
 	/** Return uCentralSec URL using the given endpoint. */
@@ -128,45 +121,49 @@ public class UCentralClient {
 		return String.format("%s/api/v1/%s", uCentralGwUrl, endpoint);
 	}
 
-	/** Perform login and uCentralGw endpoint retrieval. */
-	public boolean login() {
-		// Make request
-		String url = makeUCentralSecUrl("oauth2");
-		Map<String, Object> body = new HashMap<>();
-		body.put("userId", username);
-		body.put("password", password);
-		HttpResponse<String> response = Unirest.post(url)
-		      .header("accept", "application/json")
-		      .body(body)
-		      .asString();
-		if (!response.isSuccess()) {
-			logger.error(
-				"Login failed: Response code {}", response.getStatus()
-			);
-			return false;
-		}
-
-		// Parse access token from response
-		JSONObject respBody;
-		try {
-			respBody = new JSONObject(response.getBody());
-		} catch (JSONException e) {
-			logger.error("Login failed: Unexpected response", e);
-			logger.debug("Response body: {}", response.getBody());
-			return false;
-		}
-		if (!respBody.has("access_token")) {
-			logger.error("Login failed: Missing access token");
-			logger.debug("Response body: {}", respBody.toString());
-			return false;
-		}
-		this.accessToken = respBody.getString("access_token");
-		logger.info("Login successful as user: {}", username);
-		logger.debug("Access token: {}", accessToken);
-
-		// Find uCentral gateway URL
-		return findGateway();
+	public boolean isInitialized(){
+		return this.serviceEndpoints.containsKey("owgw") && this.serviceEndpoints.containsKey("owsec");
 	}
+
+	/** Perform login and uCentralGw endpoint retrieval. */
+//	public boolean login() {
+//		// Make request
+//		String url = makeUCentralSecUrl("oauth2");
+//		Map<String, Object> body = new HashMap<>();
+//		body.put("userId", username);
+//		body.put("password", password);
+//		HttpResponse<String> response = Unirest.post(url)
+//		      .header("accept", "application/json")
+//		      .body(body)
+//		      .asString();
+//		if (!response.isSuccess()) {
+//			logger.error(
+//				"Login failed: Response code {}", response.getStatus()
+//			);
+//			return false;
+//		}
+//
+//		// Parse access token from response
+//		JSONObject respBody;
+//		try {
+//			respBody = new JSONObject(response.getBody());
+//		} catch (JSONException e) {
+//			logger.error("Login failed: Unexpected response", e);
+//			logger.debug("Response body: {}", response.getBody());
+//			return false;
+//		}
+//		if (!respBody.has("access_token")) {
+//			logger.error("Login failed: Missing access token");
+//			logger.debug("Response body: {}", respBody.toString());
+//			return false;
+//		}
+//		this.accessToken = respBody.getString("access_token");
+//		logger.info("Login successful as user: {}", username);
+//		logger.debug("Access token: {}", accessToken);
+//
+//		// Find uCentral gateway URL
+//		return findGateway();
+//	}
 
 	/** Find uCentralGw URL from uCentralSec. */
 	private boolean findGateway() {
@@ -174,7 +171,7 @@ public class UCentralClient {
 		String url = makeUCentralSecUrl("systemEndpoints");
 		HttpResponse<String> response = Unirest.get(url)
 		      .header("accept", "application/json")
-		      .header("Authorization", "Bearer " + accessToken)
+		      .header("X-API-KEY", this.getApiKey("owsec"))
 		      .asString();
 		if (!response.isSuccess()) {
 			logger.error(
@@ -239,7 +236,7 @@ public class UCentralClient {
 		String url = makeUCentralGwUrl(endpoint);
 		GetRequest req = Unirest.get(url)
 			.header("accept", "application/json")
-			.header("Authorization", "Bearer " + accessToken)
+			.header("X-API-KEY", this.getApiKey("owgw"))
 			.connectTimeout(connectTimeoutMs)
 			.socketTimeout(socketTimeoutMs);
 		if (parameters != null) {
@@ -269,7 +266,7 @@ public class UCentralClient {
 		String url = makeUCentralGwUrl(endpoint);
 		HttpRequestWithBody req = Unirest.post(url)
 			.header("accept", "application/json")
-			.header("Authorization", "Bearer " + accessToken)
+			.header("X-API-KEY", this.getApiKey("owgw"))
 			.connectTimeout(connectTimeoutMs)
 			.socketTimeout(socketTimeoutMs);
 		if (body != null) {
@@ -419,5 +416,14 @@ public class UCentralClient {
 			logger.error(errMsg, e);
 			return null;
 		}
+	}
+
+	public void setServiceEndpoint(String service, ServiceEvent event){
+		this.serviceEndpoints.put(service, event);
+	}
+
+	private String getApiKey(String service){
+		ServiceEvent s = this.serviceEndpoints.get(service);
+		return s.key;
 	}
 }

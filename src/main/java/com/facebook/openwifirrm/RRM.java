@@ -64,46 +64,46 @@ public class RRM {
 		DatabaseManager dbManager
 	) {
 		// uCentral login
-		if (!client.login()) {
-			logger.error("uCentral login failed! Terminating...");
-			return false;
-		}
+//		if (!client.login()) {
+//			logger.error("uCentral login failed! Terminating...");
+//			return false;
+//		}
 		// Check that uCentralGw is actually alive
-		SystemInfoResults systemInfo = client.getSystemInfo();
-		if (systemInfo == null) {
-			logger.error(
-				"Failed to fetch uCentralGw system info. Terminating..."
-			);
-			return false;
-		}
-		logger.info("uCentralGw version: {}", systemInfo.version);
+//		SystemInfoResults systemInfo = client.getSystemInfo();
+//		if (systemInfo == null) {
+//			logger.error(
+//				"Failed to fetch uCentralGw system info. Terminating..."
+//			);
+//			return false;
+//		}
+//		logger.info("uCentralGw version: {}", systemInfo.version);
 
 		// Instantiate modules
-		ConfigManager configManager = new ConfigManager(
-			config.moduleConfig.configManagerParams, deviceDataManager, client
-		);
-		DataCollector dataCollector = new DataCollector(
-			config.moduleConfig.dataCollectorParams,
-			deviceDataManager,
-			client,
-			consumer,
-			configManager,
-			dbManager
-		);
-		Modeler modeler = new Modeler(
-			config.moduleConfig.modelerParams,
-			deviceDataManager,
-			consumer,
-			client,
-			dataCollector,
-			configManager
-		);
-		ApiServer apiServer = new ApiServer(
-			config.moduleConfig.apiServerParams,
-			deviceDataManager,
-			configManager,
-			modeler
-		);
+//		ConfigManager configManager = new ConfigManager(
+//			config.moduleConfig.configManagerParams, deviceDataManager, client
+//		);
+//		DataCollector dataCollector = new DataCollector(
+//			config.moduleConfig.dataCollectorParams,
+//			deviceDataManager,
+//			client,
+//			consumer,
+//			configManager,
+//			dbManager
+//		);
+//		Modeler modeler = new Modeler(
+//			config.moduleConfig.modelerParams,
+//			deviceDataManager,
+//			consumer,
+//			client,
+//			dataCollector,
+//			configManager
+//		);
+//		ApiServer apiServer = new ApiServer(
+//			config.moduleConfig.apiServerParams,
+//			deviceDataManager,
+//			configManager,
+//			modeler
+//		);
 		KafkaConsumerRunner consumerRunner =
 			(consumer == null) ? null : new KafkaConsumerRunner(consumer);
 
@@ -113,15 +113,16 @@ public class RRM {
 			if (consumerRunner != null) {
 				consumerRunner.shutdown();
 			}
-			apiServer.shutdown();
-			dataCollector.shutdown();
+//			apiServer.shutdown();
+//			dataCollector.shutdown();
 			executor.shutdownNow();
 		}));
 
 		// Submit jobs
 		List<Callable<Object>> services = Arrays
 			.asList(
-				configManager, dataCollector, modeler, apiServer, consumerRunner
+//				configManager, dataCollector, modeler, apiServer, consumerRunner
+				consumerRunner
 			)
 			.stream()
 			.filter(o -> o != null)
