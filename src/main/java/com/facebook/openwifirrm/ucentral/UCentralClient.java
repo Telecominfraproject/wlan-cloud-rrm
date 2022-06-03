@@ -118,6 +118,7 @@ public class UCentralClient {
 
 	/** Return uCentralGw URL using the given endpoint. */
 	private String makeUCentralGwUrl(String endpoint) {
+		String uCentralGwUrl = this.serviceEndpoints.get("owgw").privateEndPoint;
 		return String.format("%s/api/v1/%s", uCentralGwUrl, endpoint);
 	}
 
@@ -165,47 +166,47 @@ public class UCentralClient {
 //		return findGateway();
 //	}
 
-	/** Find uCentralGw URL from uCentralSec. */
-	private boolean findGateway() {
-		// Make request
-		String url = makeUCentralSecUrl("systemEndpoints");
-		HttpResponse<String> response = Unirest.get(url)
-		      .header("accept", "application/json")
-		      .header("X-API-KEY", this.getApiKey("owsec"))
-		      .asString();
-		if (!response.isSuccess()) {
-			logger.error(
-				"/systemEndpoints failed: Response code {}",
-				response.getStatus()
-			);
-			return false;
-		}
-
-		// Parse endpoints from response
-		JSONObject respBody;
-		JSONArray endpoints;
-		try {
-			respBody = new JSONObject(response.getBody());
-			endpoints = respBody.getJSONArray("endpoints");
-		} catch (JSONException e) {
-			logger.error("/systemEndpoints failed: Unexpected response", e);
-			logger.debug("Response body: {}", response.getBody());
-			return false;
-		}
-		for (Object o : endpoints) {
-			JSONObject endpoint = (JSONObject) o;
-			if (
-				endpoint.optString("type").equals("owgw") && endpoint.has("uri")
-			) {
-				this.uCentralGwUrl = endpoint.getString("uri");
-				logger.info("Using uCentral gateway URL: {}", uCentralGwUrl);
-				return true;
-			}
-		}
-		logger.error("/systemEndpoints failed: Missing uCentral gateway URL");
-		logger.debug("Response body: {}", respBody.toString());
-		return false;
-	}
+//	/** Find uCentralGw URL from uCentralSec. */
+//	private boolean findGateway() {
+//		// Make request
+//		String url = makeUCentralSecUrl("systemEndpoints");
+//		HttpResponse<String> response = Unirest.get(url)
+//		      .header("accept", "application/json")
+//		      .header("X-API-KEY", this.getApiKey("owsec"))
+//		      .asString();
+//		if (!response.isSuccess()) {
+//			logger.error(
+//				"/systemEndpoints failed: Response code {}",
+//				response.getStatus()
+//			);
+//			return false;
+//		}
+//
+//		// Parse endpoints from response
+//		JSONObject respBody;
+//		JSONArray endpoints;
+//		try {
+//			respBody = new JSONObject(response.getBody());
+//			endpoints = respBody.getJSONArray("endpoints");
+//		} catch (JSONException e) {
+//			logger.error("/systemEndpoints failed: Unexpected response", e);
+//			logger.debug("Response body: {}", response.getBody());
+//			return false;
+//		}
+//		for (Object o : endpoints) {
+//			JSONObject endpoint = (JSONObject) o;
+//			if (
+//				endpoint.optString("type").equals("owgw") && endpoint.has("uri")
+//			) {
+//				this.uCentralGwUrl = endpoint.getString("uri");
+//				logger.info("Using uCentral gateway URL: {}", uCentralGwUrl);
+//				return true;
+//			}
+//		}
+//		logger.error("/systemEndpoints failed: Missing uCentral gateway URL");
+//		logger.debug("Response body: {}", respBody.toString());
+//		return false;
+//	}
 
 	/** Send a GET request. */
 	@SuppressWarnings("unused")

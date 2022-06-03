@@ -300,7 +300,9 @@ public class UCentralKafkaConsumer {
 			@Override
 			public void handleServiceEventRecords(List<ServiceEvent> serviceEventRecords) {
 				for(ServiceEvent record : serviceEventRecords){
-					client.setServiceEndpoint(record.type, record);
+					if(record.event.equals("keep-alive")){
+						client.setServiceEndpoint(record.type, record);
+					}
 				}
 			}
 		});

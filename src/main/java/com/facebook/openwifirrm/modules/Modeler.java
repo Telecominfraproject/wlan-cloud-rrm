@@ -207,6 +207,10 @@ public class Modeler implements Runnable {
 
 	/** Fetch initial data (called only once). */
 	private void fetchInitialData() {
+		if(!client.isInitialized()){
+			logger.trace("Waiting for ucentral client");
+			return;
+		}
 		// TODO: backfill data from database?
 
 		// Fetch state from uCentralGw
