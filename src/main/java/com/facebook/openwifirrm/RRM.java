@@ -63,21 +63,6 @@ public class RRM {
 		UCentralKafkaConsumer consumer,
 		DatabaseManager dbManager
 	) {
-		// uCentral login
-//		if (!client.login()) {
-//			logger.error("uCentral login failed! Terminating...");
-//			return false;
-//		}
-		// Check that uCentralGw is actually alive
-//		SystemInfoResults systemInfo = client.getSystemInfo();
-//		if (systemInfo == null) {
-//			logger.error(
-//				"Failed to fetch uCentralGw system info. Terminating..."
-//			);
-//			return false;
-//		}
-//		logger.info("uCentralGw version: {}", systemInfo.version);
-
 		// Instantiate modules
 		ConfigManager configManager = new ConfigManager(
 			config.moduleConfig.configManagerParams, deviceDataManager, client

@@ -193,7 +193,7 @@ public class UCentralKafkaConsumer {
 			if(record.topic().equals(serviceEventsTopic)){
 				ServiceEvent event = gson.fromJson(record.value(), ServiceEvent.class);
 				serviceEventRecords.add(event);
-			}else{
+			} else {
 				// Parse payload JSON
 				JsonObject payload = null;
 				try {

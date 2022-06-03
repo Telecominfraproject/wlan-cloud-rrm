@@ -96,9 +96,6 @@ public class ConfigManager implements Runnable {
 				public boolean processDeviceConfig(
 					String serialNumber, UCentralApConfiguration config
 				) {
-					if(!client.isInitialized()){
-						return false;
-					}
 					return applyRRMConfig(serialNumber, config);
 				}
 			}

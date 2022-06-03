@@ -149,7 +149,7 @@ public class DataCollector implements Runnable {
 
 					@Override
 					public void handleServiceEventRecords(List<ServiceEvent> serviceEventRecords) {
-						// ignored here, handled directly from UCentralClient
+						// ignored here, handled directly from UCentralKafkaConsumer
 					}
 				}
 			);
