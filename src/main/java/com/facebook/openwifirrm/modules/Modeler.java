@@ -207,9 +207,13 @@ public class Modeler implements Runnable {
 
 	/** Fetch initial data (called only once). */
 	private void fetchInitialData() {
-		if(!client.isInitialized()){
+		while (!client.isInitialized()) {
 			logger.trace("Waiting for ucentral client");
-			return;
+			try {
+				Thread.sleep(2000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
 		// TODO: backfill data from database?
 
