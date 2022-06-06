@@ -8,14 +8,27 @@
 
 package com.facebook.openwifirrm.ucentral;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.concurrent.ThreadLocalRandom;
 
-import com.facebook.openwifirrm.ucentral.gw.models.*;
+import com.facebook.openwifirrm.ucentral.gw.models.CommandInfo;
+import com.facebook.openwifirrm.ucentral.gw.models.DeviceCapabilities;
+import com.facebook.openwifirrm.ucentral.gw.models.DeviceConfigureRequest;
+import com.facebook.openwifirrm.ucentral.gw.models.DeviceListWithStatus;
+import com.facebook.openwifirrm.ucentral.gw.models.DeviceWithStatus;
+import com.facebook.openwifirrm.ucentral.gw.models.ServiceEvent;
+import com.facebook.openwifirrm.ucentral.gw.models.StatisticsRecords;
+import com.facebook.openwifirrm.ucentral.gw.models.SystemInfoResults;
+import com.facebook.openwifirrm.ucentral.gw.models.WifiScanRequest;
+import com.facebook.openwifirrm.RRMConfig.UCentralConfig.UCentralSocketParams;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.facebook.openwifirrm.RRMConfig.UCentralConfig.UCentralSocketParams;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
@@ -70,11 +83,12 @@ public class UCentralClient {
 	/** Socket parameters */
 	private final UCentralSocketParams socketParams;
 
-	private final TreeMap<String, ServiceEvent> serviceEndpoints;
+	private final Map<String, ServiceEvent> serviceEndpoints = new HashMap<>();
 	private final String privateEndpoint;
 
 	/**
 	 * Constructor.
+	 * @param privateEndpoint advertise the RRM private endpoint to the SDK
 	 * @param socketParams Socket parameters
 	 */
 	public UCentralClient(
@@ -83,15 +97,22 @@ public class UCentralClient {
 	) {
 		this.privateEndpoint = privateEndpoint;
 		this.socketParams = socketParams;
-		this.serviceEndpoints = new TreeMap<>();
 	}
 
 	/** Return uCentralGw URL using the given endpoint. */
 	private String makeUCentralGwUrl(String endpoint) {
-		String uCentralGwUrl = this.serviceEndpoints.get(OWGW_SERVICE).privateEndPoint;
+		ServiceEvent e = serviceEndpoints.get(OWGW_SERVICE);
+		if (e == null) {
+			throw new RuntimeException("unknown uCentralGw URL");
+		}
+		String uCentralGwUrl = e.privateEndPoint;
 		return String.format("%s/api/v1/%s", uCentralGwUrl, endpoint);
 	}
 
+	/**
+	 * Check if the service has received service events for all service dependencies. The service
+	 * events contain the API keys that the client uses to communicate with the services.
+	 * */
 	public boolean isInitialized(){
 		return this.serviceEndpoints.containsKey(OWGW_SERVICE) && this.serviceEndpoints.containsKey(OWSEC_SERVICE);
 	}
@@ -311,7 +332,7 @@ public class UCentralClient {
 
 	/**
 	 * System endpoints and API keys come from the service_event Kafka topic.
-	 * */
+	 */
 	public void setServiceEndpoint(String service, ServiceEvent event){
 		this.serviceEndpoints.put(service, event);
 	}
@@ -320,10 +341,13 @@ public class UCentralClient {
 	 * Get the API key for a service
 	 * @param service Service identifier. From the "type" field of service_events topic.
 	 *   E.g.: owgw, owsec, ...
-	 * @return
 	 */
 	private String getApiKey(String service){
 		ServiceEvent s = this.serviceEndpoints.get(service);
+		if (s == null) {
+			logger.error("Error: API key not found for service: {}", service);
+			return null;
+		}
 		return s.key;
 	}
 }

@@ -178,7 +178,7 @@ public class DataCollector implements Runnable {
 
 	/** Run single iteration of application logic. */
 	private void runImpl() {
-		if(!client.isInitialized()){
+		if (!client.isInitialized()) {
 			logger.trace("Waiting for ucentral client");
 			return;
 		}
