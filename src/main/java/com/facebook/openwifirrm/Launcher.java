@@ -12,7 +12,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
-import java.util.List;
 import java.util.concurrent.Callable;
 
 import org.json.JSONObject;
@@ -142,8 +141,8 @@ public class Launcher implements Callable<Integer> {
 
 		// Instantiate clients
 		UCentralClient client = new UCentralClient(
-				config.uCentralConfig.privateEndpoint,
-				config.uCentralConfig.uCentralSocketParams
+			config.uCentralConfig.privateEndpoint,
+			config.uCentralConfig.uCentralSocketParams
 		);
 		UCentralKafkaConsumer consumer;
 		if (config.kafkaConfig.bootstrapServer.isEmpty()) {

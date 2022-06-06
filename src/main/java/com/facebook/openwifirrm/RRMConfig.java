@@ -22,7 +22,7 @@ public class RRMConfig {
 		/** uCentralSec port */
 		public int uCentralSecPort = 17001;
 
-		/** uCentralSec private  microservice endpoint */
+		/** uCentralSec private microservice endpoint */
 		public String privateEndpoint = "https://owrrm.wlan.local:17006";
 
 		/**
@@ -60,6 +60,7 @@ public class RRMConfig {
 		/** Kafka topic holding uCentral wifi scan results */
 		public String wifiScanTopic = "wifiscan";
 
+		/** Kafka topic holding uCentral microservice events. Used for detecting API keys and internal endpoints.  */
 		public String serviceEventsTopic = "service_events";
 
 		/** Kafka consumer group ID */

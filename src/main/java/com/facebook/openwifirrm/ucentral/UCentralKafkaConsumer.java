@@ -45,6 +45,9 @@ public class UCentralKafkaConsumer {
 	/** The consumer instance. */
 	private final KafkaConsumer<String, String> consumer;
 
+	/** The uCentral API client */
+	private final UCentralClient client;
+
 	/** The uCentral state topic. */
 	private final String stateTopic;
 
@@ -56,8 +59,6 @@ public class UCentralKafkaConsumer {
 
 	/** The Gson instance. */
 	private final Gson gson = new Gson();
-
-	private final UCentralClient client;
 
 	/** Representation of Kafka record. */
 	public static class KafkaRecord {
@@ -82,6 +83,7 @@ public class UCentralKafkaConsumer {
 		/** Handle a list of wifi scan records. */
 		void handleWifiScanRecords(List<KafkaRecord> records);
 
+		/** Handle a list of service event records. */
 		void handleServiceEventRecords(List<ServiceEvent> serviceEventRecords);
 	}
 
@@ -90,11 +92,13 @@ public class UCentralKafkaConsumer {
 
 	/**
 	 * Constructor.
+	 * @param client an instance of the UCentral API client
 	 * @param bootstrapServer the Kafka bootstrap server
 	 * @param groupId the Kafka consumer group ID
 	 * @param autoOffsetReset the "auto.offset.reset" config
 	 * @param stateTopic the uCentral state topic (or empty/null to skip)
 	 * @param wifiScanTopic the uCentral wifiscan topic (or empty/null to skip)
+	 * @param serviceEventsTopic the uCentral service_events Topic (required)
 	 */
 	public UCentralKafkaConsumer(
 		UCentralClient client,
@@ -191,8 +195,16 @@ public class UCentralKafkaConsumer {
 		List<ServiceEvent> serviceEventRecords = new ArrayList<>();
 		for (ConsumerRecord<String, String> record : records) {
 			if(record.topic().equals(serviceEventsTopic)){
-				ServiceEvent event = gson.fromJson(record.value(), ServiceEvent.class);
-				serviceEventRecords.add(event);
+				try{
+					ServiceEvent event = gson.fromJson(record.value(), ServiceEvent.class);
+					serviceEventRecords.add(event);
+				} catch (Exception e) {
+					// uCentralGw pushes invalid JSON for empty messages
+					logger.trace(
+							"Offset {}: Invalid payload JSON", record.offset()
+					);
+					continue;
+				}
 			} else {
 				// Parse payload JSON
 				JsonObject payload = null;
