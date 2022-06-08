@@ -1,46 +1,46 @@
 {
-  "UCentralConfig": {
+  "uCentralConfig": {
     "user": "${UCENTRALCONFIG_USER}",
     "password": "${UCENTRALCONFIG_PASSWORD}",
     "uCentralSecHost": "${UCENTRALCONFIG_UCENTRALSECHOST}",
     "uCentralSecPort": "${UCENTRALCONFIG_UCENTRALSECPORT}",
-    "UCentralSocketParams": {
+    "uCentralSocketParams": {
       "connectTimeoutMs": "${UCENTRALSOCKETPARAMS_CONNECTTIMEOUTMS}",
       "socketTimeoutMs": "${UCENTRALSOCKETPARAMS_SOCKETTIMEOUTMS}",
       "wifiScanTimeoutMs": "${UCENTRALSOCKETPARAMS_WIFISCANTIMEOUTMS}"
     }
   },
-  "KafkaConfig": {
+  "kafkaConfig": {
     "bootstrapServer": "${KAFKACONFIG_BOOTSTRAPSERVER}",
     "stateTopic": "${KAFKACONFIG_STATETOPIC}",
     "wifiScanTopic": "${KAFKACONFIG_WIFISCANTOPIC}",
     "groupId": "${KAFKACONFIG_GROUPID}",
     "autoOffsetReset": "${KAFKACONFIG_AUTOOFFSETRESET}"
   },
-  "DatabaseConfig": {
+  "databaseConfig": {
     "server": "${DATABASECONFIG_SERVER}",
     "user": "${DATABASECONFIG_USER}",
     "password": "${DATABASECONFIG_PASSWORD}",
     "dbName": "${DATABASECONFIG_DBNAME}",
     "dataRetentionIntervalDays": "${DATABASECONFIG_DATARETENTIONINTERVALDAYS}"
   },
-  "ModuleConfig": {
-    "DataCollectorParams": {
+  "moduleConfig": {
+    "dataCollectorParams": {
       "updateIntervalMs": "${DATACOLLECTORPARAMS_UPDATEINTERVALMS}",
       "deviceStatsIntervalSec": "${DATACOLLECTORPARAMS_DEVICESTATSINTERVALSEC}",
       "wifiScanIntervalSec": "${DATACOLLECTORPARAMS_WIFISCANINTERVALSEC}",
       "capabilitiesIntervalSec": "${DATACOLLECTORPARAMS_CAPABILITIESINTERVALSEC}",
       "executorThreadCount": "${DATACOLLECTORPARAMS_EXECUTORTHREADCOUNT}"
     },
-    "ConfigManagerParams": {
+    "configManagerParams": {
       "updateIntervalMs": "${CONFIGMANAGERPARAMS_UPDATEINTERVALMS}",
       "configEnabled": "${CONFIGMANAGERPARAMS_CONFIGENABLED}",
       "configDebounceIntervalSec": "${CONFIGMANAGERPARAMS_CONFIGDEBOUNCEINTERVALSEC}"
     },
-    "ModelerParams": {
+    "modelerParams": {
       "wifiScanBufferSize": "${MODELERPARAMS_WIFISCANBUFFERSIZE}"
     },
-    "ApiServerParams": {
+    "apiServerParams": {
       "httpPort": "${APISERVERPARAMS_HTTPPORT}",
       "useBasicAuth": "${APISERVERPARAMS_USEBASICAUTH}",
       "basicAuthUser": "${APISERVERPARAMS_BASICAUTHUSER}",
