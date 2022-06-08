@@ -1,0 +1,52 @@
+{
+  "RRMConfig": {
+    "UCentralConfig": {
+      "user": "${UCENTRALCONFIG_USER}",
+      "password": "${UCENTRALCONFIG_PASSWORD}",
+      "uCentralSecHost": "${UCENTRALCONFIG_UCENTRALSECHOST}",
+      "uCentralSecPort": "${UCENTRALCONFIG_UCENTRALSECPORT}",
+      "UCentralSocketParams": {
+        "connectTimeoutMs": "${UCENTRALSOCKETPARAMS_CONNECTTIMEOUTMS}",
+        "socketTimeoutMs": "${UCENTRALSOCKETPARAMS_SOCKETTIMEOUTMS}",
+        "wifiScanTimeoutMs": "${UCENTRALSOCKETPARAMS_WIFISCANTIMEOUTMS}"
+      }
+    },
+    "KafkaConfig": {
+      "bootstrapServer": "${KAFKACONFIG_BOOTSTRAPSERVER}",
+      "stateTopic": "${KAFKACONFIG_STATETOPIC}",
+      "wifiScanTopic": "${KAFKACONFIG_WIFISCANTOPIC}",
+      "groupId": "${KAFKACONFIG_GROUPID}",
+      "autoOffsetReset": "${KAFKACONFIG_AUTOOFFSETRESET}"
+    },
+    "DatabaseConfig": {
+      "server": "${DATABASECONFIG_SERVER}",
+      "user": "${DATABASECONFIG_USER}",
+      "password": "${DATABASECONFIG_PASSWORD}",
+      "dbName": "${DATABASECONFIG_DBNAME}",
+      "dataRetentionIntervalDays": "${DATABASECONFIG_DATARETENTIONINTERVALDAYS}"
+    },
+    "ModuleConfig": {
+      "DataCollectorParams": {
+        "updateIntervalMs": "${DATACOLLECTORPARAMS_UPDATEINTERVALMS}",
+        "deviceStatsIntervalSec": "${DATACOLLECTORPARAMS_DEVICESTATSINTERVALSEC}",
+        "wifiScanIntervalSec": "${DATACOLLECTORPARAMS_WIFISCANINTERVALSEC}",
+        "capabilitiesIntervalSec": "${DATACOLLECTORPARAMS_CAPABILITIESINTERVALSEC}",
+        "executorThreadCount": "${DATACOLLECTORPARAMS_EXECUTORTHREADCOUNT}"
+      },
+      "ConfigManagerParams": {
+        "updateIntervalMs": "${CONFIGMANAGERPARAMS_UPDATEINTERVALMS}",
+        "configEnabled": "${CONFIGMANAGERPARAMS_CONFIGENABLED}",
+        "configDebounceIntervalSec": "${CONFIGMANAGERPARAMS_CONFIGDEBOUNCEINTERVALSEC}"
+      },
+      "ModelerParams": {
+        "wifiScanBufferSize": "${MODELERPARAMS_WIFISCANBUFFERSIZE}"
+      },
+      "ApiServerParams": {
+        "httpPort": "${APISERVERPARAMS_HTTPPORT}",
+        "useBasicAuth": "${APISERVERPARAMS_USEBASICAUTH}",
+        "basicAuthUser": "${APISERVERPARAMS_BASICAUTHUSER}",
+        "basicAuthPassword": "${APISERVERPARAMS_BASICAUTHPASSWORD}",
+      }
+    }
+  }
+}

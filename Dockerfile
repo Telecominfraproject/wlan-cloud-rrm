@@ -4,6 +4,12 @@ COPY . .
 RUN mvn clean package
 
 FROM openjdk:11
+RUN apt-get update && apt-get install -y gettext-base
 WORKDIR /usr/src/java
+RUN mkdir /openwifi
+COPY settings.json.tmpl /
+COPY docker-entrypoint.sh /
 COPY --from=build /usr/src/java/target/openwifi-rrm.jar /usr/local/bin/
-ENTRYPOINT ["java", "-jar", "/usr/local/bin/openwifi-rrm.jar", "run"]
+EXPOSE 16789
+ENTRYPOINT ["/docker-entrypoint.sh"]
+CMD ["java", "-jar", "/usr/local/bin/openwifi-rrm.jar", "run", "-c", "/openwifi/settings.json"]
