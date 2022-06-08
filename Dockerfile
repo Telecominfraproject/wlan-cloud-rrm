@@ -5,6 +5,8 @@ RUN mvn clean package
 
 FROM openjdk:11
 RUN apt-get update && apt-get install -y gettext-base
+RUN wget https://raw.githubusercontent.com/Telecominfraproject/wlan-cloud-ucentral-deploy/main/docker-compose/certs/restapi-ca.pem \
+    -O /usr/local/share/ca-certificates/restapi-ca-selfsigned.pem
 WORKDIR /usr/src/java
 RUN mkdir /openwifi
 COPY settings.json.tmpl /

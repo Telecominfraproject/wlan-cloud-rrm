@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 set -e
 
+if [ "$SELFSIGNED_CERTS" = 'true' ]; then
+    update-ca-certificates
+fi
+
 if [[ "$TEMPLATE_CONFIG" = 'true' && ! -f /openwifi/settings.json ]]; then
   UCENTRALCONFIG_USER=${UCENTRALCONFIG_USER:-"tip@ucentral.com"} \
   UCENTRALCONFIG_PASSWORD=${UCENTRALCONFIG_PASSWORD:-"openwifi"} \
