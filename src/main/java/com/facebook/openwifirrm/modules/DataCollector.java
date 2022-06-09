@@ -20,6 +20,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
+import com.facebook.openwifirrm.ucentral.gw.models.ServiceEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -145,6 +146,11 @@ public class DataCollector implements Runnable {
 					) {
 						// ignored here, handled directly from UCentralClient
 					}
+
+					@Override
+					public void handleServiceEventRecords(List<ServiceEvent> serviceEventRecords) {
+						// ignored here, handled directly from UCentralKafkaConsumer
+					}
 				}
 			);
 		}
@@ -172,6 +178,10 @@ public class DataCollector implements Runnable {
 
 	/** Run single iteration of application logic. */
 	private void runImpl() {
+		if (!client.isInitialized()) {
+			logger.trace("Waiting for ucentral client");
+			return;
+		}
 		// Fetch device list
 		List<DeviceWithStatus> devices = client.getDevices();
 		if (devices == null) {

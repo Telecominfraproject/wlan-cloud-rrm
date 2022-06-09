@@ -16,6 +16,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import com.facebook.openwifirrm.ucentral.gw.models.ServiceEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -163,6 +164,11 @@ public class Modeler implements Runnable {
 							new InputData(InputDataType.WIFISCAN, records)
 						);
 					}
+
+					@Override
+					public void handleServiceEventRecords(List<ServiceEvent> serviceEventRecords) {
+						// ignored
+					}
 				}
 			);
 		}
@@ -201,6 +207,14 @@ public class Modeler implements Runnable {
 
 	/** Fetch initial data (called only once). */
 	private void fetchInitialData() {
+		while (!client.isInitialized()) {
+			logger.trace("Waiting for ucentral client");
+			try {
+				Thread.sleep(2000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
 		// TODO: backfill data from database?
 
 		// Fetch state from uCentralGw

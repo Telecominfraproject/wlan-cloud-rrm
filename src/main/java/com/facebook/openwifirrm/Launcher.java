@@ -141,10 +141,7 @@ public class Launcher implements Callable<Integer> {
 
 		// Instantiate clients
 		UCentralClient client = new UCentralClient(
-			config.uCentralConfig.user,
-			config.uCentralConfig.password,
-			config.uCentralConfig.uCentralSecHost,
-			config.uCentralConfig.uCentralSecPort,
+			config.uCentralConfig.privateEndpoint,
 			config.uCentralConfig.uCentralSocketParams
 		);
 		UCentralKafkaConsumer consumer;
@@ -153,11 +150,13 @@ public class Launcher implements Callable<Integer> {
 			consumer = null;
 		} else {
 			consumer = new UCentralKafkaConsumer(
+				client,
 				config.kafkaConfig.bootstrapServer,
 				config.kafkaConfig.groupId,
 				config.kafkaConfig.autoOffsetReset,
 				config.kafkaConfig.stateTopic,
-				config.kafkaConfig.wifiScanTopic
+				config.kafkaConfig.wifiScanTopic,
+				config.kafkaConfig.serviceEventsTopic
 			);
 		}
 		DatabaseManager dbManager;

@@ -12,23 +12,23 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.concurrent.ThreadLocalRandom;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.facebook.openwifirrm.RRMConfig.UCentralConfig.UCentralSocketParams;
 import com.facebook.openwifirrm.ucentral.gw.models.CommandInfo;
 import com.facebook.openwifirrm.ucentral.gw.models.DeviceCapabilities;
 import com.facebook.openwifirrm.ucentral.gw.models.DeviceConfigureRequest;
 import com.facebook.openwifirrm.ucentral.gw.models.DeviceListWithStatus;
 import com.facebook.openwifirrm.ucentral.gw.models.DeviceWithStatus;
+import com.facebook.openwifirrm.ucentral.gw.models.ServiceEvent;
 import com.facebook.openwifirrm.ucentral.gw.models.StatisticsRecords;
 import com.facebook.openwifirrm.ucentral.gw.models.SystemInfoResults;
 import com.facebook.openwifirrm.ucentral.gw.models.WifiScanRequest;
+import com.facebook.openwifirrm.RRMConfig.UCentralConfig.UCentralSocketParams;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
@@ -47,6 +47,9 @@ import kong.unirest.UnirestException;
  */
 public class UCentralClient {
 	private static final Logger logger = LoggerFactory.getLogger(UCentralClient.class);
+
+	private static final String OWGW_SERVICE = "owgw";
+	private static final String OWSEC_SERVICE = "owsec";
 
 	static {
 		Unirest.config()
@@ -77,137 +80,41 @@ public class UCentralClient {
 	/** Gson instance */
 	private final Gson gson = new Gson();
 
-	/** uCentral username */
-	private final String username;
-	/** uCentral password */
-	private final String password;
-	/** uCentralSec host */
-	private final String uCentralSecHost;
-	/** uCentralSec port */
-	private final int uCentralSecPort;
 	/** Socket parameters */
 	private final UCentralSocketParams socketParams;
 
-	/** Access token */
-	private String accessToken;
-	/** uCentralGw URL */
-	private String uCentralGwUrl;
+	private final Map<String, ServiceEvent> serviceEndpoints = new HashMap<>();
+	private final String privateEndpoint;
 
 	/**
 	 * Constructor.
-	 * @param username uCentral username
-	 * @param password uCentral password
-	 * @param uCentralSecHost uCentralSec host
-	 * @param uCentralSecPort uCentralSec port
+	 * @param privateEndpoint advertise the RRM private endpoint to the SDK
 	 * @param socketParams Socket parameters
 	 */
 	public UCentralClient(
-		String username,
-		String password,
-		String uCentralSecHost,
-		int uCentralSecPort,
+		String privateEndpoint,
 		UCentralSocketParams socketParams
 	) {
-		this.username = username;
-		this.password = password;
-		this.uCentralSecHost = uCentralSecHost;
-		this.uCentralSecPort = uCentralSecPort;
+		this.privateEndpoint = privateEndpoint;
 		this.socketParams = socketParams;
-	}
-
-	/** Return uCentralSec URL using the given endpoint. */
-	private String makeUCentralSecUrl(String endpoint) {
-		return String.format(
-			"https://%s:%d/api/v1/%s",
-			uCentralSecHost, uCentralSecPort, endpoint
-		);
 	}
 
 	/** Return uCentralGw URL using the given endpoint. */
 	private String makeUCentralGwUrl(String endpoint) {
+		ServiceEvent e = serviceEndpoints.get(OWGW_SERVICE);
+		if (e == null) {
+			throw new RuntimeException("unknown uCentralGw URL");
+		}
+		String uCentralGwUrl = e.privateEndPoint;
 		return String.format("%s/api/v1/%s", uCentralGwUrl, endpoint);
 	}
 
-	/** Perform login and uCentralGw endpoint retrieval. */
-	public boolean login() {
-		// Make request
-		String url = makeUCentralSecUrl("oauth2");
-		Map<String, Object> body = new HashMap<>();
-		body.put("userId", username);
-		body.put("password", password);
-		HttpResponse<String> response = Unirest.post(url)
-		      .header("accept", "application/json")
-		      .body(body)
-		      .asString();
-		if (!response.isSuccess()) {
-			logger.error(
-				"Login failed: Response code {}", response.getStatus()
-			);
-			return false;
-		}
-
-		// Parse access token from response
-		JSONObject respBody;
-		try {
-			respBody = new JSONObject(response.getBody());
-		} catch (JSONException e) {
-			logger.error("Login failed: Unexpected response", e);
-			logger.debug("Response body: {}", response.getBody());
-			return false;
-		}
-		if (!respBody.has("access_token")) {
-			logger.error("Login failed: Missing access token");
-			logger.debug("Response body: {}", respBody.toString());
-			return false;
-		}
-		this.accessToken = respBody.getString("access_token");
-		logger.info("Login successful as user: {}", username);
-		logger.debug("Access token: {}", accessToken);
-
-		// Find uCentral gateway URL
-		return findGateway();
-	}
-
-	/** Find uCentralGw URL from uCentralSec. */
-	private boolean findGateway() {
-		// Make request
-		String url = makeUCentralSecUrl("systemEndpoints");
-		HttpResponse<String> response = Unirest.get(url)
-		      .header("accept", "application/json")
-		      .header("Authorization", "Bearer " + accessToken)
-		      .asString();
-		if (!response.isSuccess()) {
-			logger.error(
-				"/systemEndpoints failed: Response code {}",
-				response.getStatus()
-			);
-			return false;
-		}
-
-		// Parse endpoints from response
-		JSONObject respBody;
-		JSONArray endpoints;
-		try {
-			respBody = new JSONObject(response.getBody());
-			endpoints = respBody.getJSONArray("endpoints");
-		} catch (JSONException e) {
-			logger.error("/systemEndpoints failed: Unexpected response", e);
-			logger.debug("Response body: {}", response.getBody());
-			return false;
-		}
-		for (Object o : endpoints) {
-			JSONObject endpoint = (JSONObject) o;
-			if (
-				endpoint.optString("type").equals("owgw") && endpoint.has("uri")
-			) {
-				this.uCentralGwUrl = endpoint.getString("uri");
-				logger.info("Using uCentral gateway URL: {}", uCentralGwUrl);
-				return true;
-			}
-		}
-		logger.error("/systemEndpoints failed: Missing uCentral gateway URL");
-		logger.debug("Response body: {}", respBody.toString());
-		return false;
+	/**
+	 * Check if the service has received service events for all service dependencies. The service
+	 * events contain the API keys that the client uses to communicate with the services.
+	 * */
+	public boolean isInitialized(){
+		return this.serviceEndpoints.containsKey(OWGW_SERVICE) && this.serviceEndpoints.containsKey(OWSEC_SERVICE);
 	}
 
 	/** Send a GET request. */
@@ -239,7 +146,8 @@ public class UCentralClient {
 		String url = makeUCentralGwUrl(endpoint);
 		GetRequest req = Unirest.get(url)
 			.header("accept", "application/json")
-			.header("Authorization", "Bearer " + accessToken)
+			.header("X-API-KEY", this.getApiKey(OWGW_SERVICE))
+			.header("X-INTERNAL-NAME", this.privateEndpoint)
 			.connectTimeout(connectTimeoutMs)
 			.socketTimeout(socketTimeoutMs);
 		if (parameters != null) {
@@ -269,7 +177,8 @@ public class UCentralClient {
 		String url = makeUCentralGwUrl(endpoint);
 		HttpRequestWithBody req = Unirest.post(url)
 			.header("accept", "application/json")
-			.header("Authorization", "Bearer " + accessToken)
+			.header("X-API-KEY", this.getApiKey(OWGW_SERVICE))
+			.header("X-INTERNAL-NAME", this.privateEndpoint)
 			.connectTimeout(connectTimeoutMs)
 			.socketTimeout(socketTimeoutMs);
 		if (body != null) {
@@ -419,5 +328,26 @@ public class UCentralClient {
 			logger.error(errMsg, e);
 			return null;
 		}
+	}
+
+	/**
+	 * System endpoints and API keys come from the service_event Kafka topic.
+	 */
+	public void setServiceEndpoint(String service, ServiceEvent event){
+		this.serviceEndpoints.put(service, event);
+	}
+
+	/**
+	 * Get the API key for a service
+	 * @param service Service identifier. From the "type" field of service_events topic.
+	 *   E.g.: owgw, owsec, ...
+	 */
+	private String getApiKey(String service){
+		ServiceEvent s = this.serviceEndpoints.get(service);
+		if (s == null) {
+			logger.error("Error: API key not found for service: {}", service);
+			return null;
+		}
+		return s.key;
 	}
 }
