@@ -138,17 +138,24 @@ public class UCentralKafkaConsumer {
 
 	/** Subscribe to topic(s). */
 	public void subscribe() {
-		Map<String, List<PartitionInfo>> topics =
-			consumer.listTopics(POLL_TIMEOUT);
-		logger.info("Found topics: {}", String.join(", ", topics.keySet()));
 		List<String> subscribeTopics = Arrays.asList(stateTopic, wifiScanTopic, serviceEventsTopic)
 			.stream()
 			.filter(t -> t != null && !t.isEmpty())
 			.collect(Collectors.toList());
-		for (String topic : subscribeTopics) {
-			if (!topics.containsKey(topic)) {
-				throw new RuntimeException("Topic not found: " + topic);
+		Map<String, List<PartitionInfo>> topics = consumer.listTopics(POLL_TIMEOUT);
+		List<String> topicsList = topics.keySet().stream().collect(Collectors.toList());
+		logger.info("Found topics: {}", String.join(", ", topics.keySet()));
+		while(!topicsList.containsAll(subscribeTopics)){
+			List<String> lastTopics = topicsList;
+			List<String> missingTopics = subscribeTopics.stream().filter(el -> !lastTopics.contains(el)).collect(Collectors.toList());
+			logger.info("Waiting for creation of topics: {}", String.join(", ", missingTopics));
+			try{
+				Thread.sleep(1000);
+			}catch(InterruptedException e){
+				e.printStackTrace();
 			}
+			topics = consumer.listTopics(POLL_TIMEOUT);
+			topicsList = topics.keySet().stream().collect(Collectors.toList());
 		}
 		consumer.subscribe(subscribeTopics, new ConsumerRebalanceListener() {
 			@Override
