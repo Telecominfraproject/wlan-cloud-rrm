@@ -138,17 +138,24 @@ public class UCentralKafkaConsumer {
 
 	/** Subscribe to topic(s). */
 	public void subscribe() {
-		Map<String, List<PartitionInfo>> topics =
-			consumer.listTopics(POLL_TIMEOUT);
-		logger.info("Found topics: {}", String.join(", ", topics.keySet()));
 		List<String> subscribeTopics = Arrays.asList(stateTopic, wifiScanTopic, serviceEventsTopic)
-			.stream()
-			.filter(t -> t != null && !t.isEmpty())
-			.collect(Collectors.toList());
-		for (String topic : subscribeTopics) {
-			if (!topics.containsKey(topic)) {
-				throw new RuntimeException("Topic not found: " + topic);
+				.stream()
+				.filter(t -> t != null && !t.isEmpty())
+				.collect(Collectors.toList());
+		Map<String, List<PartitionInfo>> topics = consumer.listTopics(POLL_TIMEOUT);
+		logger.info("Found topics: {}", String.join(", ", topics.keySet()));
+		while (!topics.keySet().containsAll(subscribeTopics)) {
+			logger.info(
+					"Waiting for Kafka topics (received=[{}], required=[{}])",
+					String.join(", ", topics.keySet()),
+					String.join(", ", subscribeTopics)
+			);
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				throw new RuntimeException("Interrupted while waiting for Kafka topics", e);
 			}
+			topics = consumer.listTopics(POLL_TIMEOUT);
 		}
 		consumer.subscribe(subscribeTopics, new ConsumerRebalanceListener() {
 			@Override
