@@ -139,23 +139,23 @@ public class UCentralKafkaConsumer {
 	/** Subscribe to topic(s). */
 	public void subscribe() {
 		List<String> subscribeTopics = Arrays.asList(stateTopic, wifiScanTopic, serviceEventsTopic)
-			.stream()
-			.filter(t -> t != null && !t.isEmpty())
-			.collect(Collectors.toList());
+				.stream()
+				.filter(t -> t != null && !t.isEmpty())
+				.collect(Collectors.toList());
 		Map<String, List<PartitionInfo>> topics = consumer.listTopics(POLL_TIMEOUT);
-		List<String> topicsList = topics.keySet().stream().collect(Collectors.toList());
 		logger.info("Found topics: {}", String.join(", ", topics.keySet()));
-		while(!topicsList.containsAll(subscribeTopics)){
-			List<String> lastTopics = topicsList;
-			List<String> missingTopics = subscribeTopics.stream().filter(el -> !lastTopics.contains(el)).collect(Collectors.toList());
-			logger.info("Waiting for creation of topics: {}", String.join(", ", missingTopics));
-			try{
+		while (!topics.keySet().containsAll(subscribeTopics)) {
+			logger.info(
+					"Waiting for Kafka topics (received=[{}], required=[{}])",
+					String.join(", ", topics.keySet()),
+					String.join(", ", subscribeTopics)
+			);
+			try {
 				Thread.sleep(1000);
-			}catch(InterruptedException e){
-				e.printStackTrace();
+			} catch (InterruptedException e) {
+				throw new RuntimeException("Interrupted while waiting for Kafka topics", e);
 			}
 			topics = consumer.listTopics(POLL_TIMEOUT);
-			topicsList = topics.keySet().stream().collect(Collectors.toList());
 		}
 		consumer.subscribe(subscribeTopics, new ConsumerRebalanceListener() {
 			@Override
