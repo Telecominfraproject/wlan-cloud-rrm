@@ -23,11 +23,18 @@ $ java -jar openwifi-rrm.jar [-h]
 ```
 The command-line interface is implemented using [picocli].
 
-Service configuration is done via a JSON file (default `settings.json`) and will
-require the following data:
-* uCentral credentials (`uCentralConfig`)
-* Kafka broker URL (`kafkaConfig`)
-* MySQL database credentials (`databaseConfig`)
+To start the service, use the `run` command while providing configuration via
+either environment variables (`--config-env`) or a static JSON file
+(`--config-file`, default `settings.json`). The following data is *required*:
+* uCentral credentials
+    * Env: `UCENTRALCONFIG_PRIVATEENDPOINT`
+    * JSON: `uCentralConfig` structure
+* Kafka broker URL
+    * Env: `KAFKACONFIG_BOOTSTRAPSERVER`
+    * JSON: `kafkaConfig` structure
+* MySQL database credentials
+    * Env: `DATABASECONFIG_SERVER`, `DATABASECONFIG_USER`, `DATABASECONFIG_PASSWORD`
+    * JSON: `databaseConfig` structure
 
 ## Docker
 Docker builds can be launched using the provided [Dockerfile](Dockerfile).
