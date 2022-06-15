@@ -115,6 +115,12 @@ public class Launcher implements Callable<Integer> {
 		File configFile,
 
 		@Option(
+			names = { "--config-env" },
+			description = "Read RRM config from environment variables (overrides --config-file)"
+		)
+		boolean configEnv,
+
+		@Option(
 			names = { "-t", "--topology-file" },
 			paramLabel = "<FILE>",
 			description = "Device topology file"
@@ -129,9 +135,16 @@ public class Launcher implements Callable<Integer> {
 		File deviceLayeredConfigFile
 	) throws Exception {
 		// Read local files
-		RRMConfig config = readRRMConfig(
-			configFile != null ? configFile : DEFAULT_CONFIG_FILE
-		);
+		RRMConfig config;
+		if (configEnv) {
+			logger.info("Loading config from environment variables...");
+			config = RRMConfig.fromEnv(System.getenv());
+		} else {
+			config = readRRMConfig(
+				configFile != null ? configFile : DEFAULT_CONFIG_FILE
+			);
+		}
+
 		DeviceDataManager deviceDataManager = new DeviceDataManager(
 			topologyFile != null ? topologyFile : DEFAULT_TOPOLOGY_FILE,
 			deviceLayeredConfigFile != null

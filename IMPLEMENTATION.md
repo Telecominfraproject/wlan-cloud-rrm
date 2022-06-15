@@ -6,9 +6,10 @@ This document provides high-level implementation details of the RRM service.
 the `RRM` class to run all *modules* (details below). Many of these will run in
 their own threads and implement the standard `Runnable` interface.
 
-The application takes a JSON-serialized `RRMConfig` object as service config
-(default `settings.json`). This file is created dynamically, and any new/missing
-fields are appended automatically. All fields are documented in Javadoc.
+The service configuration model is specified in the `RRMConfig` class, which can
+be provided either via environment variables or as a JSON-serialized file. When
+using the static file option, any new/missing fields are appended automatically.
+All fields are documented in Javadoc.
 
 The device topology, `DeviceTopology`, is specified as groupings of APs into
 disjoint "RF zones" (default `topology.json`). For example:
