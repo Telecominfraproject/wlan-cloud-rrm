@@ -16,7 +16,6 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import com.facebook.openwifirrm.ucentral.gw.models.ServiceEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,6 +30,7 @@ import com.facebook.openwifirrm.ucentral.UCentralUtils;
 import com.facebook.openwifirrm.ucentral.UCentralUtils.WifiScanEntry;
 import com.facebook.openwifirrm.ucentral.gw.models.DeviceCapabilities;
 import com.facebook.openwifirrm.ucentral.gw.models.DeviceWithStatus;
+import com.facebook.openwifirrm.ucentral.gw.models.ServiceEvent;
 import com.facebook.openwifirrm.ucentral.gw.models.StatisticsRecords;
 import com.facebook.openwifirrm.ucentral.models.State;
 import com.google.gson.Gson;
@@ -133,10 +133,16 @@ public class Modeler implements Runnable {
 			getClass().getSimpleName(),
 			new ConfigManager.ConfigListener() {
 				@Override
-				public boolean processDeviceConfig(
+				public void receiveDeviceConfig(
 					String serialNumber, UCentralApConfiguration config
 				) {
 					updateDeviceConfig(serialNumber, config);
+				}
+
+				@Override
+				public boolean processDeviceConfig(
+					String serialNumber, UCentralApConfiguration config
+				) {
 					return false;
 				}
 			}

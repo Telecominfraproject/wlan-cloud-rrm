@@ -165,7 +165,8 @@ public class RRMConfig {
 			public int updateIntervalMs = 5000;
 
 			/**
-			 * The expected device statistics interval, in seconds
+			 * The expected device statistics interval, in seconds (or -1 to
+			 * disable managing this value)
 			 * (<tt>DATACOLLECTORPARAMS_DEVICESTATSINTERVALSEC</tt>)
 			 */
 			public int deviceStatsIntervalSec = 60;
@@ -211,8 +212,15 @@ public class RRMConfig {
 			public boolean configEnabled = true;
 
 			/**
+			 * If set, device config changes will only be pushed on events
+			 * (e.g. RRM algorithm execution, config API calls)
+			 * (<tt>CONFIGMANAGERPARAMS_CONFIGONEVENTONLY</tt>)
+			 */
+			public boolean configOnEventOnly = false;
+
+			/**
 			 * The debounce interval for reconfiguring the same device, in
-			 * seconds
+			 * seconds (or -1 to disable)
 			 * (<tt>CONFIGMANAGERPARAMS_CONFIGDEBOUNCEINTERVALSEC</tt>)
 			 */
 			public int configDebounceIntervalSec = 30;
@@ -364,6 +372,9 @@ public class RRMConfig {
 		}
 		if ((v = env.get("CONFIGMANAGERPARAMS_CONFIGENABLED")) != null) {
 			configManagerParams.configEnabled = Boolean.parseBoolean(v);
+		}
+		if ((v = env.get("CONFIGMANAGERPARAMS_CONFIGONEVENTONLY")) != null) {
+			configManagerParams.configOnEventOnly = Boolean.parseBoolean(v);
 		}
 		if ((v = env.get("CONFIGMANAGERPARAMS_CONFIGDEBOUNCEINTERVALSEC")) != null) {
 			configManagerParams.configDebounceIntervalSec = Integer.parseInt(v);

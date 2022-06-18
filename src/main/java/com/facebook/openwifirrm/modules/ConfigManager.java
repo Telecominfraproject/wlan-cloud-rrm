@@ -62,8 +62,20 @@ public class ConfigManager implements Runnable {
 	/** Is the main thread sleeping? */
 	private final AtomicBoolean sleepingFlag = new AtomicBoolean(false);
 
+	/** Was a manual config update requested? */
+	private final AtomicBoolean eventFlag = new AtomicBoolean(false);
+
 	/** Config listener interface. */
 	public interface ConfigListener {
+		/**
+		 * Receive a new device config.
+		 *
+		 * The listener should NOT modify the "config" parameter.
+		 */
+		void receiveDeviceConfig(
+			String serialNumber, UCentralApConfiguration config
+		);
+
 		/**
 		 * Process a received device config.
 		 *
@@ -92,6 +104,13 @@ public class ConfigManager implements Runnable {
 		addConfigListener(
 			getClass().getSimpleName(),
 			new ConfigListener() {
+				@Override
+				public void receiveDeviceConfig(
+					String serialNumber, UCentralApConfiguration config
+				) {
+					// do nothing
+				}
+
 				@Override
 				public boolean processDeviceConfig(
 					String serialNumber, UCentralApConfiguration config
@@ -150,6 +169,7 @@ public class ConfigManager implements Runnable {
 		List<String> devicesNeedingUpdate = new ArrayList<>();
 		final long CONFIG_DEBOUNCE_INTERVAL_NS =
 			params.configDebounceIntervalSec * 1_000_000_000L;
+		final boolean isEvent = eventFlag.getAndSet(false);
 		for (DeviceWithStatus device : devices) {
 			// Update config structure
 			DeviceData data = deviceDataMap.computeIfAbsent(
@@ -165,7 +185,30 @@ public class ConfigManager implements Runnable {
 			}
 			data.config = new UCentralApConfiguration(device.configuration);
 
-			// Call listeners
+			// Call receive listeners
+			for (ConfigListener listener : configListeners.values()) {
+				listener.receiveDeviceConfig(device.serialNumber, data.config);
+			}
+
+			// Check event flag
+			if (params.configOnEventOnly && !isEvent) {
+				logger.debug(
+					"Skipping config for {} (event flag not set)",
+					device.serialNumber
+				);
+				continue;
+			}
+
+			// Check if pushing config is enabled in device config
+			if (!isDeviceConfigEnabled(device.serialNumber)) {
+				logger.debug(
+					"Skipping config for {} (disabled in device config)",
+					device.serialNumber
+				);
+				continue;
+			}
+
+			// Call processing listeners
 			boolean modified = false;
 			for (ConfigListener listener : configListeners.values()) {
 				boolean wasModified = listener.processDeviceConfig(
@@ -174,17 +217,6 @@ public class ConfigManager implements Runnable {
 				if (wasModified) {
 					modified = true;
 				}
-			}
-
-			// Check if pushing config is enabled in device config
-			// NOTE: run the listeners first regardless of this, as they may
-			// perform other module state updates, etc.
-			if (!isDeviceConfigEnabled(device.serialNumber)) {
-				logger.debug(
-					"Skipping config for {} (disabled in device config)",
-					device.serialNumber
-				);
-				continue;
 			}
 
 			// Queue config update if past debounce interval
@@ -210,6 +242,12 @@ public class ConfigManager implements Runnable {
 			logger.trace("Config changes are disabled.");
 		} else if (devicesNeedingUpdate.isEmpty()) {
 			logger.debug("No device configs to send.");
+		} else if (params.configOnEventOnly && !isEvent) {
+			// shouldn't happen
+			logger.error(
+				"ERROR!! {} device(s) queued for config update, but event flag not set",
+				devicesNeedingUpdate.size()
+			);
 		} else {
 			logger.info(
 				"Sending config to {} device(s): {}",
@@ -306,6 +344,7 @@ public class ConfigManager implements Runnable {
 
 	/** Interrupt the main thread, possibly triggering an update immediately. */
 	public void wakeUp() {
+		eventFlag.set(true);
 		if (mainThread != null && mainThread.isAlive() && sleepingFlag.get()) {
 			wakeupFlag.set(true);
 			mainThread.interrupt();
