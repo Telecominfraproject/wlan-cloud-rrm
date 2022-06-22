@@ -1,0 +1,10 @@
+apiVersion: v2
+appVersion: "1.0"
+description: A Helm chart for Kubernetes
+name: owrrm
+version: 0.1.0
+dependencies:
+- name: mysql
+  repository: https://tip.jfrog.io/artifactory/tip-wlan-cloud-ucentral-helm/
+  version: 8.8.3
+  condition: mysql.enabled
