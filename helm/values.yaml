@@ -1,0 +1,105 @@
+# System
+replicaCount: 1
+strategyType: RollingUpdate
+revisionHistoryLimit: 2
+
+nameOverride: ""
+fullnameOverride: ""
+
+images:
+  owrrm:
+    repository: tip-tip-wlan-cloud-ucentral.jfrog.io/owrrm
+    tag: main
+    pullPolicy: Always
+#    regcred:
+#      registry: tip-tip-wlan-cloud-ucentral.jfrog.io
+#      username: username
+#      password: password
+  dockerize:
+    repository: tip-tip-wlan-cloud-ucentral.jfrog.io/dockerize
+    tag: 0.16.0
+    pullPolicy: IfNotPresent
+
+services:
+  owrrm:
+    type: ClusterIP
+    ports:
+      restapi:
+        servicePort: 16789
+        targetPort: 16789
+        protocol: TCP
+      restapiinternal:
+        servicePort: 17007
+        targetPort: 17007
+        protocol: TCP
+
+checks:
+  owrrm:
+    liveness:
+      httpGet:
+        path: /
+        port: 16789
+    readiness:
+      httpGet:
+        path: /
+        port: 16789
+
+ingresses:
+  http:
+    enabled: false
+    annotations: {}
+      # kubernetes.io/ingress.class: nginx
+      # kubernetes.io/tls-acme: "true"
+    hosts:
+    - chart-example.local
+    paths:
+    - path: /
+      serviceName: owrrm
+      servicePort: restapi
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # requests:
+  #  cpu: 100m
+  #  memory: 128Mi
+  # limits:
+  #  cpu: 100m
+  #  memory: 128Mi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+podAnnotations: {}
+
+# Application
+public_env_variables: {}
+
+secret_env_variables: {}
+
+volumes:
+  owrrm: []
+
+# MySQL (https://github.com/bitnami/charts/tree/master/bitnami/mysql)
+mysql:
+  enabled: false
+
+  image:
+    registry: docker.io
+    repository: bitnami/mysql
+    tag: 8.0.26-debian-10-r10
+
+  auth:
+    rootPassword: openwifi
+    database: owrrm
+
+  primary:
+    persistence:
+      enabled: true
+      storageClass: ""
+      size: 8Gi

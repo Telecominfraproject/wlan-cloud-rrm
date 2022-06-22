@@ -1,0 +1,127 @@
+{{- $root := . -}}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "owrrm.fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "owrrm.name" . }}
+    helm.sh/chart: {{ include "owrrm.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  strategy:
+    type: {{ .Values.strategyType }}
+  revisionHistoryLimit: {{ .Values.revisionHistoryLimit }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "owrrm.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+      {{- with .Values.services.owrrm.labels }}
+      {{- toYaml . | nindent 6 }}
+      {{- end }}
+  template:
+    metadata:
+      annotations:
+        {{- with .Values.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      labels:
+        app.kubernetes.io/name: {{ include "owrrm.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+        {{- with .Values.services.owrrm.labels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+
+      initContainers:
+        - name: wait-kafka
+          image: "{{ .Values.images.dockerize.repository }}:{{ .Values.images.dockerize.tag }}"
+          imagePullPolicy: {{ .Values.images.dockerize.pullPolicy }}
+          args:
+            - -wait
+            - tcp://{{ .Values.public_env_variables.KAFKACONFIG_BOOTSTRAPSERVER }}
+            - -timeout
+            - 600s
+
+      containers:
+
+        - name: owrrm
+          image: "{{ .Values.images.owrrm.repository }}:{{ .Values.images.owrrm.tag }}"
+          imagePullPolicy: {{ .Values.images.owrrm.pullPolicy }}
+
+          env:
+            - name: KUBERNETES_DEPLOYED
+              value: "{{ now }}"
+          {{- range $key, $value := .Values.public_env_variables }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
+          {{- end }}
+          {{- range $key, $value := .Values.secret_env_variables }}
+            - name: {{ $key }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "owrrm.fullname" $root }}-env
+                  key: {{ $key }}
+          {{- end }}
+
+          ports:
+          {{- range $port, $portValue := .Values.services.owrrm.ports }}
+            - name: {{ $port }}
+              containerPort: {{ $portValue.targetPort }}
+              protocol: {{ $portValue.protocol }}
+          {{- end }}
+
+          volumeMounts:
+          {{- range .Values.volumes.owrrm }}
+          - name: {{ .name }}
+            mountPath: {{ .mountPath }}
+            {{- if .subPath }}
+            subPath: {{ .subPath }}
+            {{- end }}
+          {{- end }}
+
+          {{- if .Values.checks.owrrm.liveness }}
+          livenessProbe:
+            {{- toYaml .Values.checks.owrrm.liveness | nindent 12 }}
+          {{- end }}
+          {{- if .Values.checks.owrrm.readiness }}
+          readinessProbe:
+            {{- toYaml .Values.checks.owrrm.readiness | nindent 12 }}
+          {{- end }}
+
+          {{- with .Values.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+
+      imagePullSecrets:
+      {{- range $image, $imageValue := .Values.images }}
+        {{- if $imageValue.regcred }}
+      - name: {{ include "owrrm.fullname" $root }}-{{ $image }}-regcred
+        {{- end }}
+      {{- end }}
+
+      volumes:
+      {{- range $container, $containerVolumes := .Values.volumes }}
+      {{- range $containerVolumes }}
+      - name: {{ .name }}
+        {{- tpl .volumeDefinition $root | nindent 8 }}
+      {{- end }}
+      {{- end }}
+
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
