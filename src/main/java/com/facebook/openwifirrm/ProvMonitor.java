@@ -8,7 +8,10 @@
 
 package com.facebook.openwifirrm;
 
+<<<<<<< HEAD
 import java.util.concurrent.atomic.AtomicBoolean;
+=======
+>>>>>>> feat: owprov integration for periodic optimization
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
@@ -20,11 +23,19 @@ import com.facebook.openwifirrm.modules.ConfigManager;
 import com.facebook.openwifirrm.modules.Modeler;
 import com.facebook.openwifirrm.optimizers.ChannelOptimizer;
 import com.facebook.openwifirrm.optimizers.MeasurementBasedApApTPC;
+<<<<<<< HEAD
 import com.facebook.openwifirrm.optimizers.UnmanagedApAwareChannelOptimizer;
 import com.facebook.openwifirrm.optimizers.TPC;
 import com.facebook.openwifirrm.ucentral.UCentralClient;
 import com.facebook.openwifirrm.ucentral.prov.models.VenueList;
 import com.facebook.openwifirrm.ucentral.prov.models.Venue;
+=======
+import com.facebook.openwifirrm.optimizers.TPC;
+import com.facebook.openwifirrm.optimizers.UnmanagedApAwareChannelOptimizer;
+import com.facebook.openwifirrm.ucentral.UCentralClient;
+import com.facebook.openwifirrm.ucentral.prov.models.Venue;
+import com.facebook.openwifirrm.ucentral.prov.models.VenueList;
+>>>>>>> feat: owprov integration for periodic optimization
 
  /**
  * owprov monitor.
