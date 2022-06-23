@@ -20,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
@@ -101,10 +102,21 @@ public class RRM {
 			executor.shutdownNow();
 		}));
 
+		ProvMonitor provMonitor = null;
+		if (config.provConfig.useVenuesEnabled) {
+			provMonitor = new ProvMonitor(
+				configManager,
+				deviceDataManager,
+				modeler,
+				client,
+				config.provConfig.runPeriodMins
+			);
+		}
+
 		// Submit jobs
 		List<Callable<Object>> services = Arrays
 			.asList(
-				configManager, dataCollector, modeler, apiServer, consumerRunner
+				configManager, dataCollector, modeler, apiServer, consumerRunner, provMonitor
 			)
 			.stream()
 			.filter(o -> o != null)

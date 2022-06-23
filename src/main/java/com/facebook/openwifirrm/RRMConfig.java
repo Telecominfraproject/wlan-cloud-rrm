@@ -68,6 +68,28 @@ public class RRMConfig {
 	public UCentralConfig uCentralConfig = new UCentralConfig();
 
 	/**
+	 * Prov service configuration model.
+	 */
+	public class ProvConfig {
+		/**
+			* Enable use of venue information for topology
+			* (<tt>PROVCONFIG_USEVENUESENABLED</tt>)
+			*/
+		public boolean useVenuesEnabled = true;
+
+		/**
+		 * Period, in minutes, of polling owprov for venue information,
+		 * updating topology, and running RRM optimization.
+		 * Default period is every 30 minutes.
+		 * (<tt>PROVCONFIG_RUNPERIODMS</tt>)
+		 */
+		 public int runPeriodMins = 30;
+	}
+
+	/** Prov configuration. */
+	public ProvConfig provConfig = new ProvConfig();
+
+	/**
 	 * uCentral Kafka configuration.
 	 */
 	public class KafkaConfig {
@@ -298,6 +320,12 @@ public class RRMConfig {
 		}
 		if ((v = env.get("UCENTRALSOCKETPARAMS_WIFISCANTIMEOUTMS")) != null) {
 			uCentralSocketParams.wifiScanTimeoutMs = Integer.parseInt(v);
+		}
+
+		/* ProvConfig */
+		ProvConfig provConfig = config.provConfig;
+		if ((v = env.get("PROVCONFIG_USEVENUESENABLED")) != null) {
+			provConfig.useVenuesEnabled = Boolean.parseBoolean(v);
 		}
 
 		/* KafkaConfig */

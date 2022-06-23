@@ -289,6 +289,12 @@ public class DeviceDataManager {
 		}
 	}
 
+	/** Return a copy of the topology. */
+	public DeviceTopology getTopologyCopy() {
+		String contents = getTopologyJson();
+		return gson.fromJson(contents, DeviceTopology.class);
+	}
+
 	/** Return the RF zone for the given device, or null if not found. */
 	public String getDeviceZone(String serialNumber) {
 		if (serialNumber == null || serialNumber.isEmpty()) {
