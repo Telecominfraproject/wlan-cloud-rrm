@@ -14,6 +14,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.facebook.openwifirrm.RRMConfig.UCentralConfig.UCentralSocketParams;
 import com.facebook.openwifirrm.ucentral.gw.models.CommandInfo;
 import com.facebook.openwifirrm.ucentral.gw.models.DeviceCapabilities;
 import com.facebook.openwifirrm.ucentral.gw.models.DeviceConfigureRequest;
@@ -24,11 +31,6 @@ import com.facebook.openwifirrm.ucentral.gw.models.StatisticsRecords;
 import com.facebook.openwifirrm.ucentral.gw.models.SystemInfoResults;
 import com.facebook.openwifirrm.ucentral.gw.models.WifiScanRequest;
 import com.facebook.openwifirrm.ucentral.prov.models.VenueList;
-import com.facebook.openwifirrm.RRMConfig.UCentralConfig.UCentralSocketParams;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
@@ -44,6 +46,26 @@ import kong.unirest.UnirestException;
 
 /**
  * uCentral OpenAPI client.
+ * This implementation supports both public and private endpoints.
+ * <p>
+ * For public endpoint communication:
+ * <ul>
+ *   <li>
+ *     Hardcode owsec URL and use "/systemendpoints" endpoint since Kafka may
+ *     be inaccessible; access to Kafka is a hack for development only, but
+ *     could be secured in production with SASL/MTLS
+ *   </li>
+ *   <li>
+ *     Exchange username/password for an oauth token to pass to other services
+ *   </li>
+ * </ul>
+ * For private endpoint communication:
+ * <ul>
+ *   <li>
+ *     Use Kafka "system_endpoints" topic to get the private endpoint and the
+ *     key to use in the "X-API-KEY" header for each service
+ *   </li>
+ * </ul>
  */
 public class UCentralClient {
 	private static final Logger logger = LoggerFactory.getLogger(UCentralClient.class);
@@ -81,23 +103,57 @@ public class UCentralClient {
 	/** Gson instance */
 	private final Gson gson = new Gson();
 
+	/** Whether to use public endpoints. */
+	private boolean usePublicEndpoints;
+
+	/** The RRM private endpoint. */
+	private final String privateEndpoint;
+
+	/** uCentral username */
+	private final String username;
+
+	/** uCentral password */
+	private final String password;
+
 	/** Socket parameters */
 	private final UCentralSocketParams socketParams;
 
+	/** The learned service endpoints. */
 	private final Map<String, ServiceEvent> serviceEndpoints = new HashMap<>();
-	private final String privateEndpoint;
+
+	/**
+	 * The access token obtained from uCentralSec, needed only when using public
+	 * endpoints.
+	 */
+	private String accessToken;
 
 	/**
 	 * Constructor.
+	 * @param usePublicEndpoints whether to use public or private endpoints
 	 * @param privateEndpoint advertise the RRM private endpoint to the SDK
+	 * @param uCentralSecPublicEndpoint the uCentralSec public endpoint
+	 *        (if needed)
+	 * @param username uCentral username (for public endpoints only)
+	 * @param password uCentral password (for public endpoints only)
 	 * @param socketParams Socket parameters
 	 */
 	public UCentralClient(
+		boolean usePublicEndpoints,
 		String privateEndpoint,
+		String uCentralSecPublicEndpoint,
+		String username,
+		String password,
 		UCentralSocketParams socketParams
 	) {
+		this.usePublicEndpoints = usePublicEndpoints;
 		this.privateEndpoint = privateEndpoint;
+		this.username = username;
+		this.password = password;
 		this.socketParams = socketParams;
+
+		if (usePublicEndpoints) {
+			setServicePublicEndpoint(OWSEC_SERVICE, uCentralSecPublicEndpoint);
+		}
 	}
 
 	/** Return uCentral GW/Provisioning URL using the given endpoint. */
@@ -106,18 +162,119 @@ public class UCentralClient {
 		if (e == null) {
 			throw new RuntimeException("unknown uCentral URL");
 		}
-		String uCentralUrl = e.publicEndPoint; // TODO(andreilee): remove after development testing
+		String uCentralUrl = usePublicEndpoints
+			? e.publicEndPoint : e.privateEndPoint;
 		return String.format("%s/api/v1/%s", uCentralUrl, endpoint);
 	}
 
+	/** Return uCentralSec public URL using the given endpoint. */
+	private String makeUCentralSecUrl(String endpoint) {
+		ServiceEvent e = serviceEndpoints.get(OWSEC_SERVICE);
+		if (e == null) {
+			throw new RuntimeException("unknown uCentralSec URL");
+		}
+		String uCentralSecUrl = usePublicEndpoints
+			? e.publicEndPoint : e.privateEndPoint;
+		return String.format("%s/api/v1/%s", uCentralSecUrl, endpoint);
+	}
+
+	/** Perform login and uCentralGw endpoint retrieval. */
+	public boolean login() {
+		// Make request
+		String url = makeUCentralSecUrl("oauth2");
+		Map<String, Object> body = new HashMap<>();
+		body.put("userId", username);
+		body.put("password", password);
+		HttpResponse<String> response = Unirest.post(url)
+			.header("Content-Type", "application/json")
+			.header("accept", "application/json")
+			.body(body)
+			.asString();
+		if (!response.isSuccess()) {
+			logger.error(
+				"Login failed: Response code {}, body: {}",
+				response.getStatus(),
+				response.getBody()
+			);
+			return false;
+		}
+
+		// Parse access token from response
+		JSONObject respBody;
+		try {
+			respBody = new JSONObject(response.getBody());
+		} catch (JSONException e) {
+			logger.error("Login failed: Unexpected response", e);
+			logger.debug("Response body: {}", response.getBody());
+			return false;
+		}
+		if (!respBody.has("access_token")) {
+			logger.error("Login failed: Missing access token");
+			logger.debug("Response body: {}", respBody.toString());
+			return false;
+		}
+		this.accessToken = respBody.getString("access_token");
+		logger.info("Login successful as user: {}", username);
+		logger.debug("Access token: {}", accessToken);
+
+		// Find uCentral gateway URL
+		return findGateway();
+	}
+
+	/** Find uCentralGw URL from uCentralSec. */
+	private boolean findGateway() {
+		// Make request
+		String url = makeUCentralSecUrl("systemEndpoints");
+		HttpResponse<String> response = Unirest.get(url)
+			.header("accept", "application/json")
+			.header("Authorization", "Bearer " + accessToken)
+			.asString();
+		if (!response.isSuccess()) {
+			logger.error(
+				"/systemEndpoints failed: Response code {}",
+				response.getStatus()
+			);
+			return false;
+		}
+
+		// Parse endpoints from response
+		JSONObject respBody;
+		JSONArray endpoints;
+		try {
+			respBody = new JSONObject(response.getBody());
+			endpoints = respBody.getJSONArray("endpoints");
+		} catch (JSONException e) {
+			logger.error("/systemEndpoints failed: Unexpected response", e);
+			logger.debug("Response body: {}", response.getBody());
+			return false;
+		}
+		for (Object o : endpoints) {
+			JSONObject endpoint = (JSONObject) o;
+			if (
+				endpoint.optString("type").equals("owgw") && endpoint.has("uri")
+			) {
+				String uri = endpoint.getString("uri");
+				setServicePublicEndpoint(OWGW_SERVICE, uri);
+				logger.info("Using uCentral gateway URL: {}", uri);
+				return true;
+			}
+		}
+		logger.error("/systemEndpoints failed: Missing uCentral gateway URL");
+		logger.debug("Response body: {}", respBody.toString());
+		return false;
+	}
+
 	/**
-	 * Check if the service has received service events for all service dependencies. The service
-	 * events contain the API keys that the client uses to communicate with the services.
-	 * */
-	public boolean isInitialized(){
-		return this.serviceEndpoints.containsKey(OWGW_SERVICE) &&
-			this.serviceEndpoints.containsKey(OWSEC_SERVICE) &&
-			this.serviceEndpoints.containsKey(OWPROV_SERVICE);
+	 * Check if the service has received service events for all service
+	 * dependencies. The service events contain the API keys that the client
+	 * uses to communicate with the services.
+	 */
+	public boolean isInitialized() {
+		return (
+			serviceEndpoints.containsKey(OWGW_SERVICE) &&
+			serviceEndpoints.containsKey(OWSEC_SERVICE) &&
+			serviceEndpoints.containsKey(OWPROV_SERVICE) // TODO !!
+		);
 	}
 
 	/** Send a GET request. */
@@ -152,11 +309,15 @@ public class UCentralClient {
 		String url = makeUCentralUrl(endpoint, service);
 		GetRequest req = Unirest.get(url)
 			.header("accept", "application/json")
-			.header("X-API-KEY", this.getApiKey(OWGW_SERVICE))
-			.header("X-INTERNAL-NAME", this.privateEndpoint)
-			.header("Authorization", "Bearer 69e630fc1ff90cd10684f5272ecd404eb5238b8af86d85d1eedcf1fd5e8b4e54") // TODO(andreilee): remove after development testing
 			.connectTimeout(connectTimeoutMs)
 			.socketTimeout(socketTimeoutMs);
+		if (usePublicEndpoints) {
+			req.header("Authorization", "Bearer " + accessToken);
+		} else {
+			req
+				.header("X-API-KEY", this.getApiKey(OWGW_SERVICE))
+				.header("X-INTERNAL-NAME", this.privateEndpoint);
+		}
 		if (parameters != null) {
 			return req.queryString(parameters).asString();
 		} else {
@@ -190,10 +351,15 @@ public class UCentralClient {
 		String url = makeUCentralUrl(endpoint, service);
 		HttpRequestWithBody req = Unirest.post(url)
 			.header("accept", "application/json")
-			.header("X-API-KEY", this.getApiKey(service))
-			.header("X-INTERNAL-NAME", this.privateEndpoint)
 			.connectTimeout(connectTimeoutMs)
 			.socketTimeout(socketTimeoutMs);
+		if (usePublicEndpoints) {
+			req.header("Authorization", "Bearer " + accessToken);
+		} else {
+			req
+				.header("X-API-KEY", this.getApiKey(OWGW_SERVICE))
+				.header("X-INTERNAL-NAME", this.privateEndpoint);
+		}
 		if (body != null) {
 			req.header("Content-Type", "application/json");
 			return req.body(body).asString();
@@ -365,7 +531,25 @@ public class UCentralClient {
 	/**
 	 * System endpoints and API keys come from the service_event Kafka topic.
 	 */
-	public void setServiceEndpoint(String service, ServiceEvent event){
+	public void setServiceEndpoint(String service, ServiceEvent event) {
+		if (usePublicEndpoints) {
+			logger.trace(
+				"Dropping service endpoint for '{}' (using public endpoints)",
+				service
+			);
+		} else {
+			this.serviceEndpoints.put(service, event);
+		}
+	}
+
+	/**
+	 * Set a public endpoint for a service, completely overriding any existing
+	 * entry.
+	 */
+	private void setServicePublicEndpoint(String service, String endpoint) {
+		ServiceEvent event = new ServiceEvent();
+		event.type = service;
+		event.publicEndPoint = endpoint;
 		this.serviceEndpoints.put(service, event);
 	}
 
@@ -374,7 +558,7 @@ public class UCentralClient {
 	 * @param service Service identifier. From the "type" field of service_events topic.
 	 *   E.g.: owgw, owsec, ...
 	 */
-	private String getApiKey(String service){
+	private String getApiKey(String service) {
 		ServiceEvent s = this.serviceEndpoints.get(service);
 		if (s == null) {
 			logger.error("Error: API key not found for service: {}", service);

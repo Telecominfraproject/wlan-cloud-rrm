@@ -154,7 +154,11 @@ public class Launcher implements Callable<Integer> {
 
 		// Instantiate clients
 		UCentralClient client = new UCentralClient(
+			config.uCentralConfig.usePublicEndpoints,
 			config.uCentralConfig.privateEndpoint,
+			config.uCentralConfig.uCentralSecPublicEndpoint,
+			config.uCentralConfig.username,
+			config.uCentralConfig.password,
 			config.uCentralConfig.uCentralSocketParams
 		);
 		UCentralKafkaConsumer consumer;

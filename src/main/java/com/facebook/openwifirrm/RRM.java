@@ -8,6 +8,16 @@
 
 package com.facebook.openwifirrm;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.facebook.openwifirrm.modules.ApiServer;
 import com.facebook.openwifirrm.modules.ConfigManager;
 import com.facebook.openwifirrm.modules.DataCollector;
@@ -16,16 +26,7 @@ import com.facebook.openwifirrm.mysql.DatabaseManager;
 import com.facebook.openwifirrm.ucentral.KafkaConsumerRunner;
 import com.facebook.openwifirrm.ucentral.UCentralClient;
 import com.facebook.openwifirrm.ucentral.UCentralKafkaConsumer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.Arrays;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.stream.Collectors;
+import com.facebook.openwifirrm.ucentral.gw.models.SystemInfoResults;
 
 /**
  * RRM service runner.
@@ -62,6 +63,24 @@ public class RRM {
 		UCentralKafkaConsumer consumer,
 		DatabaseManager dbManager
 	) {
+		// If using public endpoints, log into uCentral now
+		if (config.uCentralConfig.usePublicEndpoints) {
+			// uCentral login
+			if (!client.login()) {
+				logger.error("uCentral login failed! Terminating...");
+				return false;
+			}
+			// Check that uCentralGw is actually alive
+			SystemInfoResults systemInfo = client.getSystemInfo();
+			if (systemInfo == null) {
+				logger.error(
+					"Failed to fetch uCentralGw system info. Terminating..."
+				);
+				return false;
+			}
+			logger.info("uCentralGw version: {}", systemInfo.version);
+		}
+
 		// Instantiate modules
 		ConfigManager configManager = new ConfigManager(
 			config.moduleConfig.configManagerParams, deviceDataManager, client
