@@ -18,7 +18,6 @@ import java.util.Properties;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
-import com.facebook.openwifirrm.ucentral.gw.models.ServiceEvent;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRebalanceListener;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -30,6 +29,7 @@ import org.apache.kafka.common.serialization.StringDeserializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.facebook.openwifirrm.ucentral.gw.models.ServiceEvent;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
@@ -132,23 +132,25 @@ public class UCentralKafkaConsumer {
 
 		// Create consumer instance
 		this.consumer = new KafkaConsumer<>(props);
-		this.subscribeApiKeyListener();
 		logger.info("Using Kafka bootstrap server: {}", bootstrapServer);
+
+		// Subscribe to service events and update UCentralClient
+		this.subscribeApiKeyListener();
 	}
 
 	/** Subscribe to topic(s). */
 	public void subscribe() {
 		List<String> subscribeTopics = Arrays.asList(stateTopic, wifiScanTopic, serviceEventsTopic)
-				.stream()
-				.filter(t -> t != null && !t.isEmpty())
-				.collect(Collectors.toList());
+			.stream()
+			.filter(t -> t != null && !t.isEmpty())
+			.collect(Collectors.toList());
 		Map<String, List<PartitionInfo>> topics = consumer.listTopics(POLL_TIMEOUT);
 		logger.info("Found topics: {}", String.join(", ", topics.keySet()));
 		while (!topics.keySet().containsAll(subscribeTopics)) {
 			logger.info(
-					"Waiting for Kafka topics (received=[{}], required=[{}])",
-					String.join(", ", topics.keySet()),
-					String.join(", ", subscribeTopics)
+				"Waiting for Kafka topics (received=[{}], required=[{}])",
+				String.join(", ", topics.keySet()),
+				String.join(", ", subscribeTopics)
 			);
 			try {
 				Thread.sleep(1000);
@@ -201,14 +203,14 @@ public class UCentralKafkaConsumer {
 		List<KafkaRecord> wifiScanRecords = new ArrayList<>();
 		List<ServiceEvent> serviceEventRecords = new ArrayList<>();
 		for (ConsumerRecord<String, String> record : records) {
-			if(record.topic().equals(serviceEventsTopic)){
-				try{
-					ServiceEvent event = gson.fromJson(record.value(), ServiceEvent.class);
+			if (record.topic().equals(serviceEventsTopic)) {
+				try {
+					ServiceEvent event =
+						gson.fromJson(record.value(), ServiceEvent.class);
 					serviceEventRecords.add(event);
 				} catch (Exception e) {
-					// uCentralGw pushes invalid JSON for empty messages
 					logger.trace(
-							"Offset {}: Invalid payload JSON", record.offset()
+						"Offset {}: Invalid payload JSON", record.offset()
 					);
 					continue;
 				}
@@ -217,12 +219,12 @@ public class UCentralKafkaConsumer {
 				JsonObject payload = null;
 				try {
 					JsonObject o =
-							gson.fromJson(record.value(), JsonObject.class);
+						gson.fromJson(record.value(), JsonObject.class);
 					payload = o.getAsJsonObject("payload");
 				} catch (Exception e) {
 					// uCentralGw pushes invalid JSON for empty messages
 					logger.trace(
-							"Offset {}: Invalid payload JSON", record.offset()
+						"Offset {}: Invalid payload JSON", record.offset()
 					);
 					continue;
 				}
@@ -232,7 +234,7 @@ public class UCentralKafkaConsumer {
 				}
 				if (!payload.isJsonObject()) {
 					logger.trace(
-							"Offset {}: Payload not an object", record.offset()
+						"Offset {}: Payload not an object", record.offset()
 					);
 					continue;
 				}
@@ -240,8 +242,8 @@ public class UCentralKafkaConsumer {
 				// Process records by topic
 				String serialNumber = record.key();
 				logger.trace(
-						"Offset {}: {} => {}",
-						record.offset(), serialNumber, payload.toString()
+					"Offset {}: {} => {}",
+					record.offset(), serialNumber, payload.toString()
 				);
 
 				if (record.topic().equals(stateTopic)) {
@@ -263,7 +265,6 @@ public class UCentralKafkaConsumer {
 				listener.handleWifiScanRecords(wifiScanRecords);
 			}
 		}
-
 		if (!serviceEventRecords.isEmpty()) {
 			for (KafkaListener listener : kafkaListeners.values()) {
 				listener.handleServiceEventRecords(serviceEventRecords);
@@ -303,8 +304,8 @@ public class UCentralKafkaConsumer {
 		consumer.close();
 	}
 
+	/** Subscribe to service events. */
 	private void subscribeApiKeyListener() {
-
 		this.addKafkaListener("APIKey", new UCentralKafkaConsumer.KafkaListener() {
 			@Override
 			public void handleStateRecords(List<UCentralKafkaConsumer.KafkaRecord> records) {
@@ -318,8 +319,8 @@ public class UCentralKafkaConsumer {
 
 			@Override
 			public void handleServiceEventRecords(List<ServiceEvent> serviceEventRecords) {
-				for(ServiceEvent record : serviceEventRecords){
-					if(record.event.equals("keep-alive")){
+				for (ServiceEvent record : serviceEventRecords) {
+					if (record.event.equals("keep-alive")) {
 						client.setServiceEndpoint(record.type, record);
 					}
 				}

@@ -19,22 +19,34 @@ public class RRMConfig {
 	 */
 	public class UCentralConfig {
 		/**
-		 * uCentralSec host
-		 * (<tt>UCENTRALCONFIG_UCENTRALSECHOST</tt>)
+		 * If set, use public service endpoints instead of private ones
+		 * (<tt>UCENTRALCONFIG_USEPUBLICENDPOINTS</tt>)
 		 */
-		public String uCentralSecHost = "127.0.0.1";
+		public boolean usePublicEndpoints = false;
 
 		/**
-		 * uCentralSec port
-		 * (<tt>UCENTRALCONFIG_UCENTRALSECPORT</tt>)
-		 */
-		public int uCentralSecPort = 17001;
-
-		/**
-		 * uCentralSec private microservice endpoint
+		 * Private endpoint for the RRM service (used as "X-INTERNAL-NAME")
 		 * (<tt>UCENTRALCONFIG_PRIVATEENDPOINT</tt>)
 		 */
 		public String privateEndpoint = "https://owrrm.wlan.local:17006";
+
+		/**
+		 * uCentralSec public endpoint
+		 * (<tt>UCENTRALCONFIG_UCENTRALSECPUBLICENDPOINT</tt>)
+		 */
+		public String uCentralSecPublicEndpoint = "";
+
+		/**
+		 * uCentral username (for public endpoints only)
+		 * (<tt>UCENTRALCONFIG_USERNAME</tt>)
+		 */
+		public String username = "tip@ucentral.com";
+
+		/**
+		 * uCentral password (for public endpoints only)
+		 * (<tt>UCENTRALCONFIG_PASSWORD</tt>)
+		 */
+		public String password = "";
 
 		/**
 		 * uCentral socket parameters
@@ -279,14 +291,20 @@ public class RRMConfig {
 
 		/* UCentralConfig */
 		UCentralConfig uCentralConfig = config.uCentralConfig;
-		if ((v = env.get("UCENTRALCONFIG_UCENTRALSECHOST")) != null) {
-			uCentralConfig.uCentralSecHost = v;
-		}
-		if ((v = env.get("UCENTRALCONFIG_UCENTRALSECPORT")) != null) {
-			uCentralConfig.uCentralSecPort = Integer.parseInt(v);
+		if ((v = env.get("UCENTRALCONFIG_USEPUBLICENDPOINTS")) != null) {
+			uCentralConfig.usePublicEndpoints = Boolean.parseBoolean(v);
 		}
 		if ((v = env.get("UCENTRALCONFIG_PRIVATEENDPOINT")) != null) {
 			uCentralConfig.privateEndpoint = v;
+		}
+		if ((v = env.get("UCENTRALCONFIG_UCENTRALSECPUBLICENDPOINT")) != null) {
+			uCentralConfig.uCentralSecPublicEndpoint = v;
+		}
+		if ((v = env.get("UCENTRALCONFIG_USERNAME")) != null) {
+			uCentralConfig.username = v;
+		}
+		if ((v = env.get("UCENTRALCONFIG_PASSWORD")) != null) {
+			uCentralConfig.password = v;
 		}
 		UCentralConfig.UCentralSocketParams uCentralSocketParams =
 			config.uCentralConfig.uCentralSocketParams;
