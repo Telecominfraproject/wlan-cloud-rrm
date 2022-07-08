@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package com.facebook.openwifirrm;
+package com.facebook.openwifirrm.modules;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -18,9 +18,13 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 
+import com.facebook.openwifirrm.DeviceDataManager;
+import com.facebook.openwifirrm.DeviceTopology;
+import com.facebook.openwifirrm.RRMConfig;
 import com.facebook.openwifirrm.modules.ConfigManager;
 import com.facebook.openwifirrm.modules.DataCollector;
 import com.facebook.openwifirrm.modules.Modeler;
+import com.facebook.openwifirrm.modules.ProvMonitor;
 import com.facebook.openwifirrm.mysql.DatabaseManager;
 import com.facebook.openwifirrm.ucentral.UCentralClient;
 import com.facebook.openwifirrm.ucentral.UCentralKafkaConsumer;

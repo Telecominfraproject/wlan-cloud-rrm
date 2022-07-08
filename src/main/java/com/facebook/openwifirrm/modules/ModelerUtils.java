@@ -13,6 +13,9 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Modeler utilities.
+ */
 public class ModelerUtils {
 	private static final Logger logger = LoggerFactory.getLogger(ModelerUtils.class);
 
@@ -167,7 +170,7 @@ public class ModelerUtils {
 		return sinrDB;
 	}
 
-	/** 
+	/**
 	 * Get the coverage metrics for the TPC algorithm design
 	 * @param sampleSpace the boundary of the space
 	 * @param rxPowerBest the max RX power of location x and location y
@@ -191,8 +194,8 @@ public class ModelerUtils {
 				}
 			}
 		}
-		double rxPowerPercentage = (double)rxPowerCount/Math.pow(sampleSpace, 2);
-		double sinrPercentage = (double)sinrCount/Math.pow(sampleSpace, 2);
+		double rxPowerPercentage = rxPowerCount/Math.pow(sampleSpace, 2);
+		double sinrPercentage = sinrCount/Math.pow(sampleSpace, 2);
 		if (rxPowerPercentage*100.0 < 100.0 - COVERAGE_THRESHOLD) {
 			return sinrPercentage;
 		} else {

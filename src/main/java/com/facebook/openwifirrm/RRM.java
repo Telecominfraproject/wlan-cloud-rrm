@@ -22,6 +22,7 @@ import com.facebook.openwifirrm.modules.ApiServer;
 import com.facebook.openwifirrm.modules.ConfigManager;
 import com.facebook.openwifirrm.modules.DataCollector;
 import com.facebook.openwifirrm.modules.Modeler;
+import com.facebook.openwifirrm.modules.ProvMonitor;
 import com.facebook.openwifirrm.mysql.DatabaseManager;
 import com.facebook.openwifirrm.ucentral.KafkaConsumerRunner;
 import com.facebook.openwifirrm.ucentral.UCentralClient;

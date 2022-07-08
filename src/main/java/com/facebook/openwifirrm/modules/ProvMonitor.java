@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package com.facebook.openwifirrm;
+package com.facebook.openwifirrm.modules;
 
 import java.util.Map;
 import java.util.Set;
@@ -15,9 +15,9 @@ import java.util.TreeSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.facebook.openwifirrm.DeviceDataManager;
+import com.facebook.openwifirrm.DeviceTopology;
 import com.facebook.openwifirrm.RRMConfig.ModuleConfig.ProvMonitorParams;
-import com.facebook.openwifirrm.modules.ConfigManager;
-import com.facebook.openwifirrm.modules.Modeler;
 import com.facebook.openwifirrm.optimizers.ChannelOptimizer;
 import com.facebook.openwifirrm.optimizers.MeasurementBasedApApTPC;
 import com.facebook.openwifirrm.optimizers.TPC;
@@ -27,8 +27,9 @@ import com.facebook.openwifirrm.ucentral.prov.models.Venue;
 import com.facebook.openwifirrm.ucentral.prov.models.VenueList;
 
  /**
- * owprov monitor.
- * Periodically updates owrrm's view of topology using venue information.
+ * owprov monitor module.
+ * <p>
+ * Periodically updates our view of topology using owprov venue information.
  * Also handles periodic optimization, based on owprov configuration.
  */
 public class ProvMonitor implements Runnable {
@@ -99,7 +100,7 @@ public class ProvMonitor implements Runnable {
 
 	/** Build new topology from VenueList */
 	protected DeviceTopology buildTopology(VenueList venueList) {
-		// TODO(andreilee): Look at entity hierarchy to understand what has RRM enabled
+		// TODO: Look at entity hierarchy to understand what has RRM enabled
 		DeviceTopology topo = new DeviceTopology();
 		for (Venue venue : venueList.venues) {
 			String zone = venue.id;
