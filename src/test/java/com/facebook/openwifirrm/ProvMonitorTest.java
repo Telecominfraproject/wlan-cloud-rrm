@@ -9,16 +9,8 @@
 package com.facebook.openwifirrm;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-<<<<<<< HEAD
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.Collections;
-import java.util.HashMap;
-=======
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
->>>>>>> feat: owprov integration for periodic optimization
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -30,20 +22,10 @@ import com.facebook.openwifirrm.modules.ConfigManager;
 import com.facebook.openwifirrm.modules.DataCollector;
 import com.facebook.openwifirrm.modules.Modeler;
 import com.facebook.openwifirrm.mysql.DatabaseManager;
-<<<<<<< HEAD
-import com.facebook.openwifirrm.optimizers.TestUtils;
-import com.facebook.openwifirrm.ucentral.UCentralClient;
-import com.facebook.openwifirrm.ucentral.UCentralKafkaConsumer;
-import com.facebook.openwifirrm.ucentral.prov.models.VenueList;
-import com.facebook.openwifirrm.ucentral.prov.models.Venue;
-
-import spark.Spark;
-=======
 import com.facebook.openwifirrm.ucentral.UCentralClient;
 import com.facebook.openwifirrm.ucentral.UCentralKafkaConsumer;
 import com.facebook.openwifirrm.ucentral.prov.models.Venue;
 import com.facebook.openwifirrm.ucentral.prov.models.VenueList;
->>>>>>> feat: owprov integration for periodic optimization
 
 public class ProvMonitorTest {
 	/** Test device data manager. */
