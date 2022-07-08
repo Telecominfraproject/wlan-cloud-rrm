@@ -107,6 +107,15 @@ public class RRM {
 			configManager,
 			modeler
 		);
+		ProvMonitor provMonitor =
+			config.moduleConfig.provMonitorParams.useVenues
+				? new ProvMonitor(
+					config.moduleConfig.provMonitorParams,
+					configManager,
+					deviceDataManager,
+					modeler,
+					client
+				) : null;
 		KafkaConsumerRunner consumerRunner =
 			(consumer == null) ? null : new KafkaConsumerRunner(consumer);
 
@@ -120,17 +129,6 @@ public class RRM {
 			dataCollector.shutdown();
 			executor.shutdownNow();
 		}));
-
-		ProvMonitor provMonitor = null;
-		if (config.provConfig.useVenuesEnabled) {
-			provMonitor = new ProvMonitor(
-				configManager,
-				deviceDataManager,
-				modeler,
-				client,
-				config.provConfig.runPeriodMins
-			);
-		}
 
 		// Submit jobs
 		List<Callable<Object>> services = Arrays

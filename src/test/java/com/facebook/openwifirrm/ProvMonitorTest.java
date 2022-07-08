@@ -71,11 +71,11 @@ public class ProvMonitorTest {
 
 		// Instantiate ProvMonitor
 		this.provMonitor = new ProvMonitor(
+			rrmConfig.moduleConfig.provMonitorParams,
 			configManager,
 			deviceDataManager,
 			modeler,
-			null,
-			1
+			null
 		);
 	}
 

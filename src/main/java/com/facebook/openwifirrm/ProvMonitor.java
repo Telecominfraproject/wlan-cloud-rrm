@@ -15,6 +15,7 @@ import java.util.TreeSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.facebook.openwifirrm.RRMConfig.ModuleConfig.ProvMonitorParams;
 import com.facebook.openwifirrm.modules.ConfigManager;
 import com.facebook.openwifirrm.modules.Modeler;
 import com.facebook.openwifirrm.optimizers.ChannelOptimizer;
@@ -33,6 +34,9 @@ import com.facebook.openwifirrm.ucentral.prov.models.VenueList;
 public class ProvMonitor implements Runnable {
 	private static final Logger logger = LoggerFactory.getLogger(ProvMonitor.class);
 
+	/** The module parameters. */
+	private final ProvMonitorParams params;
+
 	/** The device data manager. */
 	private final DeviceDataManager deviceDataManager;
 
@@ -45,22 +49,19 @@ public class ProvMonitor implements Runnable {
 	/** The uCentral client. */
 	private final UCentralClient client;
 
-	/** The period in ms with which ProvMonitor runs. */
-	private final int runPeriodMs;
-
-	/** Empty constructor without backing files (ex. for unit tests). */
+	/** Constructor. */
 	public ProvMonitor(
+		ProvMonitorParams params,
 		ConfigManager configManager,
 		DeviceDataManager deviceDataManager,
 		Modeler modeler,
-		UCentralClient client,
-		int runPeriodMins
+		UCentralClient client
 	) {
+		this.params = params;
 		this.configManager = configManager;
 		this.deviceDataManager = deviceDataManager;
 		this.modeler = modeler;
 		this.client = client;
-		this.runPeriodMs = runPeriodMins * 1000 * 60;
 	}
 
 	@Override
@@ -71,7 +72,7 @@ public class ProvMonitor implements Runnable {
 		while (!Thread.currentThread().isInterrupted()) {
 			try {
 				runImpl();
-				Thread.sleep(1000/*this.runPeriodMs*/); // TODO(andreilee): Fix before landing PR
+				Thread.sleep(params.syncIntervalMs);
 			} catch (InterruptedException e) {
 				logger.error("Interrupted!", e);
 				break;
@@ -97,7 +98,7 @@ public class ProvMonitor implements Runnable {
 	}
 
 	/** Build new topology from VenueList */
-	protected static DeviceTopology buildTopology(VenueList venueList) {
+	protected DeviceTopology buildTopology(VenueList venueList) {
 		// TODO(andreilee): Look at entity hierarchy to understand what has RRM enabled
 		DeviceTopology topo = new DeviceTopology();
 		for (Venue venue : venueList.venues) {
@@ -116,8 +117,8 @@ public class ProvMonitor implements Runnable {
 	) {
 		DeviceTopology topo = deviceDataManager.getTopologyCopy();
 
-		for (Map.Entry e : topo.entrySet()) {
-			String zone = (String)e.getKey();
+		for (Map.Entry<String, Set<String>> e : topo.entrySet()) {
+			String zone = e.getKey();
 			logger.info(
 				"Running periodic optimizations\n Zone: {}\n Devices: {}",
 				zone,

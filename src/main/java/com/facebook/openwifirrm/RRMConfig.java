@@ -10,6 +10,8 @@ package com.facebook.openwifirrm;
 
 import java.util.Map;
 
+import com.facebook.openwifirrm.RRMConfig.ModuleConfig.ProvMonitorParams;
+
 /**
  * RRM service configuration model.
  */
@@ -78,28 +80,6 @@ public class RRMConfig {
 
 	/** uCentral configuration. */
 	public UCentralConfig uCentralConfig = new UCentralConfig();
-
-	/**
-	 * Prov service configuration model.
-	 */
-	public class ProvConfig {
-		/**
-			* Enable use of venue information for topology
-			* (<tt>PROVCONFIG_USEVENUESENABLED</tt>)
-			*/
-		public boolean useVenuesEnabled = true;
-
-		/**
-		 * Period, in minutes, of polling owprov for venue information,
-		 * updating topology, and running RRM optimization.
-		 * Default period is every 30 minutes.
-		 * (<tt>PROVCONFIG_RUNPERIODMS</tt>)
-		 */
-		 public int runPeriodMins = 30;
-	}
-
-	/** Prov configuration. */
-	public ProvConfig provConfig = new ProvConfig();
 
 	/**
 	 * uCentral Kafka configuration.
@@ -301,6 +281,26 @@ public class RRMConfig {
 
 		/** ApiServer parameters. */
 		public ApiServerParams apiServerParams = new ApiServerParams();
+
+		/**
+		 * ProvMonitor parameters.
+		 */
+		public class ProvMonitorParams {
+			/**
+			 * Enable use of venue information for topology
+			 * (<tt>PROVMONITORPARAMS_USEVENUES</tt>)
+			 */
+			public boolean useVenues = true;
+
+			/**
+			 * Sync interval, in ms, for owprov venue information etc.
+			 * (<tt>PROVMONITORPARAMS_SYNCINTERVALMS</tt>)
+			 */
+			 public int syncIntervalMs = 300000;
+		}
+
+		/** ProvMonitor parameters. */
+		public ProvMonitorParams provMonitorParams = new ProvMonitorParams();
 	}
 
 	/** Module configuration. */
@@ -338,12 +338,6 @@ public class RRMConfig {
 		}
 		if ((v = env.get("UCENTRALSOCKETPARAMS_WIFISCANTIMEOUTMS")) != null) {
 			uCentralSocketParams.wifiScanTimeoutMs = Integer.parseInt(v);
-		}
-
-		/* ProvConfig */
-		ProvConfig provConfig = config.provConfig;
-		if ((v = env.get("PROVCONFIG_USEVENUESENABLED")) != null) {
-			provConfig.useVenuesEnabled = Boolean.parseBoolean(v);
 		}
 
 		/* KafkaConfig */
@@ -432,6 +426,14 @@ public class RRMConfig {
 		}
 		if ((v = env.get("APISERVERPARAMS_BASICAUTHPASSWORD")) != null) {
 			apiServerParams.basicAuthPassword = v;
+		}
+		ProvMonitorParams provManagerParams =
+			config.moduleConfig.provMonitorParams;
+		if ((v = env.get("PROVMONITORPARAMS_USEVENUES")) != null) {
+			provManagerParams.useVenues = Boolean.parseBoolean(v);
+		}
+		if ((v = env.get("PROVMONITORPARAMS_SYNCINTERVALMS")) != null) {
+			provManagerParams.syncIntervalMs = Integer.parseInt(v);
 		}
 
 		return config;
