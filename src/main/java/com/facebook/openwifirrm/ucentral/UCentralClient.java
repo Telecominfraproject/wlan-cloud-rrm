@@ -264,6 +264,103 @@ public class UCentralClient {
 		return false;
 	}
 
+	/** Return uCentralSec public URL using the given endpoint. */
+	private String makeUCentralSecUrl(String endpoint) {
+		ServiceEvent e = serviceEndpoints.get(OWSEC_SERVICE);
+		if (e == null) {
+			throw new RuntimeException("unknown uCentralSec URL");
+		}
+		String uCentralSecUrl = usePublicEndpoints
+			? e.publicEndPoint : e.privateEndPoint;
+		return String.format("%s/api/v1/%s", uCentralSecUrl, endpoint);
+	}
+
+	/** Perform login and uCentralGw endpoint retrieval. */
+	public boolean login() {
+		// Make request
+		String url = makeUCentralSecUrl("oauth2");
+		Map<String, Object> body = new HashMap<>();
+		body.put("userId", username);
+		body.put("password", password);
+		HttpResponse<String> response = Unirest.post(url)
+			.header("Content-Type", "application/json")
+			.header("accept", "application/json")
+			.body(body)
+			.asString();
+		if (!response.isSuccess()) {
+			logger.error(
+				"Login failed: Response code {}, body: {}",
+				response.getStatus(),
+				response.getBody()
+			);
+			return false;
+		}
+
+		// Parse access token from response
+		JSONObject respBody;
+		try {
+			respBody = new JSONObject(response.getBody());
+		} catch (JSONException e) {
+			logger.error("Login failed: Unexpected response", e);
+			logger.debug("Response body: {}", response.getBody());
+			return false;
+		}
+		if (!respBody.has("access_token")) {
+			logger.error("Login failed: Missing access token");
+			logger.debug("Response body: {}", respBody.toString());
+			return false;
+		}
+		this.accessToken = respBody.getString("access_token");
+		logger.info("Login successful as user: {}", username);
+		logger.debug("Access token: {}", accessToken);
+
+		// Find uCentral gateway URL
+		return findGateway();
+	}
+
+	/** Find uCentralGw URL from uCentralSec. */
+	private boolean findGateway() {
+		// Make request
+		String url = makeUCentralSecUrl("systemEndpoints");
+		HttpResponse<String> response = Unirest.get(url)
+			.header("accept", "application/json")
+			.header("Authorization", "Bearer " + accessToken)
+			.asString();
+		if (!response.isSuccess()) {
+			logger.error(
+				"/systemEndpoints failed: Response code {}",
+				response.getStatus()
+			);
+			return false;
+		}
+
+		// Parse endpoints from response
+		JSONObject respBody;
+		JSONArray endpoints;
+		try {
+			respBody = new JSONObject(response.getBody());
+			endpoints = respBody.getJSONArray("endpoints");
+		} catch (JSONException e) {
+			logger.error("/systemEndpoints failed: Unexpected response", e);
+			logger.debug("Response body: {}", response.getBody());
+			return false;
+		}
+		for (Object o : endpoints) {
+			JSONObject endpoint = (JSONObject) o;
+			if (
+				endpoint.optString("type").equals("owgw") && endpoint.has("uri")
+			) {
+				String uri = endpoint.getString("uri");
+				setServicePublicEndpoint(OWGW_SERVICE, uri);
+				logger.info("Using uCentral gateway URL: {}", uri);
+				return true;
+			}
+		}
+		logger.error("/systemEndpoints failed: Missing uCentral gateway URL");
+		logger.debug("Response body: {}", respBody.toString());
+		return false;
+	}
+
 	/**
 	 * Check if the service has received service events for all service
 	 * dependencies. The service events contain the API keys that the client
