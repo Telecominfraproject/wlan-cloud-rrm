@@ -88,14 +88,20 @@ public class ProvMonitor implements Runnable {
 			logger.trace("Waiting for uCentral client");
 			return;
 		}
+
+		// Fetch venues
 		VenueList venueList = client.getVenues();
 		if (venueList == null) {
 			logger.error("Venue list request failed");
 			return;
 		}
+
+		// Sync topology to venue list
 		DeviceTopology topo = buildTopology(venueList);
 		deviceDataManager.setTopology(topo);
-		runOptimizations(deviceDataManager, configManager, modeler);
+
+		// TODO run periodic optimizations
+		//runOptimizations(deviceDataManager, configManager, modeler);
 	}
 
 	/** Build new topology from VenueList */
@@ -111,7 +117,7 @@ public class ProvMonitor implements Runnable {
 	}
 
 	/** Running tx power and channel optimizations for all RRM-enabled venues */
-	protected static void runOptimizations(
+	protected void runOptimizations(
 		DeviceDataManager deviceDataManager,
 		ConfigManager configManager,
 		Modeler modeler

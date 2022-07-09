@@ -167,29 +167,13 @@ public class UCentralClient {
 		return String.format("%s/api/v1/%s", uCentralUrl, endpoint);
 	}
 
-	/** Return uCentralSec public URL using the given endpoint. */
-	private String makeUCentralSecUrl(String endpoint) {
-		ServiceEvent e = serviceEndpoints.get(OWSEC_SERVICE);
-		if (e == null) {
-			throw new RuntimeException("unknown uCentralSec URL");
-		}
-		String uCentralSecUrl = usePublicEndpoints
-			? e.publicEndPoint : e.privateEndPoint;
-		return String.format("%s/api/v1/%s", uCentralSecUrl, endpoint);
-	}
-
 	/** Perform login and uCentralGw endpoint retrieval. */
 	public boolean login() {
 		// Make request
-		String url = makeUCentralSecUrl("oauth2");
 		Map<String, Object> body = new HashMap<>();
 		body.put("userId", username);
 		body.put("password", password);
-		HttpResponse<String> response = Unirest.post(url)
-			.header("Content-Type", "application/json")
-			.header("accept", "application/json")
-			.body(body)
-			.asString();
+		HttpResponse<String> response = httpPost("oauth2", OWSEC_SERVICE, body);
 		if (!response.isSuccess()) {
 			logger.error(
 				"Login failed: Response code {}, body: {}",
@@ -217,18 +201,15 @@ public class UCentralClient {
 		logger.info("Login successful as user: {}", username);
 		logger.debug("Access token: {}", accessToken);
 
-		// Find uCentral gateway URL
-		return findGateway();
+		// Load system endpoints
+		return loadSystemEndpoints();
 	}
 
-	/** Find uCentralGw URL from uCentralSec. */
-	private boolean findGateway() {
+	/** Read system endpoint URLs from uCentralSec. */
+	private boolean loadSystemEndpoints() {
 		// Make request
-		String url = makeUCentralSecUrl("systemEndpoints");
-		HttpResponse<String> response = Unirest.get(url)
-			.header("accept", "application/json")
-			.header("Authorization", "Bearer " + accessToken)
-			.asString();
+		HttpResponse<String> response =
+			httpGet("systemEndpoints", OWSEC_SERVICE);
 		if (!response.isSuccess()) {
 			logger.error(
 				"/systemEndpoints failed: Response code {}",
@@ -250,35 +231,39 @@ public class UCentralClient {
 		}
 		for (Object o : endpoints) {
 			JSONObject endpoint = (JSONObject) o;
-			if (
-				endpoint.optString("type").equals("owgw") && endpoint.has("uri")
-			) {
+			if (endpoint.has("type") && endpoint.has("uri")) {
+				String service = endpoint.getString("type");
 				String uri = endpoint.getString("uri");
-				setServicePublicEndpoint(OWGW_SERVICE, uri);
-				logger.info("Using uCentral gateway URL: {}", uri);
-				return true;
+				setServicePublicEndpoint(service, uri);
+				logger.info("Using {} URL: {}", service, uri);
 			}
 		}
-		logger.error("/systemEndpoints failed: Missing uCentral gateway URL");
-		logger.debug("Response body: {}", respBody.toString());
-		return false;
+		if (!isInitialized()) {
+			logger.error("/systemEndpoints failed: missing some required endpoints");
+			logger.debug("Response body: {}", respBody.toString());
+			return false;
+		}
+		return true;
 	}
 
 	/**
-	 * Check if the service has received service events for all service
-	 * dependencies. The service events contain the API keys that the client
-	 * uses to communicate with the services.
+	 * Return true if this service has learned the endpoints of all essential
+	 * dependent services, along with API keys (if necessary).
 	 */
 	public boolean isInitialized() {
-		return (
-			serviceEndpoints.containsKey(OWGW_SERVICE) &&
-			serviceEndpoints.containsKey(OWSEC_SERVICE) &&
-			serviceEndpoints.containsKey(OWPROV_SERVICE) // TODO !!
-		);
+		if (
+			!serviceEndpoints.containsKey(OWGW_SERVICE) ||
+			!serviceEndpoints.containsKey(OWSEC_SERVICE)
+		) {
+			return false;
+		};
+		if (usePublicEndpoints && accessToken == null) {
+			return false;
+		}
+		return true;
 	}
 
 	/** Send a GET request. */
-	@SuppressWarnings("unused")
 	private HttpResponse<String> httpGet(String endpoint, String service) {
 		return httpGet(endpoint, service, null);
 	}
@@ -312,7 +297,9 @@ public class UCentralClient {
 			.connectTimeout(connectTimeoutMs)
 			.socketTimeout(socketTimeoutMs);
 		if (usePublicEndpoints) {
-			req.header("Authorization", "Bearer " + accessToken);
+			if (accessToken != null) {
+				req.header("Authorization", "Bearer " + accessToken);
+			}
 		} else {
 			req
 				.header("X-API-KEY", this.getApiKey(OWGW_SERVICE))
@@ -354,7 +341,9 @@ public class UCentralClient {
 			.connectTimeout(connectTimeoutMs)
 			.socketTimeout(socketTimeoutMs);
 		if (usePublicEndpoints) {
-			req.header("Authorization", "Bearer " + accessToken);
+			if (accessToken != null) {
+				req.header("Authorization", "Bearer " + accessToken);
+			}
 		} else {
 			req
 				.header("X-API-KEY", this.getApiKey(OWGW_SERVICE))
@@ -538,7 +527,14 @@ public class UCentralClient {
 				service
 			);
 		} else {
-			this.serviceEndpoints.put(service, event);
+			if (this.serviceEndpoints.put(service, event) == null) {
+				logger.info(
+					"Adding service endpoint for {}: '{}' <public>, '{}' <private>",
+					service,
+					event.publicEndPoint,
+					event.privateEndPoint
+				);
+			}
 		}
 	}
 

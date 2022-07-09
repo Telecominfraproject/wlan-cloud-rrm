@@ -134,7 +134,12 @@ public class RRM {
 		// Submit jobs
 		List<Callable<Object>> services = Arrays
 			.asList(
-				configManager, dataCollector, modeler, apiServer, consumerRunner, provMonitor
+				configManager,
+				dataCollector,
+				modeler,
+				apiServer,
+				provMonitor,
+				consumerRunner
 			)
 			.stream()
 			.filter(o -> o != null)
