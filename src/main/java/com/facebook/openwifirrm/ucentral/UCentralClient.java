@@ -70,6 +70,7 @@ import kong.unirest.UnirestException;
 public class UCentralClient {
 	private static final Logger logger = LoggerFactory.getLogger(UCentralClient.class);
 
+	// Service names ("type" field)
 	private static final String OWGW_SERVICE = "owgw";
 	private static final String OWSEC_SERVICE = "owsec";
 	private static final String OWPROV_SERVICE = "owprov";
@@ -156,15 +157,14 @@ public class UCentralClient {
 		}
 	}
 
-	/** Return uCentral GW/Provisioning URL using the given endpoint. */
-	private String makeUCentralUrl(String endpoint, String service) {
+	/** Return uCentral service URL using the given endpoint. */
+	private String makeServiceUrl(String endpoint, String service) {
 		ServiceEvent e = serviceEndpoints.get(service);
 		if (e == null) {
-			throw new RuntimeException("unknown uCentral URL");
+			throw new RuntimeException("unknown service: " + service);
 		}
-		String uCentralUrl = usePublicEndpoints
-			? e.publicEndPoint : e.privateEndPoint;
-		return String.format("%s/api/v1/%s", uCentralUrl, endpoint);
+		String url = usePublicEndpoints ? e.publicEndPoint : e.privateEndPoint;
+		return String.format("%s/api/v1/%s", url, endpoint);
 	}
 
 	/** Perform login and uCentralGw endpoint retrieval. */
@@ -291,7 +291,7 @@ public class UCentralClient {
 		int connectTimeoutMs,
 		int socketTimeoutMs
 	) {
-		String url = makeUCentralUrl(endpoint, service);
+		String url = makeServiceUrl(endpoint, service);
 		GetRequest req = Unirest.get(url)
 			.header("accept", "application/json")
 			.connectTimeout(connectTimeoutMs)
@@ -335,7 +335,7 @@ public class UCentralClient {
 		int connectTimeoutMs,
 		int socketTimeoutMs
 	) {
-		String url = makeUCentralUrl(endpoint, service);
+		String url = makeServiceUrl(endpoint, service);
 		HttpRequestWithBody req = Unirest.post(url)
 			.header("accept", "application/json")
 			.connectTimeout(connectTimeoutMs)

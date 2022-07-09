@@ -10,8 +10,6 @@ package com.facebook.openwifirrm;
 
 import java.util.Map;
 
-import com.facebook.openwifirrm.RRMConfig.ModuleConfig.ProvMonitorParams;
-
 /**
  * RRM service configuration model.
  */
@@ -427,7 +425,7 @@ public class RRMConfig {
 		if ((v = env.get("APISERVERPARAMS_BASICAUTHPASSWORD")) != null) {
 			apiServerParams.basicAuthPassword = v;
 		}
-		ProvMonitorParams provManagerParams =
+		ModuleConfig.ProvMonitorParams provManagerParams =
 			config.moduleConfig.provMonitorParams;
 		if ((v = env.get("PROVMONITORPARAMS_USEVENUES")) != null) {
 			provManagerParams.useVenues = Boolean.parseBoolean(v);
