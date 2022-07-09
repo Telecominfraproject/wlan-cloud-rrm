@@ -333,6 +333,7 @@ public class ApiServer implements Runnable {
 			@Parameter(hidden = true) Request request,
 			@Parameter(hidden = true) Response response
 		) {
+			// TODO - block if "ProvMonitorParams.useVenues" is enabled?
 			try {
 				DeviceTopology topology =
 					gson.fromJson(request.body(), DeviceTopology.class);

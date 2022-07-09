@@ -22,6 +22,7 @@ import com.facebook.openwifirrm.modules.ApiServer;
 import com.facebook.openwifirrm.modules.ConfigManager;
 import com.facebook.openwifirrm.modules.DataCollector;
 import com.facebook.openwifirrm.modules.Modeler;
+import com.facebook.openwifirrm.modules.ProvMonitor;
 import com.facebook.openwifirrm.mysql.DatabaseManager;
 import com.facebook.openwifirrm.ucentral.KafkaConsumerRunner;
 import com.facebook.openwifirrm.ucentral.UCentralClient;
@@ -107,6 +108,15 @@ public class RRM {
 			configManager,
 			modeler
 		);
+		ProvMonitor provMonitor =
+			config.moduleConfig.provMonitorParams.useVenues
+				? new ProvMonitor(
+					config.moduleConfig.provMonitorParams,
+					configManager,
+					deviceDataManager,
+					modeler,
+					client
+				) : null;
 		KafkaConsumerRunner consumerRunner =
 			(consumer == null) ? null : new KafkaConsumerRunner(consumer);
 
@@ -124,7 +134,12 @@ public class RRM {
 		// Submit jobs
 		List<Callable<Object>> services = Arrays
 			.asList(
-				configManager, dataCollector, modeler, apiServer, consumerRunner
+				configManager,
+				dataCollector,
+				modeler,
+				apiServer,
+				provMonitor,
+				consumerRunner
 			)
 			.stream()
 			.filter(o -> o != null)

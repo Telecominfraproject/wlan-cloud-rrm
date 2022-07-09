@@ -30,6 +30,7 @@ import com.facebook.openwifirrm.ucentral.gw.models.ServiceEvent;
 import com.facebook.openwifirrm.ucentral.gw.models.StatisticsRecords;
 import com.facebook.openwifirrm.ucentral.gw.models.SystemInfoResults;
 import com.facebook.openwifirrm.ucentral.gw.models.WifiScanRequest;
+import com.facebook.openwifirrm.ucentral.prov.models.VenueList;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
@@ -69,8 +70,10 @@ import kong.unirest.UnirestException;
 public class UCentralClient {
 	private static final Logger logger = LoggerFactory.getLogger(UCentralClient.class);
 
+	// Service names ("type" field)
 	private static final String OWGW_SERVICE = "owgw";
 	private static final String OWSEC_SERVICE = "owsec";
+	private static final String OWPROV_SERVICE = "owprov";
 
 	static {
 		Unirest.config()
@@ -154,40 +157,23 @@ public class UCentralClient {
 		}
 	}
 
-	/** Return uCentralGw URL using the given endpoint. */
-	private String makeUCentralGwUrl(String endpoint) {
-		ServiceEvent e = serviceEndpoints.get(OWGW_SERVICE);
+	/** Return uCentral service URL using the given endpoint. */
+	private String makeServiceUrl(String endpoint, String service) {
+		ServiceEvent e = serviceEndpoints.get(service);
 		if (e == null) {
-			throw new RuntimeException("unknown uCentralGw URL");
+			throw new RuntimeException("unknown service: " + service);
 		}
-		String uCentralGwUrl = usePublicEndpoints
-			? e.publicEndPoint : e.privateEndPoint;
-		return String.format("%s/api/v1/%s", uCentralGwUrl, endpoint);
-	}
-
-	/** Return uCentralSec public URL using the given endpoint. */
-	private String makeUCentralSecUrl(String endpoint) {
-		ServiceEvent e = serviceEndpoints.get(OWSEC_SERVICE);
-		if (e == null) {
-			throw new RuntimeException("unknown uCentralSec URL");
-		}
-		String uCentralSecUrl = usePublicEndpoints
-			? e.publicEndPoint : e.privateEndPoint;
-		return String.format("%s/api/v1/%s", uCentralSecUrl, endpoint);
+		String url = usePublicEndpoints ? e.publicEndPoint : e.privateEndPoint;
+		return String.format("%s/api/v1/%s", url, endpoint);
 	}
 
 	/** Perform login and uCentralGw endpoint retrieval. */
 	public boolean login() {
 		// Make request
-		String url = makeUCentralSecUrl("oauth2");
 		Map<String, Object> body = new HashMap<>();
 		body.put("userId", username);
 		body.put("password", password);
-		HttpResponse<String> response = Unirest.post(url)
-			.header("Content-Type", "application/json")
-			.header("accept", "application/json")
-			.body(body)
-			.asString();
+		HttpResponse<String> response = httpPost("oauth2", OWSEC_SERVICE, body);
 		if (!response.isSuccess()) {
 			logger.error(
 				"Login failed: Response code {}, body: {}",
@@ -215,18 +201,15 @@ public class UCentralClient {
 		logger.info("Login successful as user: {}", username);
 		logger.debug("Access token: {}", accessToken);
 
-		// Find uCentral gateway URL
-		return findGateway();
+		// Load system endpoints
+		return loadSystemEndpoints();
 	}
 
-	/** Find uCentralGw URL from uCentralSec. */
-	private boolean findGateway() {
+	/** Read system endpoint URLs from uCentralSec. */
+	private boolean loadSystemEndpoints() {
 		// Make request
-		String url = makeUCentralSecUrl("systemEndpoints");
-		HttpResponse<String> response = Unirest.get(url)
-			.header("accept", "application/json")
-			.header("Authorization", "Bearer " + accessToken)
-			.asString();
+		HttpResponse<String> response =
+			httpGet("systemEndpoints", OWSEC_SERVICE);
 		if (!response.isSuccess()) {
 			logger.error(
 				"/systemEndpoints failed: Response code {}",
@@ -248,45 +231,52 @@ public class UCentralClient {
 		}
 		for (Object o : endpoints) {
 			JSONObject endpoint = (JSONObject) o;
-			if (
-				endpoint.optString("type").equals("owgw") && endpoint.has("uri")
-			) {
+			if (endpoint.has("type") && endpoint.has("uri")) {
+				String service = endpoint.getString("type");
 				String uri = endpoint.getString("uri");
-				setServicePublicEndpoint(OWGW_SERVICE, uri);
-				logger.info("Using uCentral gateway URL: {}", uri);
-				return true;
+				setServicePublicEndpoint(service, uri);
+				logger.info("Using {} URL: {}", service, uri);
 			}
 		}
-		logger.error("/systemEndpoints failed: Missing uCentral gateway URL");
-		logger.debug("Response body: {}", respBody.toString());
-		return false;
+		if (!isInitialized()) {
+			logger.error("/systemEndpoints failed: missing some required endpoints");
+			logger.debug("Response body: {}", respBody.toString());
+			return false;
+		}
+		return true;
 	}
 
 	/**
-	 * Check if the service has received service events for all service
-	 * dependencies. The service events contain the API keys that the client
-	 * uses to communicate with the services.
+	 * Return true if this service has learned the endpoints of all essential
+	 * dependent services, along with API keys (if necessary).
 	 */
 	public boolean isInitialized() {
-		return (
-			serviceEndpoints.containsKey(OWGW_SERVICE) &&
-			serviceEndpoints.containsKey(OWSEC_SERVICE)
-		);
+		if (
+			!serviceEndpoints.containsKey(OWGW_SERVICE) ||
+			!serviceEndpoints.containsKey(OWSEC_SERVICE)
+		) {
+			return false;
+		};
+		if (usePublicEndpoints && accessToken == null) {
+			return false;
+		}
+		return true;
 	}
 
 	/** Send a GET request. */
-	@SuppressWarnings("unused")
-	private HttpResponse<String> httpGet(String endpoint) {
-		return httpGet(endpoint, null);
+	private HttpResponse<String> httpGet(String endpoint, String service) {
+		return httpGet(endpoint, service, null);
 	}
 
 	/** Send a GET request with query parameters. */
 	private HttpResponse<String> httpGet(
 		String endpoint,
+		String service,
 		Map<String, Object> parameters
 	) {
 		return httpGet(
 			endpoint,
+			service,
 			parameters,
 			socketParams.connectTimeoutMs,
 			socketParams.socketTimeoutMs
@@ -296,17 +286,20 @@ public class UCentralClient {
 	/** Send a GET request with query parameters using given timeout values. */
 	private HttpResponse<String> httpGet(
 		String endpoint,
+		String service,
 		Map<String, Object> parameters,
 		int connectTimeoutMs,
 		int socketTimeoutMs
 	) {
-		String url = makeUCentralGwUrl(endpoint);
+		String url = makeServiceUrl(endpoint, service);
 		GetRequest req = Unirest.get(url)
 			.header("accept", "application/json")
 			.connectTimeout(connectTimeoutMs)
 			.socketTimeout(socketTimeoutMs);
 		if (usePublicEndpoints) {
-			req.header("Authorization", "Bearer " + accessToken);
+			if (accessToken != null) {
+				req.header("Authorization", "Bearer " + accessToken);
+			}
 		} else {
 			req
 				.header("X-API-KEY", this.getApiKey(OWGW_SERVICE))
@@ -320,9 +313,14 @@ public class UCentralClient {
 	}
 
 	/** Send a POST request with a JSON body. */
-	private HttpResponse<String> httpPost(String endpoint, Object body) {
+	private HttpResponse<String> httpPost(
+		String endpoint,
+		String service,
+		Object body
+	) {
 		return httpPost(
 			endpoint,
+			service,
 			body,
 			socketParams.connectTimeoutMs,
 			socketParams.socketTimeoutMs
@@ -332,17 +330,20 @@ public class UCentralClient {
 	/** Send a POST request with a JSON body using given timeout values. */
 	private HttpResponse<String> httpPost(
 		String endpoint,
+		String service,
 		Object body,
 		int connectTimeoutMs,
 		int socketTimeoutMs
 	) {
-		String url = makeUCentralGwUrl(endpoint);
+		String url = makeServiceUrl(endpoint, service);
 		HttpRequestWithBody req = Unirest.post(url)
 			.header("accept", "application/json")
 			.connectTimeout(connectTimeoutMs)
 			.socketTimeout(socketTimeoutMs);
 		if (usePublicEndpoints) {
-			req.header("Authorization", "Bearer " + accessToken);
+			if (accessToken != null) {
+				req.header("Authorization", "Bearer " + accessToken);
+			}
 		} else {
 			req
 				.header("X-API-KEY", this.getApiKey(OWGW_SERVICE))
@@ -360,7 +361,7 @@ public class UCentralClient {
 	public SystemInfoResults getSystemInfo() {
 		Map<String, Object> parameters =
 			Collections.singletonMap("command", "info");
-		HttpResponse<String> response = httpGet("system", parameters);
+		HttpResponse<String> response = httpGet("system", OWGW_SERVICE, parameters);
 		if (!response.isSuccess()) {
 			logger.error("Error: {}", response.getBody());
 			return null;
@@ -381,7 +382,7 @@ public class UCentralClient {
 	public List<DeviceWithStatus> getDevices() {
 		Map<String, Object> parameters =
 			Collections.singletonMap("deviceWithStatus", true);
-		HttpResponse<String> response = httpGet("devices", parameters);
+		HttpResponse<String> response = httpGet("devices", OWGW_SERVICE, parameters);
 		if (!response.isSuccess()) {
 			logger.error("Error: {}", response.getBody());
 			return null;
@@ -407,6 +408,7 @@ public class UCentralClient {
 		req.verbose = verbose;
 		HttpResponse<String> response = httpPost(
 			String.format("device/%s/wifiscan", serialNumber),
+			OWGW_SERVICE,
 			req,
 			socketParams.connectTimeoutMs,
 			socketParams.wifiScanTimeoutMs
@@ -433,7 +435,7 @@ public class UCentralClient {
 		req.UUID = ThreadLocalRandom.current().nextLong();
 		req.configuration = configuration;
 		HttpResponse<String> response = httpPost(
-			String.format("device/%s/configure", serialNumber), req
+			String.format("device/%s/configure", serialNumber), OWGW_SERVICE, req
 		);
 		if (!response.isSuccess()) {
 			logger.error("Error: {}", response.getBody());
@@ -459,7 +461,7 @@ public class UCentralClient {
 		parameters.put("newest", true);
 		parameters.put("limit", limit);
 		HttpResponse<String> response = httpGet(
-			String.format("device/%s/statistics", serialNumber), parameters
+			String.format("device/%s/statistics", serialNumber), OWGW_SERVICE, parameters
 		);
 		if (!response.isSuccess()) {
 			logger.error("Error: {}", response.getBody());
@@ -480,7 +482,7 @@ public class UCentralClient {
 	/** Launch a get capabilities command for a device (by serial number). */
 	public DeviceCapabilities getCapabilities(String serialNumber) {
 		HttpResponse<String> response = httpGet(
-			String.format("device/%s/capabilities", serialNumber)
+			String.format("device/%s/capabilities", serialNumber), OWGW_SERVICE
 		);
 		if (!response.isSuccess()) {
 			logger.error("Error: {}", response.getBody());
@@ -497,6 +499,24 @@ public class UCentralClient {
 		}
 	}
 
+	/** Launch a get venues command. */
+	public VenueList getVenues() {
+		HttpResponse<String> response = httpGet("venue", OWPROV_SERVICE);
+		if (!response.isSuccess()) {
+			logger.error("Error: {}", response.getBody());
+			return null;
+		}
+		try {
+			return gson.fromJson(response.getBody(), VenueList.class);
+		} catch (JsonSyntaxException e) {
+			String errMsg = String.format(
+				"Failed to deserialize to VenueList: %s", response.getBody()
+			);
+			logger.error(errMsg, e);
+			return null;
+		}
+	}
+
 	/**
 	 * System endpoints and API keys come from the service_event Kafka topic.
 	 */
@@ -507,7 +527,14 @@ public class UCentralClient {
 				service
 			);
 		} else {
-			this.serviceEndpoints.put(service, event);
+			if (this.serviceEndpoints.put(service, event) == null) {
+				logger.info(
+					"Adding service endpoint for {}: '{}' <public>, '{}' <private>",
+					service,
+					event.publicEndPoint,
+					event.privateEndPoint
+				);
+			}
 		}
 	}
 

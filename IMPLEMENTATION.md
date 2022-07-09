@@ -77,6 +77,9 @@ following endpoints:
   [Swagger Core]
 * `/api/v1/<method>` - RRM API methods
 
+### owprov Monitor
+`ProvMonitor` handles sync with the owprov service.
+
 ## Optimizers
 The *optimizers* implement the RRM algorithms, which are described in
 [ALGORITHMS.md](ALGORITHMS.md).

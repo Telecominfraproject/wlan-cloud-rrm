@@ -279,6 +279,26 @@ public class RRMConfig {
 
 		/** ApiServer parameters. */
 		public ApiServerParams apiServerParams = new ApiServerParams();
+
+		/**
+		 * ProvMonitor parameters.
+		 */
+		public class ProvMonitorParams {
+			/**
+			 * Enable use of venue information for topology
+			 * (<tt>PROVMONITORPARAMS_USEVENUES</tt>)
+			 */
+			public boolean useVenues = true;
+
+			/**
+			 * Sync interval, in ms, for owprov venue information etc.
+			 * (<tt>PROVMONITORPARAMS_SYNCINTERVALMS</tt>)
+			 */
+			 public int syncIntervalMs = 300000;
+		}
+
+		/** ProvMonitor parameters. */
+		public ProvMonitorParams provMonitorParams = new ProvMonitorParams();
 	}
 
 	/** Module configuration. */
@@ -404,6 +424,14 @@ public class RRMConfig {
 		}
 		if ((v = env.get("APISERVERPARAMS_BASICAUTHPASSWORD")) != null) {
 			apiServerParams.basicAuthPassword = v;
+		}
+		ModuleConfig.ProvMonitorParams provManagerParams =
+			config.moduleConfig.provMonitorParams;
+		if ((v = env.get("PROVMONITORPARAMS_USEVENUES")) != null) {
+			provManagerParams.useVenues = Boolean.parseBoolean(v);
+		}
+		if ((v = env.get("PROVMONITORPARAMS_SYNCINTERVALMS")) != null) {
+			provManagerParams.syncIntervalMs = Integer.parseInt(v);
 		}
 
 		return config;
