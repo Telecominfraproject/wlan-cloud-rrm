@@ -20,7 +20,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
-import com.facebook.openwifirrm.ucentral.gw.models.ServiceEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,6 +37,7 @@ import com.facebook.openwifirrm.ucentral.UCentralUtils.WifiScanEntry;
 import com.facebook.openwifirrm.ucentral.gw.models.CommandInfo;
 import com.facebook.openwifirrm.ucentral.gw.models.DeviceCapabilities;
 import com.facebook.openwifirrm.ucentral.gw.models.DeviceWithStatus;
+import com.facebook.openwifirrm.ucentral.gw.models.ServiceEvent;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -121,6 +121,13 @@ public class DataCollector implements Runnable {
 		configManager.addConfigListener(
 			getClass().getSimpleName(),
 			new ConfigManager.ConfigListener() {
+				@Override
+				public void receiveDeviceConfig(
+					String serialNumber, UCentralApConfiguration config
+				) {
+					// do nothing
+				}
+
 				@Override
 				public boolean processDeviceConfig(
 					String serialNumber, UCentralApConfiguration config
@@ -224,6 +231,9 @@ public class DataCollector implements Runnable {
 
 		// Check stats interval
 		final int STATS_INTERVAL_S = params.deviceStatsIntervalSec;
+		if (STATS_INTERVAL_S < 1) {
+			return false;  // unmanaged
+		}
 		int currentStatsInterval = config.getStatisticsInterval();
 		if (currentStatsInterval != STATS_INTERVAL_S) {
 			logger.info(

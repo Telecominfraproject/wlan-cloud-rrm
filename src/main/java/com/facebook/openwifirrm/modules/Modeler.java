@@ -133,10 +133,16 @@ public class Modeler implements Runnable {
 			getClass().getSimpleName(),
 			new ConfigManager.ConfigListener() {
 				@Override
-				public boolean processDeviceConfig(
+				public void receiveDeviceConfig(
 					String serialNumber, UCentralApConfiguration config
 				) {
 					updateDeviceConfig(serialNumber, config);
+				}
+
+				@Override
+				public boolean processDeviceConfig(
+					String serialNumber, UCentralApConfiguration config
+				) {
 					return false;
 				}
 			}
