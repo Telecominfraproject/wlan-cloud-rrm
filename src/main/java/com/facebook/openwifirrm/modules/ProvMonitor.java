@@ -8,6 +8,7 @@
 
 package com.facebook.openwifirrm.modules;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
@@ -15,6 +16,7 @@ import java.util.TreeSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.facebook.openwifirrm.DeviceConfig;
 import com.facebook.openwifirrm.DeviceDataManager;
 import com.facebook.openwifirrm.DeviceTopology;
 import com.facebook.openwifirrm.RRMConfig.ModuleConfig.ProvMonitorParams;
@@ -23,6 +25,9 @@ import com.facebook.openwifirrm.optimizers.MeasurementBasedApApTPC;
 import com.facebook.openwifirrm.optimizers.TPC;
 import com.facebook.openwifirrm.optimizers.UnmanagedApAwareChannelOptimizer;
 import com.facebook.openwifirrm.ucentral.UCentralClient;
+import com.facebook.openwifirrm.ucentral.prov.models.InventoryTag;
+import com.facebook.openwifirrm.ucentral.prov.models.InventoryTagList;
+import com.facebook.openwifirrm.ucentral.prov.models.SerialNumberList;
 import com.facebook.openwifirrm.ucentral.prov.models.Venue;
 import com.facebook.openwifirrm.ucentral.prov.models.VenueList;
 
@@ -34,6 +39,9 @@ import com.facebook.openwifirrm.ucentral.prov.models.VenueList;
  */
 public class ProvMonitor implements Runnable {
 	private static final Logger logger = LoggerFactory.getLogger(ProvMonitor.class);
+
+	/** Unknown (i.e. empty/unset) venue name. */
+	public static final String UNKNOWN_VENUE = "%OWPROV_UNKNOWN_VENUE%";
 
 	/** The module parameters. */
 	private final ProvMonitorParams params;
@@ -89,31 +97,81 @@ public class ProvMonitor implements Runnable {
 			return;
 		}
 
-		// Fetch venues
-		VenueList venueList = client.getVenues();
+		// Fetch data from owprov
+		// TODO: this may change later - for now, we only fetch inventory and
+		// venues, using venue name (not UUID) as our "zone" in topology, and
+		// ignoring "entity" completely
+		InventoryTagList inventory = client.getProvInventory();
+		SerialNumberList inventoryForRRM = client.getProvInventoryForRRM();
+		VenueList venueList = client.getProvVenues();
+		//EntityList entityList = client.getProvEntities();
+		if (inventory == null || inventoryForRRM == null) {
+			logger.error("Failed to fetch inventory from owprov");
+			return;
+		}
 		if (venueList == null) {
-			logger.error("Venue list request failed");
+			logger.error("Failed to fetch venues from owprov");
 			return;
 		}
 
-		// Sync topology to venue list
-		DeviceTopology topo = buildTopology(venueList);
-		deviceDataManager.setTopology(topo);
+		// Sync data
+		syncDataToProv(inventory, inventoryForRRM, venueList);
 
 		// TODO run periodic optimizations
 		//runOptimizations(deviceDataManager, configManager, modeler);
 	}
 
-	/** Build new topology from VenueList */
-	protected DeviceTopology buildTopology(VenueList venueList) {
-		// TODO: Look at entity hierarchy to understand what has RRM enabled
-		DeviceTopology topo = new DeviceTopology();
+	/** Sync RRM topology and device configs with owprov data. */
+	protected void syncDataToProv(
+		InventoryTagList inventory,
+		SerialNumberList inventoryForRRM,
+		VenueList venueList
+	) {
+		// Sync topology
+		// NOTE: this will wipe configs for any device that moved venues, etc.
+		Map<String, String> venueIdToName = new HashMap<>();
 		for (Venue venue : venueList.venues) {
-			String zone = venue.id;
-			Set<String> devices = new TreeSet<>(venue.devices);
-			topo.put(zone, devices);
+			venueIdToName.put(venue.id, venue.name);
 		}
-		return topo;
+		DeviceTopology topo = new DeviceTopology();
+		for (InventoryTag tag : inventory.taglist) {
+			String venue = !tag.venue.isEmpty()
+				? venueIdToName.getOrDefault(tag.venue, tag.venue)
+				: UNKNOWN_VENUE;
+			Set<String> zone =
+				topo.computeIfAbsent(venue, k -> new TreeSet<>());
+			zone.add(tag.serialNumber);
+		}
+		deviceDataManager.setTopology(topo);
+		logger.info(
+			"Synced topology with owprov: {} zone(s), {} total device(s)",
+			topo.size(),
+			topo.values().stream().mapToInt(x -> x.size()).sum()
+		);
+
+		// Sync device configs
+		// NOTE: this only sets the device layer, NOT the zone(venue) layer
+		deviceDataManager.updateDeviceApConfig(configMap -> {
+			// Pass 1: disable RRM on all devices
+			for (InventoryTag tag : inventory.taglist) {
+				DeviceConfig cfg = configMap.computeIfAbsent(
+					tag.serialNumber, k -> new DeviceConfig()
+				);
+				cfg.enableRRM = cfg.enableConfig = cfg.enableWifiScan = false;
+			}
+			// Pass 2: re-enable RRM on specific devices
+			for (String serialNumber : inventoryForRRM.serialNumbers) {
+				DeviceConfig cfg = configMap.computeIfAbsent(
+					serialNumber, k -> new DeviceConfig()
+				);
+				cfg.enableRRM = cfg.enableConfig = cfg.enableWifiScan = true;
+			}
+		});
+		logger.info(
+			"Synced device configs with owprov: RRM enabled on {}/{} device(s)",
+			inventoryForRRM.serialNumbers.size(),
+			inventory.taglist.size()
+		);
 	}
 
 	/** Running tx power and channel optimizations for all RRM-enabled venues */
