@@ -8,28 +8,16 @@
 
 package com.facebook.openwifirrm.modules;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import java.util.List;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 
 import com.facebook.openwifirrm.DeviceDataManager;
-import com.facebook.openwifirrm.DeviceTopology;
 import com.facebook.openwifirrm.RRMConfig;
-import com.facebook.openwifirrm.modules.ConfigManager;
-import com.facebook.openwifirrm.modules.DataCollector;
-import com.facebook.openwifirrm.modules.Modeler;
-import com.facebook.openwifirrm.modules.ProvMonitor;
 import com.facebook.openwifirrm.mysql.DatabaseManager;
 import com.facebook.openwifirrm.ucentral.UCentralClient;
 import com.facebook.openwifirrm.ucentral.UCentralKafkaConsumer;
-import com.facebook.openwifirrm.ucentral.prov.models.Venue;
-import com.facebook.openwifirrm.ucentral.prov.models.VenueList;
 
 public class ProvMonitorTest {
 	/** Test device data manager. */
@@ -85,29 +73,7 @@ public class ProvMonitorTest {
 
 	@Test
 	@Order(1)
-	void test_buildTopology() throws Exception {
-		// First test case - empty VenueList
-		VenueList venueList = new VenueList();
-		venueList.venues = List.of();
-		DeviceTopology topo = provMonitor.buildTopology(venueList);
-		assertTrue(topo.isEmpty());
-
-		// Second test case - filled VenueList
-		Venue venue1 = new Venue();
-		venue1.id = "id1";
-		venue1.entity = "entity1";
-		venue1.entity = "zone1";
-		venue1.devices = List.of("device1", "device2");
-
-		Venue venue2 = new Venue();
-		venue2.id = "id2";
-		venue2.entity = "entity2";
-		venue2.entity = "zone2";
-		venue2.devices = List.of("device3");
-
-		venueList.venues = List.of(venue1, venue2);
-		topo = provMonitor.buildTopology(venueList);
-		assertEquals(2, topo.size());
-		assertEquals(2, topo.get("id1").size());
+	void test_syncDataToProv() throws Exception {
+		// TODO
 	}
 }

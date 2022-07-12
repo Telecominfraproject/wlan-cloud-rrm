@@ -12,7 +12,7 @@ import java.util.List;
 
 import com.facebook.openwifirrm.ucentral.gw.models.NoteInfo;
 
-public class Venue {
+public class InventoryTag {
 	// from ObjectInfo
 	public String id;
 	public String name;
@@ -22,22 +22,19 @@ public class Venue {
 	public long modified;
 	public List<Long> tags;
 
+	public String serialNumber;
+	public String deviceType;
+	public String venue;
 	public String entity;
-	public String parent;
-	public List<String> children;
-	public String managementPolicy;
-	public List<String> devices;
-	public DiGraph topology;
-	public String design;
-	//public String deviceConfiguration;  // TODO wrong in OpenAPI (array?)
-	public List<String> contacts;
+	public String subscriber;
+	public String qrCode;
+	public String geoCode;
 	public String location;
+	public String contact;
+	public String deviceConfiguration;
 	public DeviceRules deviceRules;
-	public List<String> sourceIP;
-	public List<String> managementPolicies;
-	public List<String> managementRoles;
-	public List<String> variables;
-	public List<String> maps;
-	public List<String> configurations;
-	public List<String> boards;
+	public String managementPolicy;
+	public String state;
+	public String devClass;
+	public String locale;
 }

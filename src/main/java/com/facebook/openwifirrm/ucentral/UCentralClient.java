@@ -30,6 +30,9 @@ import com.facebook.openwifirrm.ucentral.gw.models.ServiceEvent;
 import com.facebook.openwifirrm.ucentral.gw.models.StatisticsRecords;
 import com.facebook.openwifirrm.ucentral.gw.models.SystemInfoResults;
 import com.facebook.openwifirrm.ucentral.gw.models.WifiScanRequest;
+import com.facebook.openwifirrm.ucentral.prov.models.EntityList;
+import com.facebook.openwifirrm.ucentral.prov.models.InventoryTagList;
+import com.facebook.openwifirrm.ucentral.prov.models.SerialNumberList;
 import com.facebook.openwifirrm.ucentral.prov.models.VenueList;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -255,6 +258,20 @@ public class UCentralClient {
 			!serviceEndpoints.containsKey(OWGW_SERVICE) ||
 			!serviceEndpoints.containsKey(OWSEC_SERVICE)
 		) {
+			return false;
+		};
+		if (usePublicEndpoints && accessToken == null) {
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Return true if this service has learned the owprov endpoint, along with
+	 * API keys (if necessary).
+	 */
+	public boolean isProvInitialized() {
+		if (!serviceEndpoints.containsKey(OWPROV_SERVICE)) {
 			return false;
 		};
 		if (usePublicEndpoints && accessToken == null) {
@@ -499,8 +516,49 @@ public class UCentralClient {
 		}
 	}
 
-	/** Launch a get venues command. */
-	public VenueList getVenues() {
+	/** Retrieve a list of inventory from owprov. */
+	public InventoryTagList getProvInventory() {
+		HttpResponse<String> response = httpGet("inventory", OWPROV_SERVICE);
+		if (!response.isSuccess()) {
+			logger.error("Error: {}", response.getBody());
+			return null;
+		}
+		try {
+			return gson.fromJson(response.getBody(), InventoryTagList.class);
+		} catch (JsonSyntaxException e) {
+			String errMsg = String.format(
+				"Failed to deserialize to InventoryTagList: %s",
+				response.getBody()
+			);
+			logger.error(errMsg, e);
+			return null;
+		}
+	}
+
+	/** Retrieve a list of inventory with RRM enabled from owprov. */
+	public SerialNumberList getProvInventoryForRRM() {
+		Map<String, Object> parameters = new HashMap<>();
+		parameters.put("rrmOnly", true);
+		HttpResponse<String> response =
+			httpGet("inventory", OWPROV_SERVICE, parameters);
+		if (!response.isSuccess()) {
+			logger.error("Error: {}", response.getBody());
+			return null;
+		}
+		try {
+			return gson.fromJson(response.getBody(), SerialNumberList.class);
+		} catch (JsonSyntaxException e) {
+			String errMsg = String.format(
+				"Failed to deserialize to SerialNumberList: %s",
+				response.getBody()
+			);
+			logger.error(errMsg, e);
+			return null;
+		}
+	}
+
+	/** Retrieve a list of venues from owprov. */
+	public VenueList getProvVenues() {
 		HttpResponse<String> response = httpGet("venue", OWPROV_SERVICE);
 		if (!response.isSuccess()) {
 			logger.error("Error: {}", response.getBody());
@@ -511,6 +569,24 @@ public class UCentralClient {
 		} catch (JsonSyntaxException e) {
 			String errMsg = String.format(
 				"Failed to deserialize to VenueList: %s", response.getBody()
+			);
+			logger.error(errMsg, e);
+			return null;
+		}
+	}
+
+	/** Retrieve a list of entities from owprov. */
+	public EntityList getProvEntities() {
+		HttpResponse<String> response = httpGet("entity", OWPROV_SERVICE);
+		if (!response.isSuccess()) {
+			logger.error("Error: {}", response.getBody());
+			return null;
+		}
+		try {
+			return gson.fromJson(response.getBody(), EntityList.class);
+		} catch (JsonSyntaxException e) {
+			String errMsg = String.format(
+				"Failed to deserialize to EntityList: %s", response.getBody()
 			);
 			logger.error(errMsg, e);
 			return null;
