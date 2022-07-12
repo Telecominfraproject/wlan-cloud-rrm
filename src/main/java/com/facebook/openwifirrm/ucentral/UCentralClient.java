@@ -266,6 +266,20 @@ public class UCentralClient {
 		return true;
 	}
 
+	/**
+	 * Return true if this service has learned the owprov endpoint, along with
+	 * API keys (if necessary).
+	 */
+	public boolean isProvInitialized() {
+		if (!serviceEndpoints.containsKey(OWPROV_SERVICE)) {
+			return false;
+		};
+		if (usePublicEndpoints && accessToken == null) {
+			return false;
+		}
+		return true;
+	}
+
 	/** Send a GET request. */
 	private HttpResponse<String> httpGet(String endpoint, String service) {
 		return httpGet(endpoint, service, null);
