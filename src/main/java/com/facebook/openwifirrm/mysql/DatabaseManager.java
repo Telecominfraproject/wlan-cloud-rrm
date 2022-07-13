@@ -123,6 +123,7 @@ public class DatabaseManager {
 					"`serial` VARCHAR(63) NOT NULL" +
 				") ENGINE = InnoDB DEFAULT CHARSET = UTF8";
 			stmt.executeUpdate(sql);
+			// TODO : add newer wifiscan fields?
 			sql =
 				"CREATE TABLE IF NOT EXISTS `wifiscan_results` (" +
 					"`scan_id` BIGINT NOT NULL, " +
@@ -478,7 +479,7 @@ public class DatabaseManager {
 				stmt.setLong(1, scanId);
 				stmt.setLong(2, bssid);
 				stmt.setString(3, entry.ssid);
-				stmt.setLong(4, entry.lastseen);
+				stmt.setLong(4, entry.last_seen);
 				stmt.setInt(5, entry.signal);
 				stmt.setInt(6, entry.channel);
 				stmt.addBatch();
@@ -548,7 +549,7 @@ public class DatabaseManager {
 
 						WifiScanEntry entry = new WifiScanEntry();
 						entry.channel = rs.getInt("channel");
-						entry.lastseen = rs.getLong("lastseen");
+						entry.last_seen = rs.getLong("lastseen");
 						entry.signal = rs.getInt("rssi");
 						entry.bssid = Utils.longToMac(rs.getLong("bssid"));
 						entry.ssid = rs.getString("ssid");

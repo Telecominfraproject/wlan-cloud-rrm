@@ -8,6 +8,8 @@
 
 package com.facebook.openwifirrm.ucentral.gw.models;
 
+import java.util.List;
+
 import com.google.gson.JsonObject;
 
 public class WifiScanRequest {
@@ -15,4 +17,6 @@ public class WifiScanRequest {
 	public boolean verbose;
 	public boolean activeScan;
 	public JsonObject selector;
+	public List<Integer> ies;
+	public boolean override_dfs; // TODO not in OpenAPI?
 }

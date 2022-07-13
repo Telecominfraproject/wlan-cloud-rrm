@@ -40,7 +40,7 @@ public class UCentralUtils {
 	/** Represents a single entry in wifi scan results. */
 	public static class WifiScanEntry {
 		public int channel;
-		public long lastseen;
+		public long last_seen;
 		public int signal;
 		public String bssid;
 		public String ssid;
@@ -48,6 +48,8 @@ public class UCentralUtils {
 		public String ht_oper;
 		public String vht_oper;
 		public int capability;
+		public int frequency;
+		public JsonArray ies;
 
 		/** Default Constructor. */
 		public WifiScanEntry() {}
@@ -55,7 +57,7 @@ public class UCentralUtils {
 		/** Copy Constructor. */
 		public WifiScanEntry(WifiScanEntry o) {
 			this.channel = o.channel;
-			this.lastseen = o.lastseen;
+			this.last_seen = o.last_seen;
 			this.signal = o.signal;
 			this.bssid = o.bssid;
 			this.ssid = o.ssid;
@@ -63,6 +65,8 @@ public class UCentralUtils {
 			this.ht_oper = o.ht_oper;
 			this.vht_oper = o.vht_oper;
 			this.capability = o.capability;
+			this.frequency = o.frequency;
+			this.ies = o.ies;
 		}
 	}
 
@@ -109,7 +113,7 @@ public class UCentralUtils {
 				continue;
 			}
 
-			// If the field doesn't exist in config, we generate the fieldName and 
+			// If the field doesn't exist in config, we generate the fieldName and
 			// assign the new value to it.
 			int newValue = newValueList.get(operationalBand);
 			if (!radioConfig.has(fieldName)) {
@@ -125,7 +129,7 @@ public class UCentralUtils {
 				wasModified = true;
 				continue;
 			}
-			
+
 			// Compare vs. existing value
 			int currentValue = radioConfig.get(fieldName).getAsInt();
 			if (currentValue == newValue) {
