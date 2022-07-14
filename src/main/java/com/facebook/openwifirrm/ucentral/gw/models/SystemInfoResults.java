@@ -8,14 +8,19 @@
 
 package com.facebook.openwifirrm.ucentral.gw.models;
 
-import com.google.gson.JsonArray;
+import java.util.List;
 
 public class SystemInfoResults {
+	public static class Certificate {
+		public String filename;
+		public long expires;
+	}
+
 	public String version;
 	public long uptime;
 	public long start;
 	public String os;
 	public int processors;
 	public String hostname;
-	public JsonArray certificates;
+	public List<Certificate> certificates;
 }

@@ -8,6 +8,8 @@
 
 package com.facebook.openwifirrm.modules;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.Map;
@@ -28,6 +30,7 @@ import com.facebook.openwifirrm.DeviceConfig;
 import com.facebook.openwifirrm.DeviceDataManager;
 import com.facebook.openwifirrm.DeviceLayeredConfig;
 import com.facebook.openwifirrm.DeviceTopology;
+import com.facebook.openwifirrm.RRM;
 import com.facebook.openwifirrm.RRMConfig.ModuleConfig.ApiServerParams;
 import com.facebook.openwifirrm.optimizers.ChannelOptimizer;
 import com.facebook.openwifirrm.optimizers.LeastUsedChannelOptimizer;
@@ -38,6 +41,7 @@ import com.facebook.openwifirrm.optimizers.RandomChannelInitializer;
 import com.facebook.openwifirrm.optimizers.RandomTxPowerInitializer;
 import com.facebook.openwifirrm.optimizers.TPC;
 import com.facebook.openwifirrm.optimizers.UnmanagedApAwareChannelOptimizer;
+import com.facebook.openwifirrm.ucentral.gw.models.SystemInfoResults;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -70,6 +74,7 @@ import spark.Spark;
 		description = "This document describes the API for the Radio Resource Management service."
 	),
 	tags = {
+		@Tag(name = "SDK"),
 		@Tag(name = "Config"),
 		@Tag(name = "Optimization"),
 	}
@@ -95,6 +100,9 @@ public class ApiServer implements Runnable {
 	/** The cached OpenAPI instance. */
 	private OpenAPI openApi;
 
+	/** The module start time (real time), in ms. */
+	private long startTimeMs;
+
 	/** Constructor. */
 	public ApiServer(
 		ApiServerParams params,
@@ -110,6 +118,8 @@ public class ApiServer implements Runnable {
 
 	@Override
 	public void run() {
+		this.startTimeMs = System.currentTimeMillis();
+
 		if (params.httpPort == -1) {
 			logger.info("API server is disabled.");
 			return;
@@ -125,6 +135,7 @@ public class ApiServer implements Runnable {
 		// Install routes
 		Spark.before(this::beforeFilter);
 		Spark.after(this::afterFilter);
+		Spark.get("/api/v1/system", new SystemEndpoint());
 		Spark.get("/api/v1/getTopology", new GetTopologyEndpoint());
 		Spark.post("/api/v1/setTopology", new SetTopologyEndpoint());
 		Spark.get(
@@ -267,6 +278,64 @@ public class ApiServer implements Runnable {
 	private String getOpenApiJson(Request request, Response response) {
 		response.type(MediaType.APPLICATION_JSON);
 		return Json.pretty(getOpenApi());
+	}
+
+	@Path("/api/v1/system")
+	public class SystemEndpoint implements Route {
+		@GET
+		@Produces({ MediaType.APPLICATION_JSON })
+		@Operation(
+			summary = "Get system info",
+			description = "Returns the system info from the running service.",
+			operationId = "system",
+			tags = {"SDK"},
+			parameters = {
+				@Parameter(
+					name = "command",
+					description = "Get a value",
+					in = ParameterIn.QUERY,
+					schema = @Schema(type = "string", allowableValues = {"info"}),
+					required = true
+				)
+			},
+			responses = {
+				@ApiResponse(
+					responseCode = "200",
+					description = "Successful command execution",
+					content = @Content(
+						schema = @Schema(implementation = SystemInfoResults.class)
+					)
+				)
+			}
+		)
+		@Override
+		public String handle(
+			@Parameter(hidden = true) Request request,
+			@Parameter(hidden = true) Response response
+		) {
+			String command = request.queryParams("command");
+			if (command == null || !command.equals("info")) {
+				response.status(400);
+				return "Invalid command";
+			}
+
+			SystemInfoResults result = new SystemInfoResults();
+			result.version = RRM.VERSION;
+			result.uptime =
+				Math.max(System.currentTimeMillis() - startTimeMs, 0) / 1000L;
+			result.start = startTimeMs / 1000L;
+			result.os = System.getProperty("os.name");
+			result.processors = Runtime.getRuntime().availableProcessors();
+			try {
+				result.hostname = InetAddress.getLocalHost().getHostName();
+			} catch (UnknownHostException e) {
+				logger.error("Unable to get hostname", e);
+			}
+			// TODO certificates
+
+			response.type(MediaType.APPLICATION_JSON);
+			return gson.toJson(result);
+		}
 	}
 
 	@Path("/api/v1/getTopology")

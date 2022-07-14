@@ -107,11 +107,11 @@ public class UCentralClient {
 	/** Gson instance */
 	private final Gson gson = new Gson();
 
-	/** Whether to use public endpoints. */
-	private boolean usePublicEndpoints;
-
 	/** The RRM private endpoint. */
 	private final String privateEndpoint;
+
+	/** Whether to use public endpoints. */
+	private boolean usePublicEndpoints;
 
 	/** uCentral username */
 	private final String username;
@@ -133,8 +133,8 @@ public class UCentralClient {
 
 	/**
 	 * Constructor.
-	 * @param usePublicEndpoints whether to use public or private endpoints
 	 * @param privateEndpoint advertise the RRM private endpoint to the SDK
+	 * @param usePublicEndpoints whether to use public or private endpoints
 	 * @param uCentralSecPublicEndpoint the uCentralSec public endpoint
 	 *        (if needed)
 	 * @param username uCentral username (for public endpoints only)
@@ -142,15 +142,15 @@ public class UCentralClient {
 	 * @param socketParams Socket parameters
 	 */
 	public UCentralClient(
-		boolean usePublicEndpoints,
 		String privateEndpoint,
+		boolean usePublicEndpoints,
 		String uCentralSecPublicEndpoint,
 		String username,
 		String password,
 		UCentralSocketParams socketParams
 	) {
-		this.usePublicEndpoints = usePublicEndpoints;
 		this.privateEndpoint = privateEndpoint;
+		this.usePublicEndpoints = usePublicEndpoints;
 		this.username = username;
 		this.password = password;
 		this.socketParams = socketParams;

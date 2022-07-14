@@ -9,11 +9,16 @@
 package com.facebook.openwifirrm.ucentral.gw.models;
 
 public class ServiceEvent {
-    public String event;
-    public long id;
-    public String key;
-    public String type;
-    public String version;
-    public String privateEndPoint;
-    public String publicEndPoint;
+	public static final String EVENT_JOIN = "join";
+	public static final String EVENT_LEAVE = "leave";
+	public static final String EVENT_KEEPALIVE = "keep-alive";
+	public static final int KEEPALIVE_INTERVAL_S = 30;
+
+	public String event;
+	public long id;
+	public String key;
+	public String type;
+	public String version;
+	public String privateEndPoint;
+	public String publicEndPoint;
 }
