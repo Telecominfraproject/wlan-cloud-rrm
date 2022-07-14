@@ -27,7 +27,7 @@ To start the service, use the `run` command while providing configuration via
 either environment variables (`--config-env`) or a static JSON file
 (`--config-file`, default `settings.json`). The following data is *required*:
 * Service configuration
-    * Env: `SERVICECONFIG_PRIVATEENDPOINT`
+    * Env: `SERVICECONFIG_PRIVATEENDPOINT`, `SERVICECONFIG_PUBLICENDPOINT`
     * JSON: `serviceConfig` structure
 * Kafka broker URL
     * Env: `KAFKACONFIG_BOOTSTRAPSERVER`
