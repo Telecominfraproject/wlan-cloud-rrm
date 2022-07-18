@@ -28,6 +28,7 @@ import com.facebook.openwifirrm.ucentral.KafkaRunner;
 import com.facebook.openwifirrm.ucentral.UCentralClient;
 import com.facebook.openwifirrm.ucentral.UCentralKafkaConsumer;
 import com.facebook.openwifirrm.ucentral.UCentralKafkaProducer;
+import com.facebook.openwifirrm.ucentral.UCentralUtils;
 import com.facebook.openwifirrm.ucentral.gw.models.SystemInfoResults;
 
 /**
@@ -109,6 +110,7 @@ public class RRM {
 		);
 		ApiServer apiServer = new ApiServer(
 			config.moduleConfig.apiServerParams,
+			UCentralUtils.generateServiceKey(config.serviceConfig),
 			deviceDataManager,
 			configManager,
 			modeler

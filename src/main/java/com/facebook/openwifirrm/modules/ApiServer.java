@@ -85,6 +85,9 @@ public class ApiServer implements Runnable {
 	/** The module parameters. */
 	private final ApiServerParams params;
 
+	/** The service key. */
+	private final String serviceKey;
+
 	/** The device data manager. */
 	private final DeviceDataManager deviceDataManager;
 
@@ -106,11 +109,13 @@ public class ApiServer implements Runnable {
 	/** Constructor. */
 	public ApiServer(
 		ApiServerParams params,
+		String serviceKey,
 		DeviceDataManager deviceDataManager,
 		ConfigManager configManager,
 		Modeler modeler
 	) {
 		this.params = params;
+		this.serviceKey = serviceKey;
 		this.deviceDataManager = deviceDataManager;
 		this.configManager = configManager;
 		this.modeler = modeler;
@@ -211,6 +216,53 @@ public class ApiServer implements Runnable {
 		return false;
 	}
 
+	/**
+	 * Perform OpenWiFi authentication via tokens (external) and API keys
+	 * (internal).
+	 *
+	 * If authentication passes, do nothing and return true. Otherwise, send an
+	 * HTTP 403 response and return false.
+	 */
+	private boolean performOpenWifiAuth(Request request, Response response) {
+		//
+		// [WIP] This is stub code and is NOT fully implemented
+		//
+
+		// TODO check if request came from internal endpoint
+		boolean internal = true;
+		String internalName = request.headers("X-INTERNAL-NAME");
+		if (internal && internalName != null) {
+			// Internal request, validate "X-API-KEY"
+			String apiKey = request.headers("X-API-KEY");
+			if (apiKey != null && apiKey.equals(serviceKey)) {
+				// auth success
+				return true;
+			}
+		} else {
+			// External request, validate token:
+			//   Authorization: Bearer <token>
+			final String AUTH_PREFIX = "Bearer ";
+			String authHeader = request.headers("Authorization");
+			if (authHeader != null && authHeader.startsWith(AUTH_PREFIX)) {
+				String token = authHeader.substring(AUTH_PREFIX.length());
+				if (!token.isEmpty()) {
+					// TODO send token to uCentralSec (and cache reply)
+					// - /api/v1/validateToken
+					// - /api/v1/validateSubToken
+					boolean valid = true;
+					if (valid) {
+						// auth success
+						return true;
+					}
+				}
+			}
+		}
+
+		// auth failure
+		Spark.halt(403, "Forbidden");
+		return false;
+	}
+
 	/** Filter evaluated before each request. */
 	private void beforeFilter(Request request, Response response) {
 		// Log requests
@@ -232,6 +284,11 @@ public class ApiServer implements Runnable {
 				params.basicAuthUser,
 				params.basicAuthPassword
 			);
+		}
+
+		// OpenWifi auth (if enabled)
+		if (params.useOpenWifiAuth) {
+			this.performOpenWifiAuth(request, response);
 		}
 	}
 

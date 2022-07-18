@@ -8,8 +8,6 @@
 
 package com.facebook.openwifirrm.ucentral;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.Properties;
 
 import org.apache.kafka.clients.producer.KafkaProducer;
@@ -20,7 +18,6 @@ import org.apache.kafka.common.serialization.StringSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.facebook.openwifirrm.Utils;
 import com.facebook.openwifirrm.ucentral.gw.models.ServiceEvent;
 import com.google.gson.Gson;
 
@@ -42,13 +39,12 @@ public class UCentralKafkaProducer {
 	private final String serviceVersion;
 	/** The service ID. */
 	private final long serviceId;
+	/** The service key. */
+	private final String serviceKey;
 	/** The private service endpoint. */
 	private final String privateEndpoint;
 	/** The public service endpoint. */
 	private final String publicEndpoint;
-
-	/** The service key (generated). */
-	private final String serviceKey;
 
 	/** The Gson instance. */
 	private final Gson gson = new Gson();
@@ -60,6 +56,7 @@ public class UCentralKafkaProducer {
 	 * @param serviceType the service name
 	 * @param serviceVersion the service version
 	 * @param serviceId the service ID
+	 * @param serviceKey the service key
 	 * @param privateEndpoint the private service endpoint
 	 * @param publicEndpoint the public service endpoint
 	 */
@@ -69,6 +66,7 @@ public class UCentralKafkaProducer {
 		String serviceType,
 		String serviceVersion,
 		long serviceId,
+		String serviceKey,
 		String privateEndpoint,
 		String publicEndpoint
 	) {
@@ -76,10 +74,9 @@ public class UCentralKafkaProducer {
 		this.serviceType = serviceType;
 		this.serviceVersion = serviceVersion;
 		this.serviceId = serviceId;
+		this.serviceKey = serviceKey;
 		this.privateEndpoint = privateEndpoint;
 		this.publicEndpoint = publicEndpoint;
-
-		this.serviceKey = generateServiceKey();
 
 		// Set properties
 		Properties props = new Properties();
@@ -96,19 +93,6 @@ public class UCentralKafkaProducer {
 		// Create producer instance
 		this.producer = new KafkaProducer<>(props);
 		logger.info("Using Kafka bootstrap server: {}", bootstrapServer);
-	}
-
-	/** Generate the service key. */
-	private String generateServiceKey() {
-		try {
-			MessageDigest sha256 = MessageDigest.getInstance("SHA-256");
-			sha256.update(publicEndpoint.getBytes());
-			sha256.update(privateEndpoint.getBytes());
-			return Utils.bytesToHex(sha256.digest());
-		} catch (NoSuchAlgorithmException e) {
-			logger.error("Unable to generate service key", e);
-			return "";
-		}
 	}
 
 	/** Publish a service event. */

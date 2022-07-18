@@ -35,6 +35,7 @@ import com.facebook.openwifirrm.RRMConfig;
 import com.facebook.openwifirrm.mysql.DatabaseManager;
 import com.facebook.openwifirrm.ucentral.UCentralClient;
 import com.facebook.openwifirrm.ucentral.UCentralKafkaConsumer;
+import com.facebook.openwifirrm.ucentral.UCentralUtils;
 import com.google.gson.Gson;
 
 import kong.unirest.HttpResponse;
@@ -110,6 +111,7 @@ public class ApiServerTest {
 		// Instantiate ApiServer
 		this.server = new ApiServer(
 			rrmConfig.moduleConfig.apiServerParams,
+			UCentralUtils.generateServiceKey(rrmConfig.serviceConfig),
 			deviceDataManager,
 			configManager,
 			modeler

@@ -65,8 +65,8 @@ import kong.unirest.UnirestException;
  * For private endpoint communication:
  * <ul>
  *   <li>
- *     Use Kafka "system_endpoints" topic to get the private endpoint and the
- *     key to use in the "X-API-KEY" header for each service
+ *     Use Kafka "system_endpoints" topic to find the private endpoint and API
+ *     key for each service
  *   </li>
  * </ul>
  */
@@ -107,8 +107,8 @@ public class UCentralClient {
 	/** Gson instance */
 	private final Gson gson = new Gson();
 
-	/** The RRM private endpoint. */
-	private final String privateEndpoint;
+	/** The RRM public endpoint. */
+	private final String rrmEndpoint;
 
 	/** Whether to use public endpoints. */
 	private boolean usePublicEndpoints;
@@ -133,7 +133,7 @@ public class UCentralClient {
 
 	/**
 	 * Constructor.
-	 * @param privateEndpoint advertise the RRM private endpoint to the SDK
+	 * @param rrmEndpoint advertise this RRM endpoint to the SDK
 	 * @param usePublicEndpoints whether to use public or private endpoints
 	 * @param uCentralSecPublicEndpoint the uCentralSec public endpoint
 	 *        (if needed)
@@ -142,14 +142,14 @@ public class UCentralClient {
 	 * @param socketParams Socket parameters
 	 */
 	public UCentralClient(
-		String privateEndpoint,
+		String rrmEndpoint,
 		boolean usePublicEndpoints,
 		String uCentralSecPublicEndpoint,
 		String username,
 		String password,
 		UCentralSocketParams socketParams
 	) {
-		this.privateEndpoint = privateEndpoint;
+		this.rrmEndpoint = rrmEndpoint;
 		this.usePublicEndpoints = usePublicEndpoints;
 		this.username = username;
 		this.password = password;
@@ -320,7 +320,7 @@ public class UCentralClient {
 		} else {
 			req
 				.header("X-API-KEY", this.getApiKey(OWGW_SERVICE))
-				.header("X-INTERNAL-NAME", this.privateEndpoint);
+				.header("X-INTERNAL-NAME", this.rrmEndpoint);
 		}
 		if (parameters != null) {
 			return req.queryString(parameters).asString();
@@ -364,7 +364,7 @@ public class UCentralClient {
 		} else {
 			req
 				.header("X-API-KEY", this.getApiKey(OWGW_SERVICE))
-				.header("X-INTERNAL-NAME", this.privateEndpoint);
+				.header("X-INTERNAL-NAME", this.rrmEndpoint);
 		}
 		if (body != null) {
 			req.header("Content-Type", "application/json");
