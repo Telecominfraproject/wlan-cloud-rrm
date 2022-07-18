@@ -24,9 +24,10 @@ import com.facebook.openwifirrm.modules.DataCollector;
 import com.facebook.openwifirrm.modules.Modeler;
 import com.facebook.openwifirrm.modules.ProvMonitor;
 import com.facebook.openwifirrm.mysql.DatabaseManager;
-import com.facebook.openwifirrm.ucentral.KafkaConsumerRunner;
+import com.facebook.openwifirrm.ucentral.KafkaRunner;
 import com.facebook.openwifirrm.ucentral.UCentralClient;
 import com.facebook.openwifirrm.ucentral.UCentralKafkaConsumer;
+import com.facebook.openwifirrm.ucentral.UCentralKafkaProducer;
 import com.facebook.openwifirrm.ucentral.gw.models.SystemInfoResults;
 
 /**
@@ -34,6 +35,9 @@ import com.facebook.openwifirrm.ucentral.gw.models.SystemInfoResults;
  */
 public class RRM {
 	private static final Logger logger = LoggerFactory.getLogger(RRM.class);
+
+	/** The RRM service version. */
+	public static final String VERSION = "1.0";  // TODO move elsewhere?
 
 	/** The executor service instance. */
 	private final ExecutorService executor = Executors.newCachedThreadPool();
@@ -62,6 +66,7 @@ public class RRM {
 		DeviceDataManager deviceDataManager,
 		UCentralClient client,
 		UCentralKafkaConsumer consumer,
+		UCentralKafkaProducer producer,
 		DatabaseManager dbManager
 	) {
 		// If using public endpoints, log into uCentral now
@@ -117,14 +122,14 @@ public class RRM {
 					modeler,
 					client
 				) : null;
-		KafkaConsumerRunner consumerRunner =
-			(consumer == null) ? null : new KafkaConsumerRunner(consumer);
+		KafkaRunner kafkaRunner = (consumer == null && producer == null)
+			? null : new KafkaRunner(consumer, producer);
 
 		// Add shutdown hook
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 			logger.debug("Running shutdown hook...");
-			if (consumerRunner != null) {
-				consumerRunner.shutdown();
+			if (kafkaRunner != null) {
+				kafkaRunner.shutdown();
 			}
 			apiServer.shutdown();
 			dataCollector.shutdown();
@@ -139,7 +144,7 @@ public class RRM {
 				modeler,
 				apiServer,
 				provMonitor,
-				consumerRunner
+				kafkaRunner
 			)
 			.stream()
 			.filter(o -> o != null)

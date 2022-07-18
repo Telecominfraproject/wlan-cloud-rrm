@@ -107,4 +107,15 @@ public class Utils {
 		c[16] = HEX_VALUES[(byte)(addr & 0xf)];
 		return new String(c);
 	}
+
+	/** Return a hex representation of the given byte array. */
+	public static String bytesToHex(byte[] b) {
+		char[] c = new char[b.length * 2];
+		for (int i = 0; i < b.length; i++) {
+			int v = b[i] & 0xff;
+			c[i*2] = HEX_VALUES[(v >> 4) & 0xf];
+			c[i*2 + 1] = HEX_VALUES[v & 0xf];
+		}
+		return new String(c);
+	}
 }

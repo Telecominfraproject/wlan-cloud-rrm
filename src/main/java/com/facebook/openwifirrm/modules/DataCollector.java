@@ -371,7 +371,7 @@ public class DataCollector implements Runnable {
 			logger.error("Device {}: wifi scan request failed", serialNumber);
 			return false;
 		}
-		logger.debug(
+		logger.trace(
 			"Device {}: wifi scan results: {}",
 			serialNumber,
 			new Gson().toJson(wifiScanResult)

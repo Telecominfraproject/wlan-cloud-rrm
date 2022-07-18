@@ -15,6 +15,38 @@ import java.util.Map;
  */
 public class RRMConfig {
 	/**
+	 * Service configuration.
+	 */
+	public class ServiceConfig {
+		/**
+		 * RRM service name/type
+		 * (<tt>SERVICECONFIG_NAME</tt>)
+		 */
+		public String name = "owrrm";
+
+		/**
+		 * RRM service ID (random persistent number)
+		 * (<tt>SERVICECONFIG_NAME</tt>)
+		 */
+		public long id = (long) (Math.random() * Long.MAX_VALUE);
+
+		/**
+		 * Private endpoint for the RRM service
+		 * (<tt>SERVICECONFIG_PRIVATEENDPOINT</tt>)
+		 */
+		public String privateEndpoint = "https://owrrm.wlan.local:17006";
+
+		/**
+		 * Public endpoint for the RRM service
+		 * (<tt>SERVICECONFIG_PUBLICENDPOINT</tt>)
+		 */
+		public String publicEndpoint = "";
+	}
+
+	/** Service configuration. */
+	public ServiceConfig serviceConfig = new ServiceConfig();
+
+	/**
 	 * uCentral configuration.
 	 */
 	public class UCentralConfig {
@@ -23,12 +55,6 @@ public class RRMConfig {
 		 * (<tt>UCENTRALCONFIG_USEPUBLICENDPOINTS</tt>)
 		 */
 		public boolean usePublicEndpoints = false;
-
-		/**
-		 * Private endpoint for the RRM service (used as "X-INTERNAL-NAME")
-		 * (<tt>UCENTRALCONFIG_PRIVATEENDPOINT</tt>)
-		 */
-		public String privateEndpoint = "https://owrrm.wlan.local:17006";
 
 		/**
 		 * uCentralSec public endpoint
@@ -317,13 +343,25 @@ public class RRMConfig {
 		RRMConfig config = new RRMConfig();
 		String v;
 
+		/* ServiceConfig */
+		ServiceConfig serviceConfig = config.serviceConfig;
+		if ((v = env.get("SERVICECONFIG_NAME")) != null) {
+			serviceConfig.name = v;
+		}
+		if ((v = env.get("SERVICECONFIG_NAME")) != null) {
+			serviceConfig.id = Long.parseLong(v);
+		}
+		if ((v = env.get("SERVICECONFIG_PRIVATEENDPOINT")) != null) {
+			serviceConfig.privateEndpoint = v;
+		}
+		if ((v = env.get("SERVICECONFIG_PUBLICENDPOINT")) != null) {
+			serviceConfig.publicEndpoint = v;
+		}
+
 		/* UCentralConfig */
 		UCentralConfig uCentralConfig = config.uCentralConfig;
 		if ((v = env.get("UCENTRALCONFIG_USEPUBLICENDPOINTS")) != null) {
 			uCentralConfig.usePublicEndpoints = Boolean.parseBoolean(v);
-		}
-		if ((v = env.get("UCENTRALCONFIG_PRIVATEENDPOINT")) != null) {
-			uCentralConfig.privateEndpoint = v;
 		}
 		if ((v = env.get("UCENTRALCONFIG_UCENTRALSECPUBLICENDPOINT")) != null) {
 			uCentralConfig.uCentralSecPublicEndpoint = v;

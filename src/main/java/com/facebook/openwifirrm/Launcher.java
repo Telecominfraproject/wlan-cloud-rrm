@@ -21,6 +21,7 @@ import org.slf4j.LoggerFactory;
 import com.facebook.openwifirrm.mysql.DatabaseManager;
 import com.facebook.openwifirrm.ucentral.UCentralClient;
 import com.facebook.openwifirrm.ucentral.UCentralKafkaConsumer;
+import com.facebook.openwifirrm.ucentral.UCentralKafkaProducer;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -33,7 +34,7 @@ import picocli.CommandLine.Option;
  */
 @Command(
 	name = "",
-	version = "1",
+	version = RRM.VERSION,
 	descriptionHeading = "%n",
 	description = "OpenWiFi uCentral-based radio resource management service.",
 	optionListHeading = "%nOptions:%n",
@@ -154,17 +155,19 @@ public class Launcher implements Callable<Integer> {
 
 		// Instantiate clients
 		UCentralClient client = new UCentralClient(
+			config.serviceConfig.privateEndpoint,
 			config.uCentralConfig.usePublicEndpoints,
-			config.uCentralConfig.privateEndpoint,
 			config.uCentralConfig.uCentralSecPublicEndpoint,
 			config.uCentralConfig.username,
 			config.uCentralConfig.password,
 			config.uCentralConfig.uCentralSocketParams
 		);
 		UCentralKafkaConsumer consumer;
+		UCentralKafkaProducer producer;
 		if (config.kafkaConfig.bootstrapServer.isEmpty()) {
-			logger.info("Kafka consumer is disabled.");
+			logger.info("Kafka is disabled.");
 			consumer = null;
+			producer = null;
 		} else {
 			consumer = new UCentralKafkaConsumer(
 				client,
@@ -174,6 +177,15 @@ public class Launcher implements Callable<Integer> {
 				config.kafkaConfig.stateTopic,
 				config.kafkaConfig.wifiScanTopic,
 				config.kafkaConfig.serviceEventsTopic
+			);
+			producer = new UCentralKafkaProducer(
+				config.kafkaConfig.bootstrapServer,
+				config.kafkaConfig.serviceEventsTopic,
+				config.serviceConfig.name,
+				RRM.VERSION,
+				config.serviceConfig.id,
+				config.serviceConfig.privateEndpoint,
+				config.serviceConfig.publicEndpoint
 			);
 		}
 		DatabaseManager dbManager;
@@ -194,7 +206,7 @@ public class Launcher implements Callable<Integer> {
 		// Start RRM service
 		RRM rrm = new RRM();
 		boolean success = rrm.start(
-			config, deviceDataManager, client, consumer, dbManager
+			config, deviceDataManager, client, consumer, producer, dbManager
 		);
 		if (dbManager != null) {
 			dbManager.close();

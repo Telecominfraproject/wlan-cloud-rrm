@@ -98,7 +98,7 @@ public class UCentralKafkaConsumer {
 	 * @param autoOffsetReset the "auto.offset.reset" config
 	 * @param stateTopic the uCentral state topic (or empty/null to skip)
 	 * @param wifiScanTopic the uCentral wifiscan topic (or empty/null to skip)
-	 * @param serviceEventsTopic the uCentral service_events Topic (required)
+	 * @param serviceEventsTopic the uCentral service_events topic (required)
 	 */
 	public UCentralKafkaConsumer(
 		UCentralClient client,
@@ -320,7 +320,10 @@ public class UCentralKafkaConsumer {
 			@Override
 			public void handleServiceEventRecords(List<ServiceEvent> serviceEventRecords) {
 				for (ServiceEvent record : serviceEventRecords) {
-					if (record.event.equals("keep-alive")) {
+					if (
+						record.event.equals(ServiceEvent.EVENT_KEEPALIVE) ||
+						record.event.equals(ServiceEvent.EVENT_JOIN)
+					) {
 						client.setServiceEndpoint(record.type, record);
 					}
 				}
