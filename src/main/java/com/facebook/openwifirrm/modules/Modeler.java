@@ -12,6 +12,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -272,6 +273,10 @@ public class Modeler implements Runnable {
 
 	/** Process input data. */
 	private void processData(InputData data) {
+		// for logging only
+		Set<String> stateUpdates = new TreeSet<>();
+		Set<String> wifiScanUpdates = new TreeSet<>();
+
 		switch (data.type) {
 		case STATE:
 			for (KafkaRecord record : data.records) {
@@ -280,9 +285,7 @@ public class Modeler implements Runnable {
 					try {
 						State stateModel = gson.fromJson(state, State.class);
 						dataModel.latestState.put(record.serialNumber, stateModel);
-						logger.debug(
-							"Device {}: received state update", record.serialNumber
-						);
+						stateUpdates.add(record.serialNumber);
 					} catch (JsonSyntaxException e) {
 						logger.error(
 							String.format(
@@ -316,11 +319,24 @@ public class Modeler implements Runnable {
 					wifiScanList.remove(0);
 				}
 				wifiScanList.add(scanEntries);
-				logger.debug(
-					"Device {}: received wifi scan result", record.serialNumber
-				);
+				wifiScanUpdates.add(record.serialNumber);
 			}
 			break;
+		}
+
+		if (!stateUpdates.isEmpty()) {
+			logger.debug(
+				"Received state updates for {} device(s): [{}]",
+				stateUpdates.size(),
+				String.join(", ", stateUpdates)
+			);
+		}
+		if (!wifiScanUpdates.isEmpty()) {
+			logger.debug(
+				"Received wifi scan results for {} device(s): [{}]",
+				wifiScanUpdates.size(),
+				String.join(", ", wifiScanUpdates)
+			);
 		}
 	}
 

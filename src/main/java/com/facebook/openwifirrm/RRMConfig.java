@@ -34,7 +34,7 @@ public class RRMConfig {
 		 * Private endpoint for the RRM service
 		 * (<tt>SERVICECONFIG_PRIVATEENDPOINT</tt>)
 		 */
-		public String privateEndpoint = "https://owrrm.wlan.local:17006";
+		public String privateEndpoint = "http://owrrm.wlan.local:16789";  // see ApiServerParams.httpPort
 
 		/**
 		 * Public endpoint for the RRM service
@@ -296,7 +296,7 @@ public class RRMConfig {
 			 * Enable HTTP basic auth?
 			 * (<tt>APISERVERPARAMS_USEBASICAUTH</tt>)
 			 */
-			public boolean useBasicAuth = true;
+			public boolean useBasicAuth = false;
 
 			/**
 			 * The HTTP basic auth username (if enabled)
@@ -335,7 +335,7 @@ public class RRMConfig {
 			 * Sync interval, in ms, for owprov venue information etc.
 			 * (<tt>PROVMONITORPARAMS_SYNCINTERVALMS</tt>)
 			 */
-			 public int syncIntervalMs = 300000;
+			public int syncIntervalMs = 300000;
 		}
 
 		/** ProvMonitor parameters. */
