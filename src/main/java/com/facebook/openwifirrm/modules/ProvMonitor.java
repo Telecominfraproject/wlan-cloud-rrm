@@ -92,9 +92,14 @@ public class ProvMonitor implements Runnable {
 
 	/** Run single iteration of application logic. */
 	private void runImpl() {
-		if (!client.isProvInitialized()) {
+		while (!client.isProvInitialized()) {
 			logger.trace("Waiting for uCentral client");
-			return;
+			try {
+				Thread.sleep(2000);
+			} catch (InterruptedException e) {
+				Thread.currentThread().interrupt();
+				return;
+			}
 		}
 
 		// Fetch data from owprov

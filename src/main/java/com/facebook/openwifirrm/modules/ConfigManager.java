@@ -153,8 +153,14 @@ public class ConfigManager implements Runnable {
 	private void runImpl() {
 		if (!client.isInitialized()) {
 			logger.trace("Waiting for ucentral client");
-			return;
+			try {
+				Thread.sleep(2000);
+			} catch (InterruptedException e) {
+				Thread.currentThread().interrupt();
+				return;
+			}
 		}
+
 		// Fetch device list
 		List<DeviceWithStatus> devices = client.getDevices();
 		if (devices == null) {

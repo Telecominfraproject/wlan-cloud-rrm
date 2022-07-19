@@ -319,7 +319,7 @@ public class UCentralClient {
 			}
 		} else {
 			req
-				.header("X-API-KEY", this.getApiKey(OWGW_SERVICE))
+				.header("X-API-KEY", this.getApiKey(service))
 				.header("X-INTERNAL-NAME", this.rrmEndpoint);
 		}
 		if (parameters != null) {
@@ -363,7 +363,7 @@ public class UCentralClient {
 			}
 		} else {
 			req
-				.header("X-API-KEY", this.getApiKey(OWGW_SERVICE))
+				.header("X-API-KEY", this.getApiKey(service))
 				.header("X-INTERNAL-NAME", this.rrmEndpoint);
 		}
 		if (body != null) {
