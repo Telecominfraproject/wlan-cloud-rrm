@@ -22,6 +22,7 @@ import com.facebook.openwifirrm.mysql.DatabaseManager;
 import com.facebook.openwifirrm.ucentral.UCentralClient;
 import com.facebook.openwifirrm.ucentral.UCentralKafkaConsumer;
 import com.facebook.openwifirrm.ucentral.UCentralKafkaProducer;
+import com.facebook.openwifirrm.ucentral.UCentralUtils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -153,9 +154,12 @@ public class Launcher implements Callable<Integer> {
 				: DEFAULT_DEVICE_LAYERED_CONFIG_FILE
 		);
 
+		String serviceKey =
+			UCentralUtils.generateServiceKey(config.serviceConfig);
+
 		// Instantiate clients
 		UCentralClient client = new UCentralClient(
-			config.serviceConfig.privateEndpoint,
+			config.serviceConfig.publicEndpoint,
 			config.uCentralConfig.usePublicEndpoints,
 			config.uCentralConfig.uCentralSecPublicEndpoint,
 			config.uCentralConfig.username,
@@ -184,6 +188,7 @@ public class Launcher implements Callable<Integer> {
 				config.serviceConfig.name,
 				RRM.VERSION,
 				config.serviceConfig.id,
+				serviceKey,
 				config.serviceConfig.privateEndpoint,
 				config.serviceConfig.publicEndpoint
 			);

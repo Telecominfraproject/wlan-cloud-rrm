@@ -8,6 +8,8 @@
 
 package com.facebook.openwifirrm.ucentral;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -19,6 +21,8 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.facebook.openwifirrm.RRMConfig;
+import com.facebook.openwifirrm.Utils;
 import com.facebook.openwifirrm.ucentral.models.State;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -301,5 +305,18 @@ public class UCentralUtils {
 		    }
 		}
 		return bssidMap;
+	}
+
+	/** Generate the RRM service key. */
+	public static String generateServiceKey(RRMConfig.ServiceConfig serviceConfig) {
+		try {
+			MessageDigest sha256 = MessageDigest.getInstance("SHA-256");
+			sha256.update(serviceConfig.publicEndpoint.getBytes());
+			sha256.update(serviceConfig.privateEndpoint.getBytes());
+			return Utils.bytesToHex(sha256.digest());
+		} catch (NoSuchAlgorithmException e) {
+			logger.error("Unable to generate service key", e);
+			return "";
+		}
 	}
 }

@@ -309,6 +309,13 @@ public class RRMConfig {
 			 * (<tt>APISERVERPARAMS_BASICAUTHPASSWORD</tt>)
 			 */
 			public String basicAuthPassword = "openwifi";
+
+			/**
+			 * Enable OpenWiFi authentication via tokens (external) and API keys
+			 * (internal)
+			 * (<tt>APISERVERPARAMS_USEOPENWIFIAUTH</tt>)
+			 */
+			public boolean useOpenWifiAuth = false;
 		}
 
 		/** ApiServer parameters. */
@@ -473,6 +480,9 @@ public class RRMConfig {
 		}
 		if ((v = env.get("APISERVERPARAMS_BASICAUTHPASSWORD")) != null) {
 			apiServerParams.basicAuthPassword = v;
+		}
+		if ((v = env.get("APISERVERPARAMS_USEOPENWIFIAUTH")) != null) {
+			apiServerParams.useOpenWifiAuth = Boolean.parseBoolean(v);
 		}
 		ModuleConfig.ProvMonitorParams provManagerParams =
 			config.moduleConfig.provMonitorParams;
