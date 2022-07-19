@@ -151,7 +151,7 @@ public class ConfigManager implements Runnable {
 
 	/** Run single iteration of application logic. */
 	private void runImpl() {
-		if (!client.isInitialized()) {
+		while (!client.isInitialized()) {
 			logger.trace("Waiting for ucentral client");
 			try {
 				Thread.sleep(2000);
