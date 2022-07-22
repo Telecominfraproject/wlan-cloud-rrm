@@ -79,15 +79,6 @@ public class DeviceConfig {
 		config.enableRRM = true;
 		config.enableConfig = true;
 		config.enableWifiScan = true;
-		config.boundary = null;
-		config.location = null;
-		config.allowedChannels = null;
-		config.allowedChannelWidths = null;
-		config.autoChannels = null;
-		config.userChannels = null;
-		config.allowedTxPowers = null;
-		config.autoTxPowers = null;
-		config.userTxPowers = null;
 
 		return config;
 	}
