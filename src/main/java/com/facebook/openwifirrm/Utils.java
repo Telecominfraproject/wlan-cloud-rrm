@@ -33,8 +33,7 @@ public class Utils {
 
 	/** Read a file to a UTF-8 string. */
 	public static String readFile(File f) throws IOException {
-		byte[] b = Files.readAllBytes(f.toPath());
-		return new String(b, StandardCharsets.UTF_8);
+		return Files.readString(f.toPath());
 	}
 
 	/** Write a string to a file. */
