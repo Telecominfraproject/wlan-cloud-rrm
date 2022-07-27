@@ -8,6 +8,8 @@
 
 package com.facebook.openwifirrm.modules;
 
+import java.time.Instant;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +18,7 @@ import java.util.TreeSet;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -338,6 +341,57 @@ public class Modeler implements Runnable {
 				String.join(", ", wifiScanUpdates)
 			);
 		}
+	}
+
+	/**
+	 * NOTE: if a BSSID does not have a non-obsolete entry, it will be returned
+	 * (i.e., it will not be a key in the returned map).
+	 */
+	public Map<String, WifiScanEntry> getAggregatedWifiScans(long obsoletion_period) {
+		Map<String, WifiScanEntry> aggregatedWifiScans = new HashMap<>();
+		for (String bssid : dataModel.latestWifiScans.keySet()) {
+			// flatten the wifiscan entries and sort in reverse chronological order
+			List<List<WifiScanEntry>> scans = dataModel.latestWifiScans.get(bssid);
+			List<WifiScanEntry> mostRecentToOldest = scans.stream().flatMap(list -> list.stream())
+					.sorted((entry1, entry2) -> {
+						return -Long.signum(entry1.tsf - entry2.tsf);
+					}).collect(Collectors.toUnmodifiableList());
+
+			/*
+			 * For a given BSSID, discard the obsolete entries. Then,consider the most
+			 * recent entry. Take its ht_oper and vht_oper. Discard earlier entries with a
+			 * different ht_oper or a different vht_oper. For earlier entries with the same
+			 * ht_oper and vht_oper, take the average signal value.
+			 */
+			long now = Instant.now().getEpochSecond();
+			String newest_ht_oper = null;
+			String newest_vht_oper = null;
+			double averagedSignal = 0.0;
+			int count = 0;
+			for (WifiScanEntry entry : mostRecentToOldest) {
+				if (now - entry.tsf >= obsoletion_period) {
+					// discard obsolete entries
+					break;
+				}
+				if (newest_ht_oper == null || newest_vht_oper == null) {
+					// start with the most recent entry
+					newest_ht_oper = entry.ht_oper;
+					newest_vht_oper = entry.vht_oper;
+					aggregatedWifiScans.put(bssid, entry);
+					averagedSignal = entry.signal;
+					count++;
+					continue;
+				}
+				if (!entry.ht_oper.equals(newest_ht_oper) || !entry.vht_oper.equals(newest_vht_oper)) {
+					// discard older entries with different ht_oper or different vht_oper
+					continue;
+				}
+				// average signal value from older entries with the same ht_oper and vht_oper
+				averagedSignal = (count / (count + 1)) * averagedSignal + (entry.signal / (count + 1));
+			}
+			aggregatedWifiScans.get(bssid).signal = (int) Math.round(averagedSignal);
+		}
+		return aggregatedWifiScans;
 	}
 
 	/**
