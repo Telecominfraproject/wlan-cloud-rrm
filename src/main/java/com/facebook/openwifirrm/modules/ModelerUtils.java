@@ -254,7 +254,8 @@ public class ModelerUtils {
 					continue;
 				}
 				// average signal value from older entries with the same ht_oper and vht_oper
-				averagedSignal = (count / (count + 1)) * averagedSignal + (entry.signal / (count + 1));
+				averagedSignal = ((double) count / (count + 1)) * averagedSignal
+						+ ((double) entry.signal / (count + 1));
 				count++;
 			}
 			aggregatedWifiScans.get(bssid).signal = (int) Math.round(averagedSignal);
