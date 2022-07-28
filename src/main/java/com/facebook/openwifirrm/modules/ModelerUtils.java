@@ -209,11 +209,11 @@ public class ModelerUtils {
 		}
 	}
 
-	/**
-	 * NOTE: if a BSSID does not have a non-obsolete entry, it will be returned
-	 * (i.e., it will not be a key in the returned map).
-	 */
 	public Map<String, WifiScanEntry> getAggregatedWifiScans(Modeler.DataModel dataModel, long obsoletion_period) {
+		/*
+		 * NOTE: if a BSSID does not have a non-obsolete entry, it will be returned
+		 * (i.e., it will not be a key in the returned map).
+		 */
 		Map<String, WifiScanEntry> aggregatedWifiScans = new HashMap<>();
 		for (Map.Entry<String, List<List<WifiScanEntry>>> mapEntry : dataModel.latestWifiScans.entrySet()) {
 			// Flatten the wifiscan entries and sort in reverse chronological order
