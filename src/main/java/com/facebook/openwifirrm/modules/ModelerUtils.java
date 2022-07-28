@@ -231,8 +231,8 @@ public class ModelerUtils {
 			 */
 			String bssid = mapEntry.getKey();
 			long now = Instant.now().getEpochSecond();
-			String newest_ht_oper = null;
-			String newest_vht_oper = null;
+			String newestHtOper = null;
+			String newestVhtOper = null;
 			double averagedSignal = 0.0;
 			int count = 0;
 			for (WifiScanEntry entry : mostRecentToOldest) {
@@ -240,16 +240,16 @@ public class ModelerUtils {
 					// discard obsolete entries
 					break;
 				}
-				if (newest_ht_oper == null || newest_vht_oper == null) {
+				if (newestHtOper == null || newestVhtOper == null) {
 					// start with the most recent entry
-					newest_ht_oper = entry.ht_oper;
-					newest_vht_oper = entry.vht_oper;
+					newestHtOper = entry.ht_oper;
+					newestVhtOper = entry.vht_oper;
 					aggregatedWifiScans.put(bssid, entry);
 					averagedSignal = entry.signal;
 					count++;
 					continue;
 				}
-				if (!entry.ht_oper.equals(newest_ht_oper) || !entry.vht_oper.equals(newest_vht_oper)) {
+				if (!entry.ht_oper.equals(newestHtOper) || !entry.vht_oper.equals(newestVhtOper)) {
 					// discard older entries with different ht_oper or different vht_oper
 					continue;
 				}
