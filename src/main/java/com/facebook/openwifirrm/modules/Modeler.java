@@ -349,12 +349,12 @@ public class Modeler implements Runnable {
 	 */
 	public Map<String, WifiScanEntry> getAggregatedWifiScans(long obsoletion_period) {
 		Map<String, WifiScanEntry> aggregatedWifiScans = new HashMap<>();
-		for (String bssid : dataModel.latestWifiScans.keySet()) {
-			// flatten the wifiscan entries and sort in reverse chronological order
-			List<List<WifiScanEntry>> scans = dataModel.latestWifiScans.get(bssid);
+		for (Map.Entry<String, List<List<WifiScanEntry>>> mapEntry : dataModel.latestWifiScans.entrySet()) {
+			// Flatten the wifiscan entries and sort in reverse chronological order
+			List<List<WifiScanEntry>> scans = mapEntry.getValue();
 			List<WifiScanEntry> mostRecentToOldest = scans.stream().flatMap(list -> list.stream())
 					.sorted((entry1, entry2) -> {
-						return -Long.signum(entry1.tsf - entry2.tsf);
+						return -Long.compare(entry1.tsf, entry2.tsf);
 					}).collect(Collectors.toUnmodifiableList());
 
 			/*
@@ -363,6 +363,7 @@ public class Modeler implements Runnable {
 			 * different ht_oper or a different vht_oper. For earlier entries with the same
 			 * ht_oper and vht_oper, take the average signal value.
 			 */
+			String bssid = mapEntry.getKey();
 			long now = Instant.now().getEpochSecond();
 			String newest_ht_oper = null;
 			String newest_vht_oper = null;
@@ -388,6 +389,7 @@ public class Modeler implements Runnable {
 				}
 				// average signal value from older entries with the same ht_oper and vht_oper
 				averagedSignal = (count / (count + 1)) * averagedSignal + (entry.signal / (count + 1));
+				count++;
 			}
 			aggregatedWifiScans.get(bssid).signal = (int) Math.round(averagedSignal);
 		}
