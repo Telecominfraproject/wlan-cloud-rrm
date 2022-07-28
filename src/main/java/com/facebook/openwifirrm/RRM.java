@@ -113,7 +113,8 @@ public class RRM {
 			UCentralUtils.generateServiceKey(config.serviceConfig),
 			deviceDataManager,
 			configManager,
-			modeler
+			modeler,
+			client
 		);
 		ProvMonitor provMonitor =
 			config.moduleConfig.provMonitorParams.useVenues

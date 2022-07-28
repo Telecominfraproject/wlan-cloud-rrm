@@ -21,6 +21,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import com.facebook.openwifirrm.ucentral.UCentralClient;
 import org.reflections.Reflections;
 import org.reflections.util.ConfigurationBuilder;
 import org.slf4j.Logger;
@@ -97,6 +98,9 @@ public class ApiServer implements Runnable {
 	/** The Modeler module instance. */
 	private final Modeler modeler;
 
+	/** The uCentral Client instance. */
+	private final UCentralClient client;
+
 	/** The Gson instance. */
 	private final Gson gson = new Gson();
 
@@ -112,13 +116,15 @@ public class ApiServer implements Runnable {
 		String serviceKey,
 		DeviceDataManager deviceDataManager,
 		ConfigManager configManager,
-		Modeler modeler
+		Modeler modeler,
+		UCentralClient client
 	) {
 		this.params = params;
 		this.serviceKey = serviceKey;
 		this.deviceDataManager = deviceDataManager;
 		this.configManager = configManager;
 		this.modeler = modeler;
+		this.client = client;
 	}
 
 	@Override
@@ -246,10 +252,9 @@ public class ApiServer implements Runnable {
 			if (authHeader != null && authHeader.startsWith(AUTH_PREFIX)) {
 				String token = authHeader.substring(AUTH_PREFIX.length());
 				if (!token.isEmpty()) {
-					// TODO send token to uCentralSec (and cache reply)
-					// - /api/v1/validateToken
-					// - /api/v1/validateSubToken
-					boolean valid = true;
+					// The below only checks /api/v1/validateToken and caches it as necessary.
+					// TODO - /api/v1/validateSubToken still has to be implemented.
+					boolean valid = this.client.validateToken(token);
 					if (valid) {
 						// auth success
 						return true;

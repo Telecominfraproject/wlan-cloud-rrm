@@ -8,10 +8,12 @@
 
 package com.facebook.openwifirrm.ucentral;
 
+import java.time.Instant;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ThreadLocalRandom;
 
 import org.json.JSONArray;
@@ -20,7 +22,6 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.facebook.openwifirrm.RRMConfig.UCentralConfig.UCentralSocketParams;
 import com.facebook.openwifirrm.ucentral.gw.models.CommandInfo;
 import com.facebook.openwifirrm.ucentral.gw.models.DeviceCapabilities;
 import com.facebook.openwifirrm.ucentral.gw.models.DeviceConfigureRequest;
@@ -29,7 +30,9 @@ import com.facebook.openwifirrm.ucentral.gw.models.DeviceWithStatus;
 import com.facebook.openwifirrm.ucentral.gw.models.ServiceEvent;
 import com.facebook.openwifirrm.ucentral.gw.models.StatisticsRecords;
 import com.facebook.openwifirrm.ucentral.gw.models.SystemInfoResults;
+import com.facebook.openwifirrm.ucentral.gw.models.TokenValidationResult;
 import com.facebook.openwifirrm.ucentral.gw.models.WifiScanRequest;
+import com.facebook.openwifirrm.RRMConfig.UCentralConfig.UCentralSocketParams;
 import com.facebook.openwifirrm.ucentral.prov.models.EntityList;
 import com.facebook.openwifirrm.ucentral.prov.models.InventoryTagList;
 import com.facebook.openwifirrm.ucentral.prov.models.SerialNumberList;
@@ -130,6 +133,12 @@ public class UCentralClient {
 	 * endpoints.
 	 */
 	private String accessToken;
+
+	/**
+	 * The cache for token expirations
+	 * TODO - use an evicting cache
+	 */
+	private final Map<String, Long> tokenCache = new ConcurrentHashMap<>();
 
 	/**
 	 * Constructor.
@@ -612,6 +621,39 @@ public class UCentralClient {
 				);
 			}
 		}
+	}
+
+	/**
+	 * Validate the token is still valid.
+	 */
+	public boolean validateToken(String token) {
+		Long expiry = tokenCache.get(token);
+		if (expiry == null) {
+			HttpResponse<String> response =
+					httpGet("validateToken", OWSEC_SERVICE,
+							Collections.singletonMap("token", token));
+
+			if (!response.isSuccess()) {
+				logger.error("Error: {}", response.getBody());
+				return false;
+			}
+
+			TokenValidationResult result;
+			try {
+				result = gson.fromJson(response.getBody(), TokenValidationResult.class);
+			} catch (JsonSyntaxException e) {
+				String errMsg = String.format(
+						"Failed to deserialize to TokenValidationResult: %s", response.getBody()
+				);
+				logger.error(errMsg, e);
+				return false;
+			}
+
+			expiry = result.tokenInfo.created + result.tokenInfo.expires_in;
+			tokenCache.put(token, expiry);
+		}
+
+		return expiry > Instant.now().getEpochSecond();
 	}
 
 	/**
