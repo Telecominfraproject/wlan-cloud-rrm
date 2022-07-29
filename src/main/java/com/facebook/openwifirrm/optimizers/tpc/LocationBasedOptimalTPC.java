@@ -45,9 +45,10 @@ public class LocationBasedOptimalTPC extends TPC {
 	}
 
 	/**
-	 * Iterative way to generate permutations with repetitions
+	 * Iterative way to generate permutations with repetitions.
+	 *
 	 * @param choices all the choices to be considered
-	 * @param n the number of repetitions
+	 * @param n       the number of items in a permutation
 	 * @return the list of all the combinations
 	 */
 	protected static List<List<Integer>> getPermutationsWithRepetitions(
