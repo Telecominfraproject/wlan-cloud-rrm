@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
 import com.facebook.openwifirrm.RRMConfig;
 import com.facebook.openwifirrm.Utils;
 import com.facebook.openwifirrm.ucentral.models.State;
+import com.facebook.openwifirrm.ucentral.models.WifiScanEntry;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -41,40 +42,33 @@ public class UCentralUtils {
 	// This class should not be instantiated.
 	private UCentralUtils() {}
 
-	/** Represents a single entry in wifi scan results. */
-	public static class WifiScanEntry {
-		public int channel;
-		public long last_seen;
-		/** Signal strength measured in dBm */
-		public int signal;
-		/** BSSID is the MAC address of the device */
-		public String bssid;
-		public String ssid;
-		public long tsf;
-		/** High throughput operator */
-		public String ht_oper;
-		/** Very high throughput operator */
-		public String vht_oper;
-		public int capability;
-		public int frequency;
-		public JsonArray ies;
+	/**
+	 * Wraps {@code WifiScanEntry} to include the time, because it is unclear if the
+	 * {@code tsf} field in {@code WifiScanEntry} is always present and is relative
+	 * to a constant reference time
+	 *
+	 * @author rockymandayam
+	 *
+	 */
+	public static class WifiScanEntryWrapper {
+		/** Unix time in milliseconds (ms) since Jan 1, 1970 */
+		public final long timeMs;
+		public WifiScanEntry entry;
 
-		/** Default Constructor. */
-		public WifiScanEntry() {}
+		public WifiScanEntryWrapper(long time) {
+			this.timeMs = time;
+			this.entry = new WifiScanEntry();
+		}
 
-		/** Copy Constructor. */
-		public WifiScanEntry(WifiScanEntry o) {
-			this.channel = o.channel;
-			this.last_seen = o.last_seen;
-			this.signal = o.signal;
-			this.bssid = o.bssid;
-			this.ssid = o.ssid;
-			this.tsf = o.tsf;
-			this.ht_oper = o.ht_oper;
-			this.vht_oper = o.vht_oper;
-			this.capability = o.capability;
-			this.frequency = o.frequency;
-			this.ies = o.ies;
+		public WifiScanEntryWrapper(long time, WifiScanEntry entry) {
+			this.timeMs = time;
+			this.entry = entry;
+		}
+
+		/** Copy constructor. */
+		public WifiScanEntryWrapper(WifiScanEntryWrapper o) {
+			this.timeMs = o.timeMs;
+			this.entry = new WifiScanEntry(o.entry);
 		}
 	}
 
@@ -83,14 +77,15 @@ public class UCentralUtils {
 	 *
 	 * Returns null if any parsing/deserialization error occurred.
 	 */
-	public static List<WifiScanEntry> parseWifiScanEntries(JsonObject result) {
-		List<WifiScanEntry> entries = new ArrayList<>();
+	public static List<WifiScanEntryWrapper> parseWifiScanEntries(JsonObject result) {
+		List<WifiScanEntryWrapper> entries = new ArrayList<>();
 		try {
 			JsonArray scanInfo = result
 				.getAsJsonObject("status")
 				.getAsJsonArray("scan");
 			for (JsonElement e : scanInfo) {
-				entries.add(gson.fromJson(e, WifiScanEntry.class));
+				WifiScanEntry entry = gson.fromJson(e, WifiScanEntry.class);
+				entries.add(new WifiScanEntryWrapper(System.currentTimeMillis(), entry));
 			}
 		} catch (Exception e) {
 			return null;

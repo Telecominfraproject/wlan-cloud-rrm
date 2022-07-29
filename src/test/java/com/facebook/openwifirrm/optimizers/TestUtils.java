@@ -17,7 +17,7 @@ import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 import com.facebook.openwifirrm.DeviceTopology;
-import com.facebook.openwifirrm.ucentral.UCentralUtils.WifiScanEntry;
+import com.facebook.openwifirrm.ucentral.UCentralUtils.WifiScanEntryWrapper;
 import com.facebook.openwifirrm.ucentral.models.State;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -66,15 +66,15 @@ public class TestUtils {
 	}
 
 	/** Create a wifi scan entry with the given channel. */
-	public static WifiScanEntry createWifiScanEntry(int channel) {
-		WifiScanEntry entry = new WifiScanEntry();
-		entry.channel = channel;
-		entry.signal = -60;
+	public static WifiScanEntryWrapper createWifiScanEntry(int channel) {
+		WifiScanEntryWrapper entry = new WifiScanEntryWrapper(System.currentTimeMillis());
+		entry.entry.channel = channel;
+		entry.entry.signal = -60;
 		return entry;
 	}
 
 	/** Create a list of wifi scan entries with the given channels. */
-	public static List<WifiScanEntry> createWifiScanList(List<Integer> channels) {
+	public static List<WifiScanEntryWrapper> createWifiScanList(List<Integer> channels) {
 		return channels
 			.stream()
 			.map(c -> createWifiScanEntry(c))
@@ -82,16 +82,16 @@ public class TestUtils {
 	}
 
 	/** Create a wifi scan entry with the given BSSID and RSSI. */
-	public static WifiScanEntry createWifiScanEntryWithBssid(String bssid, Integer rssi) {
-		WifiScanEntry entry = new WifiScanEntry();
-		entry.channel = 36;
-		entry.bssid = bssid;
-		entry.signal = rssi;
+	public static WifiScanEntryWrapper createWifiScanEntryWithBssid(String bssid, Integer rssi) {
+		WifiScanEntryWrapper entry = new WifiScanEntryWrapper(System.currentTimeMillis());
+		entry.entry.channel = 36;
+		entry.entry.bssid = bssid;
+		entry.entry.signal = rssi;
 		return entry;
 	}
 
 	/** Create a list of wifi scan entries with the BSSIDs and RSSIs. */
-	public static List<WifiScanEntry> createWifiScanListWithBssid(Map<String, Integer> bssidToRssi) {
+	public static List<WifiScanEntryWrapper> createWifiScanListWithBssid(Map<String, Integer> bssidToRssi) {
 		Set<String> bssidSet = bssidToRssi.keySet();
 		return bssidSet
 			.stream()
@@ -103,16 +103,16 @@ public class TestUtils {
 	 * Create a wifi scan entry with the given channel
 	 * and channel width info (in the format of HT operation and VHT operation).
 	 */
-	public static WifiScanEntry createWifiScanEntryWithWidth(
+	public static WifiScanEntryWrapper createWifiScanEntryWithWidth(
 		int channel,
 		String htOper,
 		String vhtOper
 	) {
-		WifiScanEntry entry = new WifiScanEntry();
-		entry.channel = channel;
-		entry.signal = -60;
-		entry.ht_oper = htOper;
-		entry.vht_oper = vhtOper;
+		WifiScanEntryWrapper entry = new WifiScanEntryWrapper(System.currentTimeMillis());
+		entry.entry.channel = channel;
+		entry.entry.signal = -60;
+		entry.entry.ht_oper = htOper;
+		entry.entry.vht_oper = vhtOper;
 		return entry;
 	}
 
@@ -120,14 +120,14 @@ public class TestUtils {
 	 * Create a list of wifi scan entries with the given channels
 	 * and channel width info (in the format of HT operation and VHT operation).
 	 */
-	public static List<WifiScanEntry> createWifiScanListWithWidth(
+	public static List<WifiScanEntryWrapper> createWifiScanListWithWidth(
 		List<Integer> channels,
 		List<String> htOper,
 		List<String> vhtOper
 	) {
-		List<WifiScanEntry> wifiScanResults = new ArrayList<>();
+		List<WifiScanEntryWrapper> wifiScanResults = new ArrayList<>();
 		for (int i = 0; i < channels.size(); i++) {
-			WifiScanEntry wifiScanResult = createWifiScanEntryWithWidth(
+			WifiScanEntryWrapper wifiScanResult = createWifiScanEntryWithWidth(
 				channels.get(i),
 				((i >= htOper.size()) ? null : htOper.get(i)),
 				((i >= vhtOper.size()) ? null : vhtOper.get(i))
@@ -138,21 +138,21 @@ public class TestUtils {
 	}
 
 	/** Create a wifi scan entry with the given channel and bssid. */
-	public static WifiScanEntry createWifiScanEntryWithBssid(
+	public static WifiScanEntryWrapper createWifiScanEntryWithBssid(
 		int channel, String bssid
 	) {
-		WifiScanEntry entry = new WifiScanEntry();
-		entry.channel = channel;
-		entry.bssid = bssid;
-		entry.signal = -60;
+		WifiScanEntryWrapper entry = new WifiScanEntryWrapper(System.currentTimeMillis());
+		entry.entry.channel = channel;
+		entry.entry.bssid = bssid;
+		entry.entry.signal = -60;
 		return entry;
 	}
 
 	/** Create a list of wifi scan entries with the given channels and bssids. */
-	public static List<WifiScanEntry> createWifiScanList(
+	public static List<WifiScanEntryWrapper> createWifiScanList(
 		List<Integer> channels, List<String> bssids
 	) {
-		List<WifiScanEntry> wifiScanList = new ArrayList<>();
+		List<WifiScanEntryWrapper> wifiScanList = new ArrayList<>();
 		for (
 			int chnIndex = 0;
 			chnIndex < channels.size();

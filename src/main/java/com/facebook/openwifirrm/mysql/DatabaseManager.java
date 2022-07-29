@@ -27,7 +27,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.facebook.openwifirrm.Utils;
-import com.facebook.openwifirrm.ucentral.UCentralUtils.WifiScanEntry;
+import com.facebook.openwifirrm.ucentral.UCentralUtils.WifiScanEntryWrapper;
 import com.facebook.openwifirrm.ucentral.models.State;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -431,7 +431,7 @@ public class DatabaseManager {
 
 	/** Insert wifi scan results into the database. */
 	public void addWifiScan(
-		String serialNumber, long ts, List<WifiScanEntry> entries
+		String serialNumber, long ts, List<WifiScanEntryWrapper> entries
 	) throws SQLException {
 		if (ds == null) {
 			return;
@@ -471,17 +471,17 @@ public class DatabaseManager {
 				  "`scan_id`, `bssid`, `ssid`, `lastseen`, `rssi`, `channel`" +
 				") VALUES (?, ?, ?, ?, ?, ?)"
 			);
-			for (WifiScanEntry entry : entries) {
+			for (WifiScanEntryWrapper entry : entries) {
 				long bssid = 0;
 				try {
-					bssid = Utils.macToLong(entry.bssid);
+					bssid = Utils.macToLong(entry.entry.bssid);
 				} catch (IllegalArgumentException e) { /* ignore */ }
 				stmt.setLong(1, scanId);
 				stmt.setLong(2, bssid);
-				stmt.setString(3, entry.ssid);
-				stmt.setLong(4, entry.last_seen);
-				stmt.setInt(5, entry.signal);
-				stmt.setInt(6, entry.channel);
+				stmt.setString(3, entry.entry.ssid);
+				stmt.setLong(4, entry.entry.last_seen);
+				stmt.setInt(5, entry.entry.signal);
+				stmt.setInt(6, entry.entry.channel);
 				stmt.addBatch();
 			}
 			stmt.executeBatch();
@@ -499,7 +499,7 @@ public class DatabaseManager {
 	 * Return up to the N latest wifiscan results for the given device as a map
 	 * of timestamp to scan results.
 	 */
-	public Map<Long, List<WifiScanEntry>> getLatestWifiScans(
+	public Map<Long, List<WifiScanEntryWrapper>> getLatestWifiScans(
 		String serialNumber, int count
 	) throws SQLException {
 		if (serialNumber == null || serialNumber.isEmpty()) {
@@ -513,7 +513,7 @@ public class DatabaseManager {
 			return null;
 		}
 
-		Map<Long, List<WifiScanEntry>> ret = new TreeMap<>();
+		Map<Long, List<WifiScanEntryWrapper>> ret = new TreeMap<>();
 		try (Connection conn = getConnection()) {
 			// Fetch latest N scan IDs
 			Map<Long, Long> scanIdToTs = new HashMap<>();
@@ -547,13 +547,13 @@ public class DatabaseManager {
 					while (rs.next()) {
 						long scanId = rs.getLong("scan_id");
 
-						WifiScanEntry entry = new WifiScanEntry();
-						entry.channel = rs.getInt("channel");
-						entry.last_seen = rs.getLong("lastseen");
-						entry.signal = rs.getInt("rssi");
-						entry.bssid = Utils.longToMac(rs.getLong("bssid"));
-						entry.ssid = rs.getString("ssid");
-						entry.tsf = scanIdToTs.getOrDefault(scanId, 0L);
+						WifiScanEntryWrapper entry = new WifiScanEntryWrapper(System.currentTimeMillis());
+						entry.entry.channel = rs.getInt("channel");
+						entry.entry.last_seen = rs.getLong("lastseen");
+						entry.entry.signal = rs.getInt("rssi");
+						entry.entry.bssid = Utils.longToMac(rs.getLong("bssid"));
+						entry.entry.ssid = rs.getString("ssid");
+						entry.entry.tsf = scanIdToTs.getOrDefault(scanId, 0L);
 
 						ret.computeIfAbsent(scanId, i -> new ArrayList<>())
 							.add(entry);

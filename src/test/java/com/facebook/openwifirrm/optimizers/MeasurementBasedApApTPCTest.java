@@ -25,7 +25,7 @@ import com.facebook.openwifirrm.DeviceConfig;
 import com.facebook.openwifirrm.DeviceDataManager;
 import com.facebook.openwifirrm.modules.Modeler.DataModel;
 import com.facebook.openwifirrm.ucentral.models.State;
-import com.facebook.openwifirrm.ucentral.UCentralUtils.WifiScanEntry;
+import com.facebook.openwifirrm.ucentral.UCentralUtils.WifiScanEntryWrapper;
 import com.google.gson.JsonArray;
 
 @TestMethodOrder(OrderAnnotation.class)
@@ -93,29 +93,29 @@ public class MeasurementBasedApApTPCTest {
 		return model;
 	}
 
-	private static Map<String, List<List<WifiScanEntry>>> createLatestWifiScansA() {
+	private static Map<String, List<List<WifiScanEntryWrapper>>> createLatestWifiScansA() {
 		Map<String, Integer> rssiFromA = Map.ofEntries(
 			Map.entry(BSSID_Z, -91),
 			Map.entry(BSSID_B, -81),
 			Map.entry(BSSID_C, -61)
 		);
-		List<WifiScanEntry> wifiScanA = TestUtils.createWifiScanListWithBssid(rssiFromA);
+		List<WifiScanEntryWrapper> wifiScanA = TestUtils.createWifiScanListWithBssid(rssiFromA);
 
 		Map<String, Integer> rssiFromB = Map.ofEntries(
 			Map.entry(BSSID_Z, -92),
 			Map.entry(BSSID_A, -72),
 			Map.entry(BSSID_C, -62)
 		);
-		List<WifiScanEntry> wifiScanB = TestUtils.createWifiScanListWithBssid(rssiFromB);
+		List<WifiScanEntryWrapper> wifiScanB = TestUtils.createWifiScanListWithBssid(rssiFromB);
 
 		Map<String, Integer> rssiFromC = Map.ofEntries(
 			Map.entry(BSSID_Z, -93),
 			Map.entry(BSSID_A, -73),
 			Map.entry(BSSID_B, -83)
 		);
-		List<WifiScanEntry> wifiScanC = TestUtils.createWifiScanListWithBssid(rssiFromC);
+		List<WifiScanEntryWrapper> wifiScanC = TestUtils.createWifiScanListWithBssid(rssiFromC);
 
-		Map<String, List<List<WifiScanEntry>>> latestWifiScans = new HashMap<>();
+		Map<String, List<List<WifiScanEntryWrapper>>> latestWifiScans = new HashMap<>();
 		latestWifiScans.put(DEVICE_A, List.of(wifiScanA));
 		latestWifiScans.put(DEVICE_B, List.of(wifiScanB));
 		latestWifiScans.put(DEVICE_C, List.of(wifiScanC));
@@ -123,26 +123,26 @@ public class MeasurementBasedApApTPCTest {
 		return latestWifiScans;
 	}
 
-	private static Map<String, List<List<WifiScanEntry>>> createLatestWifiScansB() {
+	private static Map<String, List<List<WifiScanEntryWrapper>>> createLatestWifiScansB() {
 		Map<String, Integer> rssiFromA = Map.ofEntries(
 			Map.entry(BSSID_B, -65),
 			Map.entry(BSSID_C, -23)
 		);
-		List<WifiScanEntry> wifiScanA = TestUtils.createWifiScanListWithBssid(rssiFromA);
+		List<WifiScanEntryWrapper> wifiScanA = TestUtils.createWifiScanListWithBssid(rssiFromA);
 
 		Map<String, Integer> rssiFromB = Map.ofEntries(
 			Map.entry(BSSID_A, -52),
 			Map.entry(BSSID_C, -60)
 		);
-		List<WifiScanEntry> wifiScanB = TestUtils.createWifiScanListWithBssid(rssiFromB);
+		List<WifiScanEntryWrapper> wifiScanB = TestUtils.createWifiScanListWithBssid(rssiFromB);
 
 		Map<String, Integer> rssiFromC = Map.ofEntries(
 			Map.entry(BSSID_A, -20),
 			Map.entry(BSSID_B, -63)
 		);
-		List<WifiScanEntry> wifiScanC = TestUtils.createWifiScanListWithBssid(rssiFromC);
+		List<WifiScanEntryWrapper> wifiScanC = TestUtils.createWifiScanListWithBssid(rssiFromC);
 
-		Map<String, List<List<WifiScanEntry>>> latestWifiScans = new HashMap<>();
+		Map<String, List<List<WifiScanEntryWrapper>>> latestWifiScans = new HashMap<>();
 		latestWifiScans.put(DEVICE_A, List.of(wifiScanA));
 		latestWifiScans.put(DEVICE_B, List.of(wifiScanB));
 		latestWifiScans.put(DEVICE_C, List.of(wifiScanC));
@@ -179,7 +179,7 @@ public class MeasurementBasedApApTPCTest {
 	void test_buildRssiMap() throws Exception {
 		// This example includes three APs, and one AP that is unmanaged
 		Set<String> bssidSet = Set.of(BSSID_A, BSSID_B, BSSID_C);
-		Map<String, List<List<WifiScanEntry>>> latestWifiScans = createLatestWifiScansA();
+		Map<String, List<List<WifiScanEntryWrapper>>> latestWifiScans = createLatestWifiScansA();
 
 		Map<String, List<Integer>> rssiMap = MeasurementBasedApApTPC.buildRssiMap(bssidSet, latestWifiScans);
 
@@ -269,12 +269,12 @@ public class MeasurementBasedApApTPCTest {
 
 		// Tests an example where wifiscans are missing some data
 		Map<String, Integer> rssiFromA = Map.ofEntries(Map.entry(BSSID_B, -38));
-		List<WifiScanEntry> wifiScanA = TestUtils.createWifiScanListWithBssid(rssiFromA);
+		List<WifiScanEntryWrapper> wifiScanA = TestUtils.createWifiScanListWithBssid(rssiFromA);
 
 		Map<String, Integer> rssiFromB = Map.ofEntries(Map.entry(BSSID_A, -39));
-		List<WifiScanEntry> wifiScanB = TestUtils.createWifiScanListWithBssid(rssiFromB);
+		List<WifiScanEntryWrapper> wifiScanB = TestUtils.createWifiScanListWithBssid(rssiFromB);
 
-		Map<String, List<List<WifiScanEntry>>> latestWifiScans = new HashMap<>();
+		Map<String, List<List<WifiScanEntryWrapper>>> latestWifiScans = new HashMap<>();
 		latestWifiScans.put(DEVICE_A, List.of(wifiScanA));
 		latestWifiScans.put(DEVICE_B, List.of(wifiScanB));
 

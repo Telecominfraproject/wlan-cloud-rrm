@@ -28,7 +28,7 @@ import com.facebook.openwifirrm.ucentral.UCentralClient;
 import com.facebook.openwifirrm.ucentral.UCentralKafkaConsumer;
 import com.facebook.openwifirrm.ucentral.UCentralKafkaConsumer.KafkaRecord;
 import com.facebook.openwifirrm.ucentral.UCentralUtils;
-import com.facebook.openwifirrm.ucentral.UCentralUtils.WifiScanEntry;
+import com.facebook.openwifirrm.ucentral.UCentralUtils.WifiScanEntryWrapper;
 import com.facebook.openwifirrm.ucentral.gw.models.DeviceCapabilities;
 import com.facebook.openwifirrm.ucentral.gw.models.DeviceWithStatus;
 import com.facebook.openwifirrm.ucentral.gw.models.ServiceEvent;
@@ -83,7 +83,7 @@ public class Modeler implements Runnable {
 		// keep a rolling average for stats.
 
 		/** List of latest wifi scan results per device. */
-		public Map<String, List<List<WifiScanEntry>>> latestWifiScans =
+		public Map<String, List<List<WifiScanEntryWrapper>>> latestWifiScans =
 			new ConcurrentHashMap<>();
 
 		/** List of latest state per device. */
@@ -301,14 +301,14 @@ public class Modeler implements Runnable {
 			break;
 		case WIFISCAN:
 			for (KafkaRecord record : data.records) {
-				List<List<WifiScanEntry>> wifiScanList =
+				List<List<WifiScanEntryWrapper>> wifiScanList =
 					dataModel.latestWifiScans.computeIfAbsent(
 						record.serialNumber,
 						k -> new LinkedList<>()
 					);
 
 				// Parse and validate this record
-				List<WifiScanEntry> scanEntries =
+				List<WifiScanEntryWrapper> scanEntries =
 					UCentralUtils.parseWifiScanEntries(record.payload);
 				if (scanEntries == null) {
 					continue;
