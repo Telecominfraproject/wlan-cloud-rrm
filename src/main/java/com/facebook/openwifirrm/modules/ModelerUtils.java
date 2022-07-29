@@ -209,7 +209,17 @@ public class ModelerUtils {
 		}
 	}
 
-	public Map<String, WifiScanEntryWrapper> getAggregatedWifiScans(Modeler.DataModel dataModel, long obsoletionPeriod,
+	/**
+	 *
+	 * @param dataModel
+	 * @param obsoletionPeriodMs the maximum amount of time (in milliseconds) it is
+	 *                           worth aggregating over starting from the most
+	 *                           recent scan entry and working backwards in time
+	 * @param agg                an aggregator to output a calculated "aggregated
+	 *                           signal strength"
+	 * @return
+	 */
+	public Map<String, WifiScanEntryWrapper> getAggregatedWifiScans(Modeler.DataModel dataModel, long obsoletionPeriodMs,
 			Aggregator<Double> agg) {
 		/*
 		 * NOTE: if a BSSID does not have a non-obsolete entry, it will be returned
@@ -220,6 +230,9 @@ public class ModelerUtils {
 		for (Map.Entry<String, List<List<WifiScanEntryWrapper>>> mapEntry : dataModel.latestWifiScans.entrySet()) {
 			// Flatten the wifiscan entries and sort in reverse chronological order
 			List<List<WifiScanEntryWrapper>> scans = mapEntry.getValue();
+			if (scans.isEmpty()) {
+				continue;
+			}
 			List<WifiScanEntryWrapper> mostRecentToOldest = scans.stream().flatMap(list -> list.stream())
 					.sorted((entry1, entry2) -> {
 						return -Long.compare(entry1.timeMs, entry2.timeMs);
@@ -236,7 +249,7 @@ public class ModelerUtils {
 			String newestVhtOper = null;
 			final long now = mostRecentToOldest.get(0).timeMs;
 			for (WifiScanEntryWrapper entry : mostRecentToOldest) {
-				if (now - entry.timeMs >= obsoletionPeriod) {
+				if (now - entry.timeMs >= obsoletionPeriodMs) {
 					// discard obsolete entries
 					break;
 				} else if (entry.entry.ht_oper == null && entry.entry.vht_oper == null) {
