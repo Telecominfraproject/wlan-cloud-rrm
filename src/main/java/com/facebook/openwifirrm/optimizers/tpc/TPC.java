@@ -70,8 +70,9 @@ public abstract class TPC {
 	 * manager.
 	 *
 	 * @param deviceDataManager the DeviceDataManager instance
-	 * @param configManager the ConfigManager instance
-	 * @param txPowerMap the map of devices (by serial number) to radio to tx power
+	 * @param configManager     the ConfigManager instance
+	 * @param txPowerMap        the map of devices (by serial number) to radio to tx
+	 *                          power
 	 */
 	public void applyConfig(
 		DeviceDataManager deviceDataManager,
