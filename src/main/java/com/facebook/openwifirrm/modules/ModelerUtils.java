@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.facebook.openwifirrm.modules.aggregators.Aggregator;
 import com.facebook.openwifirrm.ucentral.UCentralUtils.WifiScanEntry;
 
 /**
@@ -209,7 +210,8 @@ public class ModelerUtils {
 		}
 	}
 
-	public Map<String, WifiScanEntry> getAggregatedWifiScans(Modeler.DataModel dataModel, long obsoletion_period) {
+	public Map<String, WifiScanEntry> getAggregatedWifiScans(Modeler.DataModel dataModel, long obsoletionPeriod,
+			Aggregator<Double> agg) {
 		/*
 		 * NOTE: if a BSSID does not have a non-obsolete entry, it will be returned
 		 * (i.e., it will not be a key in the returned map).
@@ -233,10 +235,8 @@ public class ModelerUtils {
 			long now = Instant.now().getEpochSecond();
 			String newestHtOper = null;
 			String newestVhtOper = null;
-			double averagedSignal = 0.0;
-			int count = 0;
 			for (WifiScanEntry entry : mostRecentToOldest) {
-				if (now - entry.tsf >= obsoletion_period) {
+				if (now - entry.tsf >= obsoletionPeriod) {
 					// discard obsolete entries
 					break;
 				}
@@ -245,8 +245,7 @@ public class ModelerUtils {
 					newestHtOper = entry.ht_oper;
 					newestVhtOper = entry.vht_oper;
 					aggregatedWifiScans.put(bssid, entry);
-					averagedSignal = entry.signal;
-					count++;
+					agg.addValue((double) entry.signal);
 					continue;
 				}
 				if (!entry.ht_oper.equals(newestHtOper) || !entry.vht_oper.equals(newestVhtOper)) {
@@ -254,11 +253,9 @@ public class ModelerUtils {
 					continue;
 				}
 				// average signal value from older entries with the same ht_oper and vht_oper
-				averagedSignal = ((double) count / (count + 1)) * averagedSignal
-						+ ((double) entry.signal / (count + 1));
-				count++;
+				agg.addValue((double) entry.signal);
 			}
-			aggregatedWifiScans.get(bssid).signal = (int) Math.round(averagedSignal);
+			aggregatedWifiScans.get(bssid).signal = (int) Math.round(agg.getAggregate());
 		}
 		return aggregatedWifiScans;
 	}

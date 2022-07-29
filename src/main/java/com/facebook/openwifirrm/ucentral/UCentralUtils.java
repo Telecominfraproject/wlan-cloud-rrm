@@ -45,11 +45,15 @@ public class UCentralUtils {
 	public static class WifiScanEntry {
 		public int channel;
 		public long last_seen;
+		/** Signal strength measured in dBm */
 		public int signal;
+		/** BSSID is the MAC address of the device */
 		public String bssid;
 		public String ssid;
 		public long tsf;
+		/** High throughput operator */
 		public String ht_oper;
+		/** Very high throughput operator */
 		public String vht_oper;
 		public int capability;
 		public int frequency;
