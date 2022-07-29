@@ -239,21 +239,23 @@ public class ModelerUtils {
 				if (now - entry.tsf >= obsoletionPeriod) {
 					// discard obsolete entries
 					break;
+				} else if (entry.ht_oper == null && entry.vht_oper == null) {
+					continue;
 				}
-				if (newestHtOper == null || newestVhtOper == null) {
-					// start with the most recent entry
+				if (newestHtOper == null) {
+					// may still be null after this assignment
 					newestHtOper = entry.ht_oper;
+				}
+				if (newestVhtOper == null) {
+					// may still be null after this assignment
 					newestVhtOper = entry.vht_oper;
-					aggregatedWifiScans.put(bssid, entry);
+				}
+				// if the entry matches ht_oper and vht_oper, add its signal to the aggregate
+				if ((entry.ht_oper == null || entry.ht_oper == newestHtOper)
+						&& (entry.vht_oper == null || entry.vht_oper == newestVhtOper)) {
+					aggregatedWifiScans.putIfAbsent(bssid, entry);
 					agg.addValue((double) entry.signal);
-					continue;
 				}
-				if (!entry.ht_oper.equals(newestHtOper) || !entry.vht_oper.equals(newestVhtOper)) {
-					// discard older entries with different ht_oper or different vht_oper
-					continue;
-				}
-				// average signal value from older entries with the same ht_oper and vht_oper
-				agg.addValue((double) entry.signal);
 			}
 			aggregatedWifiScans.get(bssid).signal = (int) Math.round(agg.getAggregate());
 		}
