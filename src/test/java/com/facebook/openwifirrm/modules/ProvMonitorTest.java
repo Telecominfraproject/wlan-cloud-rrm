@@ -15,9 +15,7 @@ import org.junit.jupiter.api.TestInfo;
 
 import com.facebook.openwifirrm.DeviceDataManager;
 import com.facebook.openwifirrm.RRMConfig;
-import com.facebook.openwifirrm.mysql.DatabaseManager;
 import com.facebook.openwifirrm.ucentral.UCentralClient;
-import com.facebook.openwifirrm.ucentral.UCentralKafkaConsumer;
 
 public class ProvMonitorTest {
 	/** Test device data manager. */
@@ -35,38 +33,12 @@ public class ProvMonitorTest {
 
 		// Create clients (null for now)
 		UCentralClient client = null;
-		UCentralKafkaConsumer consumer = null;
-		DatabaseManager dbManager = null;
-
-		// Instantiate dependent instances
-		ConfigManager configManager = new ConfigManager(
-			rrmConfig.moduleConfig.configManagerParams,
-			deviceDataManager,
-			client
-		);
-		DataCollector dataCollector = new DataCollector(
-			rrmConfig.moduleConfig.dataCollectorParams,
-			deviceDataManager,
-			client,
-			consumer,
-			configManager,
-			dbManager
-		);
-		Modeler modeler = new Modeler(
-			rrmConfig.moduleConfig.modelerParams,
-			deviceDataManager,
-			consumer,
-			client,
-			dataCollector,
-			configManager
-		);
 
 		// Instantiate ProvMonitor
 		this.provMonitor = new ProvMonitor(
 			rrmConfig.moduleConfig.provMonitorParams,
-			configManager,
 			deviceDataManager,
-			modeler,
+			client,
 			null
 		);
 	}

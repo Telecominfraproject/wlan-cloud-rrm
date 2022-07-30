@@ -21,7 +21,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import com.facebook.openwifirrm.ucentral.UCentralClient;
 import org.reflections.Reflections;
 import org.reflections.util.ConfigurationBuilder;
 import org.slf4j.Logger;
@@ -42,6 +41,7 @@ import com.facebook.openwifirrm.optimizers.RandomChannelInitializer;
 import com.facebook.openwifirrm.optimizers.RandomTxPowerInitializer;
 import com.facebook.openwifirrm.optimizers.TPC;
 import com.facebook.openwifirrm.optimizers.UnmanagedApAwareChannelOptimizer;
+import com.facebook.openwifirrm.ucentral.UCentralClient;
 import com.facebook.openwifirrm.ucentral.gw.models.SystemInfoResults;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -101,6 +101,9 @@ public class ApiServer implements Runnable {
 	/** The uCentral Client instance. */
 	private final UCentralClient client;
 
+	/** The RRM scheduler. */
+	private final RRMScheduler scheduler;
+
 	/** The Gson instance. */
 	private final Gson gson = new Gson();
 
@@ -117,7 +120,8 @@ public class ApiServer implements Runnable {
 		DeviceDataManager deviceDataManager,
 		ConfigManager configManager,
 		Modeler modeler,
-		UCentralClient client
+		UCentralClient client,
+		RRMScheduler scheduler
 	) {
 		this.params = params;
 		this.serviceKey = serviceKey;
@@ -125,6 +129,7 @@ public class ApiServer implements Runnable {
 		this.configManager = configManager;
 		this.modeler = modeler;
 		this.client = client;
+		this.scheduler = scheduler;
 	}
 
 	@Override
@@ -472,6 +477,9 @@ public class ApiServer implements Runnable {
 
 				// Revalidate data model
 				modeler.revalidate();
+
+				// Update scheduler
+				scheduler.syncTriggers();
 			} catch (Exception e) {
 				response.status(400);
 				return e.getMessage();
@@ -604,6 +612,9 @@ public class ApiServer implements Runnable {
 
 				// Revalidate data model
 				modeler.revalidate();
+
+				// Update scheduler
+				scheduler.syncTriggers();
 			} catch (Exception e) {
 				response.status(400);
 				return e.getMessage();
@@ -670,6 +681,9 @@ public class ApiServer implements Runnable {
 
 				// Revalidate data model
 				modeler.revalidate();
+
+				// Update scheduler
+				scheduler.syncTriggers();
 			} catch (Exception e) {
 				response.status(400);
 				return e.getMessage();

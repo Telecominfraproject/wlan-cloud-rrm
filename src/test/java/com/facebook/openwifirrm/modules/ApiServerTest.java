@@ -85,6 +85,11 @@ public class ApiServerTest {
 		UCentralKafkaConsumer consumer = null;
 		DatabaseManager dbManager = null;
 
+		// Create scheduler
+		RRMScheduler scheduler = new RRMScheduler(
+			rrmConfig.moduleConfig.schedulerParams, deviceDataManager
+		);
+
 		// Instantiate dependent instances
 		ConfigManager configManager = new ConfigManager(
 			rrmConfig.moduleConfig.configManagerParams,
@@ -115,7 +120,8 @@ public class ApiServerTest {
 			deviceDataManager,
 			configManager,
 			modeler,
-			client
+			client,
+			scheduler
 		);
 		try {
 			server.run();

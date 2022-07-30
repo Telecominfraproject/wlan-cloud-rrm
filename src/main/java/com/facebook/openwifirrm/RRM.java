@@ -23,6 +23,7 @@ import com.facebook.openwifirrm.modules.ConfigManager;
 import com.facebook.openwifirrm.modules.DataCollector;
 import com.facebook.openwifirrm.modules.Modeler;
 import com.facebook.openwifirrm.modules.ProvMonitor;
+import com.facebook.openwifirrm.modules.RRMScheduler;
 import com.facebook.openwifirrm.mysql.DatabaseManager;
 import com.facebook.openwifirrm.ucentral.KafkaRunner;
 import com.facebook.openwifirrm.ucentral.UCentralClient;
@@ -89,6 +90,9 @@ public class RRM {
 		}
 
 		// Instantiate modules
+		RRMScheduler scheduler = new RRMScheduler(
+			config.moduleConfig.schedulerParams, deviceDataManager
+		);
 		ConfigManager configManager = new ConfigManager(
 			config.moduleConfig.configManagerParams, deviceDataManager, client
 		);
@@ -114,16 +118,16 @@ public class RRM {
 			deviceDataManager,
 			configManager,
 			modeler,
-			client
+			client,
+			scheduler
 		);
 		ProvMonitor provMonitor =
 			config.moduleConfig.provMonitorParams.useVenues
 				? new ProvMonitor(
 					config.moduleConfig.provMonitorParams,
-					configManager,
 					deviceDataManager,
-					modeler,
-					client
+					client,
+					scheduler
 				) : null;
 		KafkaRunner kafkaRunner = (consumer == null && producer == null)
 			? null : new KafkaRunner(consumer, producer);
@@ -137,7 +141,11 @@ public class RRM {
 			apiServer.shutdown();
 			dataCollector.shutdown();
 			executor.shutdownNow();
+			scheduler.shutdown();
 		}));
+
+		// Start scheduler (runs separately from executor)
+		scheduler.start(configManager, modeler);
 
 		// Submit jobs
 		List<Callable<Object>> services = Arrays

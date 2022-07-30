@@ -254,7 +254,7 @@ public class RRMConfig {
 			 * (e.g. RRM algorithm execution, config API calls)
 			 * (<tt>CONFIGMANAGERPARAMS_CONFIGONEVENTONLY</tt>)
 			 */
-			public boolean configOnEventOnly = false;
+			public boolean configOnEventOnly = true;
 
 			/**
 			 * The debounce interval for reconfiguring the same device, in
@@ -340,6 +340,20 @@ public class RRMConfig {
 
 		/** ProvMonitor parameters. */
 		public ProvMonitorParams provMonitorParams = new ProvMonitorParams();
+
+		/**
+		 * RRMScheduler parameters.
+		 */
+		public class RRMSchedulerParams {
+			/**
+			 * Thread pool size for executing jobs
+			 * (<tt>SCHEDULERPARAMS_THREADCOUNT</tt>)
+			 */
+			public int threadCount = 2;
+		}
+
+		/** RRMScheduler parameters. */
+		public RRMSchedulerParams schedulerParams = new RRMSchedulerParams();
 	}
 
 	/** Module configuration. */
@@ -491,6 +505,11 @@ public class RRMConfig {
 		}
 		if ((v = env.get("PROVMONITORPARAMS_SYNCINTERVALMS")) != null) {
 			provManagerParams.syncIntervalMs = Integer.parseInt(v);
+		}
+		ModuleConfig.RRMSchedulerParams schedulerParams =
+			config.moduleConfig.schedulerParams;
+		if ((v = env.get("SCHEDULERPARAMS_THREADCOUNT")) != null) {
+			schedulerParams.threadCount = Integer.parseInt(v);
 		}
 
 		return config;
