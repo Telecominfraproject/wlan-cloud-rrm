@@ -8,6 +8,7 @@
     <java.version>11</java.version>
     <slf4j.version>1.7.32</slf4j.version>
     <junit.version>5.7.2</junit.version>
+    <swagger.version>2.1.10</swagger.version>
     <mainClassName>com.facebook.openwifirrm.Launcher</mainClassName>
   </properties>
   <build>
@@ -71,6 +72,26 @@
             <phase>package</phase>
             <goals>
               <goal>shade</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <!-- Generate "openapi.yaml" in project root, NOT packaged -->
+        <groupId>io.swagger.core.v3</groupId>
+        <artifactId>swagger-maven-plugin</artifactId>
+        <version>${swagger.version}</version>
+        <configuration>
+          <outputFileName>openapi</outputFileName>
+          <outputPath>${project.basedir}</outputPath>
+          <outputFormat>YAML</outputFormat>
+          <prettyPrint>TRUE</prettyPrint>
+        </configuration>
+        <executions>
+          <execution>
+            <phase>compile</phase>
+            <goals>
+              <goal>resolve</goal>
             </goals>
           </execution>
         </executions>
@@ -143,7 +164,7 @@
     <dependency>
       <groupId>io.swagger.core.v3</groupId>
       <artifactId>swagger-jaxrs2</artifactId>
-      <version>2.1.10</version>
+      <version>${swagger.version}</version>
       </dependency>
     <dependency>
       <groupId>javax.ws.rs</groupId>

@@ -42,7 +42,8 @@ Docker builds can be launched using the provided [Dockerfile](Dockerfile).
 ## OpenAPI
 This service provides an OpenAPI HTTP interface on the port specified in the
 service configuration (`moduleConfig.apiServerParams`). An auto-generated
-OpenAPI 3.0 document is hosted at the endpoints `/openapi.{yaml,json}`.
+OpenAPI 3.0 document is hosted at the endpoints `/openapi.{yaml,json}` and is
+written to `openapi.yaml` in the project root during the Maven "compile" phase.
 
 ## Implementation
 See [IMPLEMENTATION.md](IMPLEMENTATION.md) for service architecture details and
