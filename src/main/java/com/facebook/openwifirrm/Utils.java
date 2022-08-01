@@ -28,6 +28,9 @@ public class Utils {
 	/** Hex value array for use in {@link #longToMac(long)}. */
 	private static final char[] HEX_VALUES = "0123456789abcdef".toCharArray();
 
+	/** The gson instance. */
+	private static final Gson gson = new Gson();
+
 	// This class should not be instantiated.
 	private Utils() {}
 
@@ -117,5 +120,10 @@ public class Utils {
 			c[i*2 + 1] = HEX_VALUES[v & 0xf];
 		}
 		return new String(c);
+	}
+
+	/** Return a deep copy using gson. DO NOT USE if performance is critical. */
+	public static <T> T deepCopy(T obj, Class<T> classOfT) {
+		return gson.fromJson(gson.toJson(obj), classOfT);
 	}
 }

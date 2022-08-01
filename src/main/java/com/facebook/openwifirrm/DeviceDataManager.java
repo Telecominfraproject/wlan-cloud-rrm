@@ -11,7 +11,9 @@ package com.facebook.openwifirrm;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -295,6 +297,17 @@ public class DeviceDataManager {
 		return gson.fromJson(contents, DeviceTopology.class);
 	}
 
+	/** Return all zones in the topology. */
+	public List<String> getZones() {
+		Lock l = topologyLock.readLock();
+		l.lock();
+		try {
+			return new ArrayList<>(topology.keySet());
+		} finally {
+			l.unlock();
+		}
+	}
+
 	/** Return the RF zone for the given device, or null if not found. */
 	public String getDeviceZone(String serialNumber) {
 		if (serialNumber == null || serialNumber.isEmpty()) {
@@ -385,11 +398,11 @@ public class DeviceDataManager {
 		try {
 			DeviceConfig config = DeviceConfig.createDefault();
 			config.apply(deviceLayeredConfig.networkConfig);
-			if (zone != null) {
-				config.apply(deviceLayeredConfig.zoneConfig.get(zone));
+			config.apply(deviceLayeredConfig.zoneConfig.get(zone));
+			if (serialNumber != null) {
+				config.apply(deviceLayeredConfig.apConfig.get(serialNumber));
 			}
-			config.apply(deviceLayeredConfig.apConfig.get(serialNumber));
-			return config;
+			return Utils.deepCopy(config, DeviceConfig.class);
 		} finally {
 			l.unlock();
 		}
@@ -538,5 +551,17 @@ public class DeviceDataManager {
 		}
 		cachedDeviceConfigs.clear();
 		saveDeviceLayeredConfig();
+	}
+
+	/**
+	 * Return config for the given zone with all config layers applied. It is
+	 * the caller's responsibility to ensure the zone exists in the topology.
+	 */
+	public DeviceConfig getZoneConfig(String zone) {
+		if (zone == null) {
+			throw new IllegalArgumentException("Null zone");
+		}
+
+		return computeDeviceConfig(null, zone);
 	}
 }

@@ -78,7 +78,12 @@ following endpoints:
 * `/api/v1/<method>` - RRM API methods
 
 ### owprov Monitor
-`ProvMonitor` handles sync with the owprov service.
+`ProvMonitor` handles sync with the owprov service when it is desirable to use
+their topology ("venues") and certain device configuration fields.
+
+### Scheduler
+`RRMScheduler` uses the [Quartz Job Scheduler] to schedule RRM algorithms to run
+per zone with different intervals and parameters.
 
 ## Optimizers
 The *optimizers* implement the RRM algorithms, which are described in
@@ -97,3 +102,4 @@ The *optimizers* implement the RRM algorithms, which are described in
 [Spark]: https://sparkjava.com/
 [Swagger UI]: https://swagger.io/tools/swagger-ui/
 [Swagger Core]: https://github.com/swagger-api/swagger-core
+[Quartz Job Scheduler]: https://www.quartz-scheduler.org/
