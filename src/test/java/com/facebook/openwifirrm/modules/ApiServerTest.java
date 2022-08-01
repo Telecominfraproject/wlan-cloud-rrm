@@ -114,7 +114,8 @@ public class ApiServerTest {
 			UCentralUtils.generateServiceKey(rrmConfig.serviceConfig),
 			deviceDataManager,
 			configManager,
-			modeler
+			modeler,
+			client
 		);
 		try {
 			server.run();
