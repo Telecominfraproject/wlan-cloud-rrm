@@ -33,6 +33,7 @@ import com.facebook.openwifirrm.DeviceTopology;
 import com.facebook.openwifirrm.RRM;
 import com.facebook.openwifirrm.RRMConfig;
 import com.facebook.openwifirrm.mysql.DatabaseManager;
+import com.facebook.openwifirrm.optimizers.TestUtils;
 import com.facebook.openwifirrm.ucentral.UCentralClient;
 import com.facebook.openwifirrm.ucentral.UCentralKafkaConsumer;
 import com.facebook.openwifirrm.ucentral.UCentralUtils;
@@ -144,7 +145,7 @@ public class ApiServerTest {
 	void test_getTopology() throws Exception {
 		// Create topology
 		DeviceTopology topology = new DeviceTopology();
-		topology.put("test-zone", new TreeSet<>(Arrays.asList("aaaaaaaaaaa")));
+		topology.put(TestUtils.TEST_ZONE, new TreeSet<>(Arrays.asList("aaaaaaaaaaa")));
 		deviceDataManager.setTopology(topology);
 
 		// Fetch topology
@@ -160,7 +161,7 @@ public class ApiServerTest {
 
 		// Create topology
 		DeviceTopology topology = new DeviceTopology();
-		topology.put("test-zone", new TreeSet<>(Arrays.asList("aaaaaaaaaaa")));
+		topology.put(TestUtils.TEST_ZONE, new TreeSet<>(Arrays.asList("aaaaaaaaaaa")));
 
 		// Set topology
 		HttpResponse<String> resp = Unirest
@@ -178,16 +179,15 @@ public class ApiServerTest {
 	@Order(3)
 	void test_getDeviceLayeredConfig() throws Exception {
 		// Create topology and configs
-		final String zone = "test-zone";
 		final String ap = "aaaaaaaaaaa";
 		DeviceTopology topology = new DeviceTopology();
-		topology.put(zone, new TreeSet<>(Arrays.asList(ap)));
+		topology.put(TestUtils.TEST_ZONE, new TreeSet<>(Arrays.asList(ap)));
 		deviceDataManager.setTopology(topology);
 		DeviceLayeredConfig cfg = new DeviceLayeredConfig();
 		cfg.networkConfig.enableRRM = true;
 		DeviceConfig zoneConfig = new DeviceConfig();
 		zoneConfig.enableWifiScan = false;
-		cfg.zoneConfig.put(zone, zoneConfig);
+		cfg.zoneConfig.put(TestUtils.TEST_ZONE, zoneConfig);
 		DeviceConfig apConfig = new DeviceConfig();
 		apConfig.enableConfig = false;
 		cfg.apConfig.put(ap, apConfig);
@@ -205,10 +205,9 @@ public class ApiServerTest {
 		String url = endpoint("/api/v1/getDeviceConfig");
 
 		// Create topology
-		final String zone = "test-zone";
 		final String ap = "aaaaaaaaaaa";
 		DeviceTopology topology = new DeviceTopology();
-		topology.put(zone, new TreeSet<>(Arrays.asList(ap)));
+		topology.put(TestUtils.TEST_ZONE, new TreeSet<>(Arrays.asList(ap)));
 		deviceDataManager.setTopology(topology);
 
 		// Fetch config
@@ -247,10 +246,9 @@ public class ApiServerTest {
 		String url = endpoint("/api/v1/setDeviceZoneConfig");
 
 		// Create topology
-		final String zone = "test-zone";
 		final String ap = "aaaaaaaaaaa";
 		DeviceTopology topology = new DeviceTopology();
-		topology.put(zone, new TreeSet<>(Arrays.asList(ap)));
+		topology.put(TestUtils.TEST_ZONE, new TreeSet<>(Arrays.asList(ap)));
 		deviceDataManager.setTopology(topology);
 
 		DeviceConfig config = new DeviceConfig();
@@ -258,7 +256,7 @@ public class ApiServerTest {
 
 		// Set config
 		HttpResponse<String> resp = Unirest
-			.post(url + "?zone=" + zone)
+				.post(url + "?zone=" + TestUtils.TEST_ZONE)
 			.body(gson.toJson(config))
 			.asString();
 		assertEquals(200, resp.getStatus());
@@ -267,13 +265,13 @@ public class ApiServerTest {
 			DeviceLayeredConfig.class
 		);
 		assertEquals(1, fullCfg.zoneConfig.size());
-		assertTrue(fullCfg.zoneConfig.containsKey(zone));
-		assertEquals(gson.toJson(config), gson.toJson(fullCfg.zoneConfig.get(zone)));
+		assertTrue(fullCfg.zoneConfig.containsKey(TestUtils.TEST_ZONE));
+		assertEquals(gson.toJson(config), gson.toJson(fullCfg.zoneConfig.get(TestUtils.TEST_ZONE)));
 
 		// Missing/wrong parameters
 		assertEquals(400, Unirest.post(url).body(gson.toJson(config)).asString().getStatus());
 		assertEquals(400, Unirest.post(url + "?zone=asdf").body(gson.toJson(config)).asString().getStatus());
-		assertEquals(400, Unirest.post(url + "?zone=" + zone).body("not json").asString().getStatus());
+		assertEquals(400, Unirest.post(url + "?zone=" + TestUtils.TEST_ZONE).body("not json").asString().getStatus());
 	}
 
 	@Test
@@ -282,10 +280,9 @@ public class ApiServerTest {
 		String url = endpoint("/api/v1/setDeviceApConfig");
 
 		// Create topology
-		final String zone = "test-zone";
 		final String ap = "aaaaaaaaaaa";
 		DeviceTopology topology = new DeviceTopology();
-		topology.put(zone, new TreeSet<>(Arrays.asList(ap)));
+		topology.put(TestUtils.TEST_ZONE, new TreeSet<>(Arrays.asList(ap)));
 		deviceDataManager.setTopology(topology);
 
 		DeviceConfig config = new DeviceConfig();
@@ -317,10 +314,9 @@ public class ApiServerTest {
 		String url = endpoint("/api/v1/modifyDeviceApConfig");
 
 		// Create topology
-		final String zone = "test-zone";
 		final String ap = "aaaaaaaaaaa";
 		DeviceTopology topology = new DeviceTopology();
-		topology.put(zone, new TreeSet<>(Arrays.asList(ap)));
+		topology.put(TestUtils.TEST_ZONE, new TreeSet<>(Arrays.asList(ap)));
 		deviceDataManager.setTopology(topology);
 
 		// Set initial AP config
@@ -376,15 +372,14 @@ public class ApiServerTest {
 		String url = endpoint("/api/v1/optimizeChannel");
 
 		// Create topology
-		final String zone = "test-zone";
 		DeviceTopology topology = new DeviceTopology();
-		topology.put(zone, new TreeSet<>(Arrays.asList("aaaaaaaaaaa")));
+		topology.put(TestUtils.TEST_ZONE, new TreeSet<>(Arrays.asList("aaaaaaaaaaa")));
 		deviceDataManager.setTopology(topology);
 
 		// Correct requests
 		final String[] modes = new String[] { "random", "least_used", "unmanaged_aware" };
 		for (String mode : modes) {
-			String endpoint = String.format("%s?mode=%s&zone=%s", url, mode, zone);
+			String endpoint = String.format("%s?mode=%s&zone=%s", url, mode, TestUtils.TEST_ZONE);
 			HttpResponse<JsonNode> simpleResp = Unirest.get(endpoint).asJson();
 			assertEquals(200, simpleResp.getStatus());
 			assertNotNull(simpleResp.getBody().getObject().getJSONObject("data"));
@@ -392,7 +387,7 @@ public class ApiServerTest {
 
 		// Missing/wrong parameters
 		assertEquals(400, Unirest.get(url).asString().getStatus());
-		assertEquals(400, Unirest.get(url + "?mode=test123&zone=" + zone).asString().getStatus());
+		assertEquals(400, Unirest.get(url + "?mode=test123&zone=" + TestUtils.TEST_ZONE).asString().getStatus());
 		assertEquals(400, Unirest.get(url + "?zone=asdf&mode=" + modes[0]).asString().getStatus());
 	}
 
@@ -402,15 +397,14 @@ public class ApiServerTest {
 		String url = endpoint("/api/v1/optimizeTxPower");
 
 		// Create topology
-		final String zone = "test-zone";
 		DeviceTopology topology = new DeviceTopology();
-		topology.put(zone, new TreeSet<>(Arrays.asList("aaaaaaaaaaa")));
+		topology.put(TestUtils.TEST_ZONE, new TreeSet<>(Arrays.asList("aaaaaaaaaaa")));
 		deviceDataManager.setTopology(topology);
 
 		// Correct requests
 		final String[] modes = new String[] { "random", "measure_ap_client", "measure_ap_ap", "location_optimal" };
 		for (String mode : modes) {
-			String endpoint = String.format("%s?mode=%s&zone=%s", url, mode, zone);
+			String endpoint = String.format("%s?mode=%s&zone=%s", url, mode, TestUtils.TEST_ZONE);
 			HttpResponse<JsonNode> simpleResp = Unirest.get(endpoint).asJson();
 			assertEquals(200, simpleResp.getStatus());
 			assertNotNull(simpleResp.getBody().getObject().getJSONObject("data"));
@@ -418,7 +412,7 @@ public class ApiServerTest {
 
 		// Missing/wrong parameters
 		assertEquals(400, Unirest.get(url).asString().getStatus());
-		assertEquals(400, Unirest.get(url + "?mode=test123&zone=" + zone).asString().getStatus());
+		assertEquals(400, Unirest.get(url + "?mode=test123&zone=" + TestUtils.TEST_ZONE).asString().getStatus());
 		assertEquals(400, Unirest.get(url + "?zone=asdf&mode=" + modes[0]).asString().getStatus());
 	}
 

@@ -25,6 +25,8 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
+import com.facebook.openwifirrm.optimizers.TestUtils;
+
 @TestMethodOrder(OrderAnnotation.class)
 public class DeviceDataManagerTest {
 	@Test
@@ -85,7 +87,6 @@ public class DeviceDataManagerTest {
 	@Test
 	@Order(3)
 	void testTopologyExceptions() throws Exception {
-		final String zone = "test-zone";
 		final String deviceA = "aaaaaaaaaaaa";
 
 		DeviceDataManager deviceDataManager = new DeviceDataManager();
@@ -104,15 +105,15 @@ public class DeviceDataManagerTest {
 
 		// Empty serial number
 		final DeviceTopology topologyEmptySerial = new DeviceTopology();
-		topologyEmptySerial.put(zone, new TreeSet<>(Arrays.asList("")));
+		topologyEmptySerial.put(TestUtils.TEST_ZONE, new TreeSet<>(Arrays.asList("")));
 		assertThrows(IllegalArgumentException.class, () -> {
 			deviceDataManager.setTopology(topologyEmptySerial);
 		});
 
 		// Same device in multiple zones
 		final DeviceTopology topologyDupSerial = new DeviceTopology();
-		final String zone2 = zone + "-copy";
-		topologyDupSerial.put(zone, new TreeSet<>(Arrays.asList(deviceA)));
+		final String zone2 = TestUtils.TEST_ZONE + "-copy";
+		topologyDupSerial.put(TestUtils.TEST_ZONE, new TreeSet<>(Arrays.asList(deviceA)));
 		topologyDupSerial.put(zone2, new TreeSet<>(Arrays.asList(deviceA)));
 		assertThrows(IllegalArgumentException.class, () -> {
 			deviceDataManager.setTopology(topologyDupSerial);

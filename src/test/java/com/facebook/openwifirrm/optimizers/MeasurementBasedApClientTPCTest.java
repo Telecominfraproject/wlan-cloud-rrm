@@ -24,8 +24,6 @@ import com.google.gson.JsonObject;
 
 @TestMethodOrder(OrderAnnotation.class)
 public class MeasurementBasedApClientTPCTest {
-	/** Test zone name. */
-	private static final String TEST_ZONE = "test-zone";
 
 	/** Create a device state object containing the given parameters. */
 	private State createState(
@@ -67,7 +65,7 @@ public class MeasurementBasedApClientTPCTest {
 		DeviceDataManager deviceDataManager = new DeviceDataManager();
 		deviceDataManager.setTopology(
 			TestUtils.createTopology(
-				TEST_ZONE, deviceA, deviceB, deviceC, deviceD, deviceE
+						TestUtils.TEST_ZONE, deviceA, deviceB, deviceC, deviceD, deviceE
 			)
 		);
 
@@ -93,7 +91,7 @@ public class MeasurementBasedApClientTPCTest {
 			createState(deviceE, 23 /*txPower*/, 20 /*bandwidth*/, -45)
 		);
 
-		TPC optimizer = new MeasurementBasedApClientTPC(dataModel, TEST_ZONE, deviceDataManager);
+		TPC optimizer = new MeasurementBasedApClientTPC(dataModel, TestUtils.TEST_ZONE, deviceDataManager);
 		Map<String, Map<String, Integer>> txPowerMap =
 			optimizer.computeTxPowerMap();
 
