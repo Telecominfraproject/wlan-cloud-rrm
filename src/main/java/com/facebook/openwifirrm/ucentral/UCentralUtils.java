@@ -57,6 +57,15 @@ public class UCentralUtils {
 		 * added later in order to capture the non-redundant information but also
 		 * includes some redundant information. 802.11 defines the HT operator and
 		 * vendors may define additional fields.
+		 *
+		 * This field is specified as 24 bytes, but it is encoded in base64. 24 bytes is
+		 * 192 bits which is 32 base64 characters, so this field would be a 32-character
+		 * string. However, I believe the first byte (the Element ID, which should be 61
+		 * for ht_oper) and the second byte (Length) are omitted when the wifi scan
+		 * results are sent to rrm. Typically in base64, the input has bytes padded
+		 * until its length is divisible by 6, so the 22 bytes would be padded by two
+		 * bytes to reach 24 bytes. Typically, the ASCII value of "=" is padded, which
+		 * would explain why ht_oper values always end with two equals signs.
 		 */
 		public String ht_oper;
 		/**
@@ -65,6 +74,9 @@ public class UCentralUtils {
 		 * was added later in order to capture the non-redundant information but also
 		 * includes some redundant information. 802.11 defines the HT operator and
 		 * vendors may define additional fields.
+		 *
+		 * For information about about the contents of this field, its encoding, etc.,
+		 * please see the javadoc for ht_oper.
 		 */
 		public String vht_oper;
 		public int capability;
