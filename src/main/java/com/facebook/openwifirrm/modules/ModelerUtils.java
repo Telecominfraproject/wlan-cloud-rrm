@@ -232,6 +232,9 @@ public class ModelerUtils {
 		for (Map.Entry<String, List<List<WifiScanEntry>>> mapEntry : dataModel.latestWifiScans.entrySet()) {
 			// Flatten the wifiscan entries and sort in reverse chronological order
 			List<List<WifiScanEntry>> scans = mapEntry.getValue();
+			if (scans.isEmpty()) {
+				continue;
+			}
 			List<WifiScanEntry> mostRecentToOldest = scans.stream().flatMap(list -> list.stream())
 					.sorted((entry1, entry2) -> {
 						return -Long.compare(entry1.unixTimeMs, entry2.unixTimeMs);
