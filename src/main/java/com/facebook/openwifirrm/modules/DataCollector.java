@@ -33,7 +33,7 @@ import com.facebook.openwifirrm.ucentral.UCentralClient;
 import com.facebook.openwifirrm.ucentral.UCentralKafkaConsumer;
 import com.facebook.openwifirrm.ucentral.UCentralKafkaConsumer.KafkaRecord;
 import com.facebook.openwifirrm.ucentral.UCentralUtils;
-import com.facebook.openwifirrm.ucentral.UCentralUtils.WifiScanEntryWrapper;
+import com.facebook.openwifirrm.ucentral.UCentralUtils.WifiScanEntry;
 import com.facebook.openwifirrm.ucentral.gw.models.CommandInfo;
 import com.facebook.openwifirrm.ucentral.gw.models.DeviceCapabilities;
 import com.facebook.openwifirrm.ucentral.gw.models.DeviceWithStatus;
@@ -397,7 +397,7 @@ public class DataCollector implements Runnable {
 			);
 			return false;
 		}
-		List<WifiScanEntryWrapper> scanEntries =
+		List<WifiScanEntry> scanEntries =
 			UCentralUtils.parseWifiScanEntries(wifiScanResult.results);
 		if (scanEntries == null) {
 			logger.error(
@@ -408,9 +408,9 @@ public class DataCollector implements Runnable {
 
 		// Print some processed info (not doing anything else useful here)
 		Set<Integer> channels = scanEntries
-				.stream()
-				.map(entry -> entry.entry.channel)
-				.collect(Collectors.toCollection(() -> new TreeSet<>()));
+			.stream()
+			.map(entry -> entry.channel)
+			.collect(Collectors.toCollection(() -> new TreeSet<>()));
 		logger.info(
 			"Device {}: found {} network(s) on {} channel(s): {}",
 			serialNumber,
@@ -429,7 +429,7 @@ public class DataCollector implements Runnable {
 
 	/** Insert wifi scan results into database. */
 	private void insertWifiScanResultsToDatabase(
-		String serialNumber, long ts, List<WifiScanEntryWrapper> entries
+		String serialNumber, long ts, List<WifiScanEntry> entries
 	) {
 		if (dbManager == null) {
 			return;

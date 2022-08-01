@@ -19,12 +19,12 @@ import org.slf4j.LoggerFactory;
 
 import com.facebook.openwifirrm.DeviceDataManager;
 import com.facebook.openwifirrm.modules.Modeler.DataModel;
-import com.facebook.openwifirrm.ucentral.UCentralUtils.WifiScanEntryWrapper;
+import com.facebook.openwifirrm.ucentral.UCentralUtils.WifiScanEntry;
 
 /**
  * Unmanaged AP aware least used channel optimizer.
  * <p>
- * Randomly assign APs to the channel with the least channel weight,
+ * Randomly assign APs to the channel with the least channel weight, 
  * where channel weight = DEFAULT_WEIGHT * (number of unmanaged APs) + (number of managed APs).
  */
 public class UnmanagedApAwareChannelOptimizer extends LeastUsedChannelOptimizer {
@@ -46,28 +46,28 @@ public class UnmanagedApAwareChannelOptimizer extends LeastUsedChannelOptimizer 
 		String serialNumber,
 		int channelWidth,
 		List<Integer> availableChannelsList,
-		Map<String, List<WifiScanEntryWrapper>> deviceToWifiScans,
+		Map<String, List<WifiScanEntry>> deviceToWifiScans,
 		Map<String, Map<String, Integer>> channelMap,
 		Map<String, String> bssidsMap
 	) {
 		// Find occupied channels by nonOWF APs (and # associated nonOWF APs)
 		// Distinguish OWF APs from nonOWF APs
 		Map<Integer, Integer> occupiedChannels = new TreeMap<>();
-		List<WifiScanEntryWrapper> scanResps = getScanRespsByBandwidth(
+		List<WifiScanEntry> scanResps = getScanRespsByBandwidth(
 			band,
 			serialNumber,
 			channelWidth,
 			deviceToWifiScans
 		);
-		List<WifiScanEntryWrapper> scanRespsOWF = new ArrayList<WifiScanEntryWrapper>();
+		List<WifiScanEntry> scanRespsOWF = new ArrayList<WifiScanEntry>();
 
 		// Remove OWF APs here
-		for (WifiScanEntryWrapper entry : scanResps) {
-			if (bssidsMap.containsKey(entry.entry.bssid)) {
+		for (WifiScanEntry entry : scanResps) {
+			if (bssidsMap.containsKey(entry.bssid)) {
 				scanRespsOWF.add(entry);
 			} else {
 				occupiedChannels.compute(
-						entry.entry.channel,
+					entry.channel,
 					(k, v) -> (v == null) ? DEFAULT_WEIGHT : v + DEFAULT_WEIGHT
 				);
 			}
@@ -81,8 +81,8 @@ public class UnmanagedApAwareChannelOptimizer extends LeastUsedChannelOptimizer 
 		);
 
 		// Find occupied channels by OWF APs (and # associated OWF APs)
-		for (WifiScanEntryWrapper entry: scanRespsOWF) {
-			String nSerialNumber = bssidsMap.get(entry.entry.bssid);
+		for (WifiScanEntry entry: scanRespsOWF) {
+			String nSerialNumber = bssidsMap.get(entry.bssid);
 			int assignedChannel = channelMap
 				.getOrDefault(nSerialNumber, new HashMap<>())
 				.getOrDefault(band, 0);

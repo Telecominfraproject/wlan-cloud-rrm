@@ -22,7 +22,7 @@ import org.slf4j.LoggerFactory;
 
 import com.facebook.openwifirrm.DeviceDataManager;
 import com.facebook.openwifirrm.modules.Modeler.DataModel;
-import com.facebook.openwifirrm.ucentral.UCentralUtils.WifiScanEntryWrapper;
+import com.facebook.openwifirrm.ucentral.UCentralUtils.WifiScanEntry;
 import com.facebook.openwifirrm.ucentral.models.State;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -143,21 +143,21 @@ public class MeasurementBasedApApTPC extends TPC {
 	 */
 	protected static Map<String, List<Integer>> buildRssiMap(
 		Set<String> managedBSSIDs,
-		Map<String, List<List<WifiScanEntryWrapper>>> latestWifiScans
+		Map<String, List<List<WifiScanEntry>>> latestWifiScans
 	) {
 		Map<String, List<Integer>> bssidToRssiValues = new HashMap<>();
 		managedBSSIDs.stream()
 			.forEach(bssid -> bssidToRssiValues.put(bssid, new ArrayList<>()));
 
-		for (Map.Entry<String, List<List<WifiScanEntryWrapper>>> e : latestWifiScans.entrySet()) {
-			List<List<WifiScanEntryWrapper>> bufferedScans = e.getValue();
-			List<WifiScanEntryWrapper> latestScan = bufferedScans.get(bufferedScans.size() - 1);
+		for (Map.Entry<String, List<List<WifiScanEntry>>> e : latestWifiScans.entrySet()) {
+			List<List<WifiScanEntry>> bufferedScans = e.getValue();
+			List<WifiScanEntry> latestScan = bufferedScans.get(bufferedScans.size() - 1);
 
 			// At a given AP, if we receive a signal from ap_2, then it gets added to the rssi list for ap_2
 			latestScan.stream()
-					.filter(entry -> (managedBSSIDs.contains(entry.entry.bssid) && isChannel5G(entry.entry.channel)))
+				.filter(entry -> (managedBSSIDs.contains(entry.bssid) && isChannel5G(entry.channel)))
 				.forEach(entry -> {
-						bssidToRssiValues.get(entry.entry.bssid).add(entry.entry.signal);
+					bssidToRssiValues.get(entry.bssid).add(entry.signal);
 				});
 		}
 		bssidToRssiValues.values().stream()

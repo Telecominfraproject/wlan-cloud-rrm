@@ -22,7 +22,7 @@ import org.slf4j.LoggerFactory;
 import com.facebook.openwifirrm.DeviceDataManager;
 import com.facebook.openwifirrm.modules.Modeler.DataModel;
 import com.facebook.openwifirrm.ucentral.UCentralUtils;
-import com.facebook.openwifirrm.ucentral.UCentralUtils.WifiScanEntryWrapper;
+import com.facebook.openwifirrm.ucentral.UCentralUtils.WifiScanEntry;
 import com.facebook.openwifirrm.ucentral.models.State;
 
 /**
@@ -65,7 +65,7 @@ public class RandomChannelInitializer extends ChannelOptimizer {
 
 			// Use last wifi scan result for the performance metrics calculation
 			String band = entry.getKey();
-			Map<String, List<WifiScanEntryWrapper>> deviceToWifiScans = getDeviceToWiFiScans(
+			Map<String, List<WifiScanEntry>> deviceToWifiScans = getDeviceToWiFiScans(
 				band, model.latestWifiScans, bandsMap
 			);
 

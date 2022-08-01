@@ -23,7 +23,7 @@ import com.facebook.openwifirrm.DeviceConfig;
 import com.facebook.openwifirrm.DeviceDataManager;
 import com.facebook.openwifirrm.modules.ConfigManager;
 import com.facebook.openwifirrm.modules.Modeler.DataModel;
-import com.facebook.openwifirrm.ucentral.UCentralUtils.WifiScanEntryWrapper;
+import com.facebook.openwifirrm.ucentral.UCentralUtils.WifiScanEntry;
 import com.facebook.openwifirrm.ucentral.models.State;
 
 /**
@@ -318,17 +318,17 @@ public abstract class ChannelOptimizer {
 	 * @param bandsMap the participated OWF APs on this band
 	 * @return map of device (serial number) to wifiscan results
 	 */
-	protected static Map<String, List<WifiScanEntryWrapper>> getDeviceToWiFiScans(
+	protected static Map<String, List<WifiScanEntry>> getDeviceToWiFiScans(
 		String band,
-		Map<String, List<List<WifiScanEntryWrapper>>> latestWifiScans,
+		Map<String, List<List<WifiScanEntry>>> latestWifiScans,
 		Map<String, List<String>> bandsMap
 	) {
-		Map<String, List<WifiScanEntryWrapper>> deviceToWifiScans = new HashMap<>();
+		Map<String, List<WifiScanEntry>> deviceToWifiScans = new HashMap<>();
 		int maxChannel = UPPER_CHANNEL_LIMIT.get(band);
 		int minChannel = LOWER_CHANNEL_LIMIT.get(band);
 
 		for (
-			Map.Entry<String, List<List<WifiScanEntryWrapper>>> e :
+			Map.Entry<String, List<List<WifiScanEntry>>> e :
 			latestWifiScans.entrySet()
 		) {
 			String serialNumber = e.getKey();
@@ -343,7 +343,7 @@ public abstract class ChannelOptimizer {
 				continue;
 			}
 
-			List<List<WifiScanEntryWrapper>> wifiScanList = e.getValue();
+			List<List<WifiScanEntry>> wifiScanList = e.getValue();
 			if (wifiScanList.isEmpty()) {
 				// 2. Filter out APs with empty scan results
 				logger.debug(
@@ -356,19 +356,21 @@ public abstract class ChannelOptimizer {
 			// 1. Remove the wifi scan results on different bands
 			// 2. Duplicate the wifi scan result from a channel to multiple channels
 			//    if the neighboring AP is using a wider bandwidth (> 20 MHz)
-			List<WifiScanEntryWrapper> scanResps = wifiScanList.get(wifiScanList.size() - 1);
-			List<WifiScanEntryWrapper> scanRespsFiltered = new ArrayList<WifiScanEntryWrapper>();
-			for (WifiScanEntryWrapper entry : scanResps) {
-				if (entry.entry.channel <= maxChannel && entry.entry.channel >= minChannel) {
+			List<WifiScanEntry> scanResps = wifiScanList.get(wifiScanList.size() - 1);
+			List<WifiScanEntry> scanRespsFiltered = new ArrayList<WifiScanEntry>();
+			for (WifiScanEntry entry : scanResps) {
+				if (entry.channel <= maxChannel && entry.channel >= minChannel) {
 					int channelWidth = getChannelWidthFromWiFiScan(
-							entry.entry.channel, entry.entry.ht_oper, entry.entry.vht_oper
+						entry.channel,
+						entry.ht_oper,
+						entry.vht_oper
 					);
-					int primaryChannel = getPrimaryChannel(entry.entry.channel, channelWidth);
+					int primaryChannel = getPrimaryChannel(entry.channel, channelWidth);
 					List<Integer> coveredChannels =
-							getCoveredChannels(entry.entry.channel, primaryChannel, channelWidth);
+						getCoveredChannels(entry.channel, primaryChannel, channelWidth);
 					for (Integer newChannel : coveredChannels) {
-						WifiScanEntryWrapper newEntry = new WifiScanEntryWrapper(entry);
-						newEntry.entry.channel = newChannel;
+						WifiScanEntry newEntry = new WifiScanEntry(entry);
+						newEntry.channel = newChannel;
 						scanRespsFiltered.add(newEntry);
 					}
 				}
@@ -515,7 +517,7 @@ public abstract class ChannelOptimizer {
 	 */
 	protected void calculatePerfMetrics(
 		Map<String, Integer> tempChannelMap,
-		Map<String, List<WifiScanEntryWrapper>> deviceToWifiScans,
+		Map<String, List<WifiScanEntry>> deviceToWifiScans,
 		Map<String, String> bssidsMap,
 		boolean mode
 	) {
@@ -530,20 +532,20 @@ public abstract class ChannelOptimizer {
 			Map<Integer, Integer> channelOccupancy = new HashMap<>();
 
 			// Calculate the co-channel interference
-			List<WifiScanEntryWrapper> scanResps = deviceToWifiScans.get(serialNumber);
+			List<WifiScanEntry> scanResps = deviceToWifiScans.get(serialNumber);
 			if (scanResps != null) {
-				for (WifiScanEntryWrapper entry : scanResps) {
+				for (WifiScanEntry entry : scanResps) {
 					// Store the detected signal of the OWF APs
 					// for the new assignment calculation
-					if (mode && bssidsMap.containsKey(entry.entry.bssid)) {
-						owfSignal.put(bssidsMap.get(entry.entry.bssid), entry.entry.signal);
+					if (mode && bssidsMap.containsKey(entry.bssid)) {
+						owfSignal.put(bssidsMap.get(entry.bssid), entry.signal);
 						continue;
 					}
 					channelOccupancy.compute(
-							entry.entry.channel, (k, v) -> (v == null) ? 1 : v + 1
+						entry.channel, (k, v) -> (v == null) ? 1 : v + 1
 					);
-					if (entry.entry.channel == channel) {
-						double signal = entry.entry.signal;
+					if (entry.channel == channel) {
+						double signal = entry.signal;
 						avgInterferenceDB += signal;
 						sumInterference += Math.pow(10.0, signal/10.0);
 						maxInterferenceDB = Math.max(maxInterferenceDB, signal);
@@ -617,7 +619,7 @@ public abstract class ChannelOptimizer {
 	protected void logPerfMetrics(
 		Map<String, Integer> oldChannelMap,
 		Map<String, Integer> newChannelMap,
-		Map<String, List<WifiScanEntryWrapper>> deviceToWifiScans,
+		Map<String, List<WifiScanEntry>> deviceToWifiScans,
 		Map<String, String> bssidsMap
 	) {
 		// Calculate the old performance

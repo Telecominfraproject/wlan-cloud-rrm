@@ -8,6 +8,7 @@
 
 package com.facebook.openwifirrm.modules;
 
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,7 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.facebook.openwifirrm.modules.aggregators.Aggregator;
-import com.facebook.openwifirrm.ucentral.UCentralUtils.WifiScanEntryWrapper;
+import com.facebook.openwifirrm.ucentral.UCentralUtils.WifiScanEntry;
 
 /**
  * Modeler utilities.
@@ -209,33 +210,19 @@ public class ModelerUtils {
 		}
 	}
 
-	/**
-	 *
-	 * @param dataModel
-	 * @param obsoletionPeriodMs the maximum amount of time (in milliseconds) it is
-	 *                           worth aggregating over starting from the most
-	 *                           recent scan entry and working backwards in time
-	 * @param agg                an aggregator to output a calculated "aggregated
-	 *                           signal strength"
-	 * @return
-	 */
-	public Map<String, WifiScanEntryWrapper> getAggregatedWifiScans(Modeler.DataModel dataModel, long obsoletionPeriodMs,
+	public Map<String, WifiScanEntry> getAggregatedWifiScans(Modeler.DataModel dataModel, long obsoletionPeriod,
 			Aggregator<Double> agg) {
 		/*
 		 * NOTE: if a BSSID does not have a non-obsolete entry, it will be returned
 		 * (i.e., it will not be a key in the returned map).
 		 */
-		Map<String, WifiScanEntryWrapper> aggregatedWifiScans = new HashMap<>();
-
-		for (Map.Entry<String, List<List<WifiScanEntryWrapper>>> mapEntry : dataModel.latestWifiScans.entrySet()) {
+		Map<String, WifiScanEntry> aggregatedWifiScans = new HashMap<>();
+		for (Map.Entry<String, List<List<WifiScanEntry>>> mapEntry : dataModel.latestWifiScans.entrySet()) {
 			// Flatten the wifiscan entries and sort in reverse chronological order
-			List<List<WifiScanEntryWrapper>> scans = mapEntry.getValue();
-			if (scans.isEmpty()) {
-				continue;
-			}
-			List<WifiScanEntryWrapper> mostRecentToOldest = scans.stream().flatMap(list -> list.stream())
+			List<List<WifiScanEntry>> scans = mapEntry.getValue();
+			List<WifiScanEntry> mostRecentToOldest = scans.stream().flatMap(list -> list.stream())
 					.sorted((entry1, entry2) -> {
-						return -Long.compare(entry1.timeMs, entry2.timeMs);
+						return -Long.compare(entry1.tsf, entry2.tsf);
 					}).collect(Collectors.toUnmodifiableList());
 
 			/*
@@ -245,32 +232,32 @@ public class ModelerUtils {
 			 * ht_oper and vht_oper, take the average signal value.
 			 */
 			String bssid = mapEntry.getKey();
+			long now = Instant.now().getEpochSecond();
 			String newestHtOper = null;
 			String newestVhtOper = null;
-			final long now = mostRecentToOldest.get(0).timeMs;
-			for (WifiScanEntryWrapper entry : mostRecentToOldest) {
-				if (now - entry.timeMs >= obsoletionPeriodMs) {
+			for (WifiScanEntry entry : mostRecentToOldest) {
+				if (now - entry.tsf >= obsoletionPeriod) {
 					// discard obsolete entries
 					break;
-				} else if (entry.entry.ht_oper == null && entry.entry.vht_oper == null) {
+				} else if (entry.ht_oper == null && entry.vht_oper == null) {
 					continue;
 				}
 				if (newestHtOper == null) {
 					// may still be null after this assignment
-					newestHtOper = entry.entry.ht_oper;
+					newestHtOper = entry.ht_oper;
 				}
 				if (newestVhtOper == null) {
 					// may still be null after this assignment
-					newestVhtOper = entry.entry.vht_oper;
+					newestVhtOper = entry.vht_oper;
 				}
 				// if the entry matches ht_oper and vht_oper, add its signal to the aggregate
-				if ((entry.entry.ht_oper == null || entry.entry.ht_oper == newestHtOper)
-						&& (entry.entry.vht_oper == null || entry.entry.vht_oper == newestVhtOper)) {
+				if ((entry.ht_oper == null || entry.ht_oper == newestHtOper)
+						&& (entry.vht_oper == null || entry.vht_oper == newestVhtOper)) {
 					aggregatedWifiScans.putIfAbsent(bssid, entry);
-					agg.addValue((double) entry.entry.signal);
+					agg.addValue((double) entry.signal);
 				}
 			}
-			aggregatedWifiScans.get(bssid).entry.signal = (int) Math.round(agg.getAggregate());
+			aggregatedWifiScans.get(bssid).signal = (int) Math.round(agg.getAggregate());
 		}
 		return aggregatedWifiScans;
 	}
