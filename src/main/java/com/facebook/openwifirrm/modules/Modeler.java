@@ -23,6 +23,7 @@ import org.slf4j.LoggerFactory;
 import com.facebook.openwifirrm.DeviceConfig;
 import com.facebook.openwifirrm.DeviceDataManager;
 import com.facebook.openwifirrm.RRMConfig.ModuleConfig.ModelerParams;
+import com.facebook.openwifirrm.Utils;
 import com.facebook.openwifirrm.ucentral.UCentralApConfiguration;
 import com.facebook.openwifirrm.ucentral.UCentralClient;
 import com.facebook.openwifirrm.ucentral.UCentralKafkaConsumer;
@@ -390,9 +391,9 @@ public class Modeler implements Runnable {
 		return dataModel;
 	}
 
-	/** Return the current data model (deep clone via gson). */
+	/** Return the current data model (deep copy). */
 	public DataModel getDataModelCopy() {
-		return gson.fromJson(gson.toJson(dataModel), DataModel.class);
+		return Utils.deepCopy(dataModel, DataModel.class);
 	}
 
 	/** Revalidate the data model to remove any non-RRM-enabled devices. */

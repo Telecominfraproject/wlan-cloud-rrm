@@ -20,10 +20,6 @@ import com.facebook.openwifirrm.DeviceConfig;
 import com.facebook.openwifirrm.DeviceDataManager;
 import com.facebook.openwifirrm.DeviceTopology;
 import com.facebook.openwifirrm.RRMConfig.ModuleConfig.ProvMonitorParams;
-import com.facebook.openwifirrm.optimizers.ChannelOptimizer;
-import com.facebook.openwifirrm.optimizers.MeasurementBasedApApTPC;
-import com.facebook.openwifirrm.optimizers.TPC;
-import com.facebook.openwifirrm.optimizers.UnmanagedApAwareChannelOptimizer;
 import com.facebook.openwifirrm.ucentral.UCentralClient;
 import com.facebook.openwifirrm.ucentral.prov.models.InventoryTag;
 import com.facebook.openwifirrm.ucentral.prov.models.InventoryTagList;
@@ -49,28 +45,23 @@ public class ProvMonitor implements Runnable {
 	/** The device data manager. */
 	private final DeviceDataManager deviceDataManager;
 
-	/** The Modeler module instance. */
-	private final Modeler modeler;
-
-	/** The ConfigManager module instance. */
-	private final ConfigManager configManager;
-
 	/** The uCentral client. */
 	private final UCentralClient client;
+
+	/** The RRM scheduler. */
+	private final RRMScheduler scheduler;
 
 	/** Constructor. */
 	public ProvMonitor(
 		ProvMonitorParams params,
-		ConfigManager configManager,
 		DeviceDataManager deviceDataManager,
-		Modeler modeler,
-		UCentralClient client
+		UCentralClient client,
+		RRMScheduler scheduler
 	) {
 		this.params = params;
-		this.configManager = configManager;
 		this.deviceDataManager = deviceDataManager;
-		this.modeler = modeler;
 		this.client = client;
+		this.scheduler = scheduler;
 	}
 
 	@Override
@@ -121,9 +112,6 @@ public class ProvMonitor implements Runnable {
 
 		// Sync data
 		syncDataToProv(inventory, inventoryForRRM, venueList);
-
-		// TODO run periodic optimizations
-		//runOptimizations(deviceDataManager, configManager, modeler);
 	}
 
 	/** Sync RRM topology and device configs with owprov data. */
@@ -132,6 +120,8 @@ public class ProvMonitor implements Runnable {
 		SerialNumberList inventoryForRRM,
 		VenueList venueList
 	) {
+		// TODO sync RRM schedules per venue
+
 		// Sync topology
 		// NOTE: this will wipe configs for any device that moved venues, etc.
 		Map<String, String> venueIdToName = new HashMap<>();
@@ -177,41 +167,8 @@ public class ProvMonitor implements Runnable {
 			inventoryForRRM.serialNumbers.size(),
 			inventory.taglist.size()
 		);
-	}
 
-	/** Running tx power and channel optimizations for all RRM-enabled venues */
-	protected void runOptimizations(
-		DeviceDataManager deviceDataManager,
-		ConfigManager configManager,
-		Modeler modeler
-	) {
-		DeviceTopology topo = deviceDataManager.getTopologyCopy();
-
-		for (Map.Entry<String, Set<String>> e : topo.entrySet()) {
-			String zone = e.getKey();
-			logger.info(
-				"Running periodic optimizations\n Zone: {}\n Devices: {}",
-				zone,
-				e.getValue()
-			);
-			ChannelOptimizer channelOptimizer = new UnmanagedApAwareChannelOptimizer(
-				modeler.getDataModelCopy(), zone, deviceDataManager
-			);
-			TPC txOptimizer = new MeasurementBasedApApTPC(
-				modeler.getDataModelCopy(), zone, deviceDataManager
-			);
-
-			Map<String, Map<String, Integer>> channelMap =
-				channelOptimizer.computeChannelMap();
-			Map<String, Map<String, Integer>> txPowerMap =
-				txOptimizer.computeTxPowerMap();
-
-			channelOptimizer.applyConfig(
-				deviceDataManager, configManager, channelMap
-			);
-			txOptimizer.applyConfig(
-				deviceDataManager, configManager, txPowerMap
-			);
-		}
+		// Update scheduler
+		scheduler.syncTriggers();
 	}
 }

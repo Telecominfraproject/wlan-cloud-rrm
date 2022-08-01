@@ -63,6 +63,7 @@ public class DeviceDataManagerTest {
 		assertTrue(deviceDataManager.isZoneInTopology(zoneA));
 		assertTrue(deviceDataManager.isZoneInTopology(zoneB));
 		assertFalse(deviceDataManager.isZoneInTopology(zoneUnknown));
+		assertEquals(Arrays.asList(zoneA, zoneB), deviceDataManager.getZones());
 
 		// Minimal JSON sanity check
 		assertFalse(deviceDataManager.getTopologyJson().isEmpty());
@@ -171,6 +172,9 @@ public class DeviceDataManagerTest {
 		assertFalse(actualApCfgB.enableRRM);
 		assertEquals(2, actualApCfgA.allowedChannels.get("2G").size());
 		assertEquals(3, actualApCfgB.allowedChannels.get("2G").size());
+		DeviceConfig actualZoneCfgA = deviceDataManager.getZoneConfig(zoneA);
+		assertNotNull(actualZoneCfgA);
+		assertTrue(actualZoneCfgA.enableRRM);
 
 		// Minimal JSON sanity check
 		assertFalse(deviceDataManager.getDeviceLayeredConfigJson().isEmpty());
