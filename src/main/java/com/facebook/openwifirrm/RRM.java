@@ -126,6 +126,7 @@ public class RRM {
 				? new ProvMonitor(
 					config.moduleConfig.provMonitorParams,
 					deviceDataManager,
+					modeler,
 					client,
 					scheduler
 				) : null;

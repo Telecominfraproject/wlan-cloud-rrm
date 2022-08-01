@@ -350,6 +350,12 @@ public class RRMConfig {
 			 * (<tt>SCHEDULERPARAMS_THREADCOUNT</tt>)
 			 */
 			public int threadCount = 2;
+
+			/**
+			 * If set, do not apply any changes from scheduled algorithms
+			 * (<tt>SCHEDULERPARAMS_DRYRUN</tt>)
+			 */
+			public boolean dryRun = false;
 		}
 
 		/** RRMScheduler parameters. */
@@ -510,6 +516,9 @@ public class RRMConfig {
 			config.moduleConfig.schedulerParams;
 		if ((v = env.get("SCHEDULERPARAMS_THREADCOUNT")) != null) {
 			schedulerParams.threadCount = Integer.parseInt(v);
+		}
+		if ((v = env.get("SCHEDULERPARAMS_DRYRUN")) != null) {
+			schedulerParams.dryRun = Boolean.parseBoolean(v);
 		}
 
 		return config;
