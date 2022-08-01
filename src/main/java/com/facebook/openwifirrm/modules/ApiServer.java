@@ -10,8 +10,10 @@ package com.facebook.openwifirrm.modules;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.Base64;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
@@ -32,6 +34,7 @@ import com.facebook.openwifirrm.DeviceLayeredConfig;
 import com.facebook.openwifirrm.DeviceTopology;
 import com.facebook.openwifirrm.RRM;
 import com.facebook.openwifirrm.RRMConfig.ModuleConfig.ApiServerParams;
+import com.facebook.openwifirrm.Utils.LruCache;
 import com.facebook.openwifirrm.optimizers.ChannelOptimizer;
 import com.facebook.openwifirrm.optimizers.LeastUsedChannelOptimizer;
 import com.facebook.openwifirrm.optimizers.LocationBasedOptimalTPC;
@@ -43,6 +46,7 @@ import com.facebook.openwifirrm.optimizers.TPC;
 import com.facebook.openwifirrm.optimizers.UnmanagedApAwareChannelOptimizer;
 import com.facebook.openwifirrm.ucentral.UCentralClient;
 import com.facebook.openwifirrm.ucentral.gw.models.SystemInfoResults;
+import com.facebook.openwifirrm.ucentral.gw.models.TokenValidationResult;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -53,11 +57,14 @@ import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.models.OpenAPI;
 import spark.Request;
@@ -78,7 +85,13 @@ import spark.Spark;
 		@Tag(name = "SDK"),
 		@Tag(name = "Config"),
 		@Tag(name = "Optimization"),
+	},
+	security = {
+		@SecurityRequirement(name = "bearerAuth"),
 	}
+)
+@SecurityScheme(
+	name = "bearerAuth", type = SecuritySchemeType.HTTP, scheme = "bearer"
 )
 public class ApiServer implements Runnable {
 	private static final Logger logger = LoggerFactory.getLogger(ApiServer.class);
@@ -103,6 +116,14 @@ public class ApiServer implements Runnable {
 
 	/** The RRM scheduler. */
 	private final RRMScheduler scheduler;
+
+	/**
+	 * The auth token cache (map from token to expiration time, in UNIX seconds)
+	 * for incoming requests.
+	 *
+	 * @see {@link #performOpenWifiAuth(Request, Response)}
+	 */
+	private final Map<String, Long> tokenCache;
 
 	/** The Gson instance. */
 	private final Gson gson = new Gson();
@@ -130,6 +151,9 @@ public class ApiServer implements Runnable {
 		this.modeler = modeler;
 		this.client = client;
 		this.scheduler = scheduler;
+		this.tokenCache = Collections.synchronizedMap(
+			new LruCache<>(Math.max(params.openWifiAuthCacheSize, 1))
+		);
 	}
 
 	@Override
@@ -235,10 +259,6 @@ public class ApiServer implements Runnable {
 	 * HTTP 403 response and return false.
 	 */
 	private boolean performOpenWifiAuth(Request request, Response response) {
-		//
-		// [WIP] This is stub code and is NOT fully implemented
-		//
-
 		// TODO check if request came from internal endpoint
 		boolean internal = true;
 		String internalName = request.headers("X-INTERNAL-NAME");
@@ -257,9 +277,7 @@ public class ApiServer implements Runnable {
 			if (authHeader != null && authHeader.startsWith(AUTH_PREFIX)) {
 				String token = authHeader.substring(AUTH_PREFIX.length());
 				if (!token.isEmpty()) {
-					// The below only checks /api/v1/validateToken and caches it as necessary.
-					// TODO - /api/v1/validateSubToken still has to be implemented.
-					boolean valid = this.client.validateToken(token);
+					boolean valid = validateOpenWifiToken(token);
 					if (valid) {
 						// auth success
 						return true;
@@ -271,6 +289,25 @@ public class ApiServer implements Runnable {
 		// auth failure
 		Spark.halt(403, "Forbidden");
 		return false;
+	}
+
+	/**
+	 * Validate an OpenWiFi token (external), caching successful lookups.
+	 * @return true if token is valid
+	 */
+	private boolean validateOpenWifiToken(String token) {
+		// The below only checks /api/v1/validateToken and caches it as necessary.
+		// TODO - /api/v1/validateSubToken still has to be implemented.
+		Long expiry = tokenCache.get(token);
+		if (expiry == null) {
+			TokenValidationResult result = client.validateToken(token);
+			if (result == null) {
+				return false;
+			}
+			expiry = result.tokenInfo.created + result.tokenInfo.expires_in;
+			tokenCache.put(token, expiry);
+		}
+		return expiry > Instant.now().getEpochSecond();
 	}
 
 	/** Filter evaluated before each request. */
@@ -298,7 +335,10 @@ public class ApiServer implements Runnable {
 
 		// OpenWifi auth (if enabled)
 		if (params.useOpenWifiAuth) {
-			this.performOpenWifiAuth(request, response);
+			// Only protect API endpoints
+			if (request.pathInfo().startsWith("/api/")) {
+				this.performOpenWifiAuth(request, response);
+			}
 		}
 	}
 
