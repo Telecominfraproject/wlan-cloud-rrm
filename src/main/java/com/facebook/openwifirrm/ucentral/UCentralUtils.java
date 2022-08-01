@@ -51,12 +51,25 @@ public class UCentralUtils {
 		public String bssid;
 		public String ssid;
 		public long tsf;
-		/** High throughput operator */
+		/**
+		 * ht_oper is short for "high throughput operator". This field contains some
+		 * information already present in other fields. This is because this field was
+		 * added later in order to capture the non-redundant information but also
+		 * includes some redundant information. 802.11 defines the HT operator and
+		 * vendors may define additional fields.
+		 */
 		public String ht_oper;
-		/** Very high throughput operator */
+		/**
+		 * vht_oper is short for "very high throughput operator". This field contains
+		 * some information already present in other fields. This is because this field
+		 * was added later in order to capture the non-redundant information but also
+		 * includes some redundant information. 802.11 defines the HT operator and
+		 * vendors may define additional fields.
+		 */
 		public String vht_oper;
 		public int capability;
 		public int frequency;
+		/** IE = information element */
 		public JsonArray ies;
 		/**
 		 * Unix time in milliseconds (ms). This field is not defined in the uCentral
