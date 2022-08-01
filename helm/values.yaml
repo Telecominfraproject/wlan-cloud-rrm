@@ -1,6 +1,6 @@
 # System
 replicaCount: 1
-strategyType: RollingUpdate
+strategyType: Recreate
 revisionHistoryLimit: 2
 
 nameOverride: ""
