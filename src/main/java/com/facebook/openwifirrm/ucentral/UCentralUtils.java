@@ -58,6 +58,13 @@ public class UCentralUtils {
 		public int capability;
 		public int frequency;
 		public JsonArray ies;
+		/**
+		 * Unix time in milliseconds (ms). This field is not defined in the uCentral
+		 * API. We added it because it was unclear whether the {@code tsf} field was a
+		 * reliable time measurement (e.g., we did not know if/when it got reset or if
+		 * it was always available).
+		 */
+		public long unixTimeMs;
 
 		/** Default Constructor. */
 		public WifiScanEntry() {}
@@ -75,6 +82,7 @@ public class UCentralUtils {
 			this.capability = o.capability;
 			this.frequency = o.frequency;
 			this.ies = o.ies;
+			this.unixTimeMs = o.unixTimeMs;
 		}
 	}
 
@@ -90,7 +98,9 @@ public class UCentralUtils {
 				.getAsJsonObject("status")
 				.getAsJsonArray("scan");
 			for (JsonElement e : scanInfo) {
-				entries.add(gson.fromJson(e, WifiScanEntry.class));
+				WifiScanEntry entry = gson.fromJson(e, WifiScanEntry.class);
+				entry.unixTimeMs = System.currentTimeMillis();
+				entries.add(entry);
 			}
 		} catch (Exception e) {
 			return null;

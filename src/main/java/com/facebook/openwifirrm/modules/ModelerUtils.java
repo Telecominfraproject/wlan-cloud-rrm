@@ -222,7 +222,7 @@ public class ModelerUtils {
 			List<List<WifiScanEntry>> scans = mapEntry.getValue();
 			List<WifiScanEntry> mostRecentToOldest = scans.stream().flatMap(list -> list.stream())
 					.sorted((entry1, entry2) -> {
-						return -Long.compare(entry1.tsf, entry2.tsf);
+						return -Long.compare(entry1.unixTimeMs, entry2.unixTimeMs);
 					}).collect(Collectors.toUnmodifiableList());
 
 			/*
@@ -236,7 +236,7 @@ public class ModelerUtils {
 			String newestHtOper = null;
 			String newestVhtOper = null;
 			for (WifiScanEntry entry : mostRecentToOldest) {
-				if (now - entry.tsf >= obsoletionPeriod) {
+				if (now - entry.unixTimeMs >= obsoletionPeriod) {
 					// discard obsolete entries
 					break;
 				} else if (entry.ht_oper == null && entry.vht_oper == null) {
