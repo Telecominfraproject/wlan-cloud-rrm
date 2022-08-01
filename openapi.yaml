@@ -1,0 +1,437 @@
+openapi: 3.0.1
+info:
+  title: OpenWiFi 2.0 RRM OpenAPI
+  description: This document describes the API for the Radio Resource Management service.
+  version: 1.0.0
+tags:
+- name: SDK
+- name: Config
+- name: Optimization
+paths:
+  /api/v1/currentModel:
+    get:
+      tags:
+      - Optimization
+      summary: Get current RRM model
+      description: Returns the current RRM data model.
+      operationId: getCurrentModel
+      responses:
+        "200":
+          description: Data model
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/v1/getDeviceConfig:
+    get:
+      tags:
+      - Config
+      summary: Get device configuration
+      description: Returns the device configuration by applying all configuration
+        layers.
+      operationId: getDeviceConfig
+      parameters:
+      - name: serial
+        in: query
+        description: The device serial number
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Device configuration
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceConfig'
+  /api/v1/getDeviceLayeredConfig:
+    get:
+      tags:
+      - Config
+      summary: Get device layered configuration
+      description: Returns the device layered configuration.
+      operationId: getDeviceLayeredConfig
+      responses:
+        "200":
+          description: Device layered configuration
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceLayeredConfig'
+  /api/v1/getTopology:
+    get:
+      tags:
+      - Config
+      summary: Get device topology
+      description: Returns the device topology.
+      operationId: getTopology
+      responses:
+        "200":
+          description: Device topology
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceTopology'
+  /api/v1/modifyDeviceApConfig:
+    post:
+      tags:
+      - Config
+      summary: Modify device AP configuration
+      description: Modify the AP layer of the network configuration for the given
+        AP. Any existing fields absent from the request body will be preserved.
+      operationId: modifyDeviceApConfig
+      parameters:
+      - name: serial
+        in: query
+        description: The device serial number
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: The device AP configuration
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeviceConfig'
+        required: true
+      responses:
+        "200":
+          description: Success
+        "400":
+          description: Bad request
+  /api/v1/optimizeChannel:
+    get:
+      tags:
+      - Optimization
+      summary: Optimize channel configuration
+      description: Run channel optimizer and return the new channel allocation.
+      operationId: optimizeChannel
+      parameters:
+      - name: mode
+        in: query
+        description: "The assignment algorithm to use:\n- random: random channel initialization\n\
+          - least_used: least used channel assignment\n- unmanaged_aware: unmanaged\
+          \ AP aware least used channel assignment\n"
+        required: true
+        schema:
+          type: string
+          enum:
+          - random
+          - least_used
+          - unmanaged_aware
+      - name: zone
+        in: query
+        description: The RF zone
+        required: true
+        schema:
+          type: string
+      - name: dry_run
+        in: query
+        description: Do not apply changes
+        schema:
+          type: boolean
+      responses:
+        "200":
+          description: Channel allocation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChannelAllocation'
+  /api/v1/optimizeTxPower:
+    get:
+      tags:
+      - Optimization
+      summary: Optimize tx power configuration
+      description: Run tx power optimizer and return the new tx power allocation.
+      operationId: optimizeTxPower
+      parameters:
+      - name: mode
+        in: query
+        description: "The assignment algorithm to use:\n- random: random tx power\
+          \ initialier\n- measure_ap_client: measurement-based AP-client TPC algorithm\n\
+          - measure_ap_ap: measurement-based AP-AP TPC algorithm\n- location_optimal:\
+          \ location-based optimal TPC algorithm\n"
+        required: true
+        schema:
+          type: string
+          enum:
+          - random
+          - measure_ap_client
+          - measure_ap_ap
+          - location_optimal
+      - name: zone
+        in: query
+        description: The RF zone
+        required: true
+        schema:
+          type: string
+      - name: dry_run
+        in: query
+        description: Do not apply changes
+        schema:
+          type: boolean
+      responses:
+        "200":
+          description: Tx power allocation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TxPowerAllocation'
+  /api/v1/setDeviceApConfig:
+    post:
+      tags:
+      - Config
+      summary: Set device AP configuration
+      description: Set the AP layer of the network configuration for the given AP.
+      operationId: setDeviceApConfig
+      parameters:
+      - name: serial
+        in: query
+        description: The device serial number
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: The device AP configuration
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeviceConfig'
+        required: true
+      responses:
+        "200":
+          description: Success
+        "400":
+          description: Bad request
+  /api/v1/setDeviceNetworkConfig:
+    post:
+      tags:
+      - Config
+      summary: Set device network configuration
+      description: Set the network layer of the device configuration.
+      operationId: setDeviceNetworkConfig
+      requestBody:
+        description: The device network configuration
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeviceConfig'
+        required: true
+      responses:
+        "200":
+          description: Success
+        "400":
+          description: Bad request
+  /api/v1/setDeviceZoneConfig:
+    post:
+      tags:
+      - Config
+      summary: Set device zone configuration
+      description: Set the zone layer of the network configuration for the given zone.
+      operationId: setDeviceZoneConfig
+      parameters:
+      - name: zone
+        in: query
+        description: The RF zone
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: The device zone configuration
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeviceConfig'
+        required: true
+      responses:
+        "200":
+          description: Success
+        "400":
+          description: Bad request
+  /api/v1/setTopology:
+    post:
+      tags:
+      - Config
+      summary: Set device topology
+      description: Set the device topology.
+      operationId: setTopology
+      requestBody:
+        description: The device topology
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeviceTopology'
+        required: true
+      responses:
+        "200":
+          description: Success
+        "400":
+          description: Bad request
+  /api/v1/system:
+    get:
+      tags:
+      - SDK
+      summary: Get system info
+      description: Returns the system info from the running service.
+      operationId: system
+      parameters:
+      - name: command
+        in: query
+        description: Get a value
+        required: true
+        schema:
+          type: string
+          enum:
+          - info
+      responses:
+        "200":
+          description: Successful command execution
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SystemInfoResults'
+components:
+  schemas:
+    DeviceConfig:
+      type: object
+      properties:
+        enableRRM:
+          type: boolean
+        schedule:
+          $ref: '#/components/schemas/RRMSchedule'
+        enableConfig:
+          type: boolean
+        enableWifiScan:
+          type: boolean
+        boundary:
+          type: integer
+          format: int32
+        location:
+          type: array
+          items:
+            type: integer
+            format: int32
+        allowedChannels:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: integer
+              format: int32
+        allowedChannelWidths:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: integer
+              format: int32
+        autoChannels:
+          type: object
+          additionalProperties:
+            type: integer
+            format: int32
+        userChannels:
+          type: object
+          additionalProperties:
+            type: integer
+            format: int32
+        allowedTxPowers:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: integer
+              format: int32
+        autoTxPowers:
+          type: object
+          additionalProperties:
+            type: integer
+            format: int32
+        userTxPowers:
+          type: object
+          additionalProperties:
+            type: integer
+            format: int32
+    RRMAlgorithm:
+      type: object
+      properties:
+        name:
+          type: string
+        args:
+          type: object
+          additionalProperties:
+            type: string
+    RRMSchedule:
+      type: object
+      properties:
+        cron:
+          type: string
+        algorithms:
+          type: array
+          items:
+            $ref: '#/components/schemas/RRMAlgorithm'
+    DeviceLayeredConfig:
+      type: object
+      properties:
+        apConfig:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/DeviceConfig'
+        zoneConfig:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/DeviceConfig'
+        networkConfig:
+          $ref: '#/components/schemas/DeviceConfig'
+    DeviceTopology:
+      type: object
+    ChannelAllocation:
+      type: object
+      properties:
+        data:
+          type: object
+          additionalProperties:
+            type: object
+            additionalProperties:
+              type: integer
+              format: int32
+    TxPowerAllocation:
+      type: object
+      properties:
+        data:
+          type: object
+          additionalProperties:
+            type: object
+            additionalProperties:
+              type: integer
+              format: int32
+    Certificate:
+      type: object
+      properties:
+        filename:
+          type: string
+        expires:
+          type: integer
+          format: int64
+    SystemInfoResults:
+      type: object
+      properties:
+        version:
+          type: string
+        uptime:
+          type: integer
+          format: int64
+        start:
+          type: integer
+          format: int64
+        os:
+          type: string
+        processors:
+          type: integer
+          format: int32
+        hostname:
+          type: string
+        certificates:
+          type: array
+          items:
+            $ref: '#/components/schemas/Certificate'
