@@ -3,6 +3,8 @@ info:
   title: OpenWiFi 2.0 RRM OpenAPI
   description: This document describes the API for the Radio Resource Management service.
   version: 1.0.0
+security:
+- bearerAuth: []
 tags:
 - name: SDK
 - name: Config
@@ -435,3 +437,7 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Certificate'
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
