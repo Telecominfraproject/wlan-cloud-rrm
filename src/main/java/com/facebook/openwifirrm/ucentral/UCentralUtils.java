@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
 import com.facebook.openwifirrm.RRMConfig;
 import com.facebook.openwifirrm.Utils;
 import com.facebook.openwifirrm.ucentral.models.State;
+import com.facebook.openwifirrm.ucentral.models.WifiScanEntry;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -42,47 +43,8 @@ public class UCentralUtils {
 	private UCentralUtils() {}
 
 	/** Represents a single entry in wifi scan results. */
-	public static class WifiScanEntry {
-		public int channel;
-		public long last_seen;
-		/** Signal strength measured in dBm */
-		public int signal;
-		/** BSSID is the MAC address of the device */
-		public String bssid;
-		public String ssid;
-		public long tsf;
-		/**
-		 * ht_oper is short for "high throughput operator". This field contains some
-		 * information already present in other fields. This is because this field was
-		 * added later in order to capture the non-redundant information but also
-		 * includes some redundant information. 802.11 defines the HT operator and
-		 * vendors may define additional fields.
-		 *
-		 * This field is specified as 24 bytes, but it is encoded in base64. 24 bytes is
-		 * 192 bits which is 32 base64 characters, so this field would be a 32-character
-		 * string. However, I believe the first byte (the Element ID, which should be 61
-		 * for ht_oper) and the second byte (Length) are omitted when the wifi scan
-		 * results are sent to rrm. Typically in base64, the input has bytes padded
-		 * until its length is divisible by 6, so the 22 bytes would be padded by two
-		 * bytes to reach 24 bytes. Typically, the ASCII value of "=" is padded, which
-		 * would explain why ht_oper values always end with two equals signs.
-		 */
-		public String ht_oper;
-		/**
-		 * vht_oper is short for "very high throughput operator". This field contains
-		 * some information already present in other fields. This is because this field
-		 * was added later in order to capture the non-redundant information but also
-		 * includes some redundant information. 802.11 defines the HT operator and
-		 * vendors may define additional fields.
-		 *
-		 * For information about about the contents of this field, its encoding, etc.,
-		 * please see the javadoc for ht_oper.
-		 */
-		public String vht_oper;
-		public int capability;
-		public int frequency;
-		/** IE = information element */
-		public JsonArray ies;
+	public static class ProcessedWifiScanEntry extends WifiScanEntry {
+
 		/**
 		 * Unix time in milliseconds (ms). This field is not defined in the uCentral
 		 * API. We added it because it was unclear whether the {@code tsf} field was a
@@ -91,22 +53,13 @@ public class UCentralUtils {
 		 */
 		public long unixTimeMs;
 
-		/** Default Constructor. */
-		public WifiScanEntry() {}
+		/** Default constructor. */
+		public ProcessedWifiScanEntry() {
+		}
 
 		/** Copy Constructor. */
-		public WifiScanEntry(WifiScanEntry o) {
-			this.channel = o.channel;
-			this.last_seen = o.last_seen;
-			this.signal = o.signal;
-			this.bssid = o.bssid;
-			this.ssid = o.ssid;
-			this.tsf = o.tsf;
-			this.ht_oper = o.ht_oper;
-			this.vht_oper = o.vht_oper;
-			this.capability = o.capability;
-			this.frequency = o.frequency;
-			this.ies = o.ies;
+		public ProcessedWifiScanEntry(ProcessedWifiScanEntry o) {
+			super(o);
 			this.unixTimeMs = o.unixTimeMs;
 		}
 	}
@@ -116,14 +69,14 @@ public class UCentralUtils {
 	 *
 	 * Returns null if any parsing/deserialization error occurred.
 	 */
-	public static List<WifiScanEntry> parseWifiScanEntries(JsonObject result) {
-		List<WifiScanEntry> entries = new ArrayList<>();
+	public static List<ProcessedWifiScanEntry> parseWifiScanEntries(JsonObject result) {
+		List<ProcessedWifiScanEntry> entries = new ArrayList<>();
 		try {
 			JsonArray scanInfo = result
 				.getAsJsonObject("status")
 				.getAsJsonArray("scan");
 			for (JsonElement e : scanInfo) {
-				WifiScanEntry entry = gson.fromJson(e, WifiScanEntry.class);
+				ProcessedWifiScanEntry entry = gson.fromJson(e, ProcessedWifiScanEntry.class);
 				entry.unixTimeMs = System.currentTimeMillis();
 				entries.add(entry);
 			}

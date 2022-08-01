@@ -18,7 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.facebook.openwifirrm.modules.aggregators.Aggregator;
-import com.facebook.openwifirrm.ucentral.UCentralUtils.WifiScanEntry;
+import com.facebook.openwifirrm.ucentral.UCentralUtils.ProcessedWifiScanEntry;
 
 /**
  * Modeler utilities.
@@ -222,20 +222,20 @@ public class ModelerUtils {
 	 *         entry with its {@code signal} attribute modified to be the aggregated
 	 *         signal value instead of the value in just the most recent entry.
 	 */
-	public Map<String, WifiScanEntry> getAggregatedWifiScans(Modeler.DataModel dataModel, long obsoletionPeriodMs,
+	public Map<String, ProcessedWifiScanEntry> getAggregatedWifiScans(Modeler.DataModel dataModel, long obsoletionPeriodMs,
 			Aggregator<Double> agg) {
 		/*
 		 * NOTE: if a BSSID does not have a non-obsolete entry, it will be returned
 		 * (i.e., it will not be a key in the returned map).
 		 */
-		Map<String, WifiScanEntry> aggregatedWifiScans = new HashMap<>();
-		for (Map.Entry<String, List<List<WifiScanEntry>>> mapEntry : dataModel.latestWifiScans.entrySet()) {
+		Map<String, ProcessedWifiScanEntry> aggregatedWifiScans = new HashMap<>();
+		for (Map.Entry<String, List<List<ProcessedWifiScanEntry>>> mapEntry : dataModel.latestWifiScans.entrySet()) {
 			// Flatten the wifiscan entries and sort in reverse chronological order
-			List<List<WifiScanEntry>> scans = mapEntry.getValue();
+			List<List<ProcessedWifiScanEntry>> scans = mapEntry.getValue();
 			if (scans.isEmpty()) {
 				continue;
 			}
-			List<WifiScanEntry> mostRecentToOldest = scans.stream().flatMap(list -> list.stream())
+			List<ProcessedWifiScanEntry> mostRecentToOldest = scans.stream().flatMap(list -> list.stream())
 					.sorted((entry1, entry2) -> {
 						return -Long.compare(entry1.unixTimeMs, entry2.unixTimeMs);
 					}).collect(Collectors.toUnmodifiableList());
@@ -250,7 +250,7 @@ public class ModelerUtils {
 			long now = Instant.now().getEpochSecond();
 			String newestHtOper = null;
 			String newestVhtOper = null;
-			for (WifiScanEntry entry : mostRecentToOldest) {
+			for (ProcessedWifiScanEntry entry : mostRecentToOldest) {
 				if (now - entry.unixTimeMs >= obsoletionPeriodMs) {
 					// discard obsolete entries
 					break;

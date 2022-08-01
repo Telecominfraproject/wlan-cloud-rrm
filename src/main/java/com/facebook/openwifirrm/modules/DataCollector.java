@@ -33,7 +33,7 @@ import com.facebook.openwifirrm.ucentral.UCentralClient;
 import com.facebook.openwifirrm.ucentral.UCentralKafkaConsumer;
 import com.facebook.openwifirrm.ucentral.UCentralKafkaConsumer.KafkaRecord;
 import com.facebook.openwifirrm.ucentral.UCentralUtils;
-import com.facebook.openwifirrm.ucentral.UCentralUtils.WifiScanEntry;
+import com.facebook.openwifirrm.ucentral.UCentralUtils.ProcessedWifiScanEntry;
 import com.facebook.openwifirrm.ucentral.gw.models.CommandInfo;
 import com.facebook.openwifirrm.ucentral.gw.models.DeviceCapabilities;
 import com.facebook.openwifirrm.ucentral.gw.models.DeviceWithStatus;
@@ -397,7 +397,7 @@ public class DataCollector implements Runnable {
 			);
 			return false;
 		}
-		List<WifiScanEntry> scanEntries =
+		List<ProcessedWifiScanEntry> scanEntries =
 			UCentralUtils.parseWifiScanEntries(wifiScanResult.results);
 		if (scanEntries == null) {
 			logger.error(
@@ -429,7 +429,7 @@ public class DataCollector implements Runnable {
 
 	/** Insert wifi scan results into database. */
 	private void insertWifiScanResultsToDatabase(
-		String serialNumber, long ts, List<WifiScanEntry> entries
+		String serialNumber, long ts, List<ProcessedWifiScanEntry> entries
 	) {
 		if (dbManager == null) {
 			return;

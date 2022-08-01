@@ -27,7 +27,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.facebook.openwifirrm.Utils;
-import com.facebook.openwifirrm.ucentral.UCentralUtils.WifiScanEntry;
+import com.facebook.openwifirrm.ucentral.UCentralUtils.ProcessedWifiScanEntry;
 import com.facebook.openwifirrm.ucentral.models.State;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -431,7 +431,7 @@ public class DatabaseManager {
 
 	/** Insert wifi scan results into the database. */
 	public void addWifiScan(
-		String serialNumber, long ts, List<WifiScanEntry> entries
+		String serialNumber, long ts, List<ProcessedWifiScanEntry> entries
 	) throws SQLException {
 		if (ds == null) {
 			return;
@@ -471,7 +471,7 @@ public class DatabaseManager {
 				  "`scan_id`, `bssid`, `ssid`, `lastseen`, `rssi`, `channel`" +
 				") VALUES (?, ?, ?, ?, ?, ?)"
 			);
-			for (WifiScanEntry entry : entries) {
+			for (ProcessedWifiScanEntry entry : entries) {
 				long bssid = 0;
 				try {
 					bssid = Utils.macToLong(entry.bssid);
@@ -499,7 +499,7 @@ public class DatabaseManager {
 	 * Return up to the N latest wifiscan results for the given device as a map
 	 * of timestamp to scan results.
 	 */
-	public Map<Long, List<WifiScanEntry>> getLatestWifiScans(
+	public Map<Long, List<ProcessedWifiScanEntry>> getLatestWifiScans(
 		String serialNumber, int count
 	) throws SQLException {
 		if (serialNumber == null || serialNumber.isEmpty()) {
@@ -513,7 +513,7 @@ public class DatabaseManager {
 			return null;
 		}
 
-		Map<Long, List<WifiScanEntry>> ret = new TreeMap<>();
+		Map<Long, List<ProcessedWifiScanEntry>> ret = new TreeMap<>();
 		try (Connection conn = getConnection()) {
 			// Fetch latest N scan IDs
 			Map<Long, Long> scanIdToTs = new HashMap<>();
@@ -547,7 +547,7 @@ public class DatabaseManager {
 					while (rs.next()) {
 						long scanId = rs.getLong("scan_id");
 
-						WifiScanEntry entry = new WifiScanEntry();
+						ProcessedWifiScanEntry entry = new ProcessedWifiScanEntry();
 						entry.channel = rs.getInt("channel");
 						entry.last_seen = rs.getLong("lastseen");
 						entry.signal = rs.getInt("rssi");

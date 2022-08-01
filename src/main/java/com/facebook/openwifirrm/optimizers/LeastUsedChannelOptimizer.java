@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
 import com.facebook.openwifirrm.DeviceDataManager;
 import com.facebook.openwifirrm.modules.Modeler.DataModel;
 import com.facebook.openwifirrm.ucentral.UCentralUtils;
-import com.facebook.openwifirrm.ucentral.UCentralUtils.WifiScanEntry;
+import com.facebook.openwifirrm.ucentral.UCentralUtils.ProcessedWifiScanEntry;
 import com.facebook.openwifirrm.ucentral.models.State;
 
 /**
@@ -53,7 +53,7 @@ public class LeastUsedChannelOptimizer extends ChannelOptimizer {
 	 * @return list of the name of the sorted APs
 	 */
 	protected static List<String> getSortedAPs(
-		Map<String, List<WifiScanEntry>> deviceToWifiScans
+		Map<String, List<ProcessedWifiScanEntry>> deviceToWifiScans
 	) {
 		return deviceToWifiScans.entrySet()
 			.stream()
@@ -105,13 +105,13 @@ public class LeastUsedChannelOptimizer extends ChannelOptimizer {
 	 * @param deviceToWifiScans the filtered and reorganized wifiscan results
 	 * @return the wifiscan results on the bandwidth-specific primary channels
 	 */
-	protected List<WifiScanEntry> getScanRespsByBandwidth(
+	protected List<ProcessedWifiScanEntry> getScanRespsByBandwidth(
 		String band,
 		String serialNumber,
 		int channelWidth,
-		Map<String, List<WifiScanEntry>> deviceToWifiScans
+		Map<String, List<ProcessedWifiScanEntry>> deviceToWifiScans
 	) {
-		List<WifiScanEntry> scanResps = deviceToWifiScans.get(serialNumber);
+		List<ProcessedWifiScanEntry> scanResps = deviceToWifiScans.get(serialNumber);
 
 		// 2.4G only supports 20 MHz bandwidth
 		if (band.equals(BAND_2G)) {
@@ -122,9 +122,9 @@ public class LeastUsedChannelOptimizer extends ChannelOptimizer {
 		// For example, if the scan results are channels 36 and 40 and channel width is 40,
 		// the aggregated scan results will change the one on channel 40 to channel 36 by
 		// checking CHANNELS_WIDTH_TO_PRIMARY.
-		List<WifiScanEntry> scanRespsProcessed = new ArrayList<WifiScanEntry>();
+		List<ProcessedWifiScanEntry> scanRespsProcessed = new ArrayList<ProcessedWifiScanEntry>();
 		Map<Integer, Map<String, Integer>> channelDeviceMap = new TreeMap<>();
-		for (WifiScanEntry entry : scanResps) {
+		for (ProcessedWifiScanEntry entry : scanResps) {
 			int primaryChannel = getPrimaryChannel(entry.channel, channelWidth);
 			if (primaryChannel == 0) {
 				continue;
@@ -132,7 +132,7 @@ public class LeastUsedChannelOptimizer extends ChannelOptimizer {
 			if (channelDeviceMap.get(primaryChannel) != null) {
 				continue;
 			}
-			WifiScanEntry newEntry = new WifiScanEntry(entry);
+			ProcessedWifiScanEntry newEntry = new ProcessedWifiScanEntry(entry);
 			newEntry.channel = primaryChannel;
 			scanRespsProcessed.add(newEntry);
 		}
@@ -153,13 +153,13 @@ public class LeastUsedChannelOptimizer extends ChannelOptimizer {
 		String serialNumber,
 		int channelWidth,
 		List<Integer> availableChannelsList,
-		Map<String, List<WifiScanEntry>> deviceToWifiScans,
+		Map<String, List<ProcessedWifiScanEntry>> deviceToWifiScans,
 		Map<String, Map<String, Integer>> channelMap,
 		Map<String, String> bssidsMap
 	) {
 		// Find occupied channels (and # associated stations)
 		Map<Integer, Integer> occupiedChannels = new TreeMap<>();
-		List<WifiScanEntry> scanResps = getScanRespsByBandwidth(
+		List<ProcessedWifiScanEntry> scanResps = getScanRespsByBandwidth(
 			band,
 			serialNumber,
 			channelWidth,
@@ -167,7 +167,7 @@ public class LeastUsedChannelOptimizer extends ChannelOptimizer {
 		);
 
 		// Get the occupied channels information
-		for (WifiScanEntry entry : scanResps) {
+		for (ProcessedWifiScanEntry entry : scanResps) {
 			occupiedChannels.compute(
 				entry.channel, (k, v) -> (v == null) ? 1 : v + 1
 			);
@@ -324,7 +324,7 @@ public class LeastUsedChannelOptimizer extends ChannelOptimizer {
 			Map<String, Integer> newChannelMap = new TreeMap<>();
 
 			// Only use last wifi scan result for APs (TODO)
-			Map<String, List<WifiScanEntry>> deviceToWifiScans = getDeviceToWiFiScans(
+			Map<String, List<ProcessedWifiScanEntry>> deviceToWifiScans = getDeviceToWiFiScans(
 				band, model.latestWifiScans, bandsMap
 			);
 
