@@ -37,7 +37,12 @@ public class WifiScanEntry {
 	 * define additional fields.
 	 *
 	 * For information about about the contents of this field, its encoding, etc.,
-	 * please see the javadoc for ht_oper.
+	 * please see the javadoc for ht_oper first. The vht_oper likely operates
+	 * similarly, except instead of starting at 24 bytes, losing the last 2 bytes
+	 * resulting in only 22 bytes, then appending two bytes to reach 24 bytes (24 is
+	 * divisible by 6), vht_oper starts at 7 bytes, loses the last 2 bytes resulting
+	 * in only 5 bytes, and appends only one byte to reach 6 bytes (6 is divisible
+	 * by 6).
 	 */
 	public String vht_oper;
 	public int capability;
