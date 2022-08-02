@@ -316,6 +316,12 @@ public class RRMConfig {
 			 * (<tt>APISERVERPARAMS_USEOPENWIFIAUTH</tt>)
 			 */
 			public boolean useOpenWifiAuth = false;
+
+			/**
+			 * The maximum cache size for OpenWiFi tokens
+			 * (<tt>APISERVERPARAMS_OPENWIFIAUTHCACHESIZE</tt>)
+			 */
+			public int openWifiAuthCacheSize = 100;
 		}
 
 		/** ApiServer parameters. */
@@ -497,6 +503,9 @@ public class RRMConfig {
 		}
 		if ((v = env.get("APISERVERPARAMS_USEOPENWIFIAUTH")) != null) {
 			apiServerParams.useOpenWifiAuth = Boolean.parseBoolean(v);
+		}
+		if ((v = env.get("APISERVERPARAMS_OPENWIFIAUTHCACHESIZE")) != null) {
+			apiServerParams.openWifiAuthCacheSize = Integer.parseInt(v);
 		}
 		ModuleConfig.ProvMonitorParams provManagerParams =
 			config.moduleConfig.provMonitorParams;

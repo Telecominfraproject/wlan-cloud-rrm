@@ -15,6 +15,8 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import org.json.JSONObject;
 
@@ -33,6 +35,25 @@ public class Utils {
 
 	// This class should not be instantiated.
 	private Utils() {}
+
+	/** Simple LRU cache, adapted from: https://stackoverflow.com/a/1953516 */
+	public static class LruCache<K, V> extends LinkedHashMap<K, V> {
+		private static final long serialVersionUID = 4884066392195453453L;
+
+		/** The cache size. */
+		private final int maxEntries;
+
+		/** Constructor. */
+		public LruCache(int maxEntries) {
+			super(maxEntries + 1, 1.0f, true);
+			this.maxEntries = maxEntries;
+		}
+
+		@Override
+		protected boolean removeEldestEntry(final Map.Entry<K, V> eldest) {
+			return super.size() > maxEntries;
+		}
+	}
 
 	/** Read a file to a UTF-8 string. */
 	public static String readFile(File f) throws IOException {
