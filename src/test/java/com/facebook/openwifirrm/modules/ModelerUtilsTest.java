@@ -106,7 +106,7 @@ public class ModelerUtilsTest {
 		// for an AP, if there is one scan, the aggregate should just be that scan
 		// for the other device, there should be no aggregate
 		int signal = -60;
-		String htOper = TestUtils.get_ht_oper();
+		String htOper = TestUtils.getHtOper();
 		String vhtOper = null;
 		long timeOffsetMs = 0;
 		ProcessedWifiScanEntry entryB1 = TestUtils.createWifiScanEntry(signal, bssidB, htOper, vhtOper, timeOffsetMs);

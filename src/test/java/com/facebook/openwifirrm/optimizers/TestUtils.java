@@ -341,7 +341,7 @@ public class TestUtils {
 	 *                     802.11 2020 edition, Table "21-29" through Table "21-60".
 	 * @return base64 encoded vht operator as a String
 	 */
-	public static String get_vht_oper(CHANNEL_WIDTH channelWidth, byte channel1, byte channel2,
+	public static String getVhtOper(CHANNEL_WIDTH channelWidth, byte channel1, byte channel2,
 			byte[] vhtMcsForNss) {
 		byte[] vht_oper = new byte[5];
 		boolean channelWidthByte = !(channelWidth == CHANNEL_WIDTH.MHz_20 || channelWidth == CHANNEL_WIDTH.MHz_40);
@@ -357,8 +357,8 @@ public class TestUtils {
 		return Base64.encodeBase64String(vht_oper);
 	}
 
-	public static String get_vht_oper() {
-		return get_vht_oper(CHANNEL_WIDTH.MHz_20, (byte) 36, (byte) 0, new byte[] { 0, 0, 0, 0, 0, 0, 0, 0 });
+	public static String getVhtOper() {
+		return getVhtOper(CHANNEL_WIDTH.MHz_20, (byte) 36, (byte) 0, new byte[] { 0, 0, 0, 0, 0, 0, 0, 0 });
 	}
 
 	/**
@@ -380,7 +380,7 @@ public class TestUtils {
 	 * @param stbcBeacon
 	 * @return base64 encoded ht operator as a String
 	 */
-	public static String get_ht_oper(byte primaryChannel, byte secondaryChannelOffset, boolean staChannelWidth,
+	public static String getHtOper(byte primaryChannel, byte secondaryChannelOffset, boolean staChannelWidth,
 			boolean rifsMode, byte htProtection, boolean nongreenfieldHtStasPresent, boolean obssNonHtStasPresent,
 			byte channelCenterFrequencySegment2, boolean dualBeacon, boolean dualCtsProtection, boolean stbcBeacon) {
 		byte[] ht_oper = new byte[22];
@@ -414,7 +414,7 @@ public class TestUtils {
 		return Base64.encodeBase64String(ht_oper);
 	}
 
-	public static String get_ht_oper() {
-		return get_ht_oper((byte) 1, (byte) 0, false, false, (byte) 0, true, false, (byte) 0, false, false, false);
+	public static String getHtOper() {
+		return getHtOper((byte) 1, (byte) 0, false, false, (byte) 0, true, false, (byte) 0, false, false, false);
 	}
 }
