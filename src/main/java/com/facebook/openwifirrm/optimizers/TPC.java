@@ -25,12 +25,6 @@ public abstract class TPC {
 	/** Maximum supported tx power (dBm), inclusive. */
 	public static final int MAX_TX_POWER = 30;
 
-	/** String of the 2.4 GHz band */
-	public static final String BAND_2G = "2G";
-
-	/** String of the 5 GHz band */
-	public static final String BAND_5G = "5G";
-
 	/** The input data model. */
 	protected final DataModel model;
 

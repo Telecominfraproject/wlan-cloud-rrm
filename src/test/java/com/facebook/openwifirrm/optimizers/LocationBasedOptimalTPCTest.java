@@ -73,7 +73,7 @@ public class LocationBasedOptimalTPCTest {
 	@Test
 	@Order(3)
 	void testLocationBasedOptimalTPCSuccessCase() throws Exception {
-		final String band = "5G";
+		final String band = Constants.BAND_5G;
 		final String deviceA = "aaaaaaaaaaaa";
 		final String deviceB = "bbbbbbbbbbbb";
 		final String deviceC = "cccccccccccc";
@@ -191,7 +191,7 @@ public class LocationBasedOptimalTPCTest {
 	@Test
 	@Order(4)
 	void testLocationBasedOptimalTPCFailedCase() throws Exception {
-		final String band = "5G";
+		final String band = Constants.BAND_5G;
 		final String deviceA = "aaaaaaaaaaaa";
 		final String deviceB = "bbbbbbbbbbbb";
 		final String deviceC = "cccccccccccc";

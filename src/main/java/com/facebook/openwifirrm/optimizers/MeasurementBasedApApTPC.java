@@ -120,7 +120,7 @@ public class MeasurementBasedApApTPC extends TPC {
 			}
 			JsonObject radioObject = e.getAsJsonObject();
 			String band = radioObject.get("band").getAsString();
-			if (band.equals("5G")) {
+			if (band.equals(Constants.BAND_5G)) {
 				return radioObject.get("tx-power").getAsInt();
 			}
 		}
@@ -251,7 +251,7 @@ public class MeasurementBasedApApTPC extends TPC {
 			logger.debug("  New tx_power: {}", newTxPower);
 
 			Map<String, Integer> radioMap = new TreeMap<>();
-			radioMap.put(BAND_5G, newTxPower);
+			radioMap.put(Constants.BAND_5G, newTxPower);
 			txPowerMap.put(serialNumber, radioMap);
 		}
 

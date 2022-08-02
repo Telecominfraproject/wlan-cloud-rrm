@@ -241,7 +241,7 @@ public class MeasurementBasedApClientTPC extends TPC {
 			int newTxPower =
 				computeTxPowerForDevice(serialNumber, state, radioIndex);
 			Map<String, Integer> radioMap = new TreeMap<>();
-			radioMap.put(BAND_5G, newTxPower);
+			radioMap.put(Constants.BAND_5G, newTxPower);
 			txPowerMap.put(serialNumber, radioMap);
 		}
 

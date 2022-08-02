@@ -181,8 +181,8 @@ public class LocationBasedOptimalTPC extends TPC {
 
 			// Update the txPowerChoices for the optimization
 			Map<String, List<Integer>> allowedTxPowers = deviceCfg.allowedTxPowers;
-			if (allowedTxPowers != null && allowedTxPowers.get(BAND_5G) != null) {
-				txPowerChoices.retainAll(allowedTxPowers.get(BAND_5G));
+			if (allowedTxPowers != null && allowedTxPowers.get(Constants.BAND_5G) != null) {
+				txPowerChoices.retainAll(allowedTxPowers.get(Constants.BAND_5G));
 			}
 
 			// Update the boundary for the optimization
@@ -235,7 +235,7 @@ public class LocationBasedOptimalTPC extends TPC {
 			String serialNumber = e.getKey();
 			int txPower = txPowerList.get(e.getValue());
 			Map<String, Integer> radioMap = new TreeMap<>();
-			radioMap.put(BAND_5G, txPower);
+			radioMap.put(Constants.BAND_5G, txPower);
 			txPowerMap.put(serialNumber, radioMap);
 			logger.info(
 				"Device {}: Assigning tx power = {}",

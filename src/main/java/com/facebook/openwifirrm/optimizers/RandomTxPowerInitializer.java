@@ -54,7 +54,7 @@ public class RandomTxPowerInitializer extends TPC {
 		Map<String, Map<String, Integer>> txPowerMap = new TreeMap<>();
 		for (String serialNumber : model.latestState.keySet()) {
 			Map<String, Integer> radioMap = new TreeMap<>();
-			radioMap.put(BAND_5G, txPower);
+			radioMap.put(Constants.BAND_5G, txPower);
 			txPowerMap.put(serialNumber, radioMap);
 		}
 		if (!txPowerMap.isEmpty()) {

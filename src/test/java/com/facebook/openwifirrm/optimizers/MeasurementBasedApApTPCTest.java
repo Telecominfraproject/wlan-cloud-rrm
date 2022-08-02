@@ -31,7 +31,7 @@ import com.google.gson.JsonArray;
 @TestMethodOrder(OrderAnnotation.class)
 public class MeasurementBasedApApTPCTest {
 	private static final int MAX_TX_POWER = 30;
-	private static final String BAND = "5G";
+	private static final String BAND = Constants.BAND_5G;
 
 	// Serial numbers
 	private static final String DEVICE_A = "aaaaaaaaaaaa";

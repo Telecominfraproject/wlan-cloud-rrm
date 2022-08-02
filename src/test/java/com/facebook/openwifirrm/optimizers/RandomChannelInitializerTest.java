@@ -26,7 +26,7 @@ public class RandomChannelInitializerTest {
 	@Test
 	@Order(1)
 	void test1() throws Exception {
-		final String band = "2G";
+		final String band = Constants.BAND_2G;
 		final String deviceA = "aaaaaaaaaaaa";
 		final String deviceB = "bbbbbbbbbbbb";
 		final int channelWidth = 20;

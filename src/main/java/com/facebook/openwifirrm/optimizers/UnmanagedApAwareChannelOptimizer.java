@@ -110,7 +110,7 @@ public class UnmanagedApAwareChannelOptimizer extends LeastUsedChannelOptimizer 
 
 		// For 2.4G, we prioritize the orthogonal channels
 		// by considering the overlapping channels
-		if (band.equals(BAND_2G)) {
+		if (band.equals(Constants.BAND_2G)) {
 			Map<Integer, Integer> occupiedOverlapChannels =
 				getOccupiedOverlapChannels(occupiedChannels);
 			occupiedChannels = new TreeMap<>(occupiedOverlapChannels);

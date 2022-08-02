@@ -30,7 +30,7 @@ public class LeastUsedChannelOptimizerTest {
 	@Test
 	@Order(1)
 	void test5G() throws Exception {
-		final String band = "5G";
+		final String band = Constants.BAND_5G;
 		final String deviceA = "aaaaaaaaaaaa";
 		final String deviceB = "bbbbbbbbbbbb";
 		final String deviceC = "cccccccccccc";
@@ -107,7 +107,7 @@ public class LeastUsedChannelOptimizerTest {
 	@Test
 	@Order(2)
 	void test2G() throws Exception {
-		final String band = "2G";
+		final String band = Constants.BAND_2G;
 		final String deviceA = "aaaaaaaaaaaa";
 		final String deviceB = "bbbbbbbbbbbb";
 		final String deviceC = "cccccccccccc";
@@ -184,7 +184,7 @@ public class LeastUsedChannelOptimizerTest {
 	@Test
 	@Order(3)
 	void testWithUserChannels() throws Exception {
-		final String band = "5G";
+		final String band = Constants.BAND_5G;
 		final String deviceA = "aaaaaaaaaaaa";
 		final String deviceB = "bbbbbbbbbbbb";
 		final String deviceC = "cccccccccccc";
@@ -198,7 +198,7 @@ public class LeastUsedChannelOptimizerTest {
 		);
 		DeviceConfig apConfig = new DeviceConfig();
 		apConfig.userChannels = new HashMap<>();
-		apConfig.userChannels.put("5G", userChannel);
+		apConfig.userChannels.put(Constants.BAND_5G, userChannel);
 		deviceDataManager.setDeviceApConfig(deviceA, apConfig);
 		deviceDataManager.setDeviceApConfig(deviceB, apConfig);
 		deviceDataManager.setDeviceApConfig(deviceC, apConfig);
@@ -266,7 +266,7 @@ public class LeastUsedChannelOptimizerTest {
 	@Test
 	@Order(4)
 	void testWithAllowedChannels() throws Exception {
-		final String band = "5G";
+		final String band = Constants.BAND_5G;
 		final String deviceA = "aaaaaaaaaaaa";
 		final String deviceB = "bbbbbbbbbbbb";
 		final String deviceC = "cccccccccccc";
@@ -279,7 +279,7 @@ public class LeastUsedChannelOptimizerTest {
 		);
 		DeviceConfig apConfig = new DeviceConfig();
 		apConfig.allowedChannels = new HashMap<>();
-		apConfig.allowedChannels.put("5G", Arrays.asList(48, 165));
+		apConfig.allowedChannels.put(Constants.BAND_5G, Arrays.asList(48, 165));
 		deviceDataManager.setDeviceApConfig(deviceA, apConfig);
 		deviceDataManager.setDeviceApConfig(deviceB, apConfig);
 		deviceDataManager.setDeviceApConfig(deviceC, apConfig);
@@ -351,7 +351,7 @@ public class LeastUsedChannelOptimizerTest {
 	@Test
 	@Order(5)
 	void testBandwidth40() throws Exception {
-		final String band = "5G";
+		final String band = Constants.BAND_5G;
 		final String deviceA = "aaaaaaaaaaaa";
 		final String deviceB = "bbbbbbbbbbbb";
 		final String deviceC = "cccccccccccc";
@@ -448,7 +448,7 @@ public class LeastUsedChannelOptimizerTest {
 	@Test
 	@Order(6)
 	void testBandwidth80() throws Exception {
-		final String band = "5G";
+		final String band = Constants.BAND_5G;
 		final String deviceA = "aaaaaaaaaaaa";
 		final String deviceB = "bbbbbbbbbbbb";
 		final String deviceC = "cccccccccccc";
@@ -545,7 +545,7 @@ public class LeastUsedChannelOptimizerTest {
 		// No APs on current channel, so stay on it (36)
 		DeviceConfig apConfig = new DeviceConfig();
 		apConfig.allowedChannels = new HashMap<>();
-		apConfig.allowedChannels.put("5G", Arrays.asList(48, 165));
+		apConfig.allowedChannels.put(Constants.BAND_5G, Arrays.asList(48, 165));
 		deviceDataManager.setDeviceApConfig(deviceE, apConfig);
 		int eExpectedChannel = 36;
 		dataModel.latestDeviceStatus.put(
@@ -573,7 +573,7 @@ public class LeastUsedChannelOptimizerTest {
 	@Test
 	@Order(7)
 	void testBandwidthScan() throws Exception {
-		final String band = "5G";
+		final String band = Constants.BAND_5G;
 		final String deviceA = "aaaaaaaaaaaa";
 		final String deviceB = "bbbbbbbbbbbb";
 		final String deviceC = "cccccccccccc";
