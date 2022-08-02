@@ -17,8 +17,6 @@ import java.util.HashMap;
 
 import org.junit.jupiter.api.Test;
 
-import com.facebook.openwifirrm.optimizers.Constants;
-
 public class DeviceConfigTest {
 	@Test
 	void test_isEmpty() throws Exception {

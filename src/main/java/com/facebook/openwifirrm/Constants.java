@@ -1,4 +1,4 @@
-package com.facebook.openwifirrm.optimizers;
+package com.facebook.openwifirrm;
 
 public final class Constants {
 

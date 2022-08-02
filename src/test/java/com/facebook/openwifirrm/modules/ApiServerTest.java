@@ -26,6 +26,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.TestMethodOrder;
 
+import com.facebook.openwifirrm.Constants;
 import com.facebook.openwifirrm.DeviceConfig;
 import com.facebook.openwifirrm.DeviceDataManager;
 import com.facebook.openwifirrm.DeviceLayeredConfig;
@@ -33,7 +34,6 @@ import com.facebook.openwifirrm.DeviceTopology;
 import com.facebook.openwifirrm.RRM;
 import com.facebook.openwifirrm.RRMConfig;
 import com.facebook.openwifirrm.mysql.DatabaseManager;
-import com.facebook.openwifirrm.optimizers.Constants;
 import com.facebook.openwifirrm.optimizers.TestUtils;
 import com.facebook.openwifirrm.ucentral.UCentralClient;
 import com.facebook.openwifirrm.ucentral.UCentralKafkaConsumer;
