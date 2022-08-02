@@ -282,9 +282,11 @@ public class RRMScheduler {
 					}
 					Map<String, Map<String, Integer>> channelMap =
 						optimizer.computeChannelMap();
-					optimizer.applyConfig(
-						deviceDataManager, configManager, channelMap
-					);
+					if (!params.dryRun) {
+						optimizer.applyConfig(
+							deviceDataManager, configManager, channelMap
+						);
+					}
 					break;
 				}
 
@@ -318,9 +320,11 @@ public class RRMScheduler {
 					}
 					Map<String, Map<String, Integer>> txPowerMap =
 						optimizer.computeTxPowerMap();
-					optimizer.applyConfig(
-						deviceDataManager, configManager, txPowerMap
-					);
+					if (!params.dryRun) {
+						optimizer.applyConfig(
+							deviceDataManager, configManager, txPowerMap
+						);
+					}
 					break;
 				}
 			}

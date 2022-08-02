@@ -45,6 +45,9 @@ public class ProvMonitor implements Runnable {
 	/** The device data manager. */
 	private final DeviceDataManager deviceDataManager;
 
+	/** The Modeler module instance. */
+	private final Modeler modeler;
+
 	/** The uCentral client. */
 	private final UCentralClient client;
 
@@ -55,11 +58,13 @@ public class ProvMonitor implements Runnable {
 	public ProvMonitor(
 		ProvMonitorParams params,
 		DeviceDataManager deviceDataManager,
+		Modeler modeler,
 		UCentralClient client,
 		RRMScheduler scheduler
 	) {
 		this.params = params;
 		this.deviceDataManager = deviceDataManager;
+		this.modeler = modeler;
 		this.client = client;
 		this.scheduler = scheduler;
 	}
@@ -167,6 +172,9 @@ public class ProvMonitor implements Runnable {
 			inventoryForRRM.serialNumbers.size(),
 			inventory.taglist.size()
 		);
+
+		// Revalidate data model
+		modeler.revalidate();
 
 		// Update scheduler
 		scheduler.syncTriggers();

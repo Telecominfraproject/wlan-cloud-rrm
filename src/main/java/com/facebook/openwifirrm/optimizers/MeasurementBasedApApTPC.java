@@ -52,7 +52,6 @@ public class MeasurementBasedApApTPC extends TPC {
 	 */
 	public static final int DEFAULT_NTH_SMALLEST_RSSI = 0;
 
-
 	/** coverage threshold between APs, in dB */
 	private final int coverageThreshold;
 
@@ -84,7 +83,7 @@ public class MeasurementBasedApApTPC extends TPC {
 	}
 
 	/**
-	 * Retrieve BSSIDs of APs we are managing
+	 * Retrieve BSSIDs of APs we are managing.
 	 */
 	protected static Set<String> getManagedBSSIDs(DataModel model) {
 		Set<String> managedBSSIDs = new HashSet<>();
@@ -109,25 +108,27 @@ public class MeasurementBasedApApTPC extends TPC {
 	}
 
 	/**
-	 * Get the current 5G tx power for an AP using the latest device status
+	 * Get the current 5GHz radio tx power (the first one found) for an AP using
+	 * the latest device status.
+	 *
 	 * @param latestDeviceStatus JsonArray containing radio config for the AP
+	 * @return the tx power, or 0 if none found
 	 */
 	protected static int getCurrentTxPower(JsonArray latestDeviceStatus) {
-		for (int radioIndex = 0; radioIndex < latestDeviceStatus.size(); radioIndex++) {
-			JsonElement e = latestDeviceStatus.get(radioIndex);
+		for (JsonElement e : latestDeviceStatus) {
 			if (!e.isJsonObject()) {
-				return 0;
+				continue;
 			}
 			JsonObject radioObject = e.getAsJsonObject();
 			String band = radioObject.get("band").getAsString();
-			if (band.equals("5G")) {
+			if (band.equals("5G") && radioObject.has("tx-power")) {
 				return radioObject.get("tx-power").getAsInt();
 			}
 		}
-
 		return 0;
 	}
 
+	/** Return true if the given channel is a 5GHz channel. */
 	protected static boolean isChannel5G(int channel) {
 		return (36 <= channel && channel <= 165);
 	}
@@ -190,17 +191,17 @@ public class MeasurementBasedApApTPC extends TPC {
 		// Bound tx_power by [MIN_TX_POWER, MAX_TX_POWER]
 		if (newTxPower > MAX_TX_POWER) {
 			logger.info(
-					"Device {}: computed tx power > maximum {}, using maximum",
-					serialNumber,
-					MAX_TX_POWER
-				);
+				"Device {}: computed tx power > maximum {}, using maximum",
+				serialNumber,
+				MAX_TX_POWER
+			);
 			newTxPower = MAX_TX_POWER;
 		} else if (newTxPower < MIN_TX_POWER) {
 			logger.info(
-					"Device {}: computed tx power < minimum {}, using minimum",
-					serialNumber,
-					MIN_TX_POWER
-				);
+				"Device {}: computed tx power < minimum {}, using minimum",
+				serialNumber,
+				MIN_TX_POWER
+			);
 			newTxPower = MIN_TX_POWER;
 		}
 		return newTxPower;
