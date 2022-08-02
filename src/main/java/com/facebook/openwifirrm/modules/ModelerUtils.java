@@ -222,7 +222,8 @@ public class ModelerUtils {
 	 *         entry with its {@code signal} attribute modified to be the aggregated
 	 *         signal value instead of the value in just the most recent entry.
 	 */
-	public Map<String, ProcessedWifiScanEntry> getAggregatedWifiScans(Modeler.DataModel dataModel, long obsoletionPeriodMs,
+	public static Map<String, ProcessedWifiScanEntry> getAggregatedWifiScans(Modeler.DataModel dataModel,
+			long obsoletionPeriodMs,
 			Aggregator<Double> agg) {
 		/*
 		 * NOTE: if a BSSID does not have an entry, it will not be returned

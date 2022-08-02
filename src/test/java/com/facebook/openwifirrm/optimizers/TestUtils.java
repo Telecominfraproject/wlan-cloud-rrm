@@ -8,6 +8,7 @@
 
 package com.facebook.openwifirrm.optimizers;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -27,6 +28,8 @@ public class TestUtils {
 	private static final Gson gson = new Gson();
 
 	public static final String TEST_ZONE = "test-zone";
+
+	public static final Instant DEFAULT_START_TIME = Instant.parse("2022-01-01T00:00:00Z");
 
 	/** Create a topology from the given devices in a single zone. */
 	public static DeviceTopology createTopology(String zone, String... devices) {
@@ -72,6 +75,7 @@ public class TestUtils {
 		ProcessedWifiScanEntry entry = new ProcessedWifiScanEntry();
 		entry.channel = channel;
 		entry.signal = -60;
+		entry.unixTimeMs = TestUtils.DEFAULT_START_TIME.toEpochMilli();
 		return entry;
 	}
 
@@ -89,6 +93,7 @@ public class TestUtils {
 		entry.channel = 36;
 		entry.bssid = bssid;
 		entry.signal = rssi;
+		entry.unixTimeMs = TestUtils.DEFAULT_START_TIME.toEpochMilli();
 		return entry;
 	}
 
@@ -115,6 +120,7 @@ public class TestUtils {
 		entry.signal = -60;
 		entry.ht_oper = htOper;
 		entry.vht_oper = vhtOper;
+		entry.unixTimeMs = TestUtils.DEFAULT_START_TIME.toEpochMilli();
 		return entry;
 	}
 
@@ -147,6 +153,7 @@ public class TestUtils {
 		entry.channel = channel;
 		entry.bssid = bssid;
 		entry.signal = -60;
+		entry.unixTimeMs = TestUtils.DEFAULT_START_TIME.toEpochMilli();
 		return entry;
 	}
 
