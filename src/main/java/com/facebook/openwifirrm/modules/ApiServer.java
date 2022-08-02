@@ -32,9 +32,9 @@ import com.facebook.openwifirrm.DeviceConfig;
 import com.facebook.openwifirrm.DeviceDataManager;
 import com.facebook.openwifirrm.DeviceLayeredConfig;
 import com.facebook.openwifirrm.DeviceTopology;
-import com.facebook.openwifirrm.RRM;
 import com.facebook.openwifirrm.RRMConfig.ModuleConfig.ApiServerParams;
 import com.facebook.openwifirrm.Utils.LruCache;
+import com.facebook.openwifirrm.VersionProvider;
 import com.facebook.openwifirrm.optimizers.ChannelOptimizer;
 import com.facebook.openwifirrm.optimizers.LeastUsedChannelOptimizer;
 import com.facebook.openwifirrm.optimizers.LocationBasedOptimalTPC;
@@ -78,7 +78,7 @@ import spark.Spark;
 @OpenAPIDefinition(
 	info = @Info(
 		title = "OpenWiFi 2.0 RRM OpenAPI",
-		version = "1.0.0",
+		version = "1.0.0",  // TODO
 		description = "This document describes the API for the Radio Resource Management service."
 	),
 	tags = {
@@ -427,7 +427,7 @@ public class ApiServer implements Runnable {
 			}
 
 			SystemInfoResults result = new SystemInfoResults();
-			result.version = RRM.VERSION;
+			result.version = VersionProvider.get();
 			result.uptime =
 				Math.max(System.currentTimeMillis() - startTimeMs, 0) / 1000L;
 			result.start = startTimeMs / 1000L;

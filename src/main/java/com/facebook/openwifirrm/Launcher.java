@@ -35,7 +35,7 @@ import picocli.CommandLine.Option;
  */
 @Command(
 	name = "",
-	version = RRM.VERSION,
+	versionProvider = VersionProvider.class,
 	descriptionHeading = "%n",
 	description = "OpenWiFi uCentral-based radio resource management service.",
 	optionListHeading = "%nOptions:%n",
@@ -186,7 +186,7 @@ public class Launcher implements Callable<Integer> {
 				config.kafkaConfig.bootstrapServer,
 				config.kafkaConfig.serviceEventsTopic,
 				config.serviceConfig.name,
-				RRM.VERSION,
+				VersionProvider.get(),
 				config.serviceConfig.id,
 				serviceKey,
 				config.serviceConfig.privateEndpoint,
