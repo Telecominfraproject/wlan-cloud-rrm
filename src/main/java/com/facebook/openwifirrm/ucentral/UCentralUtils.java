@@ -49,7 +49,7 @@ public class UCentralUtils {
 		 * Unix time in milliseconds (ms). This field is not defined in the uCentral
 		 * API. We added it because it was unclear whether the {@code tsf} field was a
 		 * reliable time measurement (e.g., we did not know if/when it got reset or if
-		 * it was always available).
+		 * it is always available).
 		 */
 		public long unixTimeMs;
 

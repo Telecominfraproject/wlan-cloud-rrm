@@ -2,21 +2,14 @@ package com.facebook.openwifirrm.modules.aggregators;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInfo;
 
 public class MeanAggregatorTest {
 
-	private static double eps;
-
-	@BeforeAll
-	public static void setup(TestInfo testInfo) {
-		eps = 0.000001;
-	}
-
 	@Test
 	public void testEmptyAndFull() {
+		final double eps = 0.000001;
+
 		MeanAggregator agg = new MeanAggregator();
 
 		// default mean is 0

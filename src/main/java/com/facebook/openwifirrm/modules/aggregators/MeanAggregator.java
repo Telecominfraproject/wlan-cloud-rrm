@@ -22,4 +22,10 @@ public class MeanAggregator implements Aggregator<Double> {
 		return mean;
 	}
 
+	@Override
+	public void reset() {
+		mean = 0;
+		count = 0;
+	}
+
 }
