@@ -482,6 +482,8 @@ public class DatabaseManager {
 				stmt.setLong(4, entry.last_seen);
 				stmt.setInt(5, entry.signal);
 				stmt.setInt(6, entry.channel);
+				// TODO is this right? How do I test this?
+				stmt.setLong(7, entry.unixTimeMs);
 				stmt.addBatch();
 			}
 			stmt.executeBatch();
@@ -554,7 +556,8 @@ public class DatabaseManager {
 						entry.bssid = Utils.longToMac(rs.getLong("bssid"));
 						entry.ssid = rs.getString("ssid");
 						entry.tsf = scanIdToTs.getOrDefault(scanId, 0L);
-
+						// TODO is this right? How do I test this?
+						entry.unixTimeMs = rs.getLong("unixTimeMs");
 						ret.computeIfAbsent(scanId, i -> new ArrayList<>())
 							.add(entry);
 					}
