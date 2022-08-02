@@ -83,13 +83,13 @@ public class TestUtils {
 		return entry;
 	}
 
-	public static ProcessedWifiScanEntry createWifiScanEntry(int signal, String bssid, String htOper, String vhtOper) {
+	public static ProcessedWifiScanEntry createWifiScanEntry(int signal, String bssid, String htOper, String vhtOper, long timeOffsetMs) {
 		ProcessedWifiScanEntry entry = new ProcessedWifiScanEntry();
 		entry.signal = signal;
 		entry.bssid = bssid;
 		entry.ht_oper = htOper;
 		entry.vht_oper = vhtOper;
-		entry.unixTimeMs = TestUtils.DEFAULT_START_TIME.toEpochMilli();
+		entry.unixTimeMs = TestUtils.DEFAULT_START_TIME.toEpochMilli() + timeOffsetMs;
 		return entry;
 	}
 
@@ -348,7 +348,7 @@ public class TestUtils {
 		// overflow shouldn't matter, we only care about the raw bit representation
 		byte channelCenterFrequencySegment0 = channel1;
 		byte channelCenterFrequencySegment1 = channel2;
-	
+
 		vht_oper[0] = (byte) (Utils.boolToInt(channelWidthByte));
 		vht_oper[1] = channelCenterFrequencySegment0;
 		vht_oper[2] = channelCenterFrequencySegment1;
@@ -405,12 +405,12 @@ public class TestUtils {
 		ht_oper[15] = 0;
 		ht_oper[16] = 0;
 		ht_oper[17] = 0;
-	
+
 		ht_oper[18] = 0;
 		ht_oper[19] = 0;
 		ht_oper[20] = 0;
 		ht_oper[21] = 0;
-	
+
 		return Base64.encodeBase64String(ht_oper);
 	}
 

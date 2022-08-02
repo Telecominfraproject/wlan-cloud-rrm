@@ -8,7 +8,6 @@
 
 package com.facebook.openwifirrm.modules;
 
-import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -248,7 +247,7 @@ public class ModelerUtils {
 			 * ht_oper and vht_oper, take the average signal value.
 			 */
 			String bssid = mapEntry.getKey();
-			long now = Instant.now().getEpochSecond();
+			long now = mostRecentToOldest.get(0).unixTimeMs;
 			String newestHtOper = null;
 			String newestVhtOper = null;
 			agg.reset();
@@ -270,7 +269,7 @@ public class ModelerUtils {
 				// if the entry matches ht_oper and vht_oper, add its signal to the aggregate
 				if ((entry.ht_oper == null || entry.ht_oper == newestHtOper)
 						&& (entry.vht_oper == null || entry.vht_oper == newestVhtOper)) {
-					aggregatedWifiScans.putIfAbsent(bssid, entry);
+					aggregatedWifiScans.putIfAbsent(bssid, new ProcessedWifiScanEntry(entry));
 					agg.addValue((double) entry.signal);
 				}
 			}

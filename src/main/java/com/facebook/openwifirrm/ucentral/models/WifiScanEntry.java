@@ -1,9 +1,12 @@
 package com.facebook.openwifirrm.ucentral.models;
 
+import java.util.Objects;
+
 import com.google.gson.JsonArray;
 
 /** Represents a single entry in wifi scan results. */
 public class WifiScanEntry {
+
 	public int channel;
 	public long last_seen;
 	/** Signal strength measured in dBm */
@@ -67,5 +70,31 @@ public class WifiScanEntry {
 		this.capability = o.capability;
 		this.frequency = o.frequency;
 		this.ies = o.ies;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		WifiScanEntry other = (WifiScanEntry) obj;
+		return Objects.equals(bssid, other.bssid) && capability == other.capability && channel == other.channel
+				&& frequency == other.frequency && Objects.equals(ht_oper, other.ht_oper)
+				&& Objects.equals(ies, other.ies) && last_seen == other.last_seen && signal == other.signal
+				&& Objects.equals(ssid, other.ssid) && tsf == other.tsf && Objects.equals(vht_oper, other.vht_oper);
+	}
+
+	// TODO should I NOT implement hashCode since this is mutable, or I SHOULD
+	// because implemented equals()?
+	@Override
+	public int hashCode() {
+		return Objects.hash(bssid, capability, channel, frequency, ht_oper, ies, last_seen, signal, ssid, tsf,
+				vht_oper);
 	}
 }

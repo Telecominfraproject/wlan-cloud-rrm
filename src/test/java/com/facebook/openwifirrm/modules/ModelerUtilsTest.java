@@ -9,12 +9,21 @@
 package com.facebook.openwifirrm.modules;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 
 import org.junit.jupiter.api.Test;
+
+import com.facebook.openwifirrm.DeviceDataManager;
+import com.facebook.openwifirrm.modules.Modeler.DataModel;
+import com.facebook.openwifirrm.modules.aggregators.MeanAggregator;
+import com.facebook.openwifirrm.optimizers.TestUtils;
+import com.facebook.openwifirrm.ucentral.UCentralUtils.ProcessedWifiScanEntry;
 
 public class ModelerUtilsTest {
 	@Test
@@ -76,5 +85,62 @@ public class ModelerUtilsTest {
 			500, heatMap, sinr
 		);
 		assertEquals(0.861, metric, 0.001);
+	}
+
+	@Test
+	void testAggregatedWifiScanEntry() {
+		final long obsoletionPeriodMs = 900000;
+
+		final String apA = "aaaaaaaaaaaa";
+		final String bssidA = "aa:aa:aa:aa:aa:aa";
+		final String apB = "bbbbbbbbbbbb";
+		final String bssidB = "bb:bb:bb:bb:bb:bb";
+		DeviceDataManager deviceDataManager = new DeviceDataManager();
+		deviceDataManager.setTopology(TestUtils.createTopology(TestUtils.TEST_ZONE, apA, apB));
+		DataModel dataModel = new DataModel();
+
+		// if there are no scans (no list or empty list), there should be no aggregates
+		dataModel.latestWifiScans.computeIfAbsent(bssidB, k -> new LinkedList<>());
+		assertTrue(ModelerUtils.getAggregatedWifiScans(dataModel, obsoletionPeriodMs, new MeanAggregator()).isEmpty());
+
+		// for an AP, if there is one scan, the aggregate should just be that scan
+		// for the other device, there should be no aggregate
+		int signal = -60;
+		String htOper = TestUtils.get_ht_oper();
+		String vhtOper = null;
+		long timeOffsetMs = 0;
+		ProcessedWifiScanEntry entryB1 = TestUtils.createWifiScanEntry(signal, bssidB, htOper, vhtOper, timeOffsetMs);
+		dataModel.latestWifiScans.get(bssidB).add(Arrays.asList(entryB1));
+		ProcessedWifiScanEntry aggregatedEntryB = ModelerUtils
+				.getAggregatedWifiScans(dataModel, obsoletionPeriodMs, new MeanAggregator()).get(bssidB);
+		assertFalse(dataModel.latestWifiScans.containsKey(bssidA));
+		assertEquals(entryB1, aggregatedEntryB);
+
+		// add another entry for device B and check the aggregation
+		signal = -62;
+		timeOffsetMs = 60000; // 1 min later
+		ProcessedWifiScanEntry entryB2 = TestUtils.createWifiScanEntry(signal, bssidB, htOper, vhtOper, timeOffsetMs);
+		dataModel.latestWifiScans.get(bssidB).add(Arrays.asList(entryB2));
+		aggregatedEntryB = ModelerUtils.getAggregatedWifiScans(dataModel, obsoletionPeriodMs, new MeanAggregator())
+				.get(bssidB);
+		ProcessedWifiScanEntry expectedAggregatedEntry = new ProcessedWifiScanEntry(entryB2);
+		expectedAggregatedEntry.signal = -61; // average of -60 and -62
+		assertFalse(dataModel.latestWifiScans.containsKey(bssidA));
+		assertEquals(expectedAggregatedEntry, aggregatedEntryB);
+
+		// test the obsoletion period
+		signal = -64;
+		timeOffsetMs = obsoletionPeriodMs; // now only entry 2 and entry 3 should be aggregated
+		ProcessedWifiScanEntry entryB3 = TestUtils.createWifiScanEntry(signal, bssidB, htOper, vhtOper, timeOffsetMs);
+		dataModel.latestWifiScans.get(bssidB).add(Arrays.asList(entryB3));
+		aggregatedEntryB = ModelerUtils.getAggregatedWifiScans(dataModel, obsoletionPeriodMs, new MeanAggregator())
+				.get(bssidB);
+		expectedAggregatedEntry = new ProcessedWifiScanEntry(entryB3);
+		expectedAggregatedEntry.signal = -63; // average of -62 and -64
+		assertEquals(expectedAggregatedEntry, aggregatedEntryB);
+
+		// TODO test the buffer size
+		// TODO test the ht_oper and vht_oper logic
+		// TODO test with multiple entries from the same scan
 	}
 }
