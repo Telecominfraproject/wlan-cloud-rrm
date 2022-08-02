@@ -25,8 +25,9 @@ public class WifiScanEntry {
 	 * which should be 61 for ht_oper) and the second byte (Length) are omitted when
 	 * the wifi scan results are sent to rrm. Typically in base64, the input has
 	 * bytes padded until its length is divisible by 6, so the 22 bytes would be
-	 * padded by two bytes to reach 24 bytes. Typically, the ASCII value of "=" is
-	 * padded, which explains why ht_oper values always end with two equals signs.
+	 * padded by two bytes to reach 24 bytes. Typically, bytes of all zeros are
+	 * padded, and when translated to base64, they are written as equals signs. This
+	 * explains why ht_oper values always end with two equals signs.
 	 */
 	public String ht_oper;
 	/**

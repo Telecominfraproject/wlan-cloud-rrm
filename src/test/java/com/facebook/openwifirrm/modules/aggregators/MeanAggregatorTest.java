@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 public class MeanAggregatorTest {
 
 	@Test
-	public void testEmptyAndFull() {
+	public void testEmptyAndFullAndReset() {
 		final double eps = 0.000001;
 
 		MeanAggregator agg = new MeanAggregator();
@@ -34,5 +34,9 @@ public class MeanAggregatorTest {
 		// adding the mean does not change the mean
 		agg.addValue(1.0);
 		assertEquals(1.0, agg.getAggregate(), eps);
+
+		// test reset
+		agg.reset();
+		assertEquals(0, agg.getAggregate(), eps);
 	}
 }
