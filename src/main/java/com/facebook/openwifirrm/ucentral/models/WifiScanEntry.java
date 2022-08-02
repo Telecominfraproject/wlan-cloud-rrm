@@ -17,7 +17,7 @@ public class WifiScanEntry {
 	 * information already present in other fields. This is because this field was
 	 * added later in order to capture some new information but also includes some
 	 * redundant information. 802.11 defines the HT operator and vendors may define
-	 * additional fields.
+	 * additional fields. HT is supported on both the 2.4 GHz and 5 GHz bands.
 	 *
 	 * This field is specified as 24 bytes, but it is encoded in base64. 24 bytes is
 	 * 192 bits which is 32 base64 characters, so this field would be a 32-character
@@ -35,7 +35,7 @@ public class WifiScanEntry {
 	 * some information already present in other fields. This is because this field
 	 * was added later in order to capture some new information but also includes
 	 * some redundant information. 802.11 defines the VHT operator and vendors may
-	 * define additional fields.
+	 * define additional fields. VHT is supported only on the 5 GHz band.
 	 *
 	 * For information about about the contents of this field, its encoding, etc.,
 	 * please see the javadoc for ht_oper first. The vht_oper likely operates

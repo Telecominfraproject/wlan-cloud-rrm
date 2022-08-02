@@ -616,6 +616,7 @@ public class LeastUsedChannelOptimizerTest {
 		dataModel.latestState.put(
 			deviceB, TestUtils.createState(48, channelWidth, dummyBssid)
 		);
+		// TODO use Utils.get_ht_operator() and Utils.get_vht_operator()
 		dataModel.latestWifiScans.put(
 			deviceB,
 			Arrays.asList(
