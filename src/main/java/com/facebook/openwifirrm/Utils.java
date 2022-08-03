@@ -12,11 +12,13 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Scanner;
 
 import org.json.JSONObject;
 
@@ -74,6 +76,14 @@ public class Utils {
 		throws FileNotFoundException {
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
 		writeFile(f, gson.toJson(o));
+	}
+
+	/** Read a resource to a UTF-8 string. */
+	public static String readResourceToString(String path) {
+		InputStream is = Utils.class.getClassLoader().getResourceAsStream(path);
+		try (Scanner scanner = new Scanner(is, "UTF-8")) {
+			return scanner.useDelimiter("\\A").next();
+		}
 	}
 
 	/** Recursively merge JSONObject 'b' into 'a'. */

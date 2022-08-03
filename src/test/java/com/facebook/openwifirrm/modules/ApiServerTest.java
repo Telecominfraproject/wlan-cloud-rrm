@@ -30,8 +30,8 @@ import com.facebook.openwifirrm.DeviceConfig;
 import com.facebook.openwifirrm.DeviceDataManager;
 import com.facebook.openwifirrm.DeviceLayeredConfig;
 import com.facebook.openwifirrm.DeviceTopology;
-import com.facebook.openwifirrm.RRM;
 import com.facebook.openwifirrm.RRMConfig;
+import com.facebook.openwifirrm.VersionProvider;
 import com.facebook.openwifirrm.mysql.DatabaseManager;
 import com.facebook.openwifirrm.ucentral.UCentralClient;
 import com.facebook.openwifirrm.ucentral.UCentralKafkaConsumer;
@@ -476,6 +476,6 @@ public class ApiServerTest {
 	void test_system() throws Exception {
 		HttpResponse<JsonNode> resp = Unirest.get(endpoint("/api/v1/system?command=info")).asJson();
 		assertEquals(200, resp.getStatus());
-		assertEquals(RRM.VERSION, resp.getBody().getObject().getString("version"));
+		assertEquals(VersionProvider.get(), resp.getBody().getObject().getString("version"));
 	}
 }

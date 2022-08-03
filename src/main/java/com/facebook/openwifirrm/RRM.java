@@ -38,9 +38,6 @@ import com.facebook.openwifirrm.ucentral.gw.models.SystemInfoResults;
 public class RRM {
 	private static final Logger logger = LoggerFactory.getLogger(RRM.class);
 
-	/** The RRM service version. */
-	public static final String VERSION = "1.0";  // TODO move elsewhere?
-
 	/** The executor service instance. */
 	private final ExecutorService executor = Executors.newCachedThreadPool();
 
