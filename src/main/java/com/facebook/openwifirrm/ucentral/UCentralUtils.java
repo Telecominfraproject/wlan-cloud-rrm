@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
 import com.facebook.openwifirrm.RRMConfig;
 import com.facebook.openwifirrm.Utils;
 import com.facebook.openwifirrm.ucentral.models.State;
+import com.facebook.openwifirrm.ucentral.models.WifiScanEntryResult;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -41,62 +42,22 @@ public class UCentralUtils {
 	// This class should not be instantiated.
 	private UCentralUtils() {}
 
-	/** Represents a single entry in wifi scan results. */
-	public static class WifiScanEntry {
-		public int channel;
-		public long last_seen;
-		/** Signal strength measured in dBm */
-		public int signal;
-		/** BSSID is the MAC address of the device */
-		public String bssid;
-		public String ssid;
-		public long tsf;
+	public static class WifiScanEntry extends WifiScanEntryResult {
 		/**
-		 * ht_oper is short for "high throughput operator". This field contains some
-		 * information already present in other fields. This is because this field was
-		 * added later in order to capture some new information but also includes some
-		 * redundant information. 802.11 defines the HT operator and vendors may define
-		 * additional fields. HT is supported on both the 2.4 GHz and 5 GHz bands.
-		 *
-		 * This field is specified as 24 bytes, but it is encoded in base64. It is
-		 * likely the case that the first byte (the Element ID, which should be 61 for
-		 * ht_oper) and the second byte (Length) are omitted in the wifi scan results,
-		 * resulting in 22 bytes, which translates to a 32 byte base64 encoded String.
+		 * Unix time in milliseconds (ms). This field is not defined in the uCentral
+		 * API. This is added it because it is unclear whether the {@code tsf} field is
+		 * a reliable time measurement (e.g., it is unclear if/when it gets reset or if
+		 * it is always available).
 		 */
-		public String ht_oper;
-		/**
-		 * vht_oper is short for "very high throughput operator". This field contains
-		 * some information already present in other fields. This is because this field
-		 * was added later in order to capture some new information but also includes
-		 * some redundant information. 802.11 defines the VHT operator and vendors may
-		 * define additional fields. VHT is supported only on the 5 GHz band.
-		 *
-		 * For information about about the contents of this field, its encoding, etc.,
-		 * please see the javadoc for {@link #ht_oper} first. The vht_oper likely
-		 * operates similarly.
-		 */
-		public String vht_oper;
-		public int capability;
-		public int frequency;
-		/** IE = information element */
-		public JsonArray ies;
+		public long unixTimeMs;
 
 		/** Default Constructor. */
 		public WifiScanEntry() {}
 
 		/** Copy Constructor. */
 		public WifiScanEntry(WifiScanEntry o) {
-			this.channel = o.channel;
-			this.last_seen = o.last_seen;
-			this.signal = o.signal;
-			this.bssid = o.bssid;
-			this.ssid = o.ssid;
-			this.tsf = o.tsf;
-			this.ht_oper = o.ht_oper;
-			this.vht_oper = o.vht_oper;
-			this.capability = o.capability;
-			this.frequency = o.frequency;
-			this.ies = o.ies;
+			super(o);
+			this.unixTimeMs = o.unixTimeMs;
 		}
 	}
 
@@ -112,7 +73,10 @@ public class UCentralUtils {
 				.getAsJsonObject("status")
 				.getAsJsonArray("scan");
 			for (JsonElement e : scanInfo) {
-				entries.add(gson.fromJson(e, WifiScanEntry.class));
+				WifiScanEntry entry = gson.fromJson(e, WifiScanEntry.class);
+				entry.unixTimeMs = System.currentTimeMillis();
+				entries.add(entry);
+
 			}
 		} catch (Exception e) {
 			return null;
