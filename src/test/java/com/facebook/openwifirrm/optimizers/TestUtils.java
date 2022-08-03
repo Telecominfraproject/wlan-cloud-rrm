@@ -26,6 +26,9 @@ public class TestUtils {
 	/** The Gson instance. */
 	private final static Gson gson = new Gson();
 
+	/** Test zone name. */
+	public static final String TEST_ZONE = "test-zone";
+
 	/** Create a topology from the given devices in a single zone. */
 	public static DeviceTopology createTopology(String zone, String... devices) {
 		DeviceTopology topology = new DeviceTopology();

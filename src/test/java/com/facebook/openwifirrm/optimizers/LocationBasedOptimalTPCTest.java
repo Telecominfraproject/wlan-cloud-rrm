@@ -28,9 +28,6 @@ import com.facebook.openwifirrm.modules.Modeler.DataModel;
 
 @TestMethodOrder(OrderAnnotation.class)
 public class LocationBasedOptimalTPCTest {
-	/** Test zone name. */
-	private static final String TEST_ZONE = "test-zone";
-
 	@Test
 	@Order(1)
 	void testPermutations() throws Exception {
@@ -84,7 +81,7 @@ public class LocationBasedOptimalTPCTest {
 
 		DeviceDataManager deviceDataManager = new DeviceDataManager();
 		deviceDataManager.setTopology(
-			TestUtils.createTopology(TEST_ZONE, deviceA, deviceB, deviceC)
+			TestUtils.createTopology(TestUtils.TEST_ZONE, deviceA, deviceB, deviceC)
 		);
 		final DeviceConfig apCfgA = new DeviceConfig();
 		final DeviceConfig apCfgB = new DeviceConfig();
@@ -132,7 +129,7 @@ public class LocationBasedOptimalTPCTest {
 		expected.put(deviceC, radioMapC);
 
 		LocationBasedOptimalTPC optimizer = new LocationBasedOptimalTPC(
-			dataModel, TEST_ZONE, deviceDataManager
+			dataModel, TestUtils.TEST_ZONE, deviceDataManager
 		);
 
 		assertEquals(expected, optimizer.computeTxPowerMap()
@@ -142,7 +139,7 @@ public class LocationBasedOptimalTPCTest {
 		// The other two still participate the algorithm.
 		DeviceDataManager deviceDataManager2 = new DeviceDataManager();
 		deviceDataManager2.setTopology(
-			TestUtils.createTopology(TEST_ZONE, deviceA, deviceB, deviceC)
+			TestUtils.createTopology(TestUtils.TEST_ZONE, deviceA, deviceB, deviceC)
 		);
 		final DeviceConfig apCfgA2 = new DeviceConfig();
 		final DeviceConfig apCfgB2 = new DeviceConfig();
@@ -185,7 +182,7 @@ public class LocationBasedOptimalTPCTest {
 		expected2.put(deviceC, radioMapC2);
 
 		LocationBasedOptimalTPC optimizer5 = new LocationBasedOptimalTPC(
-			dataModel2, TEST_ZONE, deviceDataManager2
+			dataModel2, TestUtils.TEST_ZONE, deviceDataManager2
 		);
 
 		assertEquals(expected2, optimizer5.computeTxPowerMap()
@@ -203,7 +200,7 @@ public class LocationBasedOptimalTPCTest {
 		// No invalid APs, missing location data!
 		DeviceDataManager deviceDataManager1 = new DeviceDataManager();
 		deviceDataManager1.setTopology(
-			TestUtils.createTopology(TEST_ZONE, deviceA, deviceB, deviceC)
+			TestUtils.createTopology(TestUtils.TEST_ZONE, deviceA, deviceB, deviceC)
 		);
 		final DeviceConfig apCfgA1 = new DeviceConfig();
 		final DeviceConfig apCfgB1 = new DeviceConfig();
@@ -216,7 +213,7 @@ public class LocationBasedOptimalTPCTest {
 		Map<String, Map<String, Integer>> expected1 = new HashMap<>();
 
 		LocationBasedOptimalTPC optimizer1 = new LocationBasedOptimalTPC(
-			dataModel1, TEST_ZONE, deviceDataManager1
+			dataModel1, TestUtils.TEST_ZONE, deviceDataManager1
 		);
 
 		assertEquals(expected1, optimizer1.computeTxPowerMap()
@@ -225,7 +222,7 @@ public class LocationBasedOptimalTPCTest {
 		// Invalid boundary since it is smaller than the given location!
 		DeviceDataManager deviceDataManager2 = new DeviceDataManager();
 		deviceDataManager2.setTopology(
-			TestUtils.createTopology(TEST_ZONE, deviceA, deviceB, deviceC)
+			TestUtils.createTopology(TestUtils.TEST_ZONE, deviceA, deviceB, deviceC)
 		);
 		final DeviceConfig apCfgA2 = new DeviceConfig();
 		final DeviceConfig apCfgB2 = new DeviceConfig();
@@ -262,7 +259,7 @@ public class LocationBasedOptimalTPCTest {
 		Map<String, Map<String, Integer>> expected2 = new HashMap<>();
 
 		LocationBasedOptimalTPC optimizer2 = new LocationBasedOptimalTPC(
-			dataModel2, TEST_ZONE, deviceDataManager2
+			dataModel2, TestUtils.TEST_ZONE, deviceDataManager2
 		);
 
 		assertEquals(expected2, optimizer2.computeTxPowerMap()
@@ -271,7 +268,7 @@ public class LocationBasedOptimalTPCTest {
 		// Invalid txPower choices! The intersection is an empty set.
 		DeviceDataManager deviceDataManager3 = new DeviceDataManager();
 		deviceDataManager3.setTopology(
-			TestUtils.createTopology(TEST_ZONE, deviceA, deviceB, deviceC)
+			TestUtils.createTopology(TestUtils.TEST_ZONE, deviceA, deviceB, deviceC)
 		);
 		final DeviceConfig apCfgA3 = new DeviceConfig();
 		final DeviceConfig apCfgB3 = new DeviceConfig();
@@ -312,7 +309,7 @@ public class LocationBasedOptimalTPCTest {
 		Map<String, Map<String, Integer>> expected3 = new HashMap<>();
 
 		LocationBasedOptimalTPC optimizer3 = new LocationBasedOptimalTPC(
-			dataModel3, TEST_ZONE, deviceDataManager3
+			dataModel3, TestUtils.TEST_ZONE, deviceDataManager3
 		);
 
 		assertEquals(expected3, optimizer3.computeTxPowerMap()
@@ -321,7 +318,7 @@ public class LocationBasedOptimalTPCTest {
 		// Invalid operation! Complexity issue!
 		DeviceDataManager deviceDataManager4 = new DeviceDataManager();
 		deviceDataManager4.setTopology(
-			TestUtils.createTopology(TEST_ZONE, deviceA, deviceB, deviceC)
+			TestUtils.createTopology(TestUtils.TEST_ZONE, deviceA, deviceB, deviceC)
 		);
 		final DeviceConfig apCfgA4 = new DeviceConfig();
 		final DeviceConfig apCfgB4 = new DeviceConfig();
@@ -358,7 +355,7 @@ public class LocationBasedOptimalTPCTest {
 		Map<String, Map<String, Integer>> expected4 = new HashMap<>();
 
 		LocationBasedOptimalTPC optimizer4 = new LocationBasedOptimalTPC(
-			dataModel4, TEST_ZONE, deviceDataManager4
+			dataModel4, TestUtils.TEST_ZONE, deviceDataManager4
 		);
 
 		assertEquals(expected4, optimizer4.computeTxPowerMap()
