@@ -24,7 +24,7 @@ import com.google.gson.JsonArray;
 
 public class TestUtils {
 	/** The Gson instance. */
-	private final static Gson gson = new Gson();
+	private static final Gson gson = new Gson();
 
 	/** Test zone name. */
 	public static final String TEST_ZONE = "test-zone";
