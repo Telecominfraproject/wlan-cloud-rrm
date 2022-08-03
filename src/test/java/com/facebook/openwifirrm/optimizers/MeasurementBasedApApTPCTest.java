@@ -21,11 +21,12 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
+import com.facebook.openwifirrm.Constants;
 import com.facebook.openwifirrm.DeviceConfig;
 import com.facebook.openwifirrm.DeviceDataManager;
 import com.facebook.openwifirrm.modules.Modeler.DataModel;
-import com.facebook.openwifirrm.ucentral.models.State;
 import com.facebook.openwifirrm.ucentral.UCentralUtils.WifiScanEntry;
+import com.facebook.openwifirrm.ucentral.models.State;
 import com.google.gson.JsonArray;
 
 @TestMethodOrder(OrderAnnotation.class)
@@ -33,7 +34,7 @@ public class MeasurementBasedApApTPCTest {
 	/** Test zone name. */
 	private static final String TEST_ZONE = "test-zone";
 	private static final int MAX_TX_POWER = 30;
-	private static final String BAND = "5G";
+	private static final String BAND = Constants.BAND_5G;
 
 	// Serial numbers
 	private static final String DEVICE_A = "aaaaaaaaaaaa";

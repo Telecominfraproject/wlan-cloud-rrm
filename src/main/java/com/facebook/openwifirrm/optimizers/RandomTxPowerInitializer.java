@@ -14,6 +14,7 @@ import java.util.TreeMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.facebook.openwifirrm.Constants;
 import com.facebook.openwifirrm.DeviceDataManager;
 import com.facebook.openwifirrm.modules.Modeler.DataModel;
 
@@ -54,7 +55,7 @@ public class RandomTxPowerInitializer extends TPC {
 		Map<String, Map<String, Integer>> txPowerMap = new TreeMap<>();
 		for (String serialNumber : model.latestState.keySet()) {
 			Map<String, Integer> radioMap = new TreeMap<>();
-			radioMap.put(BAND_5G, txPower);
+			radioMap.put(Constants.BAND_5G, txPower);
 			txPowerMap.put(serialNumber, radioMap);
 		}
 		if (!txPowerMap.isEmpty()) {

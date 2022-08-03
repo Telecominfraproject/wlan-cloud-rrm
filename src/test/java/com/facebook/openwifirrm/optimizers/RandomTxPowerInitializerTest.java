@@ -17,6 +17,7 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
+import com.facebook.openwifirrm.Constants;
 import com.facebook.openwifirrm.DeviceDataManager;
 import com.facebook.openwifirrm.modules.Modeler.DataModel;
 import com.facebook.openwifirrm.ucentral.models.State;
@@ -53,7 +54,7 @@ public class RandomTxPowerInitializerTest {
 		Map<String, Map<String, Integer>> txPowerMap =
 			optimizer.computeTxPowerMap();
 
-		assertEquals(txPower, txPowerMap.get(deviceA).get("5G"));
-		assertEquals(txPower, txPowerMap.get(deviceB).get("5G"));
+		assertEquals(txPower, txPowerMap.get(deviceA).get(Constants.BAND_5G));
+		assertEquals(txPower, txPowerMap.get(deviceB).get(Constants.BAND_5G));
 	}
 }

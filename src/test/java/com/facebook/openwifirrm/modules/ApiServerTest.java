@@ -26,6 +26,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.TestMethodOrder;
 
+import com.facebook.openwifirrm.Constants;
 import com.facebook.openwifirrm.DeviceConfig;
 import com.facebook.openwifirrm.DeviceDataManager;
 import com.facebook.openwifirrm.DeviceLayeredConfig;
@@ -334,16 +335,16 @@ public class ApiServerTest {
 		DeviceConfig apConfig = new DeviceConfig();
 		apConfig.enableConfig = false;
 		apConfig.autoChannels = new HashMap<>();
-		apConfig.autoChannels.put("2G", 7);
-		apConfig.autoChannels.put("5G", 165);
+		apConfig.autoChannels.put(Constants.BAND_2G, 7);
+		apConfig.autoChannels.put(Constants.BAND_5G, 165);
 		deviceDataManager.setDeviceApConfig(ap, apConfig);
 
 		// Construct config request
 		DeviceConfig configReq = new DeviceConfig();
 		configReq.enableConfig = true;
 		configReq.autoTxPowers = new HashMap<>();
-		configReq.autoTxPowers.put("2G", 20);
-		configReq.autoTxPowers.put("5G", 28);
+		configReq.autoTxPowers.put(Constants.BAND_2G, 20);
+		configReq.autoTxPowers.put(Constants.BAND_5G, 28);
 
 		// Merge config objects (expected result)
 		apConfig.apply(configReq);

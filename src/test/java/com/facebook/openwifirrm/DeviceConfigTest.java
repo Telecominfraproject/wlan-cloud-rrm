@@ -28,7 +28,7 @@ public class DeviceConfigTest {
 		config.enableConfig = null;
 		assertTrue(config.isEmpty());
 
-		config.userChannels = Collections.singletonMap("2G", 1);
+		config.userChannels = Collections.singletonMap(Constants.BAND_2G, 1);
 		assertFalse(config.isEmpty());
 		config.userChannels = new HashMap<>();
 		assertFalse(config.isEmpty());

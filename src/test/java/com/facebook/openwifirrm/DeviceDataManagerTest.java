@@ -151,9 +151,9 @@ public class DeviceDataManagerTest {
 		final DeviceConfig apCfgA = new DeviceConfig();
 		final DeviceConfig apCfgB = new DeviceConfig();
 		apCfgA.allowedChannels = new HashMap<>();
-		apCfgA.allowedChannels.put("2G", Arrays.asList(6, 7));
+		apCfgA.allowedChannels.put(Constants.BAND_2G, Arrays.asList(6, 7));
 		apCfgB.allowedChannels = new HashMap<>();
-		apCfgB.allowedChannels.put("2G", Arrays.asList(1, 2, 3));
+		apCfgB.allowedChannels.put(Constants.BAND_2G, Arrays.asList(1, 2, 3));
 		// - use setter
 		deviceDataManager.setDeviceApConfig(deviceA, apCfgA);
 		// - use update function
@@ -170,8 +170,8 @@ public class DeviceDataManagerTest {
 		assertNotNull(actualApCfgB);
 		assertTrue(actualApCfgA.enableRRM);
 		assertFalse(actualApCfgB.enableRRM);
-		assertEquals(2, actualApCfgA.allowedChannels.get("2G").size());
-		assertEquals(3, actualApCfgB.allowedChannels.get("2G").size());
+		assertEquals(2, actualApCfgA.allowedChannels.get(Constants.BAND_2G).size());
+		assertEquals(3, actualApCfgB.allowedChannels.get(Constants.BAND_2G).size());
 		DeviceConfig actualZoneCfgA = deviceDataManager.getZoneConfig(zoneA);
 		assertNotNull(actualZoneCfgA);
 		assertTrue(actualZoneCfgA.enableRRM);
