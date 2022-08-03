@@ -6,7 +6,6 @@ import com.google.gson.JsonArray;
 
 /** Represents a single entry in wifi scan results. */
 public class WifiScanEntryResult {
-
 	public int channel;
 	public long last_seen;
 	/** Signal strength measured in dBm */

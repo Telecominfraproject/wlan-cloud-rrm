@@ -44,7 +44,6 @@ public class UCentralUtils {
 	private UCentralUtils() {}
 
 	public static class WifiScanEntry extends WifiScanEntryResult {
-
 		/**
 		 * Unix time in milliseconds (ms). This field is not defined in the uCentral
 		 * API. This is added it because it is unclear whether the {@code tsf} field is
