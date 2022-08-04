@@ -20,9 +20,9 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
-import com.facebook.openwifirrm.Constants;
 import com.facebook.openwifirrm.DeviceDataManager;
 import com.facebook.openwifirrm.modules.Modeler.DataModel;
+import com.facebook.openwifirrm.ucentral.UCentralConstants;
 
 @TestMethodOrder(OrderAnnotation.class)
 public class UnmanagedApAwareChannelOptimizerTest {
@@ -32,7 +32,7 @@ public class UnmanagedApAwareChannelOptimizerTest {
 	@Test
 	@Order(1)
 	void test5G() throws Exception {
-		final String band = Constants.BAND_5G;
+		final String band = UCentralConstants.BAND_5G;
 		final String deviceA = "aaaaaaaaaaaa";
 		final String deviceB = "bbbbbbbbbbbb";
 		final String deviceC = "cccccccccccc";
@@ -120,7 +120,7 @@ public class UnmanagedApAwareChannelOptimizerTest {
 	@Test
 	@Order(2)
 	void test2G() throws Exception {
-		final String band = Constants.BAND_2G;
+		final String band = UCentralConstants.BAND_2G;
 		final String deviceA = "aaaaaaaaaaaa";
 		final String deviceB = "bbbbbbbbbbbb";
 		final String deviceC = "cccccccccccc";

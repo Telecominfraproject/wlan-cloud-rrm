@@ -21,10 +21,10 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
-import com.facebook.openwifirrm.Constants;
 import com.facebook.openwifirrm.DeviceConfig;
 import com.facebook.openwifirrm.DeviceDataManager;
 import com.facebook.openwifirrm.modules.Modeler.DataModel;
+import com.facebook.openwifirrm.ucentral.UCentralConstants;
 
 @TestMethodOrder(OrderAnnotation.class)
 public class LocationBasedOptimalTPCTest {
@@ -76,7 +76,7 @@ public class LocationBasedOptimalTPCTest {
 	@Test
 	@Order(3)
 	void testLocationBasedOptimalTPCSuccessCase() throws Exception {
-		final String band = Constants.BAND_5G;
+		final String band = UCentralConstants.BAND_5G;
 		final String deviceA = "aaaaaaaaaaaa";
 		final String deviceB = "bbbbbbbbbbbb";
 		final String deviceC = "cccccccccccc";
@@ -194,7 +194,7 @@ public class LocationBasedOptimalTPCTest {
 	@Test
 	@Order(4)
 	void testLocationBasedOptimalTPCFailedCase() throws Exception {
-		final String band = Constants.BAND_5G;
+		final String band = UCentralConstants.BAND_5G;
 		final String deviceA = "aaaaaaaaaaaa";
 		final String deviceB = "bbbbbbbbbbbb";
 		final String deviceC = "cccccccccccc";

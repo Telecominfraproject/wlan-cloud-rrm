@@ -17,6 +17,8 @@ import java.util.HashMap;
 
 import org.junit.jupiter.api.Test;
 
+import com.facebook.openwifirrm.ucentral.UCentralConstants;
+
 public class DeviceConfigTest {
 	@Test
 	void test_isEmpty() throws Exception {
@@ -28,7 +30,7 @@ public class DeviceConfigTest {
 		config.enableConfig = null;
 		assertTrue(config.isEmpty());
 
-		config.userChannels = Collections.singletonMap(Constants.BAND_2G, 1);
+		config.userChannels = Collections.singletonMap(UCentralConstants.BAND_2G, 1);
 		assertFalse(config.isEmpty());
 		config.userChannels = new HashMap<>();
 		assertFalse(config.isEmpty());

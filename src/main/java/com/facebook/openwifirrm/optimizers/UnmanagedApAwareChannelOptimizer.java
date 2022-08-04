@@ -17,9 +17,9 @@ import java.util.TreeMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.facebook.openwifirrm.Constants;
 import com.facebook.openwifirrm.DeviceDataManager;
 import com.facebook.openwifirrm.modules.Modeler.DataModel;
+import com.facebook.openwifirrm.ucentral.UCentralConstants;
 import com.facebook.openwifirrm.ucentral.UCentralUtils.WifiScanEntry;
 
 /**
@@ -111,7 +111,7 @@ public class UnmanagedApAwareChannelOptimizer extends LeastUsedChannelOptimizer 
 
 		// For 2.4G, we prioritize the orthogonal channels
 		// by considering the overlapping channels
-		if (band.equals(Constants.BAND_2G)) {
+		if (band.equals(UCentralConstants.BAND_2G)) {
 			Map<Integer, Integer> occupiedOverlapChannels =
 				getOccupiedOverlapChannels(occupiedChannels);
 			occupiedChannels = new TreeMap<>(occupiedOverlapChannels);

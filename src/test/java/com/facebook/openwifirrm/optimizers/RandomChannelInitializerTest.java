@@ -17,9 +17,9 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
-import com.facebook.openwifirrm.Constants;
 import com.facebook.openwifirrm.DeviceDataManager;
 import com.facebook.openwifirrm.modules.Modeler.DataModel;
+import com.facebook.openwifirrm.ucentral.UCentralConstants;
 
 @TestMethodOrder(OrderAnnotation.class)
 public class RandomChannelInitializerTest {
@@ -29,7 +29,7 @@ public class RandomChannelInitializerTest {
 	@Test
 	@Order(1)
 	void test1() throws Exception {
-		final String band = Constants.BAND_2G;
+		final String band = UCentralConstants.BAND_2G;
 		final String deviceA = "aaaaaaaaaaaa";
 		final String deviceB = "bbbbbbbbbbbb";
 		final int channelWidth = 20;

@@ -19,10 +19,10 @@ import java.util.stream.IntStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.facebook.openwifirrm.Constants;
 import com.facebook.openwifirrm.DeviceConfig;
 import com.facebook.openwifirrm.DeviceDataManager;
 import com.facebook.openwifirrm.modules.Modeler.DataModel;
+import com.facebook.openwifirrm.ucentral.UCentralConstants;
 import com.facebook.openwifirrm.ucentral.models.State;
 import com.facebook.openwifirrm.modules.ModelerUtils;
 
@@ -182,8 +182,8 @@ public class LocationBasedOptimalTPC extends TPC {
 
 			// Update the txPowerChoices for the optimization
 			Map<String, List<Integer>> allowedTxPowers = deviceCfg.allowedTxPowers;
-			if (allowedTxPowers != null && allowedTxPowers.get(Constants.BAND_5G) != null) {
-				txPowerChoices.retainAll(allowedTxPowers.get(Constants.BAND_5G));
+			if (allowedTxPowers != null && allowedTxPowers.get(UCentralConstants.BAND_5G) != null) {
+				txPowerChoices.retainAll(allowedTxPowers.get(UCentralConstants.BAND_5G));
 			}
 
 			// Update the boundary for the optimization
@@ -236,7 +236,7 @@ public class LocationBasedOptimalTPC extends TPC {
 			String serialNumber = e.getKey();
 			int txPower = txPowerList.get(e.getValue());
 			Map<String, Integer> radioMap = new TreeMap<>();
-			radioMap.put(Constants.BAND_5G, txPower);
+			radioMap.put(UCentralConstants.BAND_5G, txPower);
 			txPowerMap.put(serialNumber, radioMap);
 			logger.info(
 				"Device {}: Assigning tx power = {}",

@@ -6,9 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package com.facebook.openwifirrm;
+package com.facebook.openwifirrm.ucentral;
 
-public final class Constants {
+public final class UCentralConstants {
 
 	/** String of the 2.4 GHz band */
 	public static final String BAND_2G = "2G";
@@ -16,6 +16,6 @@ public final class Constants {
 	public static final String BAND_5G = "5G";
 
 	// This class should not be instantiated.
-	private Constants() {}
+	private UCentralConstants() {}
 
 }

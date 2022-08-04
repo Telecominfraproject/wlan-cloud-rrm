@@ -20,9 +20,9 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.facebook.openwifirrm.Constants;
 import com.facebook.openwifirrm.DeviceDataManager;
 import com.facebook.openwifirrm.modules.Modeler.DataModel;
+import com.facebook.openwifirrm.ucentral.UCentralConstants;
 import com.facebook.openwifirrm.ucentral.UCentralUtils;
 import com.facebook.openwifirrm.ucentral.UCentralUtils.WifiScanEntry;
 import com.facebook.openwifirrm.ucentral.models.State;
@@ -74,10 +74,10 @@ public class LeastUsedChannelOptimizer extends ChannelOptimizer {
 	protected static Map<Integer, Integer> getOccupiedOverlapChannels(
 		Map<Integer, Integer> occupiedChannels
 	) {
-		int maxChannel = UPPER_CHANNEL_LIMIT.get(Constants.BAND_2G);
-		int minChannel = LOWER_CHANNEL_LIMIT.get(Constants.BAND_2G);
+		int maxChannel = UPPER_CHANNEL_LIMIT.get(UCentralConstants.BAND_2G);
+		int minChannel = LOWER_CHANNEL_LIMIT.get(UCentralConstants.BAND_2G);
 		Map<Integer, Integer> occupiedOverlapChannels = new TreeMap<>();
-		for (int overlapChannel : AVAILABLE_CHANNELS_BAND.get(Constants.BAND_2G)) {
+		for (int overlapChannel : AVAILABLE_CHANNELS_BAND.get(UCentralConstants.BAND_2G)) {
 			int occupancy = 0;
 			int windowStart = Math.max(
 				minChannel,
@@ -115,7 +115,7 @@ public class LeastUsedChannelOptimizer extends ChannelOptimizer {
 		List<WifiScanEntry> scanResps = deviceToWifiScans.get(serialNumber);
 
 		// 2.4G only supports 20 MHz bandwidth
-		if (band.equals(Constants.BAND_2G)) {
+		if (band.equals(UCentralConstants.BAND_2G)) {
 			return scanResps;
 		}
 
@@ -176,7 +176,7 @@ public class LeastUsedChannelOptimizer extends ChannelOptimizer {
 
 		// For 2.4G, we prioritize the orthogonal channels
 		// by considering the overlapping channels
-		if (band.equals(Constants.BAND_2G)) {
+		if (band.equals(UCentralConstants.BAND_2G)) {
 			Map<Integer, Integer> occupiedOverlapChannels =
 				getOccupiedOverlapChannels(occupiedChannels);
 			occupiedChannels = new TreeMap<>(occupiedOverlapChannels);
@@ -264,7 +264,7 @@ public class LeastUsedChannelOptimizer extends ChannelOptimizer {
 			} else {
 				// Prioritize channels 1, 6, and/or 11 for 2G
 				// if any of them is in the candidate list
-				if (band.equals(Constants.BAND_2G)) {
+				if (band.equals(UCentralConstants.BAND_2G)) {
 					Set<Integer> priorityMap = new HashSet<>(
 						PRIORITY_CHANNELS_2G
 					);
