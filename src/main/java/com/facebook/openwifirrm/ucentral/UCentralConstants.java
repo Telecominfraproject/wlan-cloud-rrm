@@ -8,6 +8,12 @@
 
 package com.facebook.openwifirrm.ucentral;
 
+/**
+ * Constants related to uCentral.
+ *
+ * @author rockymandayam
+ *
+ */
 public final class UCentralConstants {
 
 	/** String of the 2.4 GHz band */
