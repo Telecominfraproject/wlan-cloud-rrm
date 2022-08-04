@@ -19,6 +19,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 
 import com.facebook.openwifirrm.DeviceDataManager;
 import com.facebook.openwifirrm.modules.Modeler.DataModel;
+import com.facebook.openwifirrm.ucentral.UCentralConstants;
 import com.facebook.openwifirrm.ucentral.models.State;
 import com.google.gson.JsonObject;
 
@@ -98,18 +99,18 @@ public class MeasurementBasedApClientTPCTest {
 			optimizer.computeTxPowerMap();
 
 		// Device A: no clients
-		assertEquals(10, txPowerMap.get(deviceA).get("5G"));
+		assertEquals(10, txPowerMap.get(deviceA).get(UCentralConstants.BAND_5G));
 
 		// Device B: 1 client with RSSI -65
-		assertEquals(14, txPowerMap.get(deviceB).get("5G"));
+		assertEquals(14, txPowerMap.get(deviceB).get(UCentralConstants.BAND_5G));
 
 		// Device C: 3 clients with min. RSSI -73
-		assertEquals(26, txPowerMap.get(deviceC).get("5G"));
+		assertEquals(26, txPowerMap.get(deviceC).get(UCentralConstants.BAND_5G));
 
 		// Device D: 1 client with RSSI -80 => set to max txPower for MCS 7
-		assertEquals(28, txPowerMap.get(deviceD).get("5G"));
+		assertEquals(28, txPowerMap.get(deviceD).get(UCentralConstants.BAND_5G));
 
 		// Device E: 1 client with RSSI -45 => set to min txPower
-		assertEquals(TPC.MIN_TX_POWER, txPowerMap.get(deviceE).get("5G"));
+		assertEquals(TPC.MIN_TX_POWER, txPowerMap.get(deviceE).get(UCentralConstants.BAND_5G));
 	}
 }

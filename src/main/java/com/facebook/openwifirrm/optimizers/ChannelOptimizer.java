@@ -23,6 +23,7 @@ import com.facebook.openwifirrm.DeviceConfig;
 import com.facebook.openwifirrm.DeviceDataManager;
 import com.facebook.openwifirrm.modules.ConfigManager;
 import com.facebook.openwifirrm.modules.Modeler.DataModel;
+import com.facebook.openwifirrm.ucentral.UCentralConstants;
 import com.facebook.openwifirrm.ucentral.UCentralUtils.WifiScanEntry;
 import com.facebook.openwifirrm.ucentral.models.State;
 
@@ -35,24 +36,18 @@ public abstract class ChannelOptimizer {
 	/** Minimum supported channel width (MHz), inclusive. */
 	public static final int MIN_CHANNEL_WIDTH = 20;
 
-	/** String of the 2.4 GHz band */
-	public static final String BAND_2G = "2G";
-
-	/** String of the 5 GHz band */
-	public static final String BAND_5G = "5G";
-
 	/** Map of band to the band-specific lowest available channel*/
 	protected static final Map<String, Integer> LOWER_CHANNEL_LIMIT = new HashMap<>();
 	static {
-		LOWER_CHANNEL_LIMIT.put(BAND_2G, 1);
-		LOWER_CHANNEL_LIMIT.put(BAND_5G, 36);
+		LOWER_CHANNEL_LIMIT.put(UCentralConstants.BAND_2G, 1);
+		LOWER_CHANNEL_LIMIT.put(UCentralConstants.BAND_5G, 36);
 	}
 
 	/** Map of band to the band-specific highest available channel*/
 	protected static final Map<String, Integer> UPPER_CHANNEL_LIMIT = new HashMap<>();
 	static {
-		UPPER_CHANNEL_LIMIT.put(BAND_2G, 11);
-		UPPER_CHANNEL_LIMIT.put(BAND_5G, 165);
+		UPPER_CHANNEL_LIMIT.put(UCentralConstants.BAND_2G, 11);
+		UPPER_CHANNEL_LIMIT.put(UCentralConstants.BAND_5G, 165);
 	}
 
 	/** List of available channels per band for use. */
@@ -60,12 +55,12 @@ public abstract class ChannelOptimizer {
 		new HashMap<>();
 	static {
 		AVAILABLE_CHANNELS_BAND.put(
-			BAND_5G,
+			UCentralConstants.BAND_5G,
 			Collections.unmodifiableList(
 				Arrays.asList(36, 40, 44, 48, 149, 153, 157, 161, 165))
 		);
 		AVAILABLE_CHANNELS_BAND.put(
-			BAND_2G,
+			UCentralConstants.BAND_2G,
 			Collections.unmodifiableList(
 				Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11))
 		);
@@ -205,7 +200,7 @@ public abstract class ChannelOptimizer {
 		String htOper,
 		String vhtOper
 	) {
-		if (AVAILABLE_CHANNELS_BAND.get(BAND_2G).contains(channel)) {
+		if (AVAILABLE_CHANNELS_BAND.get(UCentralConstants.BAND_2G).contains(channel)) {
 			// 2.4G, it only supports 20 MHz
 			return 20;
 		}
@@ -447,7 +442,7 @@ public abstract class ChannelOptimizer {
 		List<Integer> newAvailableChannelsList = new ArrayList<>(availableChannelsList);
 
 		// Update the available channels if the bandwidth info is taken into account
-		if (band.equals(BAND_5G) && channelWidth > 20) {
+		if (band.equals(UCentralConstants.BAND_5G) && channelWidth > 20) {
 			newAvailableChannelsList.retainAll(
 				AVAILABLE_CHANNELS_WIDTH.getOrDefault(channelWidth, availableChannelsList)
 			);
@@ -491,7 +486,7 @@ public abstract class ChannelOptimizer {
 				"userChannels or allowedChannels might be invalid " +
 				"Fall back to the default available channels list"
 			);
-			if (band.equals(BAND_5G) && channelWidth > 20) {
+			if (band.equals(UCentralConstants.BAND_5G) && channelWidth > 20) {
 				newAvailableChannelsList = new ArrayList<>(availableChannelsList);
 				newAvailableChannelsList.retainAll(
 					AVAILABLE_CHANNELS_WIDTH.getOrDefault(channelWidth, availableChannelsList)

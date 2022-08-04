@@ -33,6 +33,7 @@ import com.facebook.openwifirrm.DeviceTopology;
 import com.facebook.openwifirrm.RRMConfig;
 import com.facebook.openwifirrm.VersionProvider;
 import com.facebook.openwifirrm.mysql.DatabaseManager;
+import com.facebook.openwifirrm.ucentral.UCentralConstants;
 import com.facebook.openwifirrm.ucentral.UCentralClient;
 import com.facebook.openwifirrm.ucentral.UCentralKafkaConsumer;
 import com.facebook.openwifirrm.ucentral.UCentralUtils;
@@ -334,16 +335,16 @@ public class ApiServerTest {
 		DeviceConfig apConfig = new DeviceConfig();
 		apConfig.enableConfig = false;
 		apConfig.autoChannels = new HashMap<>();
-		apConfig.autoChannels.put("2G", 7);
-		apConfig.autoChannels.put("5G", 165);
+		apConfig.autoChannels.put(UCentralConstants.BAND_2G, 7);
+		apConfig.autoChannels.put(UCentralConstants.BAND_5G, 165);
 		deviceDataManager.setDeviceApConfig(ap, apConfig);
 
 		// Construct config request
 		DeviceConfig configReq = new DeviceConfig();
 		configReq.enableConfig = true;
 		configReq.autoTxPowers = new HashMap<>();
-		configReq.autoTxPowers.put("2G", 20);
-		configReq.autoTxPowers.put("5G", 28);
+		configReq.autoTxPowers.put(UCentralConstants.BAND_2G, 20);
+		configReq.autoTxPowers.put(UCentralConstants.BAND_5G, 28);
 
 		// Merge config objects (expected result)
 		apConfig.apply(configReq);

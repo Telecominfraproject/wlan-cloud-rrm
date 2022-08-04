@@ -45,14 +45,40 @@ public class UCentralUtils {
 	public static class WifiScanEntry {
 		public int channel;
 		public long last_seen;
+		/** Signal strength measured in dBm */
 		public int signal;
+		/** BSSID is the MAC address of the device */
 		public String bssid;
 		public String ssid;
 		public long tsf;
+		/**
+		 * ht_oper is short for "high throughput operator". This field contains some
+		 * information already present in other fields. This is because this field was
+		 * added later in order to capture some new information but also includes some
+		 * redundant information. 802.11 defines the HT operator and vendors may define
+		 * additional fields. HT is supported on both the 2.4 GHz and 5 GHz bands.
+		 *
+		 * This field is specified as 24 bytes, but it is encoded in base64. It is
+		 * likely the case that the first byte (the Element ID, which should be 61 for
+		 * ht_oper) and the second byte (Length) are omitted in the wifi scan results,
+		 * resulting in 22 bytes, which translates to a 32 byte base64 encoded String.
+		 */
 		public String ht_oper;
+		/**
+		 * vht_oper is short for "very high throughput operator". This field contains
+		 * some information already present in other fields. This is because this field
+		 * was added later in order to capture some new information but also includes
+		 * some redundant information. 802.11 defines the VHT operator and vendors may
+		 * define additional fields. VHT is supported only on the 5 GHz band.
+		 *
+		 * For information about about the contents of this field, its encoding, etc.,
+		 * please see the javadoc for {@link #ht_oper} first. The vht_oper likely
+		 * operates similarly.
+		 */
 		public String vht_oper;
 		public int capability;
 		public int frequency;
+		/** IE = information element */
 		public JsonArray ies;
 
 		/** Default Constructor. */

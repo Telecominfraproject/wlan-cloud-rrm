@@ -22,6 +22,7 @@ import org.slf4j.LoggerFactory;
 
 import com.facebook.openwifirrm.DeviceDataManager;
 import com.facebook.openwifirrm.modules.Modeler.DataModel;
+import com.facebook.openwifirrm.ucentral.UCentralConstants;
 import com.facebook.openwifirrm.ucentral.UCentralUtils.WifiScanEntry;
 import com.facebook.openwifirrm.ucentral.models.State;
 import com.google.gson.JsonArray;
@@ -121,7 +122,7 @@ public class MeasurementBasedApApTPC extends TPC {
 			}
 			JsonObject radioObject = e.getAsJsonObject();
 			String band = radioObject.get("band").getAsString();
-			if (band.equals("5G") && radioObject.has("tx-power")) {
+			if (band.equals(UCentralConstants.BAND_5G) && radioObject.has("tx-power")) {
 				return radioObject.get("tx-power").getAsInt();
 			}
 		}
@@ -252,7 +253,7 @@ public class MeasurementBasedApApTPC extends TPC {
 			logger.debug("  New tx_power: {}", newTxPower);
 
 			Map<String, Integer> radioMap = new TreeMap<>();
-			radioMap.put(BAND_5G, newTxPower);
+			radioMap.put(UCentralConstants.BAND_5G, newTxPower);
 			txPowerMap.put(serialNumber, radioMap);
 		}
 

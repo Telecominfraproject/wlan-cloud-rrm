@@ -24,7 +24,7 @@ import com.google.gson.JsonArray;
 
 public class TestUtils {
 	/** The Gson instance. */
-	private final static Gson gson = new Gson();
+	private static final Gson gson = new Gson();
 
 	/** Create a topology from the given devices in a single zone. */
 	public static DeviceTopology createTopology(String zone, String... devices) {

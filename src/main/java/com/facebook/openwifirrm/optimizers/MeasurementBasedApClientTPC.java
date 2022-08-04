@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 
 import com.facebook.openwifirrm.DeviceDataManager;
 import com.facebook.openwifirrm.modules.Modeler.DataModel;
+import com.facebook.openwifirrm.ucentral.UCentralConstants;
 import com.facebook.openwifirrm.ucentral.models.State;
 import com.google.gson.JsonObject;
 
@@ -241,7 +242,7 @@ public class MeasurementBasedApClientTPC extends TPC {
 			int newTxPower =
 				computeTxPowerForDevice(serialNumber, state, radioIndex);
 			Map<String, Integer> radioMap = new TreeMap<>();
-			radioMap.put(BAND_5G, newTxPower);
+			radioMap.put(UCentralConstants.BAND_5G, newTxPower);
 			txPowerMap.put(serialNumber, radioMap);
 		}
 
