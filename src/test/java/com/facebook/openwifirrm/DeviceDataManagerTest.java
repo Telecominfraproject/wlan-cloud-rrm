@@ -25,8 +25,6 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
-import com.facebook.openwifirrm.optimizers.TestUtils;
-
 @TestMethodOrder(OrderAnnotation.class)
 public class DeviceDataManagerTest {
 	@Test
@@ -88,7 +86,7 @@ public class DeviceDataManagerTest {
 	@Test
 	@Order(3)
 	void testTopologyExceptions() throws Exception {
-		final String zone = TestUtils.TEST_ZONE;
+		final String zone = "test-zone";
 		final String deviceA = "aaaaaaaaaaaa";
 
 		DeviceDataManager deviceDataManager = new DeviceDataManager();

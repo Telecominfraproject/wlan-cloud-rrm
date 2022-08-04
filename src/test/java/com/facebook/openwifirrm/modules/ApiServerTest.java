@@ -34,7 +34,6 @@ import com.facebook.openwifirrm.DeviceTopology;
 import com.facebook.openwifirrm.RRMConfig;
 import com.facebook.openwifirrm.VersionProvider;
 import com.facebook.openwifirrm.mysql.DatabaseManager;
-import com.facebook.openwifirrm.optimizers.TestUtils;
 import com.facebook.openwifirrm.ucentral.UCentralClient;
 import com.facebook.openwifirrm.ucentral.UCentralKafkaConsumer;
 import com.facebook.openwifirrm.ucentral.UCentralUtils;
@@ -153,7 +152,7 @@ public class ApiServerTest {
 	void test_getTopology() throws Exception {
 		// Create topology
 		DeviceTopology topology = new DeviceTopology();
-		topology.put(TestUtils.TEST_ZONE, new TreeSet<>(Arrays.asList("aaaaaaaaaaa")));
+		topology.put("test-zone", new TreeSet<>(Arrays.asList("aaaaaaaaaaa")));
 		deviceDataManager.setTopology(topology);
 
 		// Fetch topology
@@ -169,7 +168,7 @@ public class ApiServerTest {
 
 		// Create topology
 		DeviceTopology topology = new DeviceTopology();
-		topology.put(TestUtils.TEST_ZONE, new TreeSet<>(Arrays.asList("aaaaaaaaaaa")));
+		topology.put("test-zone", new TreeSet<>(Arrays.asList("aaaaaaaaaaa")));
 
 		// Set topology
 		HttpResponse<String> resp = Unirest
@@ -187,7 +186,7 @@ public class ApiServerTest {
 	@Order(3)
 	void test_getDeviceLayeredConfig() throws Exception {
 		// Create topology and configs
-		final String zone = TestUtils.TEST_ZONE;
+		final String zone = "test-zone";
 		final String ap = "aaaaaaaaaaa";
 		DeviceTopology topology = new DeviceTopology();
 		topology.put(zone, new TreeSet<>(Arrays.asList(ap)));
@@ -214,7 +213,7 @@ public class ApiServerTest {
 		String url = endpoint("/api/v1/getDeviceConfig");
 
 		// Create topology
-		final String zone = TestUtils.TEST_ZONE;
+		final String zone = "test-zone";
 		final String ap = "aaaaaaaaaaa";
 		DeviceTopology topology = new DeviceTopology();
 		topology.put(zone, new TreeSet<>(Arrays.asList(ap)));
@@ -256,7 +255,7 @@ public class ApiServerTest {
 		String url = endpoint("/api/v1/setDeviceZoneConfig");
 
 		// Create topology
-		final String zone = TestUtils.TEST_ZONE;
+		final String zone = "test-zone";
 		final String ap = "aaaaaaaaaaa";
 		DeviceTopology topology = new DeviceTopology();
 		topology.put(zone, new TreeSet<>(Arrays.asList(ap)));
@@ -291,7 +290,7 @@ public class ApiServerTest {
 		String url = endpoint("/api/v1/setDeviceApConfig");
 
 		// Create topology
-		final String zone = TestUtils.TEST_ZONE;
+		final String zone = "test-zone";
 		final String ap = "aaaaaaaaaaa";
 		DeviceTopology topology = new DeviceTopology();
 		topology.put(zone, new TreeSet<>(Arrays.asList(ap)));
@@ -326,7 +325,7 @@ public class ApiServerTest {
 		String url = endpoint("/api/v1/modifyDeviceApConfig");
 
 		// Create topology
-		final String zone = TestUtils.TEST_ZONE;
+		final String zone = "test-zone";
 		final String ap = "aaaaaaaaaaa";
 		DeviceTopology topology = new DeviceTopology();
 		topology.put(zone, new TreeSet<>(Arrays.asList(ap)));
@@ -385,7 +384,7 @@ public class ApiServerTest {
 		String url = endpoint("/api/v1/optimizeChannel");
 
 		// Create topology
-		final String zone = TestUtils.TEST_ZONE;
+		final String zone = "test-zone";
 		DeviceTopology topology = new DeviceTopology();
 		topology.put(zone, new TreeSet<>(Arrays.asList("aaaaaaaaaaa")));
 		deviceDataManager.setTopology(topology);
@@ -411,7 +410,7 @@ public class ApiServerTest {
 		String url = endpoint("/api/v1/optimizeTxPower");
 
 		// Create topology
-		final String zone = TestUtils.TEST_ZONE;
+		final String zone = "test-zone";
 		DeviceTopology topology = new DeviceTopology();
 		topology.put(zone, new TreeSet<>(Arrays.asList("aaaaaaaaaaa")));
 		deviceDataManager.setTopology(topology);

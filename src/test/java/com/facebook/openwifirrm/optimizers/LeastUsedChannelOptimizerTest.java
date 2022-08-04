@@ -27,6 +27,9 @@ import com.facebook.openwifirrm.modules.Modeler.DataModel;
 
 @TestMethodOrder(OrderAnnotation.class)
 public class LeastUsedChannelOptimizerTest {
+	/** Test zone name. */
+	private static final String TEST_ZONE = "test-zone";
+
 	@Test
 	@Order(1)
 	void test5G() throws Exception {
@@ -39,7 +42,7 @@ public class LeastUsedChannelOptimizerTest {
 
 		DeviceDataManager deviceDataManager = new DeviceDataManager();
 		deviceDataManager.setTopology(
-			TestUtils.createTopology(TestUtils.TEST_ZONE, deviceA, deviceB, deviceC)
+			TestUtils.createTopology(TEST_ZONE, deviceA, deviceB, deviceC)
 		);
 
 		DataModel dataModel = new DataModel();
@@ -99,7 +102,7 @@ public class LeastUsedChannelOptimizerTest {
 		expected.put(deviceC, radioMapC);
 
 		ChannelOptimizer optimizer = new LeastUsedChannelOptimizer(
-			dataModel, TestUtils.TEST_ZONE, deviceDataManager
+			dataModel, TEST_ZONE, deviceDataManager
 		);
 		assertEquals(expected, optimizer.computeChannelMap());
 	}
@@ -116,7 +119,7 @@ public class LeastUsedChannelOptimizerTest {
 
 		DeviceDataManager deviceDataManager = new DeviceDataManager();
 		deviceDataManager.setTopology(
-			TestUtils.createTopology(TestUtils.TEST_ZONE, deviceA, deviceB, deviceC)
+			TestUtils.createTopology(TEST_ZONE, deviceA, deviceB, deviceC)
 		);
 
 		DataModel dataModel = new DataModel();
@@ -176,7 +179,7 @@ public class LeastUsedChannelOptimizerTest {
 		expected.put(deviceC, radioMapC);
 
 		ChannelOptimizer optimizer = new LeastUsedChannelOptimizer(
-			dataModel, TestUtils.TEST_ZONE, deviceDataManager
+			dataModel, TEST_ZONE, deviceDataManager
 		);
 		assertEquals(expected, optimizer.computeChannelMap());
 	}
@@ -194,7 +197,7 @@ public class LeastUsedChannelOptimizerTest {
 
 		DeviceDataManager deviceDataManager = new DeviceDataManager();
 		deviceDataManager.setTopology(
-			TestUtils.createTopology(TestUtils.TEST_ZONE, deviceA, deviceB, deviceC)
+			TestUtils.createTopology(TEST_ZONE, deviceA, deviceB, deviceC)
 		);
 		DeviceConfig apConfig = new DeviceConfig();
 		apConfig.userChannels = new HashMap<>();
@@ -258,7 +261,7 @@ public class LeastUsedChannelOptimizerTest {
 		expected.put(deviceC, radioMapC);
 
 		ChannelOptimizer optimizer = new LeastUsedChannelOptimizer(
-			dataModel, TestUtils.TEST_ZONE, deviceDataManager
+			dataModel, TEST_ZONE, deviceDataManager
 		);
 		assertEquals(expected, optimizer.computeChannelMap());
 	}
@@ -275,7 +278,7 @@ public class LeastUsedChannelOptimizerTest {
 
 		DeviceDataManager deviceDataManager = new DeviceDataManager();
 		deviceDataManager.setTopology(
-			TestUtils.createTopology(TestUtils.TEST_ZONE, deviceA, deviceB, deviceC)
+			TestUtils.createTopology(TEST_ZONE, deviceA, deviceB, deviceC)
 		);
 		DeviceConfig apConfig = new DeviceConfig();
 		apConfig.allowedChannels = new HashMap<>();
@@ -343,7 +346,7 @@ public class LeastUsedChannelOptimizerTest {
 		expected.put(deviceC, radioMapC);
 
 		ChannelOptimizer optimizer = new LeastUsedChannelOptimizer(
-			dataModel, TestUtils.TEST_ZONE, deviceDataManager
+			dataModel, TEST_ZONE, deviceDataManager
 		);
 		assertEquals(expected, optimizer.computeChannelMap());
 	}
@@ -361,7 +364,7 @@ public class LeastUsedChannelOptimizerTest {
 
 		DeviceDataManager deviceDataManager = new DeviceDataManager();
 		deviceDataManager.setTopology(
-			TestUtils.createTopology(TestUtils.TEST_ZONE, deviceA, deviceB, deviceC, deviceD)
+			TestUtils.createTopology(TEST_ZONE, deviceA, deviceB, deviceC, deviceD)
 		);
 
 		DataModel dataModel = new DataModel();
@@ -440,7 +443,7 @@ public class LeastUsedChannelOptimizerTest {
 		expected.put(deviceD, radioMapD);
 
 		ChannelOptimizer optimizer = new LeastUsedChannelOptimizer(
-			dataModel, TestUtils.TEST_ZONE, deviceDataManager
+			dataModel, TEST_ZONE, deviceDataManager
 		);
 		assertEquals(expected, optimizer.computeChannelMap());
 	}
@@ -460,7 +463,7 @@ public class LeastUsedChannelOptimizerTest {
 		DeviceDataManager deviceDataManager = new DeviceDataManager();
 		deviceDataManager.setTopology(
 			TestUtils.createTopology(
-				TestUtils.TEST_ZONE, deviceA, deviceB, deviceC, deviceD, deviceE
+				TEST_ZONE, deviceA, deviceB, deviceC, deviceD, deviceE
 			)
 		);
 
@@ -565,7 +568,7 @@ public class LeastUsedChannelOptimizerTest {
 		expected.put(deviceE, radioMapE);
 
 		ChannelOptimizer optimizer = new LeastUsedChannelOptimizer(
-			dataModel, TestUtils.TEST_ZONE, deviceDataManager
+			dataModel, TEST_ZONE, deviceDataManager
 		);
 		assertEquals(expected, optimizer.computeChannelMap());
 	}
@@ -582,7 +585,7 @@ public class LeastUsedChannelOptimizerTest {
 
 		DeviceDataManager deviceDataManager = new DeviceDataManager();
 		deviceDataManager.setTopology(
-			TestUtils.createTopology(TestUtils.TEST_ZONE, deviceA, deviceB, deviceC)
+			TestUtils.createTopology(TEST_ZONE, deviceA, deviceB, deviceC)
 		);
 
 		DataModel dataModel = new DataModel();
@@ -665,7 +668,7 @@ public class LeastUsedChannelOptimizerTest {
 		expected.put(deviceC, radioMapC);
 
 		ChannelOptimizer optimizer = new LeastUsedChannelOptimizer(
-			dataModel, TestUtils.TEST_ZONE, deviceDataManager
+			dataModel, TEST_ZONE, deviceDataManager
 		);
 		assertEquals(expected, optimizer.computeChannelMap());
 	}

@@ -26,6 +26,9 @@ import com.facebook.openwifirrm.modules.Modeler.DataModel;
 
 @TestMethodOrder(OrderAnnotation.class)
 public class UnmanagedApAwareChannelOptimizerTest {
+	/** Test zone name. */
+	private static final String TEST_ZONE = "test-zone";
+
 	@Test
 	@Order(1)
 	void test5G() throws Exception {
@@ -40,7 +43,7 @@ public class UnmanagedApAwareChannelOptimizerTest {
 
 		DeviceDataManager deviceDataManager = new DeviceDataManager();
 		deviceDataManager.setTopology(
-			TestUtils.createTopology(TestUtils.TEST_ZONE, deviceA, deviceB, deviceC)
+			TestUtils.createTopology(TEST_ZONE, deviceA, deviceB, deviceC)
 		);
 
 		DataModel dataModel = new DataModel();
@@ -109,7 +112,7 @@ public class UnmanagedApAwareChannelOptimizerTest {
 		expected.put(deviceC, radioMapC);
 
 		ChannelOptimizer optimizer = new UnmanagedApAwareChannelOptimizer(
-			dataModel, TestUtils.TEST_ZONE, deviceDataManager
+			dataModel, TEST_ZONE, deviceDataManager
 		);
 		assertEquals(expected, optimizer.computeChannelMap());
 	}
@@ -128,7 +131,7 @@ public class UnmanagedApAwareChannelOptimizerTest {
 
 		DeviceDataManager deviceDataManager = new DeviceDataManager();
 		deviceDataManager.setTopology(
-			TestUtils.createTopology(TestUtils.TEST_ZONE, deviceA, deviceB, deviceC)
+			TestUtils.createTopology(TEST_ZONE, deviceA, deviceB, deviceC)
 		);
 
 		DataModel dataModel = new DataModel();
@@ -188,7 +191,7 @@ public class UnmanagedApAwareChannelOptimizerTest {
 		expected.put(deviceC, radioMapC);
 
 		ChannelOptimizer optimizer = new UnmanagedApAwareChannelOptimizer(
-			dataModel, TestUtils.TEST_ZONE, deviceDataManager
+			dataModel, TEST_ZONE, deviceDataManager
 		);
 		assertEquals(expected, optimizer.computeChannelMap());
 	}

@@ -24,6 +24,9 @@ import com.facebook.openwifirrm.ucentral.models.State;
 
 @TestMethodOrder(OrderAnnotation.class)
 public class RandomTxPowerInitializerTest {
+	/** Test zone name. */
+	private static final String TEST_ZONE = "test-zone";
+
 	/** Create an empty device state object. */
 	private State createState() {
 		return new State();
@@ -37,7 +40,7 @@ public class RandomTxPowerInitializerTest {
 
 		DeviceDataManager deviceDataManager = new DeviceDataManager();
 		deviceDataManager.setTopology(
-			TestUtils.createTopology(TestUtils.TEST_ZONE, deviceA, deviceB)
+			TestUtils.createTopology(TEST_ZONE, deviceA, deviceB)
 		);
 
 		DataModel dataModel = new DataModel();
@@ -46,7 +49,7 @@ public class RandomTxPowerInitializerTest {
 
 		final int txPower = 16;
 		TPC optimizer = new RandomTxPowerInitializer(
-			dataModel, TestUtils.TEST_ZONE, deviceDataManager, txPower
+			dataModel, TEST_ZONE, deviceDataManager, txPower
 		);
 		Map<String, Map<String, Integer>> txPowerMap =
 			optimizer.computeTxPowerMap();

@@ -31,6 +31,8 @@ import com.google.gson.JsonArray;
 
 @TestMethodOrder(OrderAnnotation.class)
 public class MeasurementBasedApApTPCTest {
+	/** Test zone name. */
+	private static final String TEST_ZONE = "test-zone";
 	private static final int MAX_TX_POWER = 30;
 	private static final String BAND = Constants.BAND_5G;
 
@@ -50,7 +52,7 @@ public class MeasurementBasedApApTPCTest {
 	private static DeviceDataManager createDeviceDataManager() {
 		DeviceDataManager deviceDataManager = new DeviceDataManager();
 		deviceDataManager.setTopology(
-			TestUtils.createTopology(TestUtils.TEST_ZONE, DEVICE_A, DEVICE_B, DEVICE_C)
+			TestUtils.createTopology(TEST_ZONE, DEVICE_A, DEVICE_B, DEVICE_C)
 		);
 		final DeviceConfig apCfgA = new DeviceConfig();
 		final DeviceConfig apCfgB = new DeviceConfig();
@@ -257,7 +259,7 @@ public class MeasurementBasedApApTPCTest {
 		DataModel dataModel = createModel();
 		dataModel.latestWifiScans = createLatestWifiScansB();
 		DeviceDataManager deviceDataManager = createDeviceDataManager();
-		MeasurementBasedApApTPC optimizer = new MeasurementBasedApApTPC(dataModel, TestUtils.TEST_ZONE, deviceDataManager, -80, 0);
+		MeasurementBasedApApTPC optimizer = new MeasurementBasedApApTPC(dataModel, TEST_ZONE, deviceDataManager, -80, 0);
 
 		Map<String, Map<String, Integer>> txPowerMap = optimizer.computeTxPowerMap();
 
@@ -281,7 +283,7 @@ public class MeasurementBasedApApTPCTest {
 		dataModel.latestWifiScans = latestWifiScans;
 
 		deviceDataManager = createDeviceDataManager();
-		optimizer = new MeasurementBasedApApTPC(dataModel, TestUtils.TEST_ZONE, deviceDataManager);
+		optimizer = new MeasurementBasedApApTPC(dataModel, TEST_ZONE, deviceDataManager);
 
 		txPowerMap = optimizer.computeTxPowerMap();
 

@@ -23,6 +23,9 @@ import com.facebook.openwifirrm.modules.Modeler.DataModel;
 
 @TestMethodOrder(OrderAnnotation.class)
 public class RandomChannelInitializerTest {
+	/** Test zone name. */
+	private static final String TEST_ZONE = "test-zone";
+
 	@Test
 	@Order(1)
 	void test1() throws Exception {
@@ -33,7 +36,7 @@ public class RandomChannelInitializerTest {
 
 		DeviceDataManager deviceDataManager = new DeviceDataManager();
 		deviceDataManager.setTopology(
-			TestUtils.createTopology(TestUtils.TEST_ZONE, deviceA, deviceB)
+			TestUtils.createTopology(TEST_ZONE, deviceA, deviceB)
 		);
 
 		// A and B will be assigned to the same channel
@@ -52,7 +55,7 @@ public class RandomChannelInitializerTest {
 		);
 
 		ChannelOptimizer optimizer = new RandomChannelInitializer(
-			dataModel, TestUtils.TEST_ZONE, deviceDataManager
+			dataModel, TEST_ZONE, deviceDataManager
 		);
 		Map<String, Map<String, Integer>> channelMap =
 			optimizer.computeChannelMap();
