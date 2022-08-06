@@ -16,6 +16,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -43,6 +44,7 @@ public class UCentralUtils {
 	private UCentralUtils() {}
 
 	public static class WifiScanEntry extends WifiScanEntryResult {
+
 		/**
 		 * Unix time in milliseconds (ms). This field is not defined in the uCentral
 		 * API. This is added it because it is unclear whether the {@code tsf} field is
@@ -58,6 +60,39 @@ public class UCentralUtils {
 		public WifiScanEntry(WifiScanEntry o) {
 			super(o);
 			this.unixTimeMs = o.unixTimeMs;
+		}
+
+		/**
+		 * This is only implemented in order to be consistent due to equals() being
+		 * implemented, but instances of this class should NOT be hashed since this
+		 * class is mutable!
+		 */
+		@Override
+		public int hashCode() {
+			final int prime = 31;
+			int result = super.hashCode();
+			result = prime * result + Objects.hash(unixTimeMs);
+			return result;
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj) {
+				return true;
+			}
+			if (!super.equals(obj)) {
+				return false;
+			}
+			if (getClass() != obj.getClass()) {
+				return false;
+			}
+			WifiScanEntry other = (WifiScanEntry) obj;
+			return unixTimeMs == other.unixTimeMs;
+		}
+
+		@Override
+		public String toString() {
+			return String.format("WifiScanEntry[signal=%d, bssid=%s, unixTimeMs=%d]", signal, bssid, unixTimeMs);
 		}
 	}
 

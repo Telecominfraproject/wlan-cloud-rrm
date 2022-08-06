@@ -8,10 +8,17 @@
 
 package com.facebook.openwifirrm.modules;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.facebook.openwifirrm.modules.aggregators.Aggregator;
+import com.facebook.openwifirrm.ucentral.UCentralUtils.WifiScanEntry;
 
 /**
  * Modeler utilities.
@@ -201,5 +208,90 @@ public class ModelerUtils {
 		} else {
 			return Double.POSITIVE_INFINITY;
 		}
+	}
+
+	/**
+	 * Determines if two wifiscan entries should be aggregated without consideration
+	 * for any kind of obsoletion period. (Untested) should handle APs that support
+	 * pre-802.11n standards (no ht_oper and no vht_oper), 802.11n (supports ht_oper
+	 * but no vht_oper), and 802.11ac (supports both ht_oper and vht_oper).
+	 * Pre-802.11n, if two entries with the same bssid are in the same channel (and
+	 * therefore frequency, since they share a one-to-one mapping), that is enough
+	 * to aggregate them. However, 802.11n introduced channel bonding, so for
+	 * 802.11n onwards, channel width must be checked.
+	 *
+	 * @param entry1
+	 * @param entry2
+	 * @return true if the entries should be aggregated
+	 */
+	private static boolean matchesForAggregation(WifiScanEntry entry1, WifiScanEntry entry2) {
+		// TODO should we check the entire ht_oper and vht_oper or just channel width?
+		return entry1.bssid.equals(entry2.bssid) && Objects.equals(entry1.ssid, entry2.ssid)
+				&& entry1.frequency == entry2.frequency && entry1.channel == entry2.channel
+				&& Objects.equals(entry1.ht_oper, entry2.ht_oper) && Objects.equals(entry1.vht_oper, entry2.vht_oper);
+	}
+
+	/**
+	 *
+	 * @param dataModel
+	 * @param obsoletionPeriodMs per-BSSID, the maximum amount of time (in
+	 *                           milliseconds) it is worth aggregating over,
+	 *                           starting from the most recent scan entry and
+	 *                           working backwards in time on a per-BSSID basis
+	 *                           (per-BSSID basis meaning that this method takes the
+	 *                           most recent scan entry for a specific BSSID and
+	 *                           looks back from there and repeats this for every
+	 *                           BSSID). An entry exactly {@code obsoletionPeriodMs}
+	 *                           ms earlier than the most recent entry is considered
+	 *                           obsolete (i.e., the "non-obsolete" window is
+	 *                           exclusive).
+	 * @param agg                an aggregator to output a calculated "aggregated
+	 *                           signal strength"
+	 * @return a map from BSSID to an "aggregated wifiscan entry" (i.e., a single
+	 *         entry with its {@code signal} attribute modified to be the aggregated
+	 *         signal value instead of the value in just the most recent entry.
+	 */
+	public static Map<String, WifiScanEntry> getAggregatedWifiScans(Modeler.DataModel dataModel,
+			long obsoletionPeriodMs,
+			Aggregator<Double> agg) {
+		/*
+		 * NOTE: if a BSSID does not have an entry, it will not be returned
+		 * (i.e., it will not be a key in the returned map).
+		 */
+		Map<String, WifiScanEntry> aggregatedWifiScans = new HashMap<>();
+		for (Map.Entry<String, List<List<WifiScanEntry>>> mapEntry : dataModel.latestWifiScans.entrySet()) {
+			/*
+			 * Flatten the wifiscan entries and sort in reverse chronological order. Sorting
+			 * is done just in case the entries in the original list are not chronological
+			 * already - although they are inserted chronologically, perhaps latency,
+			 * synchronization, etc. could cause the actual unixTimeMs to be out-of-order.
+			 */
+			List<List<WifiScanEntry>> scans = mapEntry.getValue();
+			if (scans.isEmpty()) {
+				continue;
+			}
+			List<WifiScanEntry> mostRecentToOldest = scans.stream().flatMap(list -> list.stream())
+					.sorted((entry1, entry2) -> {
+						return -Long.compare(entry1.unixTimeMs, entry2.unixTimeMs);
+					}).collect(Collectors.toUnmodifiableList());
+
+			String bssid = mapEntry.getKey();
+			WifiScanEntry mostRecentEntry = mostRecentToOldest.get(0);
+			agg.reset();
+			for (WifiScanEntry entry : mostRecentToOldest) {
+				if (mostRecentEntry.unixTimeMs - entry.unixTimeMs >= obsoletionPeriodMs) {
+					// discard obsolete entries
+					break;
+				}
+				// mostRecentEntry should always match the first entry (they are the exact same
+				// object)
+				if (matchesForAggregation(mostRecentEntry, entry)) {
+					aggregatedWifiScans.putIfAbsent(bssid, new WifiScanEntry(entry));
+					agg.addValue((double) entry.signal);
+				}
+			}
+			aggregatedWifiScans.get(bssid).signal = (int) Math.round(agg.getAggregate());
+		}
+		return aggregatedWifiScans;
 	}
 }

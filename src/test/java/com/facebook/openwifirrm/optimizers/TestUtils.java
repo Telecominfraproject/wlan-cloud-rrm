@@ -72,10 +72,19 @@ public class TestUtils {
 		return jsonList;
 	}
 
+	private static int channelToFrequency(int channel) {
+		if (channel < 15) { // 2G band
+			return 2407 + 5 * channel;
+		} else { // 5G band
+			return 5000 + channel;
+		}
+	}
+
 	/** Create a wifi scan entry with the given channel. */
 	public static WifiScanEntry createWifiScanEntry(int channel) {
 		WifiScanEntry entry = new WifiScanEntry();
 		entry.channel = channel;
+		entry.frequency = channelToFrequency(channel);
 		entry.signal = -60;
 		entry.unixTimeMs = TestUtils.DEFAULT_START_TIME.toEpochMilli();
 		return entry;
@@ -91,11 +100,10 @@ public class TestUtils {
 
 	/** Create a wifi scan entry with the given BSSID and RSSI. */
 	public static WifiScanEntry createWifiScanEntryWithBssid(String bssid, Integer rssi) {
-		WifiScanEntry entry = new WifiScanEntry();
-		entry.channel = 36;
+		final int channel = 36;
+		WifiScanEntry entry = createWifiScanEntry(channel);
 		entry.bssid = bssid;
-		entry.signal = rssi;
-		entry.unixTimeMs = TestUtils.DEFAULT_START_TIME.toEpochMilli();
+		entry.signal = rssi; // overwrite
 		return entry;
 	}
 
@@ -109,8 +117,10 @@ public class TestUtils {
 	}
 
 	/**
-	 * Create a wifi scan entry with the given channel
-	 * and channel width info (in the format of HT operation and VHT operation).
+	 * Create a wifi scan entry with the given channel and channel width info (in
+	 * the format of HT operation and VHT operation). It is the caller's
+	 * responsibility to make sure {@code channel}, {@code ht_oper}, and
+	 * {@code vht_oper} are consistent.
 	 */
 	public static WifiScanEntry createWifiScanEntryWithWidth(
 		int channel,
@@ -119,6 +129,7 @@ public class TestUtils {
 	) {
 		WifiScanEntry entry = new WifiScanEntry();
 		entry.channel = channel;
+		entry.frequency = channelToFrequency(channel);
 		entry.signal = -60;
 		entry.ht_oper = htOper;
 		entry.vht_oper = vhtOper;
@@ -127,8 +138,10 @@ public class TestUtils {
 	}
 
 	/**
-	 * Create a list of wifi scan entries with the given channels
-	 * and channel width info (in the format of HT operation and VHT operation).
+	 * Create a list of wifi scan entries with the given channels and channel width
+	 * info (in the format of HT operation and VHT operation). It is the caller's
+	 * responsibility to make sure {@code channels}, {@code ht_oper}, and
+	 * {@code vht_oper} are consistent.
 	 */
 	public static List<WifiScanEntry> createWifiScanListWithWidth(
 		List<Integer> channels,
@@ -151,11 +164,8 @@ public class TestUtils {
 	public static WifiScanEntry createWifiScanEntryWithBssid(
 		int channel, String bssid
 	) {
-		WifiScanEntry entry = new WifiScanEntry();
-		entry.channel = channel;
+		WifiScanEntry entry = createWifiScanEntry(channel);
 		entry.bssid = bssid;
-		entry.signal = -60;
-		entry.unixTimeMs = TestUtils.DEFAULT_START_TIME.toEpochMilli();
 		return entry;
 	}
 
