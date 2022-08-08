@@ -124,7 +124,7 @@ public class ModelerUtilsTest {
 		assertFalse(dataModel.latestWifiScans.containsKey(bssidA));
 		assertEquals(expectedAggregatedEntry, aggregatedEntryB);
 
-		// test the obsoletion period
+		// test the obsoletion period boundaries
 		WifiScanEntry entryB3 = TestUtils.createWifiScanEntryWithBssid(1, bssidB);
 		entryB3.signal = -64;
 		entryB3.unixTimeMs += obsoletionPeriodMs;
@@ -132,7 +132,14 @@ public class ModelerUtilsTest {
 		aggregatedEntryB = ModelerUtils.getAggregatedWifiScans(dataModel, obsoletionPeriodMs, new MeanAggregator())
 				.get(bssidB);
 		expectedAggregatedEntry = new WifiScanEntry(entryB3);
+		expectedAggregatedEntry.signal = -62; // average of -60, -62, and -64 3;
+		assertEquals(expectedAggregatedEntry, aggregatedEntryB);
+		aggregatedEntryB = ModelerUtils.getAggregatedWifiScans(dataModel, obsoletionPeriodMs - 1, new MeanAggregator())
+				.get(bssidB);
 		expectedAggregatedEntry.signal = -63; // average of -62 and -64
+		assertEquals(expectedAggregatedEntry, aggregatedEntryB);
+		aggregatedEntryB = ModelerUtils.getAggregatedWifiScans(dataModel, 0, new MeanAggregator()).get(bssidB);
+		expectedAggregatedEntry.signal = -64; // latest rssid
 		assertEquals(expectedAggregatedEntry, aggregatedEntryB);
 	}
 
