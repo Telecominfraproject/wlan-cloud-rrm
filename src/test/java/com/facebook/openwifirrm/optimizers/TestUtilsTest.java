@@ -6,6 +6,10 @@ import org.junit.jupiter.api.Test;
 
 import com.facebook.openwifirrm.ChannelWidth;
 
+/**
+ * The details for the encoding of the HT Operation Element and the VHT
+ * Operation Element are found in the IEEE 802.11-2020 standard.
+ */
 public class TestUtilsTest {
 	@Test
 	void testGetVhtOper() {

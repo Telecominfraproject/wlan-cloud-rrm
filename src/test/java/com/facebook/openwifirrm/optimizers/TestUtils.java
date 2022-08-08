@@ -22,6 +22,7 @@ import org.apache.commons.codec.binary.Base64;
 import com.facebook.openwifirrm.ChannelWidth;
 import com.facebook.openwifirrm.DeviceTopology;
 import com.facebook.openwifirrm.Utils;
+import com.facebook.openwifirrm.ucentral.UCentralConstants;
 import com.facebook.openwifirrm.ucentral.UCentralUtils.WifiScanEntry;
 import com.facebook.openwifirrm.ucentral.models.State;
 import com.google.gson.Gson;
@@ -72,11 +73,20 @@ public class TestUtils {
 		return jsonList;
 	}
 
-	private static int channelToFrequency(int channel) {
-		if (channel < 15) { // 2G band
+	/**
+	 *
+	 * @param channel channel index. See
+	 *                {@link ChannelOptimizer#AVAILABLE_CHANNELS_BAND} for channels
+	 *                in each band.
+	 * @return the center frequency of the given channel in MHz
+	 */
+	private static int channelToFrequencyMHz(int channel) {
+		if (ChannelOptimizer.AVAILABLE_CHANNELS_BAND.get(UCentralConstants.BAND_2G).contains(channel)) {
 			return 2407 + 5 * channel;
-		} else { // 5G band
+		} else if (ChannelOptimizer.AVAILABLE_CHANNELS_BAND.get(UCentralConstants.BAND_5G).contains(channel)) {
 			return 5000 + channel;
+		} else {
+			throw new IllegalArgumentException("Must provide a valid channel.");
 		}
 	}
 
@@ -84,7 +94,7 @@ public class TestUtils {
 	public static WifiScanEntry createWifiScanEntry(int channel) {
 		WifiScanEntry entry = new WifiScanEntry();
 		entry.channel = channel;
-		entry.frequency = channelToFrequency(channel);
+		entry.frequency = channelToFrequencyMHz(channel);
 		entry.signal = -60;
 		entry.unixTimeMs = TestUtils.DEFAULT_START_TIME.toEpochMilli();
 		return entry;
@@ -129,7 +139,7 @@ public class TestUtils {
 	) {
 		WifiScanEntry entry = new WifiScanEntry();
 		entry.channel = channel;
-		entry.frequency = channelToFrequency(channel);
+		entry.frequency = channelToFrequencyMHz(channel);
 		entry.signal = -60;
 		entry.ht_oper = htOper;
 		entry.vht_oper = vhtOper;
@@ -309,9 +319,9 @@ public class TestUtils {
 	/**
 	 *
 	 * NOTE: some combinations of channelWidth, channel, channel2, and vhtMcsAtNss
-	 * are invalid as defined by 802.11, but this is not checked here. If fidelity
-	 * to 802.11 is required, the caller of this method must make sure to pass in
-	 * valid parameters.
+	 * are invalid as defined by 802.11-2020, but this is not checked here. If
+	 * fidelity to 802.11 is required, the caller of this method must make sure to
+	 * pass in valid parameters.
 	 *
 	 * @param channelWidth
 	 * @param channel1     If the channel is 20 MHz, 40 MHz, or 80 MHz wide, this
@@ -336,7 +346,7 @@ public class TestUtils {
 	 *                     for VHT-MCS 0-8, 2 indicates support for VHT-MCS 0-9, and
 	 *                     3 indicates that no VHT-MCS is supported for that NSS.
 	 *                     For the specifics of what each VHT-MCS is, see IEEE
-	 *                     802.11 2020 edition, Table "21-29" through Table "21-60".
+	 *                     802.11-2020, Table "21-29" through Table "21-60".
 	 * @return base64 encoded vht operator as a String
 	 */
 	public static String getVhtOper(ChannelWidth channelWidth, byte channel1, byte channel2, byte[] vhtMcsForNss) {
@@ -360,9 +370,9 @@ public class TestUtils {
 
 	/**
 	 * NOTE: some combinations of these parameters may be invalid as defined by
-	 * 802.11, but this is not checked here. If fidelity to 802.11 is required, the
-	 * caller of this method must make sure to pass in valid parameters. The 802.11
-	 * specification has more details about the parameters.
+	 * 802.11-2020, but this is not checked here. If fidelity to 802.11 is required,
+	 * the caller of this method must make sure to pass in valid parameters. The
+	 * 802.11-2020 specification has more details about the parameters.
 	 *
 	 * @param primaryChannel                 channel index
 	 * @param secondaryChannelOffset

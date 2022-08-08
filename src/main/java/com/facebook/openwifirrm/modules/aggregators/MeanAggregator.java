@@ -2,9 +2,6 @@ package com.facebook.openwifirrm.modules.aggregators;
 
 /**
  * Tracks the mean of all added values. If no values are added, the mean is 0.
- *
- * @author rockymandayam
- *
  */
 public class MeanAggregator implements Aggregator<Double> {
 

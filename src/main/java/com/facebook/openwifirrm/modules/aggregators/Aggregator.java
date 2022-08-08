@@ -3,8 +3,6 @@ package com.facebook.openwifirrm.modules.aggregators;
 /**
  * Aggregates added values into one "aggregate" measure.
  *
- * @author rockymandayam
- *
  * @param <T>
  */
 public interface Aggregator<T> {

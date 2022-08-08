@@ -243,8 +243,8 @@ public class ModelerUtils {
 	 *                           looks back from there and repeats this for every
 	 *                           BSSID). An entry exactly {@code obsoletionPeriodMs}
 	 *                           ms earlier than the most recent entry is considered
-	 *                           obsolete (i.e., the "non-obsolete" window is
-	 *                           exclusive).
+	 *                           non-obsolete (i.e., the "non-obsolete" window is
+	 *                           inclusive). Must be non-negative.
 	 * @param agg                an aggregator to output a calculated "aggregated
 	 *                           signal strength"
 	 * @return a map from BSSID to an "aggregated wifiscan entry" (i.e., a single
@@ -254,6 +254,7 @@ public class ModelerUtils {
 	public static Map<String, WifiScanEntry> getAggregatedWifiScans(Modeler.DataModel dataModel,
 			long obsoletionPeriodMs,
 			Aggregator<Double> agg) {
+		assert obsoletionPeriodMs >= 0 : "obsoletionPeriodMs must be non-negative.";
 		/*
 		 * NOTE: if a BSSID does not have an entry, it will not be returned
 		 * (i.e., it will not be a key in the returned map).
@@ -279,7 +280,7 @@ public class ModelerUtils {
 			WifiScanEntry mostRecentEntry = mostRecentToOldest.get(0);
 			agg.reset();
 			for (WifiScanEntry entry : mostRecentToOldest) {
-				if (mostRecentEntry.unixTimeMs - entry.unixTimeMs >= obsoletionPeriodMs) {
+				if (mostRecentEntry.unixTimeMs - entry.unixTimeMs > obsoletionPeriodMs) {
 					// discard obsolete entries
 					break;
 				}
