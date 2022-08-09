@@ -18,6 +18,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.facebook.openwifirrm.modules.aggregators.Aggregator;
+import com.facebook.openwifirrm.modules.operationelement.HTOperationElement;
+import com.facebook.openwifirrm.modules.operationelement.VHTOperationElement;
 import com.facebook.openwifirrm.ucentral.UCentralUtils.WifiScanEntry;
 
 /**
@@ -210,6 +212,24 @@ public class ModelerUtils {
 		}
 	}
 
+	private static boolean matchesHtForAggregation(String htOper1, String htOper2) {
+		if (htOper1 == htOper2) { // serves as a null check
+			return true;
+		}
+		HTOperationElement htOperObj1 = new HTOperationElement(htOper1);
+		HTOperationElement htOperObj2 = new HTOperationElement(htOper2);
+		return htOperObj1.matchesForAggregation(htOperObj2);
+	}
+
+	private static boolean matchesVhtForAggregation(String vhtOper1, String vhtOper2) {
+		if (vhtOper1 == vhtOper2) { // serves as a null check
+			return true;
+		}
+		VHTOperationElement vhtOperObj1 = new VHTOperationElement(vhtOper1);
+		VHTOperationElement vhtOperObj2 = new VHTOperationElement(vhtOper2);
+		return vhtOperObj1.matchesForAggregation(vhtOperObj2);
+	}
+
 	/**
 	 * Determines if two wifiscan entries should be aggregated without consideration
 	 * for any kind of obsoletion period. (Untested) should handle APs that support
@@ -228,7 +248,8 @@ public class ModelerUtils {
 		// TODO should we check the entire ht_oper and vht_oper or just channel width?
 		return entry1.bssid.equals(entry2.bssid) && Objects.equals(entry1.ssid, entry2.ssid)
 				&& entry1.frequency == entry2.frequency && entry1.channel == entry2.channel
-				&& Objects.equals(entry1.ht_oper, entry2.ht_oper) && Objects.equals(entry1.vht_oper, entry2.vht_oper);
+				&& matchesHtForAggregation(entry1.ht_oper, entry2.ht_oper)
+				&& matchesVhtForAggregation(entry1.vht_oper, entry2.vht_oper);
 	}
 
 	/**
