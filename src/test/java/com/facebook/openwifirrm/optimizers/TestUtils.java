@@ -18,7 +18,7 @@ import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 import com.facebook.openwifirrm.DeviceTopology;
-import com.facebook.openwifirrm.ucentral.UCentralConstants;
+import com.facebook.openwifirrm.ucentral.UCentralUtils;
 import com.facebook.openwifirrm.ucentral.UCentralUtils.WifiScanEntry;
 import com.facebook.openwifirrm.ucentral.models.State;
 import com.google.gson.Gson;
@@ -28,7 +28,7 @@ public class TestUtils {
 	/** The Gson instance. */
 	private static final Gson gson = new Gson();
 
-	public static final Instant DEFAULT_START_TIME = Instant.parse("2022-01-01T00:00:00Z");
+	public static final Instant DEFAULT_WIFISCANENTRY_TIME = Instant.parse("2022-01-01T00:00:00Z");
 
 	/** Create a topology from the given devices in a single zone. */
 	public static DeviceTopology createTopology(String zone, String... devices) {
@@ -69,30 +69,13 @@ public class TestUtils {
 		return jsonList;
 	}
 
-	/**
-	 *
-	 * @param channel channel number. See
-	 *                {@link ChannelOptimizer#AVAILABLE_CHANNELS_BAND} for channels
-	 *                in each band.
-	 * @return the center frequency of the given channel in MHz
-	 */
-	private static int channelToFrequencyMHz(int channel) {
-		if (ChannelOptimizer.AVAILABLE_CHANNELS_BAND.get(UCentralConstants.BAND_2G).contains(channel)) {
-			return 2407 + 5 * channel;
-		} else if (ChannelOptimizer.AVAILABLE_CHANNELS_BAND.get(UCentralConstants.BAND_5G).contains(channel)) {
-			return 5000 + channel;
-		} else {
-			throw new IllegalArgumentException("Must provide a valid channel.");
-		}
-	}
-
 	/** Create a wifi scan entry with the given channel. */
 	public static WifiScanEntry createWifiScanEntry(int channel) {
 		WifiScanEntry entry = new WifiScanEntry();
 		entry.channel = channel;
-		entry.frequency = channelToFrequencyMHz(channel);
+		entry.frequency = UCentralUtils.channelToFrequencyMHz(channel);
 		entry.signal = -60;
-		entry.unixTimeMs = TestUtils.DEFAULT_START_TIME.toEpochMilli();
+		entry.unixTimeMs = TestUtils.DEFAULT_WIFISCANENTRY_TIME.toEpochMilli();
 		return entry;
 	}
 
@@ -135,11 +118,11 @@ public class TestUtils {
 	) {
 		WifiScanEntry entry = new WifiScanEntry();
 		entry.channel = channel;
-		entry.frequency = channelToFrequencyMHz(channel);
+		entry.frequency = UCentralUtils.channelToFrequencyMHz(channel);
 		entry.signal = -60;
 		entry.ht_oper = htOper;
 		entry.vht_oper = vhtOper;
-		entry.unixTimeMs = TestUtils.DEFAULT_START_TIME.toEpochMilli();
+		entry.unixTimeMs = TestUtils.DEFAULT_WIFISCANENTRY_TIME.toEpochMilli();
 		return entry;
 	}
 

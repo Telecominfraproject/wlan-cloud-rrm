@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
 
 import com.facebook.openwifirrm.RRMConfig;
 import com.facebook.openwifirrm.Utils;
+import com.facebook.openwifirrm.optimizers.ChannelOptimizer;
 import com.facebook.openwifirrm.ucentral.models.State;
 import com.facebook.openwifirrm.ucentral.models.WifiScanEntryResult;
 import com.google.gson.Gson;
@@ -337,6 +338,23 @@ public class UCentralUtils {
 		} catch (NoSuchAlgorithmException e) {
 			logger.error("Unable to generate service key", e);
 			return "";
+		}
+	}
+
+	/**
+	 *
+	 * @param channel channel number. See
+	 *                {@link ChannelOptimizer#AVAILABLE_CHANNELS_BAND} for channels
+	 *                in each band.
+	 * @return the center frequency of the given channel in MHz
+	 */
+	public static int channelToFrequencyMHz(int channel) {
+		if (ChannelOptimizer.AVAILABLE_CHANNELS_BAND.get(UCentralConstants.BAND_2G).contains(channel)) {
+			return 2407 + 5 * channel;
+		} else if (ChannelOptimizer.AVAILABLE_CHANNELS_BAND.get(UCentralConstants.BAND_5G).contains(channel)) {
+			return 5000 + channel;
+		} else {
+			throw new IllegalArgumentException("Must provide a valid channel.");
 		}
 	}
 }

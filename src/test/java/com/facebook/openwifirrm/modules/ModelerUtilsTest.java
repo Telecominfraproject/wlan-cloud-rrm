@@ -100,12 +100,13 @@ public class ModelerUtilsTest {
 		DataModel dataModel = new DataModel();
 
 		// if there are no scans (no list or empty list), there should be no aggregates
-		dataModel.latestWifiScans.computeIfAbsent(bssidB, k -> new LinkedList<>());
+		dataModel.latestWifiScans.put(bssidB, new LinkedList<>());
 		assertTrue(ModelerUtils.getAggregatedWifiScans(dataModel, obsoletionPeriodMs, new MeanAggregator()).isEmpty());
 
 		// for an AP, if there is one scan, the aggregate should just be that scan
 		// for the other device, there should be no aggregate
-		WifiScanEntry entryB1 = TestUtils.createWifiScanEntryWithBssid(1, bssidB); // defaults to signal = -60
+		WifiScanEntry entryB1 = TestUtils.createWifiScanEntryWithBssid(1, bssidB);
+		entryB1.signal = -60;
 		dataModel.latestWifiScans.get(bssidB).add(Arrays.asList(entryB1));
 		WifiScanEntry aggregatedEntryB = ModelerUtils
 				.getAggregatedWifiScans(dataModel, obsoletionPeriodMs, new MeanAggregator()).get(bssidB);

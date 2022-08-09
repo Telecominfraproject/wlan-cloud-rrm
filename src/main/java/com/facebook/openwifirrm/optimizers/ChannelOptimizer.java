@@ -51,7 +51,7 @@ public abstract class ChannelOptimizer {
 	}
 
 	/** List of available channels per band for use. */
-	protected static final Map<String, List<Integer>> AVAILABLE_CHANNELS_BAND =
+	public static final Map<String, List<Integer>> AVAILABLE_CHANNELS_BAND =
 		new HashMap<>();
 	static {
 		AVAILABLE_CHANNELS_BAND.put(
