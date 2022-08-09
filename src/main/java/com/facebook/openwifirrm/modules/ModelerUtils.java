@@ -246,13 +246,15 @@ public class ModelerUtils {
 	 */
 	private static boolean matchesForAggregation(WifiScanEntry entry1, WifiScanEntry entry2) {
 		// TODO should we check the entire ht_oper and vht_oper or just channel width?
-		return entry1.bssid.equals(entry2.bssid) && Objects.equals(entry1.ssid, entry2.ssid)
+		return Objects.equals(entry1.bssid, entry2.bssid) && Objects.equals(entry1.ssid, entry2.ssid)
 				&& entry1.frequency == entry2.frequency && entry1.channel == entry2.channel
 				&& matchesHtForAggregation(entry1.ht_oper, entry2.ht_oper)
 				&& matchesVhtForAggregation(entry1.vht_oper, entry2.vht_oper);
 	}
 
 	/**
+	 * For each BSSID, calculates an aggregate wifiscan entry with an aggregated
+	 * RSSI.
 	 *
 	 * @param dataModel
 	 * @param obsoletionPeriodMs per-BSSID, the maximum amount of time (in
@@ -275,7 +277,9 @@ public class ModelerUtils {
 	public static Map<String, WifiScanEntry> getAggregatedWifiScans(Modeler.DataModel dataModel,
 			long obsoletionPeriodMs,
 			Aggregator<Double> agg) {
-		assert obsoletionPeriodMs >= 0 : "obsoletionPeriodMs must be non-negative.";
+		if (obsoletionPeriodMs < 0) {
+			throw new IllegalArgumentException("obsoletionPeriodMs must be non-negative.");
+		}
 		/*
 		 * NOTE: if a BSSID does not have an entry, it will not be returned
 		 * (i.e., it will not be a key in the returned map).
@@ -292,7 +296,7 @@ public class ModelerUtils {
 			if (scans.isEmpty()) {
 				continue;
 			}
-			List<WifiScanEntry> mostRecentToOldest = scans.stream().flatMap(list -> list.stream())
+			List<WifiScanEntry> mostRecentToOldest = scans.stream().flatMap(List::stream)
 					.sorted((entry1, entry2) -> {
 						return -Long.compare(entry1.unixTimeMs, entry2.unixTimeMs);
 					}).collect(Collectors.toUnmodifiableList());

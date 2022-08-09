@@ -22,7 +22,7 @@ public class MeanAggregatorTest {
 		agg.addValue(1.0);
 		assertEquals(0.5, agg.getAggregate(), eps);
 
-		// add a "float"
+		// add a double
 		agg.addValue(3.5);
 		assertEquals(1.5, agg.getAggregate(), eps);
 

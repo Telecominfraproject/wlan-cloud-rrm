@@ -157,8 +157,4 @@ public class Utils {
 	public static <T> T deepCopy(T obj, Class<T> classOfT) {
 		return gson.fromJson(gson.toJson(obj), classOfT);
 	}
-
-	public static int boolToInt(boolean b) {
-		return b ? 1 : 0;
-	}
 }

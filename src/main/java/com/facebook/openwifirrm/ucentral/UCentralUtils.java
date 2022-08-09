@@ -46,9 +46,8 @@ public class UCentralUtils {
 	public static class WifiScanEntry extends WifiScanEntryResult {
 		/**
 		 * Unix time in milliseconds (ms). This field is not defined in the uCentral
-		 * API. This is added it because it is unclear whether the {@code tsf} field is
-		 * a reliable time measurement (e.g., it is unclear if/when it gets reset or if
-		 * it is always available).
+		 * API. This is added it because {@link WifiScanEntryResult#tsf} is an unknown
+		 * time reference.
 		 */
 		public long unixTimeMs;
 
@@ -61,11 +60,6 @@ public class UCentralUtils {
 			this.unixTimeMs = o.unixTimeMs;
 		}
 
-		/**
-		 * This is only implemented in order to be consistent due to equals() being
-		 * implemented, but instances of this class should NOT be hashed since this
-		 * class is mutable!
-		 */
 		@Override
 		public int hashCode() {
 			final int prime = 31;

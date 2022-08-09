@@ -63,11 +63,6 @@ public class WifiScanEntryResult {
 		this.ies = o.ies;
 	}
 
-	/**
-	 * This is only implemented in order to be consistent due to equals() being
-	 * implemented, but instances of this class should NOT be hashed since this
-	 * class is mutable!
-	 */
 	@Override
 	public int hashCode() {
 		return Objects.hash(bssid, capability, channel, frequency, ht_oper, ies, last_seen, signal, ssid, tsf,
