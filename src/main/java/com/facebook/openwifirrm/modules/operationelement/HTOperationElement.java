@@ -70,8 +70,8 @@ public class HTOperationElement implements OperationElement {
 
 	/**
 	 *
-	 * @param htOperString must be a properly formatted ht operation element string
-	 *                     (see 802.11-2020 standard)
+	 * @param htOperString must be a String representing a base64 encoded properly
+	 *                     formatted ht operation element (see 802.11-2020 standard)
 	 */
 	public HTOperationElement(String htOperString) {
 		byte[] bytes = Base64.decodeBase64(htOperString);

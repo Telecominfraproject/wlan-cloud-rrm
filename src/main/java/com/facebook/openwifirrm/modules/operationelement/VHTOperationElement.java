@@ -65,8 +65,9 @@ public class VHTOperationElement implements OperationElement {
 
 	/**
 	 *
-	 * @param vhtOperString must be a properly formatted vht operation element (see
-	 *                      802.11-2020 standard) string
+	 * @param vhtOperString must be a String representing a base64 encoded properly
+	 *                      formatted vht operation element (see 802.11-2020
+	 *                      standard)
 	 */
 	public VHTOperationElement(String vhtOperString) {
 		byte[] bytes = Base64.decodeBase64(vhtOperString);
