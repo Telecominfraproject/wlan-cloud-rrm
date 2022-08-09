@@ -172,7 +172,7 @@ public class MeasurementBasedApApTPCTest {
 		model.latestDeviceStatus.put(DEVICE_A, TestUtils.createDeviceStatusDualBand(1, 5, 36, expectedTxPower));
 
 		JsonArray radioStatuses = model.latestDeviceStatus.get(DEVICE_A).getAsJsonArray();
-		int txPower = MeasurementBasedApApTPC.getCurrentTxPower(radioStatuses);
+		int txPower = MeasurementBasedApApTPC.getCurrentTxPower(radioStatuses, UCentralConstants.BAND_5G);
 		assertEquals(expectedTxPower, txPower);
 	}
 
@@ -183,7 +183,7 @@ public class MeasurementBasedApApTPCTest {
 		Set<String> bssidSet = Set.of(BSSID_A, BSSID_B, BSSID_C);
 		Map<String, List<List<WifiScanEntry>>> latestWifiScans = createLatestWifiScansA();
 
-		Map<String, List<Integer>> rssiMap = MeasurementBasedApApTPC.buildRssiMap(bssidSet, latestWifiScans);
+		Map<String, List<Integer>> rssiMap = MeasurementBasedApApTPC.buildRssiMap(bssidSet, latestWifiScans, UCentralConstants.BAND_5G);
 
 		assertEquals(3, rssiMap.size());
 		assertEquals(2, rssiMap.get(BSSID_A).size());

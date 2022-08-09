@@ -112,29 +112,35 @@ public class MeasurementBasedApApTPC extends TPC {
 	}
 
 	/**
-	 * Get the current 5GHz radio tx power (the first one found) for an AP using
-	 * the latest device status.
+	 * Get the current band radio tx power (the first one found) for an AP using the
+	 * latest device status.
 	 *
 	 * @param latestDeviceStatus JsonArray containing radio config for the AP
 	 * @return the tx power, or 0 if none found
 	 */
-	protected static int getCurrentTxPower(JsonArray latestDeviceStatus) {
+	protected static int getCurrentTxPower(JsonArray latestDeviceStatus, String band) {
 		for (JsonElement e : latestDeviceStatus) {
 			if (!e.isJsonObject()) {
 				continue;
 			}
 			JsonObject radioObject = e.getAsJsonObject();
-			String band = radioObject.get("band").getAsString();
-			if (band.equals(UCentralConstants.BAND_5G) && radioObject.has("tx-power")) {
+			String radioBand = radioObject.get("band").getAsString();
+			if (radioBand.equals(band) && radioObject.has("tx-power")) {
 				return radioObject.get("tx-power").getAsInt();
 			}
 		}
 		return 0;
 	}
 
-	/** Return true if the given channel is a 5GHz channel. */
-	protected static boolean isChannel5G(int channel) {
-		return (36 <= channel && channel <= 165);
+	/**
+	 *
+	 * @param channel channel index (e.g., 36)
+	 * @param band    "2G" or "5G"
+	 * @return true if the given channel is in the given band
+	 */
+	protected static boolean isChannelInBand(int channel, String band) {
+		return ChannelOptimizer.LOWER_CHANNEL_LIMIT.get(band) <= channel
+				&& channel <= ChannelOptimizer.UPPER_CHANNEL_LIMIT.get(band);
 	}
 
 	/**
@@ -147,8 +153,7 @@ public class MeasurementBasedApApTPC extends TPC {
 	 * @param managedBSSIDs set of all BSSIDs of APs we are managing
 	 */
 	protected static Map<String, List<Integer>> buildRssiMap(
-		Set<String> managedBSSIDs,
-		Map<String, List<List<WifiScanEntry>>> latestWifiScans
+			Set<String> managedBSSIDs, Map<String, List<List<WifiScanEntry>>> latestWifiScans, String band
 	) {
 		Map<String, List<Integer>> bssidToRssiValues = new HashMap<>();
 		managedBSSIDs.stream()
@@ -160,10 +165,10 @@ public class MeasurementBasedApApTPC extends TPC {
 
 			// At a given AP, if we receive a signal from ap_2, then it gets added to the rssi list for ap_2
 			latestScan.stream()
-				.filter(entry -> (managedBSSIDs.contains(entry.bssid) && isChannel5G(entry.channel)))
-				.forEach(entry -> {
-					bssidToRssiValues.get(entry.bssid).add(entry.signal);
-				});
+					.filter(entry -> (managedBSSIDs.contains(entry.bssid) && isChannelInBand(entry.channel, band)))
+					.forEach(entry -> {
+						bssidToRssiValues.get(entry.bssid).add(entry.signal);
+					});
 		}
 		bssidToRssiValues.values().stream()
 			.forEach(rssiList -> Collections.sort(rssiList));
@@ -211,12 +216,10 @@ public class MeasurementBasedApApTPC extends TPC {
 		return newTxPower;
 	}
 
-	@Override
-	public Map<String, Map<String, Integer>> computeTxPowerMap() {
-		Map<String, Map<String, Integer>> txPowerMap = new TreeMap<>();
-
+	protected void buildTxPowerMapForBand(String band, Map<String, Map<String, Integer>> txPowerMap) {
 		Set<String> managedBSSIDs = getManagedBSSIDs(model);
-		Map<String, List<Integer>> bssidToRssiValues = buildRssiMap(managedBSSIDs, model.latestWifiScans);
+		Map<String, List<Integer>> bssidToRssiValues = buildRssiMap(managedBSSIDs, model.latestWifiScans, band);
+		logger.debug("Starting {}", band);
 		Map<String, JsonArray> allStatuses = model.latestDeviceStatus;
 		for (String serialNumber : allStatuses.keySet()) {
 			State state = model.latestState.get(serialNumber);
@@ -239,7 +242,7 @@ public class MeasurementBasedApApTPC extends TPC {
 				continue;
 			}
 			JsonArray radioStatuses = allStatuses.get(serialNumber).getAsJsonArray();
-			int currentTxPower = getCurrentTxPower(radioStatuses);
+			int currentTxPower = getCurrentTxPower(radioStatuses, band);
 			String bssid = state.interfaces[0].ssids[0].bssid;
 			List<Integer> rssiValues = bssidToRssiValues.get(bssid);
 			logger.debug("Device <{}> : BSSID <{}>", serialNumber, bssid);
@@ -256,10 +259,16 @@ public class MeasurementBasedApApTPC extends TPC {
 			logger.debug("  New tx_power: {}", newTxPower);
 
 			Map<String, Integer> radioMap = new TreeMap<>();
-			radioMap.put(UCentralConstants.BAND_5G, newTxPower);
+			radioMap.put(band, newTxPower);
 			txPowerMap.put(serialNumber, radioMap);
 		}
+	}
 
+	@Override
+	public Map<String, Map<String, Integer>> computeTxPowerMap() {
+		Map<String, Map<String, Integer>> txPowerMap = new TreeMap<>();
+		buildTxPowerMapForBand(UCentralConstants.BAND_2G, txPowerMap);
+		buildTxPowerMapForBand(UCentralConstants.BAND_5G, txPowerMap);
 		return txPowerMap;
 	}
 }
