@@ -150,6 +150,15 @@ public class HTOperationElement implements OperationElement {
 				&& staChannelWidth == other.staChannelWidth && stbcBeacon == other.stbcBeacon;
 	}
 
+	public static boolean matchesHtForAggregation(String htOper1, String htOper2) {
+		if (htOper1 == htOper2) { // serves as a null check
+			return true;
+		}
+		HTOperationElement htOperObj1 = new HTOperationElement(htOper1);
+		HTOperationElement htOperObj2 = new HTOperationElement(htOper2);
+		return htOperObj1.matchesForAggregation(htOperObj2);
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;

@@ -93,6 +93,15 @@ public class VHTOperationElement implements OperationElement {
 				&& channelWidthIndicator == other.channelWidthIndicator;
 	}
 
+	public static boolean matchesVhtForAggregation(String vhtOper1, String vhtOper2) {
+		if (vhtOper1 == vhtOper2) { // serves as a null check
+			return true;
+		}
+		VHTOperationElement vhtOperObj1 = new VHTOperationElement(vhtOper1);
+		VHTOperationElement vhtOperObj2 = new VHTOperationElement(vhtOper2);
+		return vhtOperObj1.matchesForAggregation(vhtOperObj2);
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
