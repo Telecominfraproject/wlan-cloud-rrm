@@ -44,6 +44,9 @@ public class UCentralUtils {
 	// This class should not be instantiated.
 	private UCentralUtils() {}
 
+	/**
+	 * Extends {@link WifiScanEntryResult} to track the response time of the entry.
+	 */
 	public static class WifiScanEntry extends WifiScanEntryResult {
 		/**
 		 * Unix time in milliseconds (ms). This field is not defined in the uCentral
@@ -342,6 +345,7 @@ public class UCentralUtils {
 	}
 
 	/**
+	 * Converts channel number to that channel's center frequency in MHz.
 	 *
 	 * @param channel channel number. See
 	 *                {@link ChannelOptimizer#AVAILABLE_CHANNELS_BAND} for channels
