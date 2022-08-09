@@ -146,6 +146,7 @@ public class ModelerUtilsTest {
 //	@Test
 //	void testMultipleEntriesAndAggregationLogic() {
 //		// TODO test 802.11n onwards (with non-null ht_oper and vht_oper)
+// 		// TODO test matching method for ht/vht opers
 //		// TODO test with multiple entries from the same scan
 //	}
 }
