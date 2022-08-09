@@ -5,69 +5,49 @@ import java.util.Objects;
 
 import org.apache.commons.codec.binary.Base64;
 
-import com.facebook.openwifirrm.ChannelWidth;
-import com.facebook.openwifirrm.Utils;
-
 /**
  * Very High Throughput (VHT) Operation Element, which are potentially present
- * in wifiscan entries. Details in IEEE 802.11-2020 standard.
+ * in wifiscan entries. Introduced in 802.11ac (2013).
+ *
+ * XXX some combinations of channelWidth, channel, channel2, and vhtMcsAtNss are
+ * invalid, but this is not checked here. If fidelity to 802.11 is required, the
+ * caller of this method must make sure to pass in valid parameters.
  */
 public class VHTOperationElement implements OperationElement {
 
-	protected final boolean channelWidthIndicator;
-	protected final byte channel1;
-	protected final byte channel2;
-	protected final byte[] vhtMcsForNss;
-
+	/** false if the channel width is 20 MHz or 40 MHz; true otherwise. */
+	private final boolean channelWidthIndicator;
 	/**
-	 *
-	 * XXX some combinations of channelWidth, channel, channel2, and vhtMcsAtNss are
-	 * invalid as defined by 802.11-2020, but this is not checked here. If fidelity
-	 * to 802.11 is required, the caller of this method must make sure to pass in
-	 * valid parameters.
-	 *
-	 * @param channelWidth
-	 * @param channel1     If the channel is 20 MHz, 40 MHz, or 80 MHz wide, this
-	 *                     parameter should be the channel index. E.g., channel 36
-	 *                     is the channel centered at 5180 MHz. For a 160 MHz wide
-	 *                     channel, this parameter should be the channel index of
-	 *                     the 80MHz channel that contains the primary channel. For
-	 *                     a 80+80 MHz wide channel, this parameter should be the
-	 *                     channel index of the primary channel.
-	 * @param channel2     This should be zero unless the channel is 160MHz or 80+80
-	 *                     MHz wide. If the channel is 160 MHz wide, this parameter
-	 *                     should contain the channel index of the 160 MHz wide
-	 *                     channel. If the channel is 80+80 MHz wide, it should be
-	 *                     the channel index of the secondary 80 MHz wide channel.
-	 * @param vhtMcsForNss An 8-element array where each element is between 0 and 4
-	 *                     inclusive. MCS means Modulation and Coding Scheme. NSS
-	 *                     means Number of Spatial Streams. There can be 1, 2, ...,
-	 *                     or 8 spatial streams. For each NSS, the corresponding
-	 *                     element in the array should specify which MCSs are
-	 *                     supported for that NSS in the following manner: 0
-	 *                     indicates support for VHT-MCS 0-7, 1 indicates support
-	 *                     for VHT-MCS 0-8, 2 indicates support for VHT-MCS 0-9, and
-	 *                     3 indicates that no VHT-MCS is supported for that NSS.
-	 *                     For the specifics of what each VHT-MCS is, see IEEE
-	 *                     802.11-2020, Table "21-29" through Table "21-60".
-	 * @return base64 encoded vht operator as a String
+	 * If the channel is 20 MHz, 40 MHz, or 80 MHz wide, this parameter is the
+	 * channel number. E.g., the channel centered at 5180 MHz is channel 36. For a
+	 * 160 MHz wide channel, this parameter is the channel number of the 80MHz
+	 * channel that contains the primary channel. For a 80+80 MHz wide channel, this
+	 * parameter is the channel number of the primary channel.
 	 */
-	public VHTOperationElement(ChannelWidth channelWidth, byte channel1, byte channel2, byte[] vhtMcsForNss) {
-		this.channelWidthIndicator = !(channelWidth == ChannelWidth.MHz_20 || channelWidth == ChannelWidth.MHz_40);
-		this.channel1 = channel1;
-		this.channel2 = channel2;
-		this.vhtMcsForNss = vhtMcsForNss;
-	}
-
-	public VHTOperationElement() {
-		this(ChannelWidth.MHz_20, (byte) 36, (byte) 0, new byte[] { 0, 0, 0, 0, 0, 0, 0, 0 });
-	}
+	private final byte channel1;
+	/**
+	 * This should be zero unless the channel is 160MHz or 80+80 MHz wide. If the
+	 * channel is 160 MHz wide, this parameter is the channel number of the 160 MHz
+	 * wide channel. If the channel is 80+80 MHz wide, this parameter is the channel
+	 * index of the secondary 80 MHz wide channel.
+	 */
+	private final byte channel2;
+	/**
+	 * An 8-element array where each element is between 0 and 4 inclusive. MCS means
+	 * Modulation and Coding Scheme. NSS means Number of Spatial Streams. There can
+	 * be 1, 2, ..., or 8 spatial streams. For each NSS, the corresponding element
+	 * in the array should specify which MCSs are supported for that NSS in the
+	 * following manner: 0 indicates support for VHT-MCS 0-7, 1 indicates support
+	 * for VHT-MCS 0-8, 2 indicates support for VHT-MCS 0-9, and 3 indicates that no
+	 * VHT-MCS is supported for that NSS. For the specifics of what each VHT-MCS is,
+	 * see IEEE 802.11-2020, Table "21-29" through Table "21-60".
+	 */
+	private final byte[] vhtMcsForNss;
 
 	/**
 	 *
 	 * @param vhtOperString must be a String representing a base64 encoded properly
-	 *                      formatted vht operation element (see 802.11-2020
-	 *                      standard)
+	 *                      formatted vht operation element (see 802.11 standard)
 	 */
 	public VHTOperationElement(String vhtOperString) {
 		byte[] bytes = Base64.decodeBase64(vhtOperString);
@@ -86,19 +66,12 @@ public class VHTOperationElement implements OperationElement {
 		this.vhtMcsForNss = vhtMcsForNss;
 	}
 
-	@Override
-	public String getAsBase64String() {
-		byte[] vhtOper = new byte[5];
-		// overflow shouldn't matter, we only care about the raw bit representation
-		byte channelCenterFrequencySegment0 = channel1;
-		byte channelCenterFrequencySegment1 = channel2;
-
-		vhtOper[0] = (byte) (Utils.boolToInt(channelWidthIndicator));
-		vhtOper[1] = channelCenterFrequencySegment0;
-		vhtOper[2] = channelCenterFrequencySegment1;
-		vhtOper[3] = (byte) (vhtMcsForNss[0] << 6 | vhtMcsForNss[1] << 4 | vhtMcsForNss[2] << 2 | vhtMcsForNss[3]);
-		vhtOper[4] = (byte) (vhtMcsForNss[4] << 6 | vhtMcsForNss[5] << 4 | vhtMcsForNss[6] << 2 | vhtMcsForNss[7]);
-		return Base64.encodeBase64String(vhtOper);
+	public VHTOperationElement(boolean channelWidthIndicator, byte channel1, byte channel2, byte[] vhtMcsForNss) {
+		super();
+		this.channelWidthIndicator = channelWidthIndicator;
+		this.channel1 = channel1;
+		this.channel2 = channel2;
+		this.vhtMcsForNss = vhtMcsForNss;
 	}
 
 	@Override

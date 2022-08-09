@@ -5,49 +5,79 @@ import java.util.Objects;
 
 import org.apache.commons.codec.binary.Base64;
 
-import com.facebook.openwifirrm.Utils;
-
 /**
  * High Throughput (HT) Operation Element, which are potentially present in
- * wifiscan entries. Details in IEEE 802.11-2020 standard.
+ * wifiscan entries. Introduced in 802.11n (2009).
  */
 public class HTOperationElement implements OperationElement {
 
-	protected final byte primaryChannel;
-	protected final byte secondaryChannelOffset;
-	protected final boolean staChannelWidth;
-	protected final boolean rifsMode;
-	protected final byte htProtection;
-	protected final boolean nongreenfieldHtStasPresent;
-	protected final boolean obssNonHtStasPresent;
-	protected final byte channelCenterFrequencySegment2;
-	protected final boolean dualBeacon;
-	protected final boolean dualCtsProtection;
-	protected final boolean stbcBeacon;
-	protected final byte[] basicHtMcsSet;
+	private final byte primaryChannel;
+	private final byte secondaryChannelOffset;
+	private final boolean staChannelWidth;
+	private final boolean rifsMode;
+	private final byte htProtection;
+	private final boolean nongreenfieldHtStasPresent;
+	private final boolean obssNonHtStasPresent;
+	private final byte channelCenterFrequencySegment2;
+	private final boolean dualBeacon;
+	private final boolean dualCtsProtection;
+	private final boolean stbcBeacon;
+	private final byte[] basicHtMcsSet;
 
 	/**
-	 * XXX some combinations of these parameters may be invalid as defined by
-	 * 802.11-2020, but this is not checked here. If fidelity to 802.11 is required,
-	 * the caller of this method must make sure to pass in valid parameters. The
-	 * 802.11-2020 specification has more details about the parameters.
+	 * Constructs an {@code HTOperationElement} using the given field values. See
+	 * 802.11 for more details.
 	 *
-	 * @param primaryChannel                 channel index
-	 * @param secondaryChannelOffset
-	 * @param staChannelWidth
-	 * @param rifsMode
-	 * @param htProtection
-	 * @param nongreenfieldHtStasPresent
-	 * @param obssNonHtStasPresent
-	 * @param channelCenterFrequencySegment2
-	 * @param dualBeacon
-	 * @param dualCtsProtection
-	 * @param stbcBeacon
-	 * @return base64 encoded ht operator as a String
+	 * @param primaryChannel                 channel number of the primary channel
+	 * @param secondaryChannelOffset         Indicates the offset of the secondary
+	 *                                       channel relative to the primary
+	 *                                       channel. A 1 indicates that the
+	 *                                       secondary channel is above the primary
+	 *                                       channel. A 3 indicates that the
+	 *                                       secondary channel is below the primary
+	 *                                       channel. A 0 indicates that there is no
+	 *                                       secondary channel present. The value 2
+	 *                                       is reserved.
+	 * @param staChannelWidth                Defines the channel widths that can be
+	 *                                       used to transmit to the STA. With
+	 *                                       exceptions, false allows a 20 MHz
+	 *                                       channel width. True allows use of any
+	 *                                       channel width in the supported channel
+	 *                                       width set. See 802.11 for exceptions.
+	 * @param rifsMode                       True if RIFS is permitted; false
+	 *                                       otherwise.
+	 * @param htProtection                   A 0 indicates no protection mode. A 1
+	 *                                       indicates nonmember protection mode. A
+	 *                                       2 indicates 20 MHz protection mode. A 3
+	 *                                       indicates non-HT mixed mode
+	 * @param nongreenfieldHtStasPresent     False if all HT STAs that are
+	 *                                       associated are HT-greenfield capable or
+	 *                                       all HT peer mesh STAs are HT-greenfield
+	 *                                       capable; true otherwise.
+	 * @param obssNonHtStasPresent           Indicates if the use of protection for
+	 *                                       non-HT STAs by overlapping BSSs is
+	 *                                       determined to be desirable. See 802.11
+	 *                                       for details.
+	 * @param channelCenterFrequencySegment2 Defines the channel center frequency
+	 *                                       for a 160 or 80+80 MHz BSS bandwidth
+	 *                                       with NSS support less than Max VHT NSS.
+	 *                                       See 802.11 for details.
+	 * @param dualBeacon                     False if no STBC beacon is transmitted;
+	 *                                       true otherwise.
+	 * @param dualCtsProtection              False if dual CTS protection is not
+	 *                                       required; true otherwise.
+	 * @param stbcBeacon                     False in a primary beacon. True in an
+	 *                                       STBC beacon.
 	 */
 	public HTOperationElement(byte primaryChannel, byte secondaryChannelOffset, boolean staChannelWidth,
 			boolean rifsMode, byte htProtection, boolean nongreenfieldHtStasPresent, boolean obssNonHtStasPresent,
 			byte channelCenterFrequencySegment2, boolean dualBeacon, boolean dualCtsProtection, boolean stbcBeacon) {
+		/*
+		 * XXX some combinations of these parameters may be invalid as defined by
+		 * 802.11-2020, but this is not checked here. If fidelity to 802.11 is required,
+		 * the caller of this method must make sure to pass in valid parameters. The
+		 * 802.11-2020 specification has more details about the parameters.
+		 */
 		this.primaryChannel = primaryChannel;
 		this.secondaryChannelOffset = secondaryChannelOffset;
 		this.staChannelWidth = staChannelWidth;
@@ -64,17 +94,19 @@ public class HTOperationElement implements OperationElement {
 		this.basicHtMcsSet = new byte[16];
 	}
 
+	/** Default constructor. */
 	public HTOperationElement() {
 		this((byte) 1, (byte) 0, false, false, (byte) 0, true, false, (byte) 0, false, false, false);
 	}
 
 	/**
+	 * Constructs an {@code HTOperationElement} by decoding {@code htOperString}.
 	 *
-	 * @param htOperString must be a String representing a base64 encoded properly
-	 *                     formatted ht operation element (see 802.11-2020 standard)
+	 * @param htOper must be a String representing a base64 encoded properly
+	 *               formatted ht operation element (see 802.11)
 	 */
-	public HTOperationElement(String htOperString) {
-		byte[] bytes = Base64.decodeBase64(htOperString);
+	public HTOperationElement(String htOper) {
+		byte[] bytes = Base64.decodeBase64(htOper);
 		this.primaryChannel = bytes[0];
 		this.secondaryChannelOffset = (byte) (bytes[1] >>> 6);
 		this.staChannelWidth = ((bytes[1] & 0b00100000) >>> 5) == 1;
@@ -92,23 +124,6 @@ public class HTOperationElement implements OperationElement {
 			basicHtMcsSet[i] = bytes[6 + i];
 		}
 		this.basicHtMcsSet = basicHtMcsSet;
-	}
-
-	@Override
-	public String getAsBase64String() {
-		byte[] htOper = new byte[22];
-		htOper[0] = primaryChannel;
-		htOper[1] = (byte) (secondaryChannelOffset << 6 | Utils.boolToInt(staChannelWidth) << 5
-				| Utils.boolToInt(rifsMode) << 4);
-		htOper[2] = (byte) (htProtection << 6 | Utils.boolToInt(nongreenfieldHtStasPresent) << 5
-				| Utils.boolToInt(obssNonHtStasPresent) << 3 | channelCenterFrequencySegment2 >>> 5);
-		htOper[3] = (byte) (channelCenterFrequencySegment2 << 5);
-		htOper[4] = (byte) (Utils.boolToInt(dualBeacon) << 1 | Utils.boolToInt(dualCtsProtection));
-		htOper[5] = (byte) (Utils.boolToInt(stbcBeacon) << 7);
-		for (int i = 0; i < basicHtMcsSet.length; i++) {
-			htOper[6 + i] = basicHtMcsSet[i];
-		}
-		return Base64.encodeBase64String(htOper);
 	}
 
 	@Override

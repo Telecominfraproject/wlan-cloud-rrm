@@ -5,7 +5,5 @@ package com.facebook.openwifirrm.modules.operationelement;
  */
 public interface OperationElement {
 
-	public String getAsBase64String();
-
 	boolean matchesForAggregation(OperationElement otherOper);
 }

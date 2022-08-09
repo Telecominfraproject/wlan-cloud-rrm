@@ -71,7 +71,7 @@ public class TestUtils {
 
 	/**
 	 *
-	 * @param channel channel index. See
+	 * @param channel channel number. See
 	 *                {@link ChannelOptimizer#AVAILABLE_CHANNELS_BAND} for channels
 	 *                in each band.
 	 * @return the center frequency of the given channel in MHz
