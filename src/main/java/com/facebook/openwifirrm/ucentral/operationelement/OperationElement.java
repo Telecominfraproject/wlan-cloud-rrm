@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package com.facebook.openwifirrm.modules.operationelement;
+package com.facebook.openwifirrm.ucentral.operationelement;
 
 /** Represents an Operation Element (in IEEE 802.11-2020). */
 public interface OperationElement {

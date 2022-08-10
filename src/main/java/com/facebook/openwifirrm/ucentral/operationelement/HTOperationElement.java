@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package com.facebook.openwifirrm.modules.operationelement;
+package com.facebook.openwifirrm.ucentral.operationelement;
 
 import java.util.Arrays;
 import java.util.Objects;
