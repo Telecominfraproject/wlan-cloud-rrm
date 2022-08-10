@@ -429,7 +429,7 @@ public class DataCollector implements Runnable {
 
 	/** Insert wifi scan results into database. */
 	private void insertWifiScanResultsToDatabase(
-		String serialNumber, long ts, List<WifiScanEntry> entries
+		String serialNumber, long timestampSeconds, List<WifiScanEntry> entries
 	) {
 		if (dbManager == null) {
 			return;
@@ -437,7 +437,7 @@ public class DataCollector implements Runnable {
 
 		// Insert into database
 		try {
-			dbManager.addWifiScan(serialNumber, ts, entries);
+			dbManager.addWifiScan(serialNumber, timestampSeconds, entries);
 		} catch (SQLException e) {
 			logger.error("Failed to insert wifi scan results into database", e);
 			return;

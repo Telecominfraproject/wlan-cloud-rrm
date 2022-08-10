@@ -14,8 +14,8 @@ import java.util.Objects;
 import org.apache.commons.codec.binary.Base64;
 
 /**
- * Very High Throughput (VHT) Operation Element, which are potentially present
- * in wifiscan entries. Introduced in 802.11ac (2013).
+ * Very High Throughput (VHT) Operation Element, which is potentially present in
+ * wifiscan entries. Introduced in 802.11ac (2013).
  *
  * XXX some combinations of channelWidth, channel, channel2, and vhtMcsAtNss are
  * invalid, but this is not checked here. If fidelity to 802.11 is required, the

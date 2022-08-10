@@ -322,8 +322,8 @@ public class Modeler implements Runnable {
 					);
 
 				// Parse and validate this record
-				List<WifiScanEntry> scanEntries =
-						UCentralUtils.parseWifiScanEntries(record.payload, record.timestampMs);
+				List<WifiScanEntry> scanEntries = UCentralUtils.parseWifiScanEntries(record.payload,
+						record.timestampMs);
 				if (scanEntries == null) {
 					continue;
 				}

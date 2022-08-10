@@ -8,7 +8,7 @@
 
 package com.facebook.openwifirrm.ucentral.operationelement;
 
-/** Represents an Operation Element (in IEEE 802.11-2020). */
+/** Represents an Operation Element defined in 802.11. */
 public interface OperationElement {
 
 	/**

@@ -14,7 +14,7 @@ import java.util.Objects;
 import org.apache.commons.codec.binary.Base64;
 
 /**
- * High Throughput (HT) Operation Element, which are potentially present in
+ * High Throughput (HT) Operation Element, which is potentially present in
  * wifiscan entries. Introduced in 802.11n (2009).
  */
 public class HTOperationElement implements OperationElement {

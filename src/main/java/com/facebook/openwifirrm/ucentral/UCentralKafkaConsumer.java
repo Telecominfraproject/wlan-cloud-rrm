@@ -249,7 +249,7 @@ public class UCentralKafkaConsumer {
 					"Offset {}: {} => {}",
 					record.offset(), serialNumber, payload.toString()
 				);
-				// record.timestamp() is confirmed to be Unix time (ms) empirically
+				// record.timestamp() is empirically confirmed to be Unix time (ms)
 				KafkaRecord kafkaRecord = new KafkaRecord(serialNumber, payload, record.timestamp());
 				if (record.topic().equals(stateTopic)) {
 					stateRecords.add(kafkaRecord);
