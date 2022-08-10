@@ -103,45 +103,48 @@ public class ModelerUtilsTest {
 		dataModel.latestWifiScans.put(bssidB, new LinkedList<>());
 		assertTrue(ModelerUtils.getAggregatedWifiScans(dataModel, obsoletionPeriodMs, new MeanAggregator()).isEmpty());
 
-		// for an AP, if there is one scan, the aggregate should just be that scan
-		// for the other device, there should be no aggregate
-		WifiScanEntry entryB1 = TestUtils.createWifiScanEntryWithBssid(1, bssidB);
-		entryB1.signal = -60;
-		dataModel.latestWifiScans.get(bssidB).add(Arrays.asList(entryB1));
-		WifiScanEntry aggregatedEntryB = ModelerUtils
+		/*
+		 * When only apB conducts a scan, and receives one response from apA, that
+		 * response should be the "aggregate response" from apA to apB, and apA should
+		 * have no aggregate.
+		 */
+		WifiScanEntry entryAToB1 = TestUtils.createWifiScanEntryWithBssid(1, bssidA);
+		entryAToB1.signal = -60;
+		dataModel.latestWifiScans.get(bssidB).add(Arrays.asList(entryAToB1));
+		WifiScanEntry aggregatedEntryAToB = ModelerUtils
 				.getAggregatedWifiScans(dataModel, obsoletionPeriodMs, new MeanAggregator()).get(bssidB);
 		assertFalse(dataModel.latestWifiScans.containsKey(bssidA));
-		assertEquals(entryB1, aggregatedEntryB);
+		assertEquals(entryAToB1, aggregatedEntryAToB);
 
-		// add another entry for device B and check the aggregation
-		WifiScanEntry entryB2 = TestUtils.createWifiScanEntryWithBssid(1, bssidB);
-		entryB2.signal = -62;
-		entryB2.unixTimeMs += 60000; // 1 min later
-		dataModel.latestWifiScans.get(bssidB).add(Arrays.asList(entryB2));
-		aggregatedEntryB = ModelerUtils.getAggregatedWifiScans(dataModel, obsoletionPeriodMs, new MeanAggregator())
+		// add another scan with one entry from apA to apB and check the aggregation
+		WifiScanEntry entryAToB2 = TestUtils.createWifiScanEntryWithBssid(1, bssidA);
+		entryAToB2.signal = -62;
+		entryAToB2.unixTimeMs += 60000; // 1 min later
+		dataModel.latestWifiScans.get(bssidB).add(Arrays.asList(entryAToB2));
+		aggregatedEntryAToB = ModelerUtils.getAggregatedWifiScans(dataModel, obsoletionPeriodMs, new MeanAggregator())
 				.get(bssidB);
-		WifiScanEntry expectedAggregatedEntry = new WifiScanEntry(entryB2);
+		WifiScanEntry expectedAggregatedEntry = new WifiScanEntry(entryAToB2);
 		expectedAggregatedEntry.signal = -61; // average of -60 and -62
 		assertFalse(dataModel.latestWifiScans.containsKey(bssidA));
-		assertEquals(expectedAggregatedEntry, aggregatedEntryB);
+		assertEquals(expectedAggregatedEntry, aggregatedEntryAToB);
 
 		// test the obsoletion period boundaries
-		WifiScanEntry entryB3 = TestUtils.createWifiScanEntryWithBssid(1, bssidB);
-		entryB3.signal = -64;
-		entryB3.unixTimeMs += obsoletionPeriodMs;
-		dataModel.latestWifiScans.get(bssidB).add(Arrays.asList(entryB3));
-		aggregatedEntryB = ModelerUtils.getAggregatedWifiScans(dataModel, obsoletionPeriodMs, new MeanAggregator())
+		WifiScanEntry entryAToB3 = TestUtils.createWifiScanEntryWithBssid(1, bssidA);
+		entryAToB3.signal = -64;
+		entryAToB3.unixTimeMs += obsoletionPeriodMs;
+		dataModel.latestWifiScans.get(bssidB).add(Arrays.asList(entryAToB3));
+		aggregatedEntryAToB = ModelerUtils.getAggregatedWifiScans(dataModel, obsoletionPeriodMs, new MeanAggregator())
 				.get(bssidB);
-		expectedAggregatedEntry = new WifiScanEntry(entryB3);
+		expectedAggregatedEntry = new WifiScanEntry(entryAToB3);
 		expectedAggregatedEntry.signal = -62; // average of -60, -62, and -64 3;
-		assertEquals(expectedAggregatedEntry, aggregatedEntryB);
-		aggregatedEntryB = ModelerUtils.getAggregatedWifiScans(dataModel, obsoletionPeriodMs - 1, new MeanAggregator())
-				.get(bssidB);
+		assertEquals(expectedAggregatedEntry, aggregatedEntryAToB);
+		aggregatedEntryAToB = ModelerUtils
+				.getAggregatedWifiScans(dataModel, obsoletionPeriodMs - 1, new MeanAggregator()).get(bssidB);
 		expectedAggregatedEntry.signal = -63; // average of -62 and -64
-		assertEquals(expectedAggregatedEntry, aggregatedEntryB);
-		aggregatedEntryB = ModelerUtils.getAggregatedWifiScans(dataModel, 0, new MeanAggregator()).get(bssidB);
+		assertEquals(expectedAggregatedEntry, aggregatedEntryAToB);
+		aggregatedEntryAToB = ModelerUtils.getAggregatedWifiScans(dataModel, 0, new MeanAggregator()).get(bssidB);
 		expectedAggregatedEntry.signal = -64; // latest rssid
-		assertEquals(expectedAggregatedEntry, aggregatedEntryB);
+		assertEquals(expectedAggregatedEntry, aggregatedEntryAToB);
 	}
 
 //	@Test
