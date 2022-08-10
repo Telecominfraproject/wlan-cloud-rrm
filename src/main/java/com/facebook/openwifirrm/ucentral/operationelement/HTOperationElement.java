@@ -19,63 +19,63 @@ import org.apache.commons.codec.binary.Base64;
  */
 public class HTOperationElement implements OperationElement {
 
+	/** Channel number of the primary channel. */
 	private final byte primaryChannel;
+	/**
+	 * Indicates the offset of the secondary channel relative to the primary
+	 * channel. A 1 indicates that the secondary channel is above the primary
+	 * channel. A 3 indicates that the secondary channel is below the primary
+	 * channel. A 0 indicates that there is no secondary channel present. The value
+	 * 2 is reserved.
+	 */
 	private final byte secondaryChannelOffset;
+	/**
+	 * Defines the channel widths that can be used to transmit to the STA. With
+	 * exceptions, false allows a 20 MHz channel width. True allows use of any
+	 * channel width in the supported channel width set. See 802.11 for exceptions.
+	 */
 	private final boolean staChannelWidth;
+	/** True if RIFS is permitted; false otherwise. */
 	private final boolean rifsMode;
+	/**
+	 * A 0 indicates no protection mode. A 1 indicates nonmember protection mode. A
+	 * 2 indicates 20 MHz protection mode. A 3 indicates non-HT mixed mode.
+	 */
 	private final byte htProtection;
+	/**
+	 * False if all HT STAs that are associated are HT-greenfield capable or all HT
+	 * peer mesh STAs are HT-greenfield capable; true otherwise.
+	 */
 	private final boolean nongreenfieldHtStasPresent;
+	/**
+	 * Indicates if the use of protection for non-HT STAs by overlapping BSSs is
+	 * determined to be desirable. See 802.11 for details.
+	 */
 	private final boolean obssNonHtStasPresent;
+	/**
+	 * Defines the channel center frequency for a 160 or 80+80 MHz BSS bandwidth
+	 * with NSS support less than Max VHT NSS. See 802.11 for details.
+	 */
 	private final byte channelCenterFrequencySegment2;
+	/** False if no STBC beacon is transmitted; true otherwise. */
 	private final boolean dualBeacon;
+	/** False if dual CTS protection is not required; true otherwise. */
 	private final boolean dualCtsProtection;
+	/** False in a primary beacon. True in an STBC beacon. */
 	private final boolean stbcBeacon;
+	/**
+	 * Indicates the HT-MCS values that are supported by all HT STAs in the BSS. A
+	 * bitmap where a bit is set to 1 to indicate support for that MCS and 0
+	 * otherwise, where bit 0 corresponds to MCS 0.
+	 */
 	private final byte[] basicHtMcsSet;
 
 	/**
 	 * Constructs an {@code HTOperationElement} using the given field values. See
 	 * 802.11 for more details.
-	 *
-	 * @param primaryChannel                 channel number of the primary channel
-	 * @param secondaryChannelOffset         Indicates the offset of the secondary
-	 *                                       channel relative to the primary
-	 *                                       channel. A 1 indicates that the
-	 *                                       secondary channel is above the primary
-	 *                                       channel. A 3 indicates that the
-	 *                                       secondary channel is below the primary
-	 *                                       channel. A 0 indicates that there is no
-	 *                                       secondary channel present. The value 2
-	 *                                       is reserved.
-	 * @param staChannelWidth                Defines the channel widths that can be
-	 *                                       used to transmit to the STA. With
-	 *                                       exceptions, false allows a 20 MHz
-	 *                                       channel width. True allows use of any
-	 *                                       channel width in the supported channel
-	 *                                       width set. See 802.11 for exceptions.
-	 * @param rifsMode                       True if RIFS is permitted; false
-	 *                                       otherwise.
-	 * @param htProtection                   A 0 indicates no protection mode. A 1
-	 *                                       indicates nonmember protection mode. A
-	 *                                       2 indicates 20 MHz protection mode. A 3
-	 *                                       indicates non-HT mixed mode
-	 * @param nongreenfieldHtStasPresent     False if all HT STAs that are
-	 *                                       associated are HT-greenfield capable or
-	 *                                       all HT peer mesh STAs are HT-greenfield
-	 *                                       capable; true otherwise.
-	 * @param obssNonHtStasPresent           Indicates if the use of protection for
-	 *                                       non-HT STAs by overlapping BSSs is
-	 *                                       determined to be desirable. See 802.11
-	 *                                       for details.
-	 * @param channelCenterFrequencySegment2 Defines the channel center frequency
-	 *                                       for a 160 or 80+80 MHz BSS bandwidth
-	 *                                       with NSS support less than Max VHT NSS.
-	 *                                       See 802.11 for details.
-	 * @param dualBeacon                     False if no STBC beacon is transmitted;
-	 *                                       true otherwise.
-	 * @param dualCtsProtection              False if dual CTS protection is not
-	 *                                       required; true otherwise.
-	 * @param stbcBeacon                     False in a primary beacon. True in an
-	 *                                       STBC beacon.
+	 * <p>
+	 * For details about the parameters, see the javadocs for the corresponding
+	 * member variables.
 	 */
 	public HTOperationElement(byte primaryChannel, byte secondaryChannelOffset, boolean staChannelWidth,
 			boolean rifsMode, byte htProtection, boolean nongreenfieldHtStasPresent, boolean obssNonHtStasPresent,

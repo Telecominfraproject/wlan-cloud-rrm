@@ -23,7 +23,7 @@ import org.apache.commons.codec.binary.Base64;
  */
 public class VHTOperationElement implements OperationElement {
 
-	/** false if the channel width is 20 MHz or 40 MHz; true otherwise. */
+	/** False if the channel width is 20 MHz or 40 MHz; true otherwise. */
 	private final boolean channelWidthIndicator;
 	/**
 	 * If the channel is 20 MHz, 40 MHz, or 80 MHz wide, this parameter is the
@@ -53,6 +53,7 @@ public class VHTOperationElement implements OperationElement {
 	private final byte[] vhtMcsForNss;
 
 	/**
+	 * Constructs a {@code VHTOperationElement} by decoding {@code vhtOperString}.
 	 *
 	 * @param vhtOperString must be a String representing a base64 encoded properly
 	 *                      formatted vht operation element (see 802.11 standard)
@@ -74,8 +75,14 @@ public class VHTOperationElement implements OperationElement {
 		this.vhtMcsForNss = vhtMcsForNss;
 	}
 
+	/**
+	 * Constructs an {@code HTOperationElement} using the given field values. See
+	 * 802.11 for more details.
+	 * <p>
+	 * For details about the parameters, see the javadocs for the corresponding
+	 * member variables.
+	 */
 	public VHTOperationElement(boolean channelWidthIndicator, byte channel1, byte channel2, byte[] vhtMcsForNss) {
-		super();
 		this.channelWidthIndicator = channelWidthIndicator;
 		this.channel1 = channel1;
 		this.channel2 = channel2;
