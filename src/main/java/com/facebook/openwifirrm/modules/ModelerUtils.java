@@ -228,9 +228,10 @@ public class ModelerUtils {
 	 * @return true if the entries should be aggregated
 	 */
 	private static boolean matchesForAggregation(WifiScanEntry entry1, WifiScanEntry entry2) {
-		// TODO should we check the entire ht_oper and vht_oper or just channel width?
-		return Objects.equals(entry1.bssid, entry2.bssid) && Objects.equals(entry1.ssid, entry2.ssid)
-				&& entry1.frequency == entry2.frequency && entry1.channel == entry2.channel
+		// do not check SSID (other SSIDs can contribute to interference, and SSIDs can
+		// change any time)
+		return Objects.equals(entry1.bssid, entry2.bssid) && entry1.frequency == entry2.frequency
+				&& entry1.channel == entry2.channel
 				&& HTOperationElement.matchesHtForAggregation(entry1.ht_oper, entry2.ht_oper)
 				&& VHTOperationElement.matchesVhtForAggregation(entry1.vht_oper, entry2.vht_oper);
 	}
