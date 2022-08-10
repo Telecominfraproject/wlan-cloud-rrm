@@ -88,7 +88,7 @@ public class ModelerUtilsTest {
 	}
 
 	@Test
-	void testBasicPreDot11nAggregatedWifiScanEntry() {
+	void testPreDot11nAggregatedWifiScanEntry() {
 		final long obsoletionPeriodMs = 900000;
 
 		final String apA = "aaaaaaaaaaaa";
@@ -149,12 +149,49 @@ public class ModelerUtilsTest {
 		aggregateMap = ModelerUtils.getAggregatedWifiScans(dataModel, 0, new MeanAggregator());
 		expectedAggregatedEntryAToB.signal = -64; // latest rssid
 		assertEquals(expectedAggregatedEntryAToB, aggregateMap.get(apB).get(bssidA));
+		// Test that the obsoletion period starts counting backwards from the time of
+		// the most recent entry for each (ap, bssid) tuple.
+		WifiScanEntry entryCToB1 = TestUtils.createWifiScanEntryWithBssid(1, bssidC);
+		entryCToB1.signal = -70;
+		entryCToB1.unixTimeMs += 2 * obsoletionPeriodMs;
+		dataModel.latestWifiScans.get(apB).add(Arrays.asList(entryCToB1));
+		aggregateMap = ModelerUtils.getAggregatedWifiScans(dataModel, 0, new MeanAggregator());
+		WifiScanEntry expectedAggregatedEntryCToB = new WifiScanEntry(entryCToB1);
+		expectedAggregatedEntryAToB = new WifiScanEntry(entryAToB3);
+		assertEquals(expectedAggregatedEntryCToB, aggregateMap.get(apB).get(bssidC));
+		assertEquals(expectedAggregatedEntryAToB, aggregateMap.get(apB).get(bssidA));
+
+		// test multiple entries in one scan and scans from multiple APs
+		WifiScanEntry entryAToB4 = TestUtils.createWifiScanEntryWithBssid(1, bssidA);
+		entryAToB4.signal = -80;
+		entryAToB4.unixTimeMs += 3 * obsoletionPeriodMs;
+		WifiScanEntry entryCToB2 = TestUtils.createWifiScanEntryWithBssid(1, bssidC);
+		entryCToB2.signal = -80;
+		entryCToB2.unixTimeMs += 3 * obsoletionPeriodMs;
+		WifiScanEntry entryBToA1 = TestUtils.createWifiScanEntryWithBssid(1, bssidB);
+		entryBToA1.signal = -60;
+		entryBToA1.unixTimeMs += 3 * obsoletionPeriodMs;
+		WifiScanEntry entryCToA1 = TestUtils.createWifiScanEntryWithBssid(1, bssidC);
+		entryCToA1.signal = -60;
+		entryCToA1.unixTimeMs += 3 * obsoletionPeriodMs;
+		dataModel.latestWifiScans.get(apB).add(Arrays.asList(entryCToB2, entryAToB4));
+		dataModel.latestWifiScans.put(apA, new LinkedList<>());
+		dataModel.latestWifiScans.get(apA).add(Arrays.asList(entryBToA1, entryCToA1));
+		aggregateMap = ModelerUtils.getAggregatedWifiScans(dataModel, obsoletionPeriodMs, new MeanAggregator());
+		expectedAggregatedEntryCToB = new WifiScanEntry(entryCToB2);
+		expectedAggregatedEntryCToB.signal = -75; // average of -70 and-80
+		expectedAggregatedEntryAToB = new WifiScanEntry(entryAToB4);
+		WifiScanEntry expectedAggregatedEntryCToA = new WifiScanEntry(entryCToA1);
+		WifiScanEntry expectedAggregatedEntryBToA = new WifiScanEntry(entryBToA1);
+		assertEquals(expectedAggregatedEntryCToB, aggregateMap.get(apB).get(bssidC));
+		assertEquals(expectedAggregatedEntryAToB, aggregateMap.get(apB).get(bssidA));
+		assertEquals(expectedAggregatedEntryCToA, aggregateMap.get(apA).get(bssidC));
+		assertEquals(expectedAggregatedEntryBToA, aggregateMap.get(apA).get(bssidB));
 	}
 
 //	@Test
-//	void testMultipleEntriesAndAggregationLogic() {
-//		// TODO test 802.11n onwards (with non-null ht_oper and vht_oper)
-// 		// TODO test matching method for ht/vht opers
-//		// TODO test with multiple entries from the same scan
+//	void testPostDot11nAggregatedWifiScanEntry() {
+		// TODO test 802.11n onwards (with non-null ht_oper and vht_oper)
+		// TODO test matching method for ht/vht opers
 //	}
 }
