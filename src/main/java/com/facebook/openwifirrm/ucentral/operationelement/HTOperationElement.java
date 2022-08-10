@@ -108,10 +108,10 @@ public class HTOperationElement implements OperationElement {
 	}
 
 	/**
-	 * Constructs an {@code HTOperationElement} by decoding {@code htOperString}.
+	 * Constructs an {@code HTOperationElement} by decoding {@code htOper}.
 	 *
-	 * @param htOper must be a String representing a base64 encoded properly
-	 *               formatted ht operation element (see 802.11)
+	 * @param htOper a base64 encoded properly formatted HT operation element (see
+	 *               802.11)
 	 */
 	public HTOperationElement(String htOper) {
 		byte[] bytes = Base64.decodeBase64(htOper);
@@ -145,6 +145,17 @@ public class HTOperationElement implements OperationElement {
 				&& channelCenterFrequencySegment2 == other.channelCenterFrequencySegment2;
 	}
 
+	/**
+	 * Determines whether two HT operation elements should have their statistics
+	 * aggregated.
+	 *
+	 * @param htOper1 a base64 encoded properly formatted HT operation element (see
+	 *                802.11)
+	 * @param htOper2 a base64 encoded properly formatted HT operation element (see
+	 *                802.11)
+	 * @return true if the two inputs should have their statistics aggregated; false
+	 *         otherwise.
+	 */
 	public static boolean matchesHtForAggregation(String htOper1, String htOper2) {
 		if (htOper1 == htOper2) { // serves as a null check
 			return true;

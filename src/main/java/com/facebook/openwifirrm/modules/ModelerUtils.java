@@ -223,8 +223,6 @@ public class ModelerUtils {
 	 * to aggregate them. However, 802.11n introduced channel bonding, so for
 	 * 802.11n onwards, channel width must be checked.
 	 *
-	 * @param entry1
-	 * @param entry2
 	 * @return true if the entries should be aggregated
 	 */
 	private static boolean matchesForAggregation(WifiScanEntry entry1, WifiScanEntry entry2) {
@@ -268,7 +266,7 @@ public class ModelerUtils {
 		}
 		Map<String, Map<String, WifiScanEntry>> aggregatedWifiScans = new HashMap<>();
 		for (Map.Entry<String, List<List<WifiScanEntry>>> apToScansMapEntry : dataModel.latestWifiScans.entrySet()) {
-			String ap = apToScansMapEntry.getKey();
+			String serialNumber = apToScansMapEntry.getKey();
 			List<List<WifiScanEntry>> scans = apToScansMapEntry.getValue();
 			if (scans.isEmpty()) {
 				continue;
@@ -290,8 +288,7 @@ public class ModelerUtils {
 				if (entry.bssid == null) {
 					continue;
 				}
-				bssidToEntriesMap.computeIfAbsent(entry.bssid, bssid -> new ArrayList<>());
-				bssidToEntriesMap.get(entry.bssid).add(entry);
+				bssidToEntriesMap.computeIfAbsent(entry.bssid, bssid -> new ArrayList<>()).add(entry);
 			}
 
 			// calculate the aggregate for each bssid for this AP
@@ -305,15 +302,16 @@ public class ModelerUtils {
 						// discard obsolete entries
 						break;
 					}
-					// mostRecentEntry should always match the first entry (they are the exact same
-					// object)
-					if (matchesForAggregation(mostRecentEntry, entry)) {
-						aggregatedWifiScans.computeIfAbsent(ap, k -> new HashMap<>());
-						aggregatedWifiScans.get(ap).putIfAbsent(bssid, new WifiScanEntry(entry));
+					if (mostRecentEntry == entry || matchesForAggregation(mostRecentEntry, entry)) {
+						aggregatedWifiScans
+								.computeIfAbsent(serialNumber, k -> new HashMap<>())
+								.computeIfAbsent(bssid, k -> new WifiScanEntry(entry));
 						agg.addValue((double) entry.signal);
 					}
 				}
-				aggregatedWifiScans.get(ap).get(bssid).signal = (int) Math.round(agg.getAggregate());
+				if (agg.getCount() > 0) {
+					aggregatedWifiScans.get(serialNumber).get(bssid).signal = (int) Math.round(agg.getAggregate());
+				}
 			}
 		}
 		return aggregatedWifiScans;

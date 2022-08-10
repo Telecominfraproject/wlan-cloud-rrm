@@ -16,10 +16,6 @@ import org.apache.commons.codec.binary.Base64;
 /**
  * Very High Throughput (VHT) Operation Element, which is potentially present in
  * wifiscan entries. Introduced in 802.11ac (2013).
- *
- * XXX some combinations of channelWidth, channel, channel2, and vhtMcsAtNss are
- * invalid, but this is not checked here. If fidelity to 802.11 is required, the
- * caller of this method must make sure to pass in valid parameters.
  */
 public class VHTOperationElement implements OperationElement {
 
@@ -53,13 +49,13 @@ public class VHTOperationElement implements OperationElement {
 	private final byte[] vhtMcsForNss;
 
 	/**
-	 * Constructs a {@code VHTOperationElement} by decoding {@code vhtOperString}.
+	 * Constructs a {@code VHTOperationElement} by decoding {@code vhtOper}.
 	 *
-	 * @param vhtOperString must be a String representing a base64 encoded properly
-	 *                      formatted vht operation element (see 802.11 standard)
+	 * @param vhtOper a base64 encoded properly formatted VHT operation element (see
+	 *                802.11 standard)
 	 */
-	public VHTOperationElement(String vhtOperString) {
-		byte[] bytes = Base64.decodeBase64(vhtOperString);
+	public VHTOperationElement(String vhtOper) {
+		byte[] bytes = Base64.decodeBase64(vhtOper);
 		this.channelWidthIndicator = bytes[0] == 1;
 		this.channel1 = bytes[1];
 		this.channel2 = bytes[2];
@@ -83,6 +79,11 @@ public class VHTOperationElement implements OperationElement {
 	 * member variables.
 	 */
 	public VHTOperationElement(boolean channelWidthIndicator, byte channel1, byte channel2, byte[] vhtMcsForNss) {
+		/*
+		 * XXX some combinations of channelWidth, channel, channel2, and vhtMcsAtNss are
+		 * invalid, but this is not checked here. If fidelity to 802.11 is required, the
+		 * caller of this method must make sure to pass in valid parameters.
+		 */
 		this.channelWidthIndicator = channelWidthIndicator;
 		this.channel1 = channel1;
 		this.channel2 = channel2;
@@ -100,6 +101,18 @@ public class VHTOperationElement implements OperationElement {
 				&& channelWidthIndicator == other.channelWidthIndicator;
 	}
 
+	/**
+	 * Determines whether two VHT operation elements should have their statistics
+	 * aggregated.
+	 *
+	 * @param vhtOper1 a base64 encoded properly formatted VHT operation element
+	 *                 (see 802.11 standard)
+	 *
+	 * @param vhtOper2 a base64 encoded properly formatted VHT operation element
+	 *                 (see 802.11 standard)
+	 * @return true if the two inputs should have their statistics aggregated; false
+	 *         otherwise.
+	 */
 	public static boolean matchesVhtForAggregation(String vhtOper1, String vhtOper2) {
 		if (vhtOper1 == vhtOper2) { // serves as a null check
 			return true;

@@ -28,6 +28,11 @@ public class MeanAggregator implements Aggregator<Double> {
 	}
 
 	@Override
+	public long getCount() {
+		return count;
+	}
+
+	@Override
 	public void reset() {
 		mean = 0;
 		count = 0;

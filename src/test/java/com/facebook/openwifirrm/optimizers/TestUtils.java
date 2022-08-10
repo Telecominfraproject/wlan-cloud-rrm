@@ -28,6 +28,7 @@ public class TestUtils {
 	/** The Gson instance. */
 	private static final Gson gson = new Gson();
 
+	/** Default value for {@link WifiScanEntry#unixTimeMs} for testing. */
 	public static final Instant DEFAULT_WIFISCANENTRY_TIME = Instant.parse("2022-01-01T00:00:00Z");
 
 	/** Create a topology from the given devices in a single zone. */

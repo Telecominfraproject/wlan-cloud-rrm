@@ -20,6 +20,9 @@ public interface Aggregator<T> {
 	/** Returns the aggregate measure of all added values. */
 	T getAggregate();
 
+	/** Returns the number of values that are aggregated. */
+	long getCount();
+
 	/** Remove all added values from the group of values being aggregated. */
 	void reset();
 }
