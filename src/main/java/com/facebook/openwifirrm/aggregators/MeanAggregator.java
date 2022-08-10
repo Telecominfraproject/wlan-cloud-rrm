@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package com.facebook.openwifirrm.modules.aggregators;
+package com.facebook.openwifirrm.aggregators;
 
 /**
  * Tracks the mean of all added values. If no values are added, the mean is 0.

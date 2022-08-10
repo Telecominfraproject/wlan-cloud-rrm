@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.facebook.openwifirrm.modules.aggregators.Aggregator;
+import com.facebook.openwifirrm.aggregators.Aggregator;
 import com.facebook.openwifirrm.modules.operationelement.HTOperationElement;
 import com.facebook.openwifirrm.modules.operationelement.VHTOperationElement;
 import com.facebook.openwifirrm.ucentral.UCentralUtils.WifiScanEntry;
