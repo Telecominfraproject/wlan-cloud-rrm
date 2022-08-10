@@ -88,13 +88,14 @@ public class Modeler implements Runnable {
 		 * active wifiscan, the AP sends out a wifiscan request and listens for
 		 * responses from other APs. In a passive wifiscan, the AP does not send out a
 		 * wifiscan request but instead just waits for periodic beacons from the other
-		 * APs. Note that neither the responses to requests (in active mode) or the
+		 * APs. (Note that neither the responses to requests (in active mode) or the
 		 * periodic beacons are guaranteed to happen at any particular time (and it
-		 * depends on network traffic).
+		 * depends on network traffic)).
 		 * <p>
-		 * The "result" if a wifiscan therefore can include multiple responses.
-		 * {@code latestWifiScans} maps from an AP to a list of most recent wifiscan
-		 * "results" where each "result" itself is a list of responses from other APs.
+		 * The "result" of a wifiscan therefore can include multiple responses.
+		 * {@code latestWifiScans} maps from an AP (serial number) to a list of most
+		 * recent wifiscan "results" where each "result" itself is a list of responses
+		 * from other APs.
 		 */
 		public Map<String, List<List<WifiScanEntry>>> latestWifiScans =
 			new ConcurrentHashMap<>();

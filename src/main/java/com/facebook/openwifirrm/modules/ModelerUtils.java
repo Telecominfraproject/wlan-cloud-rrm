@@ -8,6 +8,7 @@
 
 package com.facebook.openwifirrm.modules;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -235,70 +236,84 @@ public class ModelerUtils {
 	}
 
 	/**
-	 * For each BSSID, calculates an aggregate wifiscan entry with an aggregated
-	 * RSSI.
+	 * For each AP, for each other AP that sent a wifiscan entry to that AP, this
+	 * method calculates an aggregate wifiscan entry with an aggregated RSSI.
 	 *
-	 * @param dataModel
-	 * @param obsoletionPeriodMs per-BSSID, the maximum amount of time (in
-	 *                           milliseconds) it is worth aggregating over,
-	 *                           starting from the most recent scan entry and
-	 *                           working backwards in time on a per-BSSID basis
-	 *                           (per-BSSID basis meaning that this method takes the
-	 *                           most recent scan entry for a specific BSSID and
-	 *                           looks back from there and repeats this for every
-	 *                           BSSID). An entry exactly {@code obsoletionPeriodMs}
-	 *                           ms earlier than the most recent entry is considered
-	 *                           non-obsolete (i.e., the "non-obsolete" window is
-	 *                           inclusive). Must be non-negative.
-	 * @param agg                an aggregator to output a calculated "aggregated
-	 *                           signal strength"
-	 * @return a map from BSSID to an "aggregated wifiscan entry" (i.e., a single
-	 *         entry with its {@code signal} attribute modified to be the aggregated
-	 *         signal value instead of the value in just the most recent entry.
+	 * @param dataModel          the data model which includes the latest wifiscan
+	 *                           entries
+	 * @param obsoletionPeriodMs for each (scanning AP, responding AP) tuple, the
+	 *                           maximum amount of time (in milliseconds) it is
+	 *                           worth aggregating over, starting from the most
+	 *                           recent scan entry for that tuple, and working
+	 *                           backwards in time. An entry exactly
+	 *                           {@code obsoletionPeriodMs} ms earlier than the most
+	 *                           recent entry is considered non-obsolete (i.e., the
+	 *                           "non-obsolete" window is inclusive). Must be
+	 *                           non-negative.
+	 * @param agg                an aggregator to calculate the aggregated RSSI
+	 *                           given recent wifiscan entries' RSSIs.
+	 * @return a map from AP serial number to a map from BSSID to an "aggregated
+	 *         wifiscan entry" (i.e., a single entry with its {@code signal}
+	 *         attribute modified to be the aggregated signal value instead of the
+	 *         value in just the most recent entry for that (AP serial number,
+	 *         BSSID) tuple. The returned map will only contain APs which received
+	 *         at least one non-obsolete wifiscan entry from a BSS.
 	 */
-	public static Map<String, WifiScanEntry> getAggregatedWifiScans(Modeler.DataModel dataModel,
+	public static Map<String, Map<String, WifiScanEntry>> getAggregatedWifiScans(Modeler.DataModel dataModel,
 			long obsoletionPeriodMs,
 			Aggregator<Double> agg) {
 		if (obsoletionPeriodMs < 0) {
 			throw new IllegalArgumentException("obsoletionPeriodMs must be non-negative.");
 		}
-		/*
-		 * NOTE: if a BSSID does not have an entry, it will not be returned
-		 * (i.e., it will not be a key in the returned map).
-		 */
-		Map<String, WifiScanEntry> aggregatedWifiScans = new HashMap<>();
-		for (Map.Entry<String, List<List<WifiScanEntry>>> mapEntry : dataModel.latestWifiScans.entrySet()) {
+		Map<String, Map<String, WifiScanEntry>> aggregatedWifiScans = new HashMap<>();
+		for (Map.Entry<String, List<List<WifiScanEntry>>> apToScansMapEntry : dataModel.latestWifiScans.entrySet()) {
+			String ap = apToScansMapEntry.getKey();
+			List<List<WifiScanEntry>> scans = apToScansMapEntry.getValue();
+			if (scans.isEmpty()) {
+				continue;
+			}
 			/*
 			 * Flatten the wifiscan entries and sort in reverse chronological order. Sorting
 			 * is done just in case the entries in the original list are not chronological
 			 * already - although they are inserted chronologically, perhaps latency,
 			 * synchronization, etc. could cause the actual unixTimeMs to be out-of-order.
 			 */
-			List<List<WifiScanEntry>> scans = mapEntry.getValue();
-			if (scans.isEmpty()) {
-				continue;
-			}
-			List<WifiScanEntry> mostRecentToOldest = scans.stream().flatMap(List::stream)
+			List<WifiScanEntry> mostRecentToOldestEntries = scans.stream().flatMap(List::stream)
 					.sorted((entry1, entry2) -> {
 						return -Long.compare(entry1.unixTimeMs, entry2.unixTimeMs);
 					}).collect(Collectors.toUnmodifiableList());
-
-			String bssid = mapEntry.getKey();
-			WifiScanEntry mostRecentEntry = mostRecentToOldest.get(0);
-			agg.reset();
-			for (WifiScanEntry entry : mostRecentToOldest) {
-				if (mostRecentEntry.unixTimeMs - entry.unixTimeMs > obsoletionPeriodMs) {
-					// discard obsolete entries
-					break;
+			// Split mostRecentToOldest into separate lists for each BSSID
+			// These lists will be in reverse chronological order also
+			Map<String, List<WifiScanEntry>> bssidToEntriesMap = new HashMap<>();
+			for (WifiScanEntry entry : mostRecentToOldestEntries) {
+				if (entry.bssid == null) {
+					continue;
 				}
-				// mostRecentEntry should always match the first entry (they are the exact same
-				// object)
-				if (matchesForAggregation(mostRecentEntry, entry)) {
-					aggregatedWifiScans.putIfAbsent(bssid, new WifiScanEntry(entry));
-					agg.addValue((double) entry.signal);
-				}
+				bssidToEntriesMap.computeIfAbsent(entry.bssid, bssid -> new ArrayList<>());
+				bssidToEntriesMap.get(entry.bssid).add(entry);
 			}
-			aggregatedWifiScans.get(bssid).signal = (int) Math.round(agg.getAggregate());
+
+			// calculate the aggregate for each bssid for this AP
+			for (Map.Entry<String, List<WifiScanEntry>> bssidToWifiScanEntriesMapEntry : bssidToEntriesMap.entrySet()) {
+				String bssid = bssidToWifiScanEntriesMapEntry.getKey();
+				List<WifiScanEntry> entries = bssidToWifiScanEntriesMapEntry.getValue();
+				WifiScanEntry mostRecentEntry = entries.get(0);
+				agg.reset();
+				for (WifiScanEntry entry : entries) {
+					if (mostRecentEntry.unixTimeMs - entry.unixTimeMs > obsoletionPeriodMs) {
+						// discard obsolete entries
+						break;
+					}
+					// mostRecentEntry should always match the first entry (they are the exact same
+					// object)
+					if (matchesForAggregation(mostRecentEntry, entry)) {
+						aggregatedWifiScans.computeIfAbsent(ap, k -> new HashMap<>());
+						aggregatedWifiScans.get(ap).putIfAbsent(bssid, new WifiScanEntry(entry));
+						agg.addValue((double) entry.signal);
+					}
+				}
+				aggregatedWifiScans.get(ap).get(bssid).signal = (int) Math.round(agg.getAggregate());
+			}
 		}
 		return aggregatedWifiScans;
 	}
