@@ -198,8 +198,14 @@ public class ModelerUtilsTest {
 		assertEquals(expectedAggregatedEntryBToA, aggregateMap.get(apA).get(bssidB));
 
 		// TODO test out of order wifiscans
-		// TODO should aggregation "skip" or "break" at mismatched entries?
-
+		WifiScanEntry entryBToA3 = TestUtils.createWifiScanEntryWithBssid(2, bssidB); // different channel
+		entryBToA3.signal = -64;
+		entryBToA3.unixTimeMs += 3 * obsoletionPeriodMs - 1;
+		dataModel.latestWifiScans.get(apA).add(Arrays.asList(entryBToA3));
+		expectedAggregatedEntryBToA = new WifiScanEntry(entryBToA2); // use the most recent entry
+		expectedAggregatedEntryBToA.signal = -63; // average of -62 and -64 (skipping -60, different channel)
+		aggregateMap = ModelerUtils.getAggregatedWifiScans(dataModel, obsoletionPeriodMs, new MeanAggregator());
+		assertEquals(expectedAggregatedEntryBToA, aggregateMap.get(apA).get(bssidB));
 	}
 
 //	@Test

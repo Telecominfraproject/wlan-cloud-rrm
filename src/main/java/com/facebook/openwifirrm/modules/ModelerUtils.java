@@ -252,11 +252,11 @@ public class ModelerUtils {
 	 * @param agg                an aggregator to calculate the aggregated RSSI
 	 *                           given recent wifiscan entries' RSSIs.
 	 * @return a map from AP serial number to a map from BSSID to an "aggregated
-	 *         wifiscan entry" (i.e., a single entry with its {@code signal}
-	 *         attribute modified to be the aggregated signal value instead of the
-	 *         value in just the most recent entry for that (AP serial number,
-	 *         BSSID) tuple. The returned map will only contain APs which received
-	 *         at least one non-obsolete wifiscan entry from a BSS.
+	 *         wifiscan entry". This aggregated entry is the most recent entry with
+	 *         its {@code signal} attribute modified to be the aggregated signal
+	 *         value instead of the value in just the most recent entry for that (AP
+	 *         serial number, BSSID) tuple. The returned map will only contain APs
+	 *         which received at least one non-obsolete wifiscan entry from a BSS.
 	 */
 	public static Map<String, Map<String, WifiScanEntry>> getAggregatedWifiScans(Modeler.DataModel dataModel,
 			long obsoletionPeriodMs,
