@@ -397,8 +397,8 @@ public class DataCollector implements Runnable {
 			);
 			return false;
 		}
-		List<WifiScanEntry> scanEntries =
-			UCentralUtils.parseWifiScanEntries(wifiScanResult.results);
+		List<WifiScanEntry> scanEntries = UCentralUtils.parseWifiScanEntries(wifiScanResult.results,
+				wifiScanResult.executed);
 		if (scanEntries == null) {
 			logger.error(
 				"Device {}: wifi scan returned unexpected result", serialNumber

@@ -96,9 +96,12 @@ public class UCentralUtils {
 	/**
 	 * Parse a JSON wifi scan result into a list of WifiScanEntry objects.
 	 *
-	 * Returns null if any parsing/deserialization error occurred.
+	 * @param result           result of the wifiscan
+	 * @param timestampSeconds Unix time in seconds
+	 * @return list of wifiscan entries, or null if any parsing/deserialization
+	 *         error occurred.
 	 */
-	public static List<WifiScanEntry> parseWifiScanEntries(JsonObject result) {
+	public static List<WifiScanEntry> parseWifiScanEntries(JsonObject result, long timestampSeconds) {
 		List<WifiScanEntry> entries = new ArrayList<>();
 		try {
 			JsonArray scanInfo = result
@@ -106,7 +109,7 @@ public class UCentralUtils {
 				.getAsJsonArray("scan");
 			for (JsonElement e : scanInfo) {
 				WifiScanEntry entry = gson.fromJson(e, WifiScanEntry.class);
-				entry.unixTimeMs = System.currentTimeMillis();
+				entry.unixTimeMs = timestampSeconds * 1000;
 				entries.add(entry);
 
 			}

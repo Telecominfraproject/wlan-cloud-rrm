@@ -429,7 +429,14 @@ public class DatabaseManager {
 		return state;
 	}
 
-	/** Insert wifi scan results into the database. */
+	/**
+	 * Insert wifi scan results into the database.
+	 * 
+	 * @param serialNumber serial number
+	 * @param ts           timestamp (Unix time in seconds).
+	 * @param entries      list of wifiscan entries
+	 * @throws SQLException
+	 */
 	public void addWifiScan(
 		String serialNumber, long ts, List<WifiScanEntry> entries
 	) throws SQLException {
