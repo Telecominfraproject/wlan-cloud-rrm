@@ -136,18 +136,13 @@ public class HTOperationElement implements OperationElement {
 
 	@Override
 	public boolean matchesForAggregation(OperationElement otherOper) {
-		// check everything except basicHtMcsSet
 		if (otherOper == null || getClass() == otherOper.getClass()) {
 			return false;
 		}
 		HTOperationElement other = (HTOperationElement) otherOper;
-		return channelCenterFrequencySegment2 == other.channelCenterFrequencySegment2
-				&& dualBeacon == other.dualBeacon && dualCtsProtection == other.dualCtsProtection
-				&& htProtection == other.htProtection
-				&& nongreenfieldHtStasPresent == other.nongreenfieldHtStasPresent
-				&& obssNonHtStasPresent == other.obssNonHtStasPresent && primaryChannel == other.primaryChannel
-				&& rifsMode == other.rifsMode && secondaryChannelOffset == other.secondaryChannelOffset
-				&& staChannelWidth == other.staChannelWidth && stbcBeacon == other.stbcBeacon;
+		return primaryChannel == other.primaryChannel && secondaryChannelOffset == other.secondaryChannelOffset
+				&& staChannelWidth == other.staChannelWidth
+				&& channelCenterFrequencySegment2 == other.channelCenterFrequencySegment2;
 	}
 
 	public static boolean matchesHtForAggregation(String htOper1, String htOper2) {
