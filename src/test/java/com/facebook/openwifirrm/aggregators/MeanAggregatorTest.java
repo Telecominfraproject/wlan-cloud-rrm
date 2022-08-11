@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package com.facebook.openwifirrm.modules.aggregators;
+package com.facebook.openwifirrm.aggregators;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
