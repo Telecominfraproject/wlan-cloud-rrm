@@ -137,8 +137,10 @@ public class UCentralUtils {
 		// Iterate all the radios of an AP to find the corresponding band
 		for (int radioIndex = 0; radioIndex < radioCount; radioIndex++) {
 			JsonObject radioConfig = config.getRadioConfig(radioIndex);
+			if (radioConfig == null) {
+				continue;
+			}
 			String operationalBand = radioConfig.get("band").getAsString();
-
 			if (!newValueList.containsKey(operationalBand)) {
 				continue;
 			}

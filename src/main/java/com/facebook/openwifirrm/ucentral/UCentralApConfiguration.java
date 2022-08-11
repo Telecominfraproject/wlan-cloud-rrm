@@ -20,6 +20,7 @@ import com.google.gson.JsonObject;
  * Wrapper around uCentral AP configuration.
  */
 public class UCentralApConfiguration {
+	/** The raw configuration. */
 	private final JsonObject config;
 
 	/** Constructor from JSON string. */
@@ -50,10 +51,10 @@ public class UCentralApConfiguration {
 		return config.getAsJsonArray("radios").size();
 	}
 
-	/** Return all info in the radio config */
+	/** Return all info in the radio config (or an empty array if none). */
 	public JsonArray getRadioConfigList() {
 		if (!config.has("radios") || !config.get("radios").isJsonArray()) {
-			return null;
+			return new JsonArray();
 		}
 		return config.getAsJsonArray("radios");
 	}
@@ -67,21 +68,27 @@ public class UCentralApConfiguration {
 		for (int radioIndex = 0; radioIndex < radioConfigList.size(); radioIndex++) {
 			JsonElement e = radioConfigList.get(radioIndex);
 			if (!e.isJsonObject()) {
-				return radioBandsSet;
+				continue;
 			}
 			JsonObject radioObject = e.getAsJsonObject();
-			String band = radioObject.get("band").getAsString();
-			radioBandsSet.add(band);
+			if (!radioObject.has("band")) {
+				continue;
+			}
+			radioBandsSet.add(radioObject.get("band").getAsString());
 		}
 		return radioBandsSet;
 	}
 
-	/** Return the radio config at the given index. */
+	/** Return the radio config at the given index, or null if invalid. */
 	public JsonObject getRadioConfig(int index) {
 		if (getRadioCount() < index) {
 			return null;
 		}
-		JsonElement e = config.getAsJsonArray("radios").get(index);
+		JsonArray radios = config.getAsJsonArray("radios");
+		if (radios == null) {
+			return null;
+		}
+		JsonElement e = radios.get(index);
 		if (!e.isJsonObject()) {
 			return null;
 		}
