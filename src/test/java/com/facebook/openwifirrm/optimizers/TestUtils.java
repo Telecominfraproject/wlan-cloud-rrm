@@ -112,12 +112,9 @@ public class TestUtils {
 	 * responsibility to make sure {@code channel}, {@code htOper}, and
 	 * {@code vhtOper} are consistent.
 	 */
-	public static WifiScanEntry createWifiScanEntryWithWidth(
-		int channel,
-		String htOper,
-		String vhtOper
-	) {
+	public static WifiScanEntry createWifiScanEntryWithWidth(String bssid, int channel, String htOper, String vhtOper) {
 		WifiScanEntry entry = new WifiScanEntry();
+		entry.bssid = bssid;
 		entry.channel = channel;
 		entry.frequency = UCentralUtils.channelToFrequencyMHz(channel);
 		entry.signal = -60;
@@ -133,17 +130,15 @@ public class TestUtils {
 	 * responsibility to make sure {@code channels}, {@code htOper}, and
 	 * {@code vhtOper} are consistent.
 	 */
-	public static List<WifiScanEntry> createWifiScanListWithWidth(
-		List<Integer> channels,
-		List<String> htOper,
-		List<String> vhtOper
-	) {
+	public static List<WifiScanEntry> createWifiScanListWithWidth(String bssid, List<Integer> channels,
+			List<String> htOper, List<String> vhtOper) {
 		List<WifiScanEntry> wifiScanResults = new ArrayList<>();
 		for (int i = 0; i < channels.size(); i++) {
 			WifiScanEntry wifiScanResult = createWifiScanEntryWithWidth(
-				channels.get(i),
-				((i >= htOper.size()) ? null : htOper.get(i)),
-				((i >= vhtOper.size()) ? null : vhtOper.get(i))
+					bssid,
+					channels.get(i),
+					((i >= htOper.size()) ? null : htOper.get(i)),
+					((i >= vhtOper.size()) ? null : vhtOper.get(i))
 			);
 			wifiScanResults.add(wifiScanResult);
 		}

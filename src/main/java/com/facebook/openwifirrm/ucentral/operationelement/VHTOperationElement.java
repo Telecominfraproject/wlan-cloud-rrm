@@ -114,8 +114,11 @@ public class VHTOperationElement implements OperationElement {
 	 *         otherwise.
 	 */
 	public static boolean matchesVhtForAggregation(String vhtOper1, String vhtOper2) {
-		if (vhtOper1 == vhtOper2) { // serves as a null check
-			return true;
+		if (Objects.equals(vhtOper1, vhtOper2)) {
+			return true; // true if both are null or they are equal
+		}
+		if (vhtOper1 == null || vhtOper2 == null) {
+			return false; // false if exactly one is null
 		}
 		VHTOperationElement vhtOperObj1 = new VHTOperationElement(vhtOper1);
 		VHTOperationElement vhtOperObj2 = new VHTOperationElement(vhtOper2);

@@ -54,7 +54,8 @@ public class HTOperationElement implements OperationElement {
 	private final boolean obssNonHtStasPresent;
 	/**
 	 * Defines the channel center frequency for a 160 or 80+80 MHz BSS bandwidth
-	 * with NSS support less than Max VHT NSS. See 802.11 for details.
+	 * with NSS support less than Max VHT NSS. This is 0 for non-VHT STAs. See
+	 * 802.11 for details.
 	 */
 	private final byte channelCenterFrequencySegment2;
 	/** False if no STBC beacon is transmitted; true otherwise. */
@@ -102,9 +103,11 @@ public class HTOperationElement implements OperationElement {
 		this.basicHtMcsSet = new byte[16];
 	}
 
-	/** Default constructor. */
-	public HTOperationElement() {
-		this((byte) 1, (byte) 0, false, false, (byte) 0, true, false, (byte) 0, false, false, false);
+	/** Constructor with the most used parameters. */
+	public HTOperationElement(byte primaryChannel, byte secondaryChannelOffset, boolean staChannelWidth,
+			byte channelCenterFrequencySegment2) {
+		this(primaryChannel, secondaryChannelOffset, staChannelWidth, false, (byte) 0, true, false,
+				channelCenterFrequencySegment2, false, false, false);
 	}
 
 	/**
@@ -157,8 +160,11 @@ public class HTOperationElement implements OperationElement {
 	 *         otherwise.
 	 */
 	public static boolean matchesHtForAggregation(String htOper1, String htOper2) {
-		if (htOper1 == htOper2) { // serves as a null check
-			return true;
+		if (Objects.equals(htOper1, htOper2)) {
+			return true; // true if both are null or they are equal
+		}
+		if (htOper1 == null || htOper2 == null) {
+			return false; // false if exactly one is null
 		}
 		HTOperationElement htOperObj1 = new HTOperationElement(htOper1);
 		HTOperationElement htOperObj2 = new HTOperationElement(htOper2);
