@@ -22,9 +22,9 @@ import org.slf4j.LoggerFactory;
 import com.facebook.openwifirrm.DeviceConfig;
 import com.facebook.openwifirrm.DeviceDataManager;
 import com.facebook.openwifirrm.modules.Modeler.DataModel;
+import com.facebook.openwifirrm.modules.ModelerUtils;
 import com.facebook.openwifirrm.ucentral.UCentralConstants;
 import com.facebook.openwifirrm.ucentral.models.State;
-import com.facebook.openwifirrm.modules.ModelerUtils;
 
 /**
  * Location-based optimal TPC algorithm.
@@ -33,6 +33,9 @@ import com.facebook.openwifirrm.modules.ModelerUtils;
  */
 public class LocationBasedOptimalTPC extends TPC {
 	private static final Logger logger = LoggerFactory.getLogger(LocationBasedOptimalTPC.class);
+
+	/** The RRM algorithm ID. */
+	public static final String ALGORITHM_ID = "location_optimal";
 
 	/** Constructor. */
 	public LocationBasedOptimalTPC(
@@ -165,8 +168,8 @@ public class LocationBasedOptimalTPC extends TPC {
 			// Generate the required location data for the optimization
 			if (
 				deviceCfg.location.size() == 2 &&
-				deviceCfg.location.get(0) >= 0 && 
-				deviceCfg.location.get(1) >= 0 
+				deviceCfg.location.get(0) >= 0 &&
+				deviceCfg.location.get(1) >= 0
 			) {
 				apLocX.add(deviceCfg.location.get(0).doubleValue());
 				apLocY.add(deviceCfg.location.get(1).doubleValue());

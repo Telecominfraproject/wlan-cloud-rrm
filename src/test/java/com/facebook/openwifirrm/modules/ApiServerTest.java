@@ -16,7 +16,9 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,13 +32,13 @@ import com.facebook.openwifirrm.DeviceConfig;
 import com.facebook.openwifirrm.DeviceDataManager;
 import com.facebook.openwifirrm.DeviceLayeredConfig;
 import com.facebook.openwifirrm.DeviceTopology;
+import com.facebook.openwifirrm.RRMAlgorithm;
 import com.facebook.openwifirrm.RRMConfig;
 import com.facebook.openwifirrm.VersionProvider;
 import com.facebook.openwifirrm.mysql.DatabaseManager;
-import com.facebook.openwifirrm.ucentral.UCentralConstants;
 import com.facebook.openwifirrm.ucentral.UCentralClient;
+import com.facebook.openwifirrm.ucentral.UCentralConstants;
 import com.facebook.openwifirrm.ucentral.UCentralKafkaConsumer;
-import com.facebook.openwifirrm.ucentral.UCentralUtils;
 import com.google.gson.Gson;
 
 import kong.unirest.HttpResponse;
@@ -117,7 +119,7 @@ public class ApiServerTest {
 		// Instantiate ApiServer
 		this.server = new ApiServer(
 			rrmConfig.moduleConfig.apiServerParams,
-			UCentralUtils.generateServiceKey(rrmConfig.serviceConfig),
+			rrmConfig.serviceConfig,
 			deviceDataManager,
 			configManager,
 			modeler,
@@ -393,9 +395,9 @@ public class ApiServerTest {
 		final String[] modes = new String[] { "random", "least_used", "unmanaged_aware" };
 		for (String mode : modes) {
 			String endpoint = String.format("%s?mode=%s&zone=%s", url, mode, zone);
-			HttpResponse<JsonNode> simpleResp = Unirest.get(endpoint).asJson();
-			assertEquals(200, simpleResp.getStatus());
-			assertNotNull(simpleResp.getBody().getObject().getJSONObject("data"));
+			HttpResponse<JsonNode> resp = Unirest.get(endpoint).asJson();
+			assertEquals(200, resp.getStatus());
+			assertNotNull(resp.getBody().getObject().getJSONObject("data"));
 		}
 
 		// Missing/wrong parameters
@@ -419,9 +421,9 @@ public class ApiServerTest {
 		final String[] modes = new String[] { "random", "measure_ap_client", "measure_ap_ap", "location_optimal" };
 		for (String mode : modes) {
 			String endpoint = String.format("%s?mode=%s&zone=%s", url, mode, zone);
-			HttpResponse<JsonNode> simpleResp = Unirest.get(endpoint).asJson();
-			assertEquals(200, simpleResp.getStatus());
-			assertNotNull(simpleResp.getBody().getObject().getJSONObject("data"));
+			HttpResponse<JsonNode> resp = Unirest.get(endpoint).asJson();
+			assertEquals(200, resp.getStatus());
+			assertNotNull(resp.getBody().getObject().getJSONObject("data"));
 		}
 
 		// Missing/wrong parameters
@@ -478,5 +480,53 @@ public class ApiServerTest {
 		HttpResponse<JsonNode> resp = Unirest.get(endpoint("/api/v1/system?command=info")).asJson();
 		assertEquals(200, resp.getStatus());
 		assertEquals(VersionProvider.get(), resp.getBody().getObject().getString("version"));
+	}
+
+	@Test
+	@Order(2001)
+	void test_provider() throws Exception {
+		HttpResponse<JsonNode> resp = Unirest.get(endpoint("/api/v1/provider")).asJson();
+		assertEquals(200, resp.getStatus());
+		assertEquals(rrmConfig.serviceConfig.vendor, resp.getBody().getObject().getString("vendor"));
+		assertEquals(rrmConfig.serviceConfig.vendorUrl, resp.getBody().getObject().getString("about"));
+		assertEquals(VersionProvider.get(), resp.getBody().getObject().getString("version"));
+	}
+
+	@Test
+	@Order(2002)
+	void test_algorithms() throws Exception {
+		HttpResponse<JsonNode> resp = Unirest.get(endpoint("/api/v1/algorithms")).asJson();
+		assertEquals(200, resp.getStatus());
+		assertEquals(RRMAlgorithm.AlgorithmType.values().length, resp.getBody().getArray().length());
+	}
+
+	@Test
+	@Order(2003)
+	void test_runRRM() throws Exception {
+		String url = endpoint("/api/v1/runRRM");
+
+		// Create topology
+		final String zone = "test-zone";
+		DeviceTopology topology = new DeviceTopology();
+		topology.put(zone, new TreeSet<>(Arrays.asList("aaaaaaaaaaa")));
+		deviceDataManager.setTopology(topology);
+
+		// Correct requests
+		final List<String> algorithms = Arrays
+			.stream(RRMAlgorithm.AlgorithmType.values())
+			.map(RRMAlgorithm.AlgorithmType::name)
+			.collect(Collectors.toList());
+		for (String name : algorithms) {
+			String endpoint = String.format("%s?algorithm=%s&venue=%s", url, name, zone);
+			HttpResponse<JsonNode> resp = Unirest.put(endpoint).asJson();
+			assertEquals(200, resp.getStatus());
+			assertFalse(resp.getBody().getObject().has("error"));
+			assertEquals(1, resp.getBody().getObject().keySet().size());
+		}
+
+		// Missing/wrong parameters
+		assertEquals(400, Unirest.put(url).asString().getStatus());
+		assertEquals(400, Unirest.put(url + "?mode=test123&venue=" + zone).asString().getStatus());
+		assertEquals(400, Unirest.put(url + "?venue=asdf&algorithm=" + algorithms.get(0)).asString().getStatus());
 	}
 }

@@ -10,6 +10,22 @@ tags:
 - name: Config
 - name: Optimization
 paths:
+  /api/v1/algorithms:
+    get:
+      tags:
+      - SDK
+      summary: Get RRM algorithms
+      description: Returns the RRM algorithm list.
+      operationId: algorithms
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Algorithm'
   /api/v1/currentModel:
     get:
       tags:
@@ -150,7 +166,7 @@ paths:
       - name: mode
         in: query
         description: "The assignment algorithm to use:\n- random: random tx power\
-          \ initialier\n- measure_ap_client: measurement-based AP-client TPC algorithm\n\
+          \ initializer\n- measure_ap_client: measurement-based AP-client TPC algorithm\n\
           - measure_ap_ap: measurement-based AP-AP TPC algorithm\n- location_optimal:\
           \ location-based optimal TPC algorithm\n"
         required: true
@@ -179,6 +195,57 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/TxPowerAllocation'
+  /api/v1/provider:
+    get:
+      tags:
+      - SDK
+      summary: Get RRM provider info
+      description: Returns the RRM provider info.
+      operationId: provider
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Provider'
+  /api/v1/runRRM:
+    put:
+      tags:
+      - SDK
+      summary: Run RRM algorithm
+      description: Run a specific RRM algorithm now.
+      operationId: runRRM
+      parameters:
+      - name: algorithm
+        in: query
+        description: The algorithm name
+        required: true
+        schema:
+          type: string
+      - name: args
+        in: query
+        description: The algorithm arguments
+        schema:
+          type: string
+      - name: venue
+        in: query
+        description: The RF zone
+        required: true
+        schema:
+          type: string
+      - name: mock
+        in: query
+        description: Do not apply changes
+        schema:
+          type: boolean
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AlgorithmResult'
   /api/v1/setDeviceApConfig:
     post:
       tags:
@@ -287,13 +354,30 @@ paths:
           - info
       responses:
         "200":
-          description: Successful command execution
+          description: Success
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/SystemInfoResults'
 components:
   schemas:
+    Algorithm:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        shortName:
+          type: string
+        parameterFormat:
+          type: string
+        parameterSamples:
+          type: array
+          items:
+            type: string
+        helper:
+          type: string
     DeviceConfig:
       type: object
       properties:
@@ -359,10 +443,6 @@ components:
       properties:
         name:
           type: string
-        args:
-          type: object
-          additionalProperties:
-            type: string
     RRMSchedule:
       type: object
       properties:
@@ -401,6 +481,36 @@ components:
       type: object
       properties:
         data:
+          type: object
+          additionalProperties:
+            type: object
+            additionalProperties:
+              type: integer
+              format: int32
+    Provider:
+      type: object
+      properties:
+        vendor:
+          type: string
+        vendorShortname:
+          type: string
+        version:
+          type: string
+        about:
+          type: string
+    AlgorithmResult:
+      type: object
+      properties:
+        error:
+          type: string
+        channelMap:
+          type: object
+          additionalProperties:
+            type: object
+            additionalProperties:
+              type: integer
+              format: int32
+        txPowerMap:
           type: object
           additionalProperties:
             type: object

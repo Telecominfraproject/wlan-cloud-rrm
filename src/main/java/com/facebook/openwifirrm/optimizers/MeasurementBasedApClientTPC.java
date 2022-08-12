@@ -32,12 +32,15 @@ import com.google.gson.JsonObject;
 public class MeasurementBasedApClientTPC extends TPC {
 	private static final Logger logger = LoggerFactory.getLogger(MeasurementBasedApClientTPC.class);
 
+	/** The RRM algorithm ID. */
+	public static final String ALGORITHM_ID = "measure_ap_client";
+
 	/** Default target MCS index. */
 	public static final int DEFAULT_TARGET_MCS = 8;
 
 	/** Default tx power. */
 	public static final int DEFAULT_TX_POWER = 10;
-	
+
 	/** Mapping of MCS index to required SNR (dB) in 802.11ac. */
 	private static final List<Double> MCS_TO_SNR = Collections.unmodifiableList(
 		Arrays.asList(

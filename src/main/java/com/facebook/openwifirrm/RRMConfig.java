@@ -41,6 +41,24 @@ public class RRMConfig {
 		 * (<tt>SERVICECONFIG_PUBLICENDPOINT</tt>)
 		 */
 		public String publicEndpoint = "";
+
+		/**
+		 * RRM vendor name
+		 * (<tt>SERVICECONFIG_VENDOR</tt>)
+		 */
+		public String vendor = "Meta";
+
+		/**
+		 * RRM vendor URL
+		 * (<tt>SERVICECONFIG_VENDORURL</tt>)
+		 */
+		public String vendorUrl = "https://github.com/Telecominfraproject/wlan-cloud-rrm";
+
+		/**
+		 * RRM reference URL
+		 * (<tt>SERVICECONFIG_VENDORREFERENCEURL</tt>)
+		 */
+		public String vendorReferenceUrl = "https://github.com/Telecominfraproject/wlan-cloud-rrm/blob/main/ALGORITHMS.md";
 	}
 
 	/** Service configuration. */
@@ -389,6 +407,15 @@ public class RRMConfig {
 		}
 		if ((v = env.get("SERVICECONFIG_PUBLICENDPOINT")) != null) {
 			serviceConfig.publicEndpoint = v;
+		}
+		if ((v = env.get("SERVICECONFIG_VENDOR")) != null) {
+			serviceConfig.vendor = v;
+		}
+		if ((v = env.get("SERVICECONFIG_VENDORURL")) != null) {
+			serviceConfig.vendorUrl = v;
+		}
+		if ((v = env.get("SERVICECONFIG_VENDORREFERENCEURL")) != null) {
+			serviceConfig.vendorReferenceUrl = v;
 		}
 
 		/* UCentralConfig */

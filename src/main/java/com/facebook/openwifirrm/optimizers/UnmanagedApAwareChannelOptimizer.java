@@ -25,11 +25,14 @@ import com.facebook.openwifirrm.ucentral.UCentralUtils.WifiScanEntry;
 /**
  * Unmanaged AP aware least used channel optimizer.
  * <p>
- * Randomly assign APs to the channel with the least channel weight, 
+ * Randomly assign APs to the channel with the least channel weight,
  * where channel weight = DEFAULT_WEIGHT * (number of unmanaged APs) + (number of managed APs).
  */
 public class UnmanagedApAwareChannelOptimizer extends LeastUsedChannelOptimizer {
 	private static final Logger logger = LoggerFactory.getLogger(UnmanagedApAwareChannelOptimizer.class);
+
+	/** The RRM algorithm ID. */
+	public static final String ALGORITHM_ID = "unmanaged_aware";
 
 	/** The default weight for nonOWF APs. */
 	private static final int DEFAULT_WEIGHT = 2;
