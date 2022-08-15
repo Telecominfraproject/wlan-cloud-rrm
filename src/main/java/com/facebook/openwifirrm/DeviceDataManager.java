@@ -106,7 +106,15 @@ public class DeviceDataManager {
 			// Read file
 			logger.info("Reading topology file '{}'", topologyFile.getPath());
 			String contents = Utils.readFile(topologyFile);
-			topo = gson.fromJson(contents, DeviceTopology.class);
+			if (contents == null || contents.isBlank()) {
+				// Blank file, write defaults to disk
+				logger.info("Topology file '{}' is blank, writing to it...", topologyFile.getPath());
+				topo = new DeviceTopology();
+				Utils.writeJsonFile(topologyFile, topo);
+			} else {
+				topo = gson.fromJson(contents, DeviceTopology.class);
+			}
+
 		}
 		validateTopology(topo);
 		return topo;
