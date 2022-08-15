@@ -427,7 +427,8 @@ public class ApiServer implements Runnable {
 					content = @Content(
 						schema = @Schema(implementation = SystemInfoResults.class)
 					)
-				)
+				),
+				@ApiResponse(responseCode = "400", description = "Bad Request")
 			}
 		)
 		@Override
@@ -587,7 +588,8 @@ public class ApiServer implements Runnable {
 					content = @Content(
 						schema = @Schema(implementation = RRMAlgorithm.AlgorithmResult.class)
 					)
-				)
+				),
+				@ApiResponse(responseCode = "400", description = "Bad Request")
 			}
 		)
 		@Override
@@ -682,14 +684,8 @@ public class ApiServer implements Runnable {
 				required = true
 			),
 			responses = {
-				@ApiResponse(
-					responseCode = "200",
-					description = "Success"
-				),
-				@ApiResponse(
-					responseCode = "400",
-					description = "Bad request"
-				)
+				@ApiResponse(responseCode = "200", description = "Success"),
+				@ApiResponse(responseCode = "400", description = "Bad Request")
 			}
 		)
 		@Override
@@ -770,7 +766,8 @@ public class ApiServer implements Runnable {
 					content = @Content(
 						schema = @Schema(implementation = DeviceConfig.class)
 					)
-				)
+				),
+				@ApiResponse(responseCode = "400", description = "Bad Request")
 			}
 		)
 		@Override
@@ -817,14 +814,8 @@ public class ApiServer implements Runnable {
 				required = true
 			),
 			responses = {
-				@ApiResponse(
-					responseCode = "200",
-					description = "Success"
-				),
-				@ApiResponse(
-					responseCode = "400",
-					description = "Bad request"
-				)
+				@ApiResponse(responseCode = "200", description = "Success"),
+				@ApiResponse(responseCode = "400", description = "Bad Request")
 			}
 		)
 		@Override
@@ -880,14 +871,8 @@ public class ApiServer implements Runnable {
 				required = true
 			),
 			responses = {
-				@ApiResponse(
-					responseCode = "200",
-					description = "Success"
-				),
-				@ApiResponse(
-					responseCode = "400",
-					description = "Bad request"
-				)
+				@ApiResponse(responseCode = "200", description = "Success"),
+				@ApiResponse(responseCode = "400", description = "Bad Request")
 			}
 		)
 		@Override
@@ -949,14 +934,8 @@ public class ApiServer implements Runnable {
 				required = true
 			),
 			responses = {
-				@ApiResponse(
-					responseCode = "200",
-					description = "Success"
-				),
-				@ApiResponse(
-					responseCode = "400",
-					description = "Bad request"
-				)
+				@ApiResponse(responseCode = "200", description = "Success"),
+				@ApiResponse(responseCode = "400", description = "Bad Request")
 			}
 		)
 		@Override
@@ -1017,14 +996,8 @@ public class ApiServer implements Runnable {
 				required = true
 			),
 			responses = {
-				@ApiResponse(
-					responseCode = "200",
-					description = "Success"
-				),
-				@ApiResponse(
-					responseCode = "400",
-					description = "Bad request"
-				)
+				@ApiResponse(responseCode = "200", description = "Success"),
+				@ApiResponse(responseCode = "400", description = "Bad Request")
 			}
 		)
 		@Override
@@ -1158,7 +1131,8 @@ public class ApiServer implements Runnable {
 							implementation = ChannelAllocation.class
 						)
 					)
-				)
+				),
+				@ApiResponse(responseCode = "400", description = "Bad Request")
 			}
 		)
 		@Override
@@ -1262,7 +1236,8 @@ public class ApiServer implements Runnable {
 							implementation = TxPowerAllocation.class
 						)
 					)
-				)
+				),
+				@ApiResponse(responseCode = "400", description = "Bad Request")
 			}
 		)
 		@Override

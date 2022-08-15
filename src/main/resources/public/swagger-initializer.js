@@ -4,6 +4,11 @@ window.onload = function() {
     defaultModelsExpandDepth: 0,
     dom_id: '#swagger-ui',
     deepLinking: true,
+    syntaxHighlight: {
+      /* https://github.com/swagger-api/swagger-ui/issues/3832 */
+      activated: false,
+      theme: "agate"
+    },
     presets: [
       SwaggerUIBundle.presets.apis,
       SwaggerUIStandalonePreset
