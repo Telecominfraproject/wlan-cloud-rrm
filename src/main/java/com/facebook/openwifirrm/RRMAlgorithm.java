@@ -60,10 +60,16 @@ public class RRMAlgorithm {
 		/** The error string, only set upon failure to execute the algorithm. */
 		public String error;
 
-		/** Computed channel assignments. */
+		/**
+		 * Computed channel assignments.
+		 * @see {@link ChannelOptimizer#computeChannelMap()}
+		 */
 		public Map<String, Map<String, Integer>> channelMap;
 
-		/** Computed tx power assignments. */
+		/**
+		 * Computed tx power assignments.
+		 * @see {@link TPC#computeTxPowerMap()}
+		 */
 		public Map<String, Map<String, Integer>> txPowerMap;
 	}
 
@@ -135,7 +141,7 @@ public class RRMAlgorithm {
 	 * @param zone the RF zone
 	 * @param dryRun if set, do not apply changes
 	 * @param allowDefaultMode if false, "mode" argument must be present and
-	 *                         valid (returns false if invalid)
+	 *                         valid (returns error if invalid)
 	 *
 	 * @return the algorithm result, with exactly one field set ("error" upon
 	 *         failure, any others upon success)
