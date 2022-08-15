@@ -35,6 +35,9 @@ import com.facebook.openwifirrm.ucentral.models.State;
 public class LeastUsedChannelOptimizer extends ChannelOptimizer {
 	private static final Logger logger = LoggerFactory.getLogger(LeastUsedChannelOptimizer.class);
 
+	/** The RRM algorithm ID. */
+	public static final String ALGORITHM_ID = "least_used";
+
 	/** The window size for overlapping channels. */
 	protected static final int OVERLAP_WINDOW = 4;
 

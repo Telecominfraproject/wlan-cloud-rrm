@@ -26,6 +26,9 @@ import com.facebook.openwifirrm.ucentral.UCentralConstants;
 public class RandomTxPowerInitializer extends TPC {
 	private static final Logger logger = LoggerFactory.getLogger(RandomTxPowerInitializer.class);
 
+	/** The RRM algorithm ID. */
+	public static final String ALGORITHM_ID = "random";
+
 	/** Default tx power. */
 	public static final int DEFAULT_TX_POWER = 23;
 

@@ -38,6 +38,9 @@ import com.google.gson.JsonObject;
 public class MeasurementBasedApApTPC extends TPC {
 	private static final Logger logger = LoggerFactory.getLogger(MeasurementBasedApApTPC.class);
 
+	/** The RRM algorithm ID. */
+	public static final String ALGORITHM_ID = "measure_ap_ap";
+
 	/**
 	 * Default coverage threshold between APs, in dBm.
 	 *

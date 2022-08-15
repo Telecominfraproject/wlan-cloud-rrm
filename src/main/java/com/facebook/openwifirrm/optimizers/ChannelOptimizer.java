@@ -374,7 +374,7 @@ public abstract class ChannelOptimizer {
 			if (scanRespsFiltered.size() == 0) {
 				// 3. Filter out APs with empty scan results (on a particular band)
 				logger.debug(
-					"Device {}: Empty wifi scan results on {} band, skipping..",
+					"Device {}: Empty wifi scan results on {} band, skipping...",
 					serialNumber,
 					band
 				);

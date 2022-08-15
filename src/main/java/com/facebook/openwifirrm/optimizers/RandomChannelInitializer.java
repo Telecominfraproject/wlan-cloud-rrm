@@ -33,6 +33,9 @@ import com.facebook.openwifirrm.ucentral.models.State;
 public class RandomChannelInitializer extends ChannelOptimizer {
 	private static final Logger logger = LoggerFactory.getLogger(RandomChannelInitializer.class);
 
+	/** The RRM algorithm ID. */
+	public static final String ALGORITHM_ID = "random";
+
 	/** The PRNG instance. */
 	private final Random rng = new Random();
 

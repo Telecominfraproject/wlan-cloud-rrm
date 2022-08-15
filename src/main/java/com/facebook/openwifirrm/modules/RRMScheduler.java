@@ -10,7 +10,6 @@ package com.facebook.openwifirrm.modules;
 
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -33,23 +32,19 @@ import org.slf4j.LoggerFactory;
 
 import com.facebook.openwifirrm.DeviceConfig;
 import com.facebook.openwifirrm.DeviceDataManager;
+import com.facebook.openwifirrm.RRMAlgorithm;
 import com.facebook.openwifirrm.RRMConfig.ModuleConfig.RRMSchedulerParams;
-import com.facebook.openwifirrm.RRMSchedule.RRMAlgorithm;
-import com.facebook.openwifirrm.optimizers.ChannelOptimizer;
-import com.facebook.openwifirrm.optimizers.LeastUsedChannelOptimizer;
-import com.facebook.openwifirrm.optimizers.LocationBasedOptimalTPC;
-import com.facebook.openwifirrm.optimizers.MeasurementBasedApApTPC;
-import com.facebook.openwifirrm.optimizers.MeasurementBasedApClientTPC;
-import com.facebook.openwifirrm.optimizers.RandomChannelInitializer;
-import com.facebook.openwifirrm.optimizers.RandomTxPowerInitializer;
-import com.facebook.openwifirrm.optimizers.TPC;
-import com.facebook.openwifirrm.optimizers.UnmanagedApAwareChannelOptimizer;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 /**
  * RRM scheduler, implemented using Quartz.
  */
 public class RRMScheduler {
 	private static final Logger logger = LoggerFactory.getLogger(RRMScheduler.class);
+
+	/** The gson instance. */
+	private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
 	/** SchedulerContext key holding the RRMScheduler instance. */
 	private static final String SCHEDULER_CONTEXT_RRMSCHEDULER = "RRMScheduler";
@@ -224,10 +219,6 @@ public class RRMScheduler {
 	protected void performRRM(String zone) {
 		logger.info("Starting scheduled RRM for zone '{}'", zone);
 
-		// TODO better place for these definitions
-		final String RRM_ALGORITHM_CHANNEL = "optimizeChannel";
-		final String RRM_ALGORITHM_TPC = "optimizeTxPower";
-
 		// Get algorithms from zone config
 		DeviceConfig config = deviceDataManager.getZoneConfig(zone);
 		if (config.schedule == null) {
@@ -240,94 +231,25 @@ public class RRMScheduler {
 		) {
 			logger.debug("Using default RRM algorithms for zone '{}'", zone);
 			config.schedule.algorithms = Arrays.asList(
-				new RRMAlgorithm(RRM_ALGORITHM_CHANNEL, null),
-				new RRMAlgorithm(RRM_ALGORITHM_TPC, null)
+				new RRMAlgorithm(RRMAlgorithm.AlgorithmType.OptimizeChannel.name()),
+				new RRMAlgorithm(RRMAlgorithm.AlgorithmType.OptimizeTxPower.name())
 			);
 		}
 
 		// Execute algorithms
 		for (RRMAlgorithm algo : config.schedule.algorithms) {
-			if (algo.name == null) {
-				continue;
-			}
-
-			String mode = (algo.args != null)
-				? algo.args.getOrDefault("mode", "")
-				: "";
-
-			// TODO de-dupe with ApiServer code
-			switch (algo.name) {
-				case RRM_ALGORITHM_CHANNEL: {
-					logger.info(
-						"> Zone '{}': Running channel optimizer...", zone
-					);
-					ChannelOptimizer optimizer;
-					switch (mode) {
-					case "random":
-						optimizer = new RandomChannelInitializer(
-							modeler.getDataModelCopy(), zone, deviceDataManager
-						);
-						break;
-					case "least_used":
-						optimizer = new LeastUsedChannelOptimizer(
-							modeler.getDataModelCopy(), zone, deviceDataManager
-						);
-						break;
-					case "unmanaged_aware":
-					default:
-						optimizer = new UnmanagedApAwareChannelOptimizer(
-							modeler.getDataModelCopy(), zone, deviceDataManager
-						);
-						break;
-					}
-					Map<String, Map<String, Integer>> channelMap =
-						optimizer.computeChannelMap();
-					if (!params.dryRun) {
-						optimizer.applyConfig(
-							deviceDataManager, configManager, channelMap
-						);
-					}
-					break;
-				}
-
-				case RRM_ALGORITHM_TPC: {
-					logger.info(
-						"> Zone '{}': Running tx power optimizer...", zone
-					);
-					TPC optimizer;
-					switch (mode) {
-					case "random":
-						optimizer = new RandomTxPowerInitializer(
-							modeler.getDataModelCopy(), zone, deviceDataManager
-						);
-						break;
-					case "measure_ap_client":
-						optimizer = new MeasurementBasedApClientTPC(
-							modeler.getDataModelCopy(), zone, deviceDataManager
-						);
-						break;
-					case "measure_ap_ap":
-					default:
-						optimizer = new MeasurementBasedApApTPC(
-							modeler.getDataModelCopy(), zone, deviceDataManager
-						);
-						break;
-					case "location_optimal":
-						optimizer = new LocationBasedOptimalTPC(
-							modeler.getDataModelCopy(), zone, deviceDataManager
-						);
-						break;
-					}
-					Map<String, Map<String, Integer>> txPowerMap =
-						optimizer.computeTxPowerMap();
-					if (!params.dryRun) {
-						optimizer.applyConfig(
-							deviceDataManager, configManager, txPowerMap
-						);
-					}
-					break;
-				}
-			}
+			RRMAlgorithm.AlgorithmResult result = algo.run(
+				deviceDataManager,
+				configManager,
+				modeler,
+				zone,
+				params.dryRun,
+				true /* allowDefaultMode */
+			);
+			logger.info(
+				"'{}' result for zone '{}': {}",
+				algo.getName(), zone, gson.toJson(result)
+			);
 		}
 	}
 }

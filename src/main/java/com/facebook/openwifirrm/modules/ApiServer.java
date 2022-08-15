@@ -14,11 +14,15 @@ import java.time.Instant;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
@@ -32,21 +36,24 @@ import com.facebook.openwifirrm.DeviceConfig;
 import com.facebook.openwifirrm.DeviceDataManager;
 import com.facebook.openwifirrm.DeviceLayeredConfig;
 import com.facebook.openwifirrm.DeviceTopology;
+import com.facebook.openwifirrm.RRMAlgorithm;
 import com.facebook.openwifirrm.RRMConfig.ModuleConfig.ApiServerParams;
+import com.facebook.openwifirrm.RRMConfig.ServiceConfig;
 import com.facebook.openwifirrm.Utils.LruCache;
 import com.facebook.openwifirrm.VersionProvider;
-import com.facebook.openwifirrm.optimizers.ChannelOptimizer;
 import com.facebook.openwifirrm.optimizers.LeastUsedChannelOptimizer;
 import com.facebook.openwifirrm.optimizers.LocationBasedOptimalTPC;
 import com.facebook.openwifirrm.optimizers.MeasurementBasedApApTPC;
 import com.facebook.openwifirrm.optimizers.MeasurementBasedApClientTPC;
 import com.facebook.openwifirrm.optimizers.RandomChannelInitializer;
 import com.facebook.openwifirrm.optimizers.RandomTxPowerInitializer;
-import com.facebook.openwifirrm.optimizers.TPC;
 import com.facebook.openwifirrm.optimizers.UnmanagedApAwareChannelOptimizer;
 import com.facebook.openwifirrm.ucentral.UCentralClient;
+import com.facebook.openwifirrm.ucentral.UCentralUtils;
 import com.facebook.openwifirrm.ucentral.gw.models.SystemInfoResults;
 import com.facebook.openwifirrm.ucentral.gw.models.TokenValidationResult;
+import com.facebook.openwifirrm.ucentral.prov.rrm.models.Algorithm;
+import com.facebook.openwifirrm.ucentral.prov.rrm.models.Provider;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -59,6 +66,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 import io.swagger.v3.oas.annotations.info.Info;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
@@ -99,6 +107,9 @@ public class ApiServer implements Runnable {
 	/** The module parameters. */
 	private final ApiServerParams params;
 
+	/** The service config. */
+	private final ServiceConfig serviceConfig;
+
 	/** The service key. */
 	private final String serviceKey;
 
@@ -137,7 +148,7 @@ public class ApiServer implements Runnable {
 	/** Constructor. */
 	public ApiServer(
 		ApiServerParams params,
-		String serviceKey,
+		ServiceConfig serviceConfig,
 		DeviceDataManager deviceDataManager,
 		ConfigManager configManager,
 		Modeler modeler,
@@ -145,7 +156,8 @@ public class ApiServer implements Runnable {
 		RRMScheduler scheduler
 	) {
 		this.params = params;
-		this.serviceKey = serviceKey;
+		this.serviceConfig = serviceConfig;
+		this.serviceKey = UCentralUtils.generateServiceKey(serviceConfig);
 		this.deviceDataManager = deviceDataManager;
 		this.configManager = configManager;
 		this.modeler = modeler;
@@ -176,6 +188,9 @@ public class ApiServer implements Runnable {
 		Spark.before(this::beforeFilter);
 		Spark.after(this::afterFilter);
 		Spark.get("/api/v1/system", new SystemEndpoint());
+		Spark.get("/api/v1/provider", new ProviderEndpoint());
+		Spark.get("/api/v1/algorithms", new AlgorithmsEndpoint());
+		Spark.put("/api/v1/runRRM", new RunRRMEndpoint());
 		Spark.get("/api/v1/getTopology", new GetTopologyEndpoint());
 		Spark.post("/api/v1/setTopology", new SetTopologyEndpoint());
 		Spark.get(
@@ -408,7 +423,7 @@ public class ApiServer implements Runnable {
 			responses = {
 				@ApiResponse(
 					responseCode = "200",
-					description = "Successful command execution",
+					description = "Success",
 					content = @Content(
 						schema = @Schema(implementation = SystemInfoResults.class)
 					)
@@ -440,6 +455,179 @@ public class ApiServer implements Runnable {
 			}
 			// TODO certificates
 
+			response.type(MediaType.APPLICATION_JSON);
+			return gson.toJson(result);
+		}
+	}
+
+	@Path("/api/v1/provider")
+	public class ProviderEndpoint implements Route {
+		@GET
+		@Produces({ MediaType.APPLICATION_JSON })
+		@Operation(
+			summary = "Get RRM provider info",
+			description = "Returns the RRM provider info.",
+			operationId = "provider",
+			tags = {"SDK"},
+			responses = {
+				@ApiResponse(
+					responseCode = "200",
+					description = "Success",
+					content = @Content(
+						schema = @Schema(implementation = Provider.class)
+					)
+				)
+			}
+		)
+		@Override
+		public String handle(
+			@Parameter(hidden = true) Request request,
+			@Parameter(hidden = true) Response response
+		) {
+			Provider provider = new Provider();
+			provider.vendor = serviceConfig.vendor;
+			provider.vendorShortname =
+				serviceConfig.vendor.replaceAll("[^A-Za-z0-9]", "");
+			provider.version = VersionProvider.get();
+			provider.about = serviceConfig.vendorUrl;
+
+			response.type(MediaType.APPLICATION_JSON);
+			return gson.toJson(provider);
+		}
+	}
+
+	@Path("/api/v1/algorithms")
+	public class AlgorithmsEndpoint implements Route {
+		@GET
+		@Produces({ MediaType.APPLICATION_JSON })
+		@Operation(
+			summary = "Get RRM algorithms",
+			description = "Returns the RRM algorithm list.",
+			operationId = "algorithms",
+			tags = {"SDK"},
+			responses = {
+				@ApiResponse(
+					responseCode = "200",
+					description = "Success",
+					content = @Content(
+						array = @ArraySchema(
+							schema = @Schema(implementation = Algorithm.class)
+						)
+					)
+				)
+			}
+		)
+		@Override
+		public String handle(
+			@Parameter(hidden = true) Request request,
+			@Parameter(hidden = true) Response response
+		) {
+			List<Algorithm> algorithms = Arrays
+				.stream(RRMAlgorithm.AlgorithmType.values())
+				.map(algo -> {
+					Algorithm a = new Algorithm();
+					a.name = algo.longName;
+					a.description = algo.description;
+					a.shortName = algo.name();
+					// comma-separated key=value pairs, see RRMAlgorithm.parse()
+					a.parameterFormat =
+						"((([^,=])+)=(([^,=])+))(,(([^,=])+)=(([^,=])+))*";
+					a.parameterSamples =
+						Arrays.asList("mode=random", "key1=val1,key2=val2");
+					a.helper = serviceConfig.vendorReferenceUrl;
+					return a;
+				}).collect(Collectors.toList());
+
+			response.type(MediaType.APPLICATION_JSON);
+			return gson.toJson(algorithms);
+		}
+	}
+
+	@Path("/api/v1/runRRM")
+	public class RunRRMEndpoint implements Route {
+		@PUT
+		@Produces({ MediaType.APPLICATION_JSON })
+		@Operation(
+			summary = "Run RRM algorithm",
+			description = "Run a specific RRM algorithm now.",
+			operationId = "runRRM",
+			tags = {"SDK"},
+			parameters = {
+				@Parameter(
+					name = "algorithm",
+					description = "The algorithm name",
+					in = ParameterIn.QUERY,
+					schema = @Schema(type = "string"),
+					required = true
+				),
+				@Parameter(
+					name = "args",
+					description = "The algorithm arguments",
+					in = ParameterIn.QUERY,
+					schema = @Schema(type = "string")
+				),
+				@Parameter(
+					name = "venue",
+					description = "The RF zone",
+					in = ParameterIn.QUERY,
+					schema = @Schema(type = "string"),
+					required = true
+				),
+				@Parameter(
+					name = "mock",
+					description = "Do not apply changes",
+					in = ParameterIn.QUERY,
+					schema = @Schema(type = "boolean")
+				)
+			},
+			responses = {
+				@ApiResponse(
+					responseCode = "200",
+					description = "Success",
+					content = @Content(
+						schema = @Schema(implementation = RRMAlgorithm.AlgorithmResult.class)
+					)
+				)
+			}
+		)
+		@Override
+		public String handle(
+			@Parameter(hidden = true) Request request,
+			@Parameter(hidden = true) Response response
+		) {
+			String algorithm = request.queryParamOrDefault("algorithm", "");
+			String args = request.queryParamOrDefault("args", "");
+			String venue = request.queryParamOrDefault("venue", "");
+			boolean mock = request
+				.queryParamOrDefault("mock", "")
+				.equalsIgnoreCase("true");
+
+			// Validate zone
+			if (!deviceDataManager.isZoneInTopology(venue)) {
+				response.status(400);
+				return "Invalid venue";
+			}
+
+			// Validate inputs
+			RRMAlgorithm algo = RRMAlgorithm.parse(algorithm, args);
+			if (algo == null) {
+				response.status(400);
+				return "Invalid inputs";
+			}
+
+			// Run algorithm
+			RRMAlgorithm.AlgorithmResult result = algo.run(
+				deviceDataManager,
+				configManager,
+				modeler,
+				venue,
+				mock,
+				true /* allowDefaultMode */
+			);
+			if (result.error != null) {
+				response.status(400);
+				return result.error;
+			}
 			response.type(MediaType.APPLICATION_JSON);
 			return gson.toJson(result);
 		}
@@ -933,13 +1121,17 @@ public class ApiServer implements Runnable {
 				@Parameter(
 					name = "mode",
 					description = "The assignment algorithm to use:\n"
-							+ "- random: random channel initialization\n"
-							+ "- least_used: least used channel assignment\n"
-							+ "- unmanaged_aware: unmanaged AP aware least used channel assignment\n",
+							+ "- " + RandomChannelInitializer.ALGORITHM_ID + ": random channel initialization\n"
+							+ "- " + LeastUsedChannelOptimizer.ALGORITHM_ID + ": least used channel assignment\n"
+							+ "- " + UnmanagedApAwareChannelOptimizer.ALGORITHM_ID + ": unmanaged AP aware least used channel assignment\n",
 					in = ParameterIn.QUERY,
 					schema = @Schema(
 						type = "string",
-						allowableValues = {"random", "least_used", "unmanaged_aware"}
+						allowableValues = {
+							RandomChannelInitializer.ALGORITHM_ID,
+							LeastUsedChannelOptimizer.ALGORITHM_ID,
+							UnmanagedApAwareChannelOptimizer.ALGORITHM_ID,
+						}
 					),
 					required = true
 				),
@@ -986,43 +1178,26 @@ public class ApiServer implements Runnable {
 				return "Invalid zone";
 			}
 
-			// Get ChannelOptimizer implementation
-			ChannelOptimizer optimizer;
-			switch (mode) {
-			case "random":
-			    // Run random channel initializer
-				optimizer = new RandomChannelInitializer(
-					modeler.getDataModelCopy(), zone, deviceDataManager
-				);
-				break;
-			case "least_used":
-				// Run least used channel optimizer
-				optimizer = new LeastUsedChannelOptimizer(
-					modeler.getDataModelCopy(), zone, deviceDataManager
-				);
-				break;
-			case "unmanaged_aware":
-				// Run unmanaged AP aware least used channel optimizer
-				optimizer = new UnmanagedApAwareChannelOptimizer(
-					modeler.getDataModelCopy(), zone, deviceDataManager
-				);
-				break;
-			default:
+			// Run algorithm
+			Map<String, String> args = new HashMap<>();
+			args.put("mode", mode);
+			RRMAlgorithm algo = new RRMAlgorithm(
+				RRMAlgorithm.AlgorithmType.OptimizeChannel.name(), args
+			);
+			RRMAlgorithm.AlgorithmResult result = algo.run(
+				deviceDataManager,
+				configManager,
+				modeler,
+				zone,
+				dryRun,
+				false /* allowDefaultMode */
+			);
+			if (result.error != null) {
 				response.status(400);
-				return "Invalid mode";
+				return result.error;
 			}
-
-			// Compute channel map
-			Map<String, Map<String, Integer>> channelMap =
-				optimizer.computeChannelMap();
-			if (!dryRun) {
-				optimizer.applyConfig(
-					deviceDataManager, configManager, channelMap
-				);
-			}
-
 			response.type(MediaType.APPLICATION_JSON);
-			return gson.toJson(new ChannelAllocation(channelMap));
+			return gson.toJson(new ChannelAllocation(result.channelMap));
 		}
 	}
 
@@ -1048,14 +1223,19 @@ public class ApiServer implements Runnable {
 				@Parameter(
 					name = "mode",
 					description = "The assignment algorithm to use:\n"
-							+ "- random: random tx power initialier\n"
-							+ "- measure_ap_client: measurement-based AP-client TPC algorithm\n"
-							+ "- measure_ap_ap: measurement-based AP-AP TPC algorithm\n"
-							+ "- location_optimal: location-based optimal TPC algorithm\n",
+							+ "- " + RandomTxPowerInitializer.ALGORITHM_ID + ": random tx power initializer\n"
+							+ "- " + MeasurementBasedApClientTPC.ALGORITHM_ID + ": measurement-based AP-client TPC algorithm\n"
+							+ "- " + MeasurementBasedApApTPC.ALGORITHM_ID + ": measurement-based AP-AP TPC algorithm\n"
+							+ "- " + LocationBasedOptimalTPC.ALGORITHM_ID + ": location-based optimal TPC algorithm\n",
 					in = ParameterIn.QUERY,
 					schema = @Schema(
 						type = "string",
-						allowableValues = {"random", "measure_ap_client", "measure_ap_ap", "location_optimal"}
+						allowableValues = {
+							RandomTxPowerInitializer.ALGORITHM_ID,
+							MeasurementBasedApClientTPC.ALGORITHM_ID,
+							MeasurementBasedApApTPC.ALGORITHM_ID,
+							LocationBasedOptimalTPC.ALGORITHM_ID,
+						}
 					),
 					required = true
 				),
@@ -1102,49 +1282,26 @@ public class ApiServer implements Runnable {
 				return "Invalid zone";
 			}
 
-			// Get TPC implementation
-			TPC optimizer;
-			switch (mode) {
-			case "random":
-			    // Run random tx power initialization
-				optimizer = new RandomTxPowerInitializer(
-					modeler.getDataModelCopy(), zone, deviceDataManager
-				);
-				break;
-			case "measure_ap_client":
-				// Run measurement-based AP-client tx power optimization
-				optimizer = new MeasurementBasedApClientTPC(
-					modeler.getDataModelCopy(), zone, deviceDataManager
-				);
-				break;
-			case "measure_ap_ap":
-				// Run measurement-based AP-AP tx power optimization
-				optimizer = new MeasurementBasedApApTPC(
-					modeler.getDataModelCopy(), zone, deviceDataManager
-				);
-				break;
-			case "location_optimal":
-				// Run location-based optimal tx power optimization
-				optimizer = new LocationBasedOptimalTPC(
-					modeler.getDataModelCopy(), zone, deviceDataManager
-				);
-				break;
-			default:
+			// Run algorithm
+			Map<String, String> args = new HashMap<>();
+			args.put("mode", mode);
+			RRMAlgorithm algo = new RRMAlgorithm(
+				RRMAlgorithm.AlgorithmType.OptimizeTxPower.name(), args
+			);
+			RRMAlgorithm.AlgorithmResult result = algo.run(
+				deviceDataManager,
+				configManager,
+				modeler,
+				zone,
+				dryRun,
+				false /* allowDefaultMode */
+			);
+			if (result.error != null) {
 				response.status(400);
-				return "Invalid mode";
+				return result.error;
 			}
-
-			// Compute tx power map
-			Map<String, Map<String, Integer>> txPowerMap =
-				optimizer.computeTxPowerMap();
-			if (!dryRun) {
-				optimizer.applyConfig(
-					deviceDataManager, configManager, txPowerMap
-				);
-			}
-
 			response.type(MediaType.APPLICATION_JSON);
-			return gson.toJson(new TxPowerAllocation(txPowerMap));
+			return gson.toJson(new TxPowerAllocation(result.txPowerMap));
 		}
 	}
 }

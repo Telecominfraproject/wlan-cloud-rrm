@@ -9,7 +9,6 @@
 package com.facebook.openwifirrm;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * RRM schedule config.
@@ -30,19 +29,4 @@ public class RRMSchedule {
 	 * If empty, all algorithms will be run using default settings.
 	 */
 	public List<RRMAlgorithm> algorithms;
-
-	/** RRM algorithm name and arguments. */
-	public static class RRMAlgorithm {
-		/** The algorithm name. */
-		public String name;
-
-		/** The algorithm arguments. */
-		public Map<String, String> args;
-
-		/** Constructor. */
-		public RRMAlgorithm(String name, Map<String, String> args) {
-			this.name = name;
-			this.args = args;
-		}
-	}
 }
