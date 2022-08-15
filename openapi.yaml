@@ -62,6 +62,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/DeviceConfig'
+        "400":
+          description: Bad Request
   /api/v1/getDeviceLayeredConfig:
     get:
       tags:
@@ -116,7 +118,7 @@ paths:
         "200":
           description: Success
         "400":
-          description: Bad request
+          description: Bad Request
   /api/v1/optimizeChannel:
     get:
       tags:
@@ -155,6 +157,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ChannelAllocation'
+        "400":
+          description: Bad Request
   /api/v1/optimizeTxPower:
     get:
       tags:
@@ -195,6 +199,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/TxPowerAllocation'
+        "400":
+          description: Bad Request
   /api/v1/provider:
     get:
       tags:
@@ -246,6 +252,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AlgorithmResult'
+        "400":
+          description: Bad Request
   /api/v1/setDeviceApConfig:
     post:
       tags:
@@ -271,7 +279,7 @@ paths:
         "200":
           description: Success
         "400":
-          description: Bad request
+          description: Bad Request
   /api/v1/setDeviceNetworkConfig:
     post:
       tags:
@@ -290,7 +298,7 @@ paths:
         "200":
           description: Success
         "400":
-          description: Bad request
+          description: Bad Request
   /api/v1/setDeviceZoneConfig:
     post:
       tags:
@@ -316,7 +324,7 @@ paths:
         "200":
           description: Success
         "400":
-          description: Bad request
+          description: Bad Request
   /api/v1/setTopology:
     post:
       tags:
@@ -335,7 +343,7 @@ paths:
         "200":
           description: Success
         "400":
-          description: Bad request
+          description: Bad Request
   /api/v1/system:
     get:
       tags:
@@ -359,6 +367,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SystemInfoResults'
+        "400":
+          description: Bad Request
 components:
   schemas:
     Algorithm:
