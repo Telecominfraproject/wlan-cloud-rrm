@@ -32,7 +32,6 @@ import com.google.gson.JsonObject;
 /**
  * Measurement-based AP-AP TPC algorithm.
  *
- * TODO: support both 2G and 5G
  * TODO: implement the channel-specific TPC operation
  */
 public class MeasurementBasedApApTPC extends TPC {
@@ -196,6 +195,8 @@ public class MeasurementBasedApApTPC extends TPC {
 		int txDelta = MAX_TX_POWER - currentTxPower;
 		// Represents the highest possible RSSI to be received by that neighboring AP
 		int estimatedRSSI = targetRSSI + txDelta;
+		// this is the same as the following (easier to understand):
+		// newTxPower = (coverageThreshold - targetRSSI) + currentTxPower
 		int newTxPower = MAX_TX_POWER + coverageThreshold - estimatedRSSI;
 		// Bound tx_power by [MIN_TX_POWER, MAX_TX_POWER]
 		if (newTxPower > MAX_TX_POWER) {
@@ -219,7 +220,7 @@ public class MeasurementBasedApApTPC extends TPC {
 	protected void buildTxPowerMapForBand(String band, Map<String, Map<String, Integer>> txPowerMap) {
 		Set<String> managedBSSIDs = getManagedBSSIDs(model);
 		Map<String, List<Integer>> bssidToRssiValues = buildRssiMap(managedBSSIDs, model.latestWifiScans, band);
-		logger.debug("Starting {}", band);
+		logger.debug("Starting TPC for the {} band", band);
 		Map<String, JsonArray> allStatuses = model.latestDeviceStatus;
 		for (String serialNumber : allStatuses.keySet()) {
 			State state = model.latestState.get(serialNumber);
@@ -256,6 +257,7 @@ public class MeasurementBasedApApTPC extends TPC {
 				coverageThreshold,
 				nthSmallestRssi
 			);
+			logger.debug("  Old tx_power: {}", currentTxPower);
 			logger.debug("  New tx_power: {}", newTxPower);
 
 			Map<String, Integer> radioMap = new TreeMap<>();
@@ -267,8 +269,9 @@ public class MeasurementBasedApApTPC extends TPC {
 	@Override
 	public Map<String, Map<String, Integer>> computeTxPowerMap() {
 		Map<String, Map<String, Integer>> txPowerMap = new TreeMap<>();
-		buildTxPowerMapForBand(UCentralConstants.BAND_2G, txPowerMap);
-		buildTxPowerMapForBand(UCentralConstants.BAND_5G, txPowerMap);
+		for (String band : UCentralConstants.BANDS) {
+			buildTxPowerMapForBand(band, txPowerMap);
+		}
 		return txPowerMap;
 	}
 }
