@@ -114,7 +114,6 @@ public class DeviceDataManager {
 			} else {
 				topo = gson.fromJson(contents, DeviceTopology.class);
 			}
-
 		}
 		validateTopology(topo);
 		return topo;
