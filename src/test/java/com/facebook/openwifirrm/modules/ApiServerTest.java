@@ -469,9 +469,39 @@ public class ApiServerTest {
 		assertEquals(404, Unirest.post(fakeEndpoint).asString().getStatus());
 		assertEquals(404, Unirest.put(fakeEndpoint).asString().getStatus());
 		assertEquals(404, Unirest.delete(fakeEndpoint).asString().getStatus());
-		assertEquals(404, Unirest.options(fakeEndpoint).asString().getStatus());
 		assertEquals(404, Unirest.head(fakeEndpoint).asString().getStatus());
 		assertEquals(404, Unirest.patch(fakeEndpoint).asString().getStatus());
+	}
+
+	@Test
+	@Order(1002)
+	void testCORS() throws Exception {
+		final String fakeEndpoint = endpoint("/test123");
+		final String HEADERS = "authorization";
+		final String METHOD = "GET";
+		final String ORIGIN = "https://example.com";
+		HttpResponse<String> resp = Unirest.options(fakeEndpoint)
+			.header("Access-Control-Request-Headers", HEADERS)
+			.header("Access-Control-Request-Method", METHOD)
+			.header("Origin", ORIGIN)
+			.asString();
+		assertEquals(200, resp.getStatus());
+		assertEquals(
+			ORIGIN, resp.getHeaders().getFirst("Access-Control-Allow-Origin")
+		);
+		assertEquals("Origin", resp.getHeaders().getFirst("Vary"));
+		assertEquals(
+			HEADERS, resp.getHeaders().getFirst("Access-Control-Allow-Headers")
+		);
+		assertEquals(
+			METHOD, resp.getHeaders().getFirst("Access-Control-Allow-Methods")
+		);
+		assertEquals(
+			"true",
+			resp.getHeaders().getFirst("Access-Control-Allow-Credentials")
+		);
+		String maxAge = resp.getHeaders().getFirst("Access-Control-Max-Age");
+		assertTrue(Integer.parseInt(maxAge) >= 0);
 	}
 
 	@Test

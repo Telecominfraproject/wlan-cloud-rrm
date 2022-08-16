@@ -9,6 +9,8 @@
 package com.facebook.openwifirrm.modules;
 
 import java.net.InetAddress;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.UnknownHostException;
 import java.time.Instant;
 import java.util.Arrays;
@@ -18,6 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 import javax.ws.rs.GET;
@@ -136,6 +139,9 @@ public class ApiServer implements Runnable {
 	 */
 	private final Map<String, Long> tokenCache;
 
+	/** The list of allowed CORS domains. If null, all domains are allowed. */
+	private final Set<String> corsDomains;
+
 	/** The Gson instance. */
 	private final Gson gson = new Gson();
 
@@ -166,6 +172,23 @@ public class ApiServer implements Runnable {
 		this.tokenCache = Collections.synchronizedMap(
 			new LruCache<>(Math.max(params.openWifiAuthCacheSize, 1))
 		);
+		this.corsDomains = getCorsDomains(params.corsDomainList);
+	}
+
+	/**
+	 * Build the CORS domain set.
+	 *
+	 * @see ApiServerParams#corsDomainList
+	 */
+	private Set<String> getCorsDomains(String corsDomainList) {
+		if (corsDomainList.isEmpty()) {
+			return null;
+		}
+		Set<String> ret = ConcurrentHashMap.newKeySet();
+		for (String domain : corsDomainList.split(",")) {
+			ret.add(domain);
+		}
+		return ret;
 	}
 
 	@Override
@@ -187,6 +210,7 @@ public class ApiServer implements Runnable {
 		// Install routes
 		Spark.before(this::beforeFilter);
 		Spark.after(this::afterFilter);
+		Spark.options("/*", this::options);
 		Spark.get("/api/v1/system", new SystemEndpoint());
 		Spark.get("/api/v1/provider", new ProviderEndpoint());
 		Spark.get("/api/v1/algorithms", new AlgorithmsEndpoint());
@@ -338,6 +362,26 @@ public class ApiServer implements Runnable {
 		// Remove "Server: Jetty" header
 		response.header("Server", "");
 
+		// Set CORS headers
+		String origin = request.headers("Origin");
+		if (origin != null) {
+			boolean allowOrigin = false;
+			if (corsDomains == null) {
+				allowOrigin = true;
+			} else {
+				try {
+					String originHost = new URI(origin).getHost();
+					allowOrigin = corsDomains.contains(originHost);
+				} catch (URISyntaxException e) { /* invalid origin URI */ }
+			}
+			if (allowOrigin) {
+				response.header("Access-Control-Allow-Origin", origin);
+				response.header("Vary", "Origin");
+			} else {
+				logger.debug("CORS checks failed for origin: {}", origin);
+			}
+		}
+
 		// HTTP basic auth (if enabled)
 		if (params.useBasicAuth) {
 			performHttpBasicAuth(
@@ -370,6 +414,22 @@ public class ApiServer implements Runnable {
 				response.header("Content-Encoding", "gzip");
 			}
 		}
+	}
+
+	/** Global OPTIONS handler. */
+	private String options(Request request, Response response) {
+		// Set CORS headers
+		String acrh = request.headers("Access-Control-Request-Headers");
+		if (acrh != null) {
+			response.header("Access-Control-Allow-Headers", acrh);
+		}
+		String acrm = request.headers("Access-Control-Request-Method");
+		if (acrm != null) {
+			response.header("Access-Control-Allow-Methods", acrm);
+		}
+		response.header("Access-Control-Allow-Credentials", "true");
+		response.header("Access-Control-Max-Age", "86400" /* 1 day */);
+		return "OK";
 	}
 
 	/** Returns the OpenAPI object, generating and caching it if needed. */
