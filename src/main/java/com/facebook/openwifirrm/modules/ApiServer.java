@@ -428,7 +428,7 @@ public class ApiServer implements Runnable {
 			response.header("Access-Control-Allow-Methods", acrm);
 		}
 		response.header("Access-Control-Allow-Credentials", "true");
-		response.header("Access-Control-Max-Age", "86400");
+		response.header("Access-Control-Max-Age", "86400" /* 1 day */);
 		return "OK";
 	}
 
