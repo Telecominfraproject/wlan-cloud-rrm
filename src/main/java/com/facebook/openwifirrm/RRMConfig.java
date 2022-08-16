@@ -311,6 +311,14 @@ public class RRMConfig {
 			public int httpPort = 16789;
 
 			/**
+			 * Comma-separated list of all allowed CORS domains (exact match
+			 * including subdomain portions, but excluding protocol).
+			 * If empty, enable CORS for all origins.
+			 * ({@code APISERVERPARAMS_CORSDOMAINLIST})
+			 */
+			public String corsDomainList = "";
+
+			/**
 			 * Enable HTTP basic auth?
 			 * ({@code APISERVERPARAMS_USEBASICAUTH})
 			 */
@@ -524,6 +532,9 @@ public class RRMConfig {
 			config.moduleConfig.apiServerParams;
 		if ((v = env.get("APISERVERPARAMS_HTTPPORT")) != null) {
 			apiServerParams.httpPort = Integer.parseInt(v);
+		}
+		if ((v = env.get("APISERVERPARAMS_CORSDOMAINLIST")) != null) {
+			apiServerParams.corsDomainList = v;
 		}
 		if ((v = env.get("APISERVERPARAMS_USEBASICAUTH")) != null) {
 			apiServerParams.useBasicAuth = Boolean.parseBoolean(v);
