@@ -72,7 +72,7 @@ public class DeviceDataManager {
 	 * Initialize from the given files.
 	 * @param topologyFile the {@link DeviceTopology} file
 	 * @param deviceLayeredConfigFile the {@link DeviceLayeredConfig} file
-	 * @throws IOException
+	 * @throws IOException if file I/O fails
 	 */
 	public DeviceDataManager(File topologyFile, File deviceLayeredConfigFile)
 		throws IOException {
@@ -90,7 +90,7 @@ public class DeviceDataManager {
 	 *
 	 * If the file does not exist, try to create it.
 	 *
-	 * @throws IOException
+	 * @throws IOException if file I/O fails
 	 */
 	private DeviceTopology readTopology(File topologyFile) throws IOException {
 		DeviceTopology topo;
@@ -117,7 +117,7 @@ public class DeviceDataManager {
 	 *
 	 * If the file does not exist, try to create it.
 	 *
-	 * @throws IOException
+	 * @throws IOException if file I/O fails
 	 */
 	private DeviceLayeredConfig readDeviceLayeredConfig(File deviceConfigFile)
 		throws IOException {

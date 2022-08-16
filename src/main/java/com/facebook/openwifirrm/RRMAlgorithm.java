@@ -62,13 +62,13 @@ public class RRMAlgorithm {
 
 		/**
 		 * Computed channel assignments.
-		 * @see {@link ChannelOptimizer#computeChannelMap()}
+		 * @see ChannelOptimizer#computeChannelMap()
 		 */
 		public Map<String, Map<String, Integer>> channelMap;
 
 		/**
 		 * Computed tx power assignments.
-		 * @see {@link TPC#computeTxPowerMap()}
+		 * @see TPC#computeTxPowerMap()
 		 */
 		public Map<String, Map<String, Integer>> txPowerMap;
 	}
@@ -98,7 +98,7 @@ public class RRMAlgorithm {
 	 *
 	 * @param name the algorithm name, which must exist in {@link AlgorithmType}
 	 * @param argsRaw the arguments as a comma-separated list of key=value
-	 *                pairs, e.g. <tt> key1=val1,key2=val2,key3=val3</tt>
+	 *                pairs, e.g. <code> key1=val1,key2=val2,key3=val3</code>
 	 *
 	 * @return the parsed object, or null if parsing failed
 	 */

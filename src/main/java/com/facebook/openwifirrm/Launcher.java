@@ -64,7 +64,7 @@ public class Launcher implements Callable<Integer> {
 	 * If the file is missing any default fields in {@link RRMConfig}, try to
 	 * rewrite it.
 	 *
-	 * @throws IOException
+	 * @throws IOException if file I/O fails
 	 */
 	private RRMConfig readRRMConfig(File configFile) throws IOException {
 		RRMConfig config;
