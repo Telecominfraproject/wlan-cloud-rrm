@@ -132,7 +132,7 @@ public class ApiServer implements Runnable {
 	 * The auth token cache (map from token to expiration time, in UNIX seconds)
 	 * for incoming requests.
 	 *
-	 * @see {@link #performOpenWifiAuth(Request, Response)}
+	 * @see #performOpenWifiAuth(Request, Response)
 	 */
 	private final Map<String, Long> tokenCache;
 

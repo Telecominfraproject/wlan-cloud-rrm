@@ -84,6 +84,16 @@
         </executions>
       </plugin>
       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>3.4.1</version>
+        <configuration>
+          <doclint>all,-missing</doclint>
+          <notimestamp>true</notimestamp>
+          <bottom>Copyright &#169; Meta Platforms, Inc. and affiliates.</bottom>
+        </configuration>
+      </plugin>
+      <plugin>
         <!-- Generate "openapi.yaml" in project root, NOT packaged -->
         <groupId>io.swagger.core.v3</groupId>
         <artifactId>swagger-maven-plugin</artifactId>
