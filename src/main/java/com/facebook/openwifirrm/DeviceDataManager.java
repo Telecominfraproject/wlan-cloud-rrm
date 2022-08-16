@@ -107,7 +107,6 @@ public class DeviceDataManager {
 			logger.info("Reading topology file '{}'", topologyFile.getPath());
 			String contents = Utils.readFile(topologyFile);
 			if (contents == null || contents.isBlank()) {
-				// Blank file, write defaults to disk
 				logger.info("Topology file '{}' is blank, writing defaults to it...", topologyFile.getPath());
 				topo = new DeviceTopology();
 				Utils.writeJsonFile(topologyFile, topo);
@@ -132,7 +131,7 @@ public class DeviceDataManager {
 		if (!deviceConfigFile.isFile()) {
 			// No file, write defaults to disk
 			logger.info(
-					"Device config file '{}' does not exist, creating it...",
+				"Device config file '{}' does not exist, creating it...",
 				deviceConfigFile.getPath()
 			);
 			cfg = new DeviceLayeredConfig();

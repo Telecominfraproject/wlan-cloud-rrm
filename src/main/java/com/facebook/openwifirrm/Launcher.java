@@ -83,6 +83,7 @@ public class Launcher implements Callable<Integer> {
 			logger.info("Reading config file '{}'", configFile.getPath());
 			String contents = Utils.readFile(configFile);
 			if (contents == null || contents.isBlank()) {
+				logger.info("Config file '{}' does not exist, writing defaults it...", configFile.getPath());
 				config = new RRMConfig();
 				Utils.writeJsonFile(configFile, config);
 			} else {
