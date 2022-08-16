@@ -20,43 +20,43 @@ public class RRMConfig {
 	public class ServiceConfig {
 		/**
 		 * RRM service name/type
-		 * (<code>SERVICECONFIG_NAME</code>)
+		 * ({@code SERVICECONFIG_NAME})
 		 */
 		public String name = "owrrm";
 
 		/**
 		 * RRM service ID (random persistent number)
-		 * (<code>SERVICECONFIG_NAME</code>)
+		 * ({@code SERVICECONFIG_NAME})
 		 */
 		public long id = (long) (Math.random() * Long.MAX_VALUE);
 
 		/**
 		 * Private endpoint for the RRM service
-		 * (<code>SERVICECONFIG_PRIVATEENDPOINT</code>)
+		 * ({@code SERVICECONFIG_PRIVATEENDPOINT})
 		 */
 		public String privateEndpoint = "http://owrrm.wlan.local:16789";  // see ApiServerParams.httpPort
 
 		/**
 		 * Public endpoint for the RRM service
-		 * (<code>SERVICECONFIG_PUBLICENDPOINT</code>)
+		 * ({@code SERVICECONFIG_PUBLICENDPOINT})
 		 */
 		public String publicEndpoint = "";
 
 		/**
 		 * RRM vendor name
-		 * (<code>SERVICECONFIG_VENDOR</code>)
+		 * ({@code SERVICECONFIG_VENDOR})
 		 */
 		public String vendor = "Meta";
 
 		/**
 		 * RRM vendor URL
-		 * (<code>SERVICECONFIG_VENDORURL</code>)
+		 * ({@code SERVICECONFIG_VENDORURL})
 		 */
 		public String vendorUrl = "https://github.com/Telecominfraproject/wlan-cloud-rrm";
 
 		/**
 		 * RRM reference URL
-		 * (<code>SERVICECONFIG_VENDORREFERENCEURL</code>)
+		 * ({@code SERVICECONFIG_VENDORREFERENCEURL})
 		 */
 		public String vendorReferenceUrl = "https://github.com/Telecominfraproject/wlan-cloud-rrm/blob/main/ALGORITHMS.md";
 	}
@@ -70,25 +70,25 @@ public class RRMConfig {
 	public class UCentralConfig {
 		/**
 		 * If set, use public service endpoints instead of private ones
-		 * (<code>UCENTRALCONFIG_USEPUBLICENDPOINTS</code>)
+		 * ({@code UCENTRALCONFIG_USEPUBLICENDPOINTS})
 		 */
 		public boolean usePublicEndpoints = false;
 
 		/**
 		 * uCentralSec public endpoint
-		 * (<code>UCENTRALCONFIG_UCENTRALSECPUBLICENDPOINT</code>)
+		 * ({@code UCENTRALCONFIG_UCENTRALSECPUBLICENDPOINT})
 		 */
 		public String uCentralSecPublicEndpoint = "";
 
 		/**
 		 * uCentral username (for public endpoints only)
-		 * (<code>UCENTRALCONFIG_USERNAME</code>)
+		 * ({@code UCENTRALCONFIG_USERNAME})
 		 */
 		public String username = "tip@ucentral.com";
 
 		/**
 		 * uCentral password (for public endpoints only)
-		 * (<code>UCENTRALCONFIG_PASSWORD</code>)
+		 * ({@code UCENTRALCONFIG_PASSWORD})
 		 */
 		public String password = "";
 
@@ -98,19 +98,19 @@ public class RRMConfig {
 		public class UCentralSocketParams {
 			/**
 			 * Connection timeout for all requests, in ms
-			 * (<code>UCENTRALSOCKETPARAMS_CONNECTTIMEOUTMS</code>)
+			 * ({@code UCENTRALSOCKETPARAMS_CONNECTTIMEOUTMS})
 			 */
 			public int connectTimeoutMs = 2000;
 
 			/**
 			 * Socket timeout for all requests, in ms
-			 * (<code>UCENTRALSOCKETPARAMS_SOCKETTIMEOUTMS</code>)
+			 * ({@code UCENTRALSOCKETPARAMS_SOCKETTIMEOUTMS})
 			 */
 			public int socketTimeoutMs = 15000;
 
 			/**
 			 * Socket timeout for wifi scan requests, in ms
-			 * (<code>UCENTRALSOCKETPARAMS_WIFISCANTIMEOUTMS</code>)
+			 * ({@code UCENTRALSOCKETPARAMS_WIFISCANTIMEOUTMS})
 			 */
 			public int wifiScanTimeoutMs = 45000;
 		}
@@ -129,38 +129,38 @@ public class RRMConfig {
 	public class KafkaConfig {
 		/**
 		 * Kafka bootstrap host:port, or empty to disable
-		 * (<code>KAFKACONFIG_BOOTSTRAPSERVER</code>)
+		 * ({@code KAFKACONFIG_BOOTSTRAPSERVER})
 		 */
 		public String bootstrapServer = "127.0.0.1:9093";
 
 		/**
 		 * Kafka topic holding uCentral state
-		 * (<code>KAFKACONFIG_STATETOPIC</code>)
+		 * ({@code KAFKACONFIG_STATETOPIC})
 		 */
 		public String stateTopic = "state";
 
 		/**
 		 * Kafka topic holding uCentral wifi scan results
-		 * (<code>KAFKACONFIG_WIFISCANTOPIC</code>)
+		 * ({@code KAFKACONFIG_WIFISCANTOPIC})
 		 */
 		public String wifiScanTopic = "wifiscan";
 
 		/**
 		 * Kafka topic holding uCentral microservice events.
 		 * Used for detecting API keys and internal endpoints.
-		 * (<code>KAFKACONFIG_SERVICEEVENTSTOPIC</code>)
+		 * ({@code KAFKACONFIG_SERVICEEVENTSTOPIC})
 		 */
 		public String serviceEventsTopic = "service_events";
 
 		/**
 		 * Kafka consumer group ID
-		 * (<code>KAFKACONFIG_GROUPID</code>)
+		 * ({@code KAFKACONFIG_GROUPID})
 		 */
 		public String groupId = "rrm-service";
 
 		/**
 		 * Kafka "auto.offset.reset" config ["earliest", "latest"]
-		 * (<code>KAFKACONFIG_AUTOOFFSETRESET</code>)
+		 * ({@code KAFKACONFIG_AUTOOFFSETRESET})
 		 */
 		public String autoOffsetReset = "latest";
 	}
@@ -174,31 +174,31 @@ public class RRMConfig {
 	public class DatabaseConfig {
 		/**
 		 * MySQL database host:port, or empty to disable
-		 * (<code>DATABASECONFIG_SERVER</code>)
+		 * ({@code DATABASECONFIG_SERVER})
 		 */
 		public String server = "127.0.0.1:3306";
 
 		/**
 		 * MySQL database user
-		 * (<code>DATABASECONFIG_USER</code>)
+		 * ({@code DATABASECONFIG_USER})
 		 */
 		public String user = "root";
 
 		/**
 		 * MySQL database password
-		 * (<code>DATABASECONFIG_PASSWORD</code>)
+		 * ({@code DATABASECONFIG_PASSWORD})
 		 */
 		public String password = "openwifi";
 
 		/**
 		 * MySQL database name
-		 * (<code>DATABASECONFIG_DBNAME</code>)
+		 * ({@code DATABASECONFIG_DBNAME})
 		 */
 		public String dbName = "rrm";
 
 		/**
 		 * Data retention interval in days (0 to disable)
-		 * (<code>DATABASECONFIG_DATARETENTIONINTERVALDAYS</code>)
+		 * ({@code DATABASECONFIG_DATARETENTIONINTERVALDAYS})
 		 */
 		public int dataRetentionIntervalDays = 14;
 	}
@@ -216,33 +216,33 @@ public class RRMConfig {
 		public class DataCollectorParams {
 			/**
 			 * The main logic loop interval (i.e. sleep time), in ms
-			 * (<code>DATACOLLECTORPARAMS_UPDATEINTERVALMS</code>)
+			 * ({@code DATACOLLECTORPARAMS_UPDATEINTERVALMS})
 			 */
 			public int updateIntervalMs = 5000;
 
 			/**
 			 * The expected device statistics interval, in seconds (or -1 to
 			 * disable managing this value)
-			 * (<code>DATACOLLECTORPARAMS_DEVICESTATSINTERVALSEC</code>)
+			 * ({@code DATACOLLECTORPARAMS_DEVICESTATSINTERVALSEC})
 			 */
 			public int deviceStatsIntervalSec = 60;
 
 			/**
 			 * The wifi scan interval (per device), in seconds (or -1 to disable
 			 * automatic scans)
-			 * (<code>DATACOLLECTORPARAMS_WIFISCANINTERVALSEC</code>)
+			 * ({@code DATACOLLECTORPARAMS_WIFISCANINTERVALSEC})
 			 */
 			public int wifiScanIntervalSec = 60;
 
 			/**
 			 * The capabilities request interval (per device), in seconds
-			 * (<code>DATACOLLECTORPARAMS_CAPABILITIESINTERVALSEC</code>)
+			 * ({@code DATACOLLECTORPARAMS_CAPABILITIESINTERVALSEC})
 			 */
 			public int capabilitiesIntervalSec = 3600;
 
 			/**
 			 * Number of executor threads for async tasks (ex. wifi scans)
-			 * (<code>DATACOLLECTORPARAMS_EXECUTORTHREADCOUNT</code>)
+			 * ({@code DATACOLLECTORPARAMS_EXECUTORTHREADCOUNT})
 			 */
 			public int executorThreadCount = 3;
 		}
@@ -257,27 +257,27 @@ public class RRMConfig {
 		public class ConfigManagerParams {
 			/**
 			 * The main logic loop interval (i.e. sleep time), in ms
-			 * (<code>CONFIGMANAGERPARAMS_UPDATEINTERVALMS</code>)
+			 * ({@code CONFIGMANAGERPARAMS_UPDATEINTERVALMS})
 			 */
 			public int updateIntervalMs = 60000;
 
 			/**
 			 * Enable pushing device config changes?
-			 * (<code>CONFIGMANAGERPARAMS_CONFIGENABLED</code>)
+			 * ({@code CONFIGMANAGERPARAMS_CONFIGENABLED})
 			 */
 			public boolean configEnabled = true;
 
 			/**
 			 * If set, device config changes will only be pushed on events
 			 * (e.g. RRM algorithm execution, config API calls)
-			 * (<code>CONFIGMANAGERPARAMS_CONFIGONEVENTONLY</code>)
+			 * ({@code CONFIGMANAGERPARAMS_CONFIGONEVENTONLY})
 			 */
 			public boolean configOnEventOnly = true;
 
 			/**
 			 * The debounce interval for reconfiguring the same device, in
 			 * seconds (or -1 to disable)
-			 * (<code>CONFIGMANAGERPARAMS_CONFIGDEBOUNCEINTERVALSEC</code>)
+			 * ({@code CONFIGMANAGERPARAMS_CONFIGDEBOUNCEINTERVALSEC})
 			 */
 			public int configDebounceIntervalSec = 30;
 		}
@@ -292,7 +292,7 @@ public class RRMConfig {
 		public class ModelerParams {
 			/**
 			 * Maximum rounds of wifi scan results to store per device
-			 * (<code>MODELERPARAMS_WIFISCANBUFFERSIZE</code>)
+			 * ({@code MODELERPARAMS_WIFISCANBUFFERSIZE})
 			 */
 			public int wifiScanBufferSize = 10;
 		}
@@ -306,38 +306,38 @@ public class RRMConfig {
 		public class ApiServerParams {
 			/**
 			 * The HTTP port to listen on, or -1 to disable
-			 * (<code>APISERVERPARAMS_HTTPPORT</code>)
+			 * ({@code APISERVERPARAMS_HTTPPORT})
 			 */
 			public int httpPort = 16789;
 
 			/**
 			 * Enable HTTP basic auth?
-			 * (<code>APISERVERPARAMS_USEBASICAUTH</code>)
+			 * ({@code APISERVERPARAMS_USEBASICAUTH})
 			 */
 			public boolean useBasicAuth = false;
 
 			/**
 			 * The HTTP basic auth username (if enabled)
-			 * (<code>APISERVERPARAMS_BASICAUTHUSER</code>)
+			 * ({@code APISERVERPARAMS_BASICAUTHUSER})
 			 */
 			public String basicAuthUser = "admin";
 
 			/**
 			 * The HTTP basic auth password (if enabled)
-			 * (<code>APISERVERPARAMS_BASICAUTHPASSWORD</code>)
+			 * ({@code APISERVERPARAMS_BASICAUTHPASSWORD})
 			 */
 			public String basicAuthPassword = "openwifi";
 
 			/**
 			 * Enable OpenWiFi authentication via tokens (external) and API keys
 			 * (internal)
-			 * (<code>APISERVERPARAMS_USEOPENWIFIAUTH</code>)
+			 * ({@code APISERVERPARAMS_USEOPENWIFIAUTH})
 			 */
 			public boolean useOpenWifiAuth = false;
 
 			/**
 			 * The maximum cache size for OpenWiFi tokens
-			 * (<code>APISERVERPARAMS_OPENWIFIAUTHCACHESIZE</code>)
+			 * ({@code APISERVERPARAMS_OPENWIFIAUTHCACHESIZE})
 			 */
 			public int openWifiAuthCacheSize = 100;
 		}
@@ -351,13 +351,13 @@ public class RRMConfig {
 		public class ProvMonitorParams {
 			/**
 			 * Enable use of venue information for topology
-			 * (<code>PROVMONITORPARAMS_USEVENUES</code>)
+			 * ({@code PROVMONITORPARAMS_USEVENUES})
 			 */
 			public boolean useVenues = true;
 
 			/**
 			 * Sync interval, in ms, for owprov venue information etc.
-			 * (<code>PROVMONITORPARAMS_SYNCINTERVALMS</code>)
+			 * ({@code PROVMONITORPARAMS_SYNCINTERVALMS})
 			 */
 			public int syncIntervalMs = 300000;
 		}
@@ -371,13 +371,13 @@ public class RRMConfig {
 		public class RRMSchedulerParams {
 			/**
 			 * Thread pool size for executing jobs
-			 * (<code>SCHEDULERPARAMS_THREADCOUNT</code>)
+			 * ({@code SCHEDULERPARAMS_THREADCOUNT})
 			 */
 			public int threadCount = 2;
 
 			/**
 			 * If set, do not apply any changes from scheduled algorithms
-			 * (<code>SCHEDULERPARAMS_DRYRUN</code>)
+			 * ({@code SCHEDULERPARAMS_DRYRUN})
 			 */
 			public boolean dryRun = false;
 		}

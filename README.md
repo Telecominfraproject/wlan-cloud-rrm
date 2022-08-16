@@ -1,5 +1,5 @@
 # OpenWiFi RRM Service
-OpenWiFi uCentral-based radio resource management service.
+OpenWiFi uCentral-based radio resource management (RRM) service.
 
 ## Requirements
 * **Running:** JRE 11.
