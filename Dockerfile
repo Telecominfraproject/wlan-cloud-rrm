@@ -1,7 +1,7 @@
 FROM maven:3-jdk-11 as build
 WORKDIR /usr/src/java
 COPY . .
-RUN mvn clean package
+RUN mvn clean package -DappendVersionString="$(./scripts/get_build_version.sh)"
 
 FROM openjdk:11
 RUN apt-get update && apt-get install -y gettext-base
