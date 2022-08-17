@@ -24,7 +24,7 @@ import org.slf4j.LoggerFactory;
 
 import com.facebook.openwifirrm.RRMConfig;
 import com.facebook.openwifirrm.Utils;
-import com.facebook.openwifirrm.optimizers.ChannelOptimizer;
+import com.facebook.openwifirrm.optimizers.channel.ChannelOptimizer;
 import com.facebook.openwifirrm.ucentral.models.State;
 import com.facebook.openwifirrm.ucentral.models.WifiScanEntryResult;
 import com.google.gson.Gson;

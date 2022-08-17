@@ -16,15 +16,15 @@ import org.slf4j.LoggerFactory;
 
 import com.facebook.openwifirrm.modules.ConfigManager;
 import com.facebook.openwifirrm.modules.Modeler;
-import com.facebook.openwifirrm.optimizers.ChannelOptimizer;
-import com.facebook.openwifirrm.optimizers.LeastUsedChannelOptimizer;
-import com.facebook.openwifirrm.optimizers.LocationBasedOptimalTPC;
-import com.facebook.openwifirrm.optimizers.MeasurementBasedApApTPC;
-import com.facebook.openwifirrm.optimizers.MeasurementBasedApClientTPC;
-import com.facebook.openwifirrm.optimizers.RandomChannelInitializer;
-import com.facebook.openwifirrm.optimizers.RandomTxPowerInitializer;
-import com.facebook.openwifirrm.optimizers.TPC;
-import com.facebook.openwifirrm.optimizers.UnmanagedApAwareChannelOptimizer;
+import com.facebook.openwifirrm.optimizers.channel.ChannelOptimizer;
+import com.facebook.openwifirrm.optimizers.channel.LeastUsedChannelOptimizer;
+import com.facebook.openwifirrm.optimizers.channel.RandomChannelInitializer;
+import com.facebook.openwifirrm.optimizers.channel.UnmanagedApAwareChannelOptimizer;
+import com.facebook.openwifirrm.optimizers.tpc.LocationBasedOptimalTPC;
+import com.facebook.openwifirrm.optimizers.tpc.MeasurementBasedApApTPC;
+import com.facebook.openwifirrm.optimizers.tpc.MeasurementBasedApClientTPC;
+import com.facebook.openwifirrm.optimizers.tpc.RandomTxPowerInitializer;
+import com.facebook.openwifirrm.optimizers.tpc.TPC;
 
 /**
  * RRM algorithm model and utility methods.
