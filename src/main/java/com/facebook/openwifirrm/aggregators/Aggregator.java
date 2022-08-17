@@ -14,7 +14,7 @@ package com.facebook.openwifirrm.aggregators;
  * @param <T> the type of values being aggregated (e.g., Double).
  */
 public interface Aggregator<T> {
-	/** Adds {@value} to the group of values being aggregated. */
+	/** Adds {@code value} to the group of values being aggregated. */
 	void addValue(T value);
 
 	/** Returns the aggregate measure of all added values. */
