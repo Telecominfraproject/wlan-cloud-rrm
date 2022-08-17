@@ -129,7 +129,7 @@ public class DeviceDataManager {
 		}
 		if (cfg == null) {
 			// Missing/empty file, write defaults to disk
-			logger.info("Creating default config file '{}'", deviceConfigFile.getPath());
+			logger.info("Creating default device config file '{}'", deviceConfigFile.getPath());
 			cfg = new DeviceLayeredConfig();
 			Utils.writeJsonFile(deviceConfigFile, cfg);
 		} else {
