@@ -93,7 +93,13 @@ public class RRMConfig {
 		public String password = "";
 
 		/**
-		 * uCentral socket parameters
+		 * Verify SSL/TLS certificates in HTTPS requests
+		 * ({@code UCENTRALCONFIG_VERIFYSSL})
+		 */
+		public boolean verifySsl = false;
+
+		/**
+		 * uCentral socket parameters.
 		 */
 		public class UCentralSocketParams {
 			/**
@@ -439,6 +445,9 @@ public class RRMConfig {
 		}
 		if ((v = env.get("UCENTRALCONFIG_PASSWORD")) != null) {
 			uCentralConfig.password = v;
+		}
+		if ((v = env.get("UCENTRALCONFIG_VERIFYSSL")) != null) {
+			uCentralConfig.verifySsl = Boolean.parseBoolean(v);
 		}
 		UCentralConfig.UCentralSocketParams uCentralSocketParams =
 			config.uCentralConfig.uCentralSocketParams;

@@ -158,6 +158,7 @@ public class Launcher implements Callable<Integer> {
 			UCentralUtils.generateServiceKey(config.serviceConfig);
 
 		// Instantiate clients
+		UCentralClient.verifySsl(config.uCentralConfig.verifySsl);
 		UCentralClient client = new UCentralClient(
 			config.serviceConfig.publicEndpoint,
 			config.uCentralConfig.usePublicEndpoints,
