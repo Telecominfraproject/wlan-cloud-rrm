@@ -118,18 +118,27 @@ public class HTOperationElement {
 	 */
 	public HTOperationElement(String htOper) {
 		byte[] bytes = Base64.decodeBase64(htOper);
+		/*
+		 * Note that the code here may seem to read "reversed" compared to 802.11. This
+		 * is because the bits within a byte are delivered from MSB to LSB, whereas the
+		 * 802.11 graphic shows the bits LSB-first. At least, this is our understanding
+		 * from looking at 802.11 and at the actual HT operation elements from the
+		 * edgecore APs.
+		 */
 		this.primaryChannel = bytes[0];
-		this.secondaryChannelOffset = (byte) (bytes[1] >>> 6);
-		this.staChannelWidth = ((bytes[1] & 0b00100000) >>> 5) == 1;
-		this.rifsMode = ((bytes[1] & 0b00010000) >>> 4) == 1;
-		this.htProtection = (byte) (bytes[2] >>> 6);
-		this.nongreenfieldHtStasPresent = ((bytes[2] & 0b00100000) >>> 5) == 1;
-		this.obssNonHtStasPresent = ((bytes[2] & 0b00001000) >>> 3) == 1;
-		this.channelCenterFrequencySegment2 = (byte) (((bytes[2] & 0b00000111) << 5)
-				| ((bytes[3] & 0b11111000) >>> 3));
-		this.dualBeacon = ((bytes[4] & 0b00000010) >>> 1) == 1;
-		this.dualCtsProtection = (bytes[4] & 0b00000001) == 1;
-		this.stbcBeacon = (bytes[5] & 0b10000000 >>> 7) == 1;
+		this.rifsMode = ((bytes[1] & 0b00001000) >>> 3) == 1;
+		this.staChannelWidth = ((bytes[1] & 0b00000100) >>> 2) == 1;
+		this.secondaryChannelOffset = (byte) (bytes[1] & 0b00000011);
+		byte channelCenterFrequencySegment2LastThreeBits = (byte) ((bytes[2] & 0b11100000) >>> 5);
+		this.obssNonHtStasPresent = ((bytes[2] & 0b00010000) >>> 4) == 1;
+		this.nongreenfieldHtStasPresent = ((bytes[2] & 0b00000100) >>> 2) == 1;
+		this.htProtection = (byte) (bytes[2] & 0b00000011);
+		byte channelCenterFrequencySegment2FirstFiveBits = (byte) (bytes[3] & 0b00011111);
+		this.channelCenterFrequencySegment2 = (byte) (((byte) (channelCenterFrequencySegment2FirstFiveBits << 3))
+				| channelCenterFrequencySegment2LastThreeBits);
+		this.dualCtsProtection = ((bytes[4] & 0b10000000) >>> 7) == 1;
+		this.dualBeacon = ((bytes[4] & 0b01000000) >>> 6) == 1;
+		this.stbcBeacon = (bytes[5] & 0b00000001) == 1;
 		byte[] basicHtMcsSet = new byte[16];
 		for (int i = 0; i < basicHtMcsSet.length; i++) {
 			basicHtMcsSet[i] = bytes[6 + i];

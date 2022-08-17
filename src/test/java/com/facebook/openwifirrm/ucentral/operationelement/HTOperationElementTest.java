@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Test;
 public class HTOperationElementTest {
 	@Test
 	void testGetHtOper() {
-		String htOper = "AQAgAAAAAAAAAAAAAAAAAAAAAAAAAA==";
+		String htOper = "AQAEAAAAAAAAAAAAAAAAAAAAAAAAAA==";
 		HTOperationElement htOperObj = new HTOperationElement(htOper);
 		byte expectedPrimaryChannel = 1;
 		byte expectedSecondaryChannelOffset = 0;

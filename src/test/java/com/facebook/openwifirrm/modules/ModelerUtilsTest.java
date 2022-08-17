@@ -255,7 +255,7 @@ public class ModelerUtilsTest {
 		// Test that entries with HT operation elements which differ in the relevant
 		// fields (channel numbers and widths) are not aggregated together.
 		primaryChannel = 1;
-		htOper = "AWAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="; // use different Basic HT-MCS Set field
+		htOper = "AQUAAAAAAAAAAAAAAAAAAAAAAAAAAA=="; // use secondary channel and wider channel
 		WifiScanEntry entryAToB4 = TestUtils.createWifiScanEntryWithWidth(bssidA, primaryChannel, htOper, null);
 		entryAToB4.signal = -72;
 		entryAToB4.unixTimeMs += 180000; // 1 min after previous entry
@@ -267,7 +267,7 @@ public class ModelerUtilsTest {
 
 		// Test that entries with HT operation elements with differ only in irrelevant
 		// fields are aggregated together
-		htOper = "AWAAAAAAgAAAAAAAAAAAAAAAAAAAAA==";
+		htOper = "AQUAAAAAgAAAAAAAAAAAAAAAAAAAAA=="; // use different Basic HT-MCS Set field
 		WifiScanEntry entryAToB5 = TestUtils.createWifiScanEntryWithWidth(bssidA, primaryChannel, htOper, null);
 		entryAToB5.signal = -74;
 		entryAToB5.unixTimeMs += 240000; // 1 min after previous entry
@@ -281,12 +281,11 @@ public class ModelerUtilsTest {
 		 * Test that entries with VHT operation elements which differ in the relevant
 		 * fields (channel numbers and widths) are not aggregated together. Use channel
 		 * 42 (80 MHz wide), with the primary channel being 36 (contained "within" the
-		 * wider channel 42). Use 36 as the entry's "channel" field as well, even if
-		 * this is not how it would be in reality, just to test htOper.
+		 * wider channel 42).
 		 */
 		primaryChannel = 36;
 		// use secondary channel offset field of 1 and sta channel width field of 1
-		htOper = "LGAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+		htOper = "JAUAAAAAAAAAAAAAAAAAAAAAAAAAAA==";
 		String vhtOper = "ASoAAAA=";
 		WifiScanEntry entryAToB6 = TestUtils.createWifiScanEntryWithWidth(bssidA, primaryChannel, htOper, vhtOper);
 		entryAToB6.signal = -74;
