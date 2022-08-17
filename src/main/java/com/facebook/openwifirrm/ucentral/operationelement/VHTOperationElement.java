@@ -90,6 +90,14 @@ public class VHTOperationElement {
 		this.vhtMcsForNss = vhtMcsForNss;
 	}
 
+	/**
+	 * Determine whether {@code this} and {@code other} "match" for the purpose of
+	 * aggregating statistics.
+	 *
+	 * @param other another VHT operation element
+	 * @return true if the the operation elements "match" for the purpose of
+	 *         aggregating statistics; false otherwise.
+	 */
 	public boolean matchesForAggregation(VHTOperationElement other) {
 		// check everything except vhtMcsForNss
 		return other != null && channel1 == other.channel1 && channel2 == other.channel2

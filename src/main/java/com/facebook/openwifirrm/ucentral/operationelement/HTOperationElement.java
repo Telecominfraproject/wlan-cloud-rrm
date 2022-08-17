@@ -137,6 +137,14 @@ public class HTOperationElement {
 		this.basicHtMcsSet = basicHtMcsSet;
 	}
 
+	/**
+	 * Determine whether {@code this} and {@code other} "match" for the purpose of
+	 * aggregating statistics.
+	 *
+	 * @param other another HT operation element
+	 * @return true if the the operation elements "match" for the purpose of
+	 *         aggregating statistics; false otherwise.
+	 */
 	public boolean matchesForAggregation(HTOperationElement other) {
 		return other != null && primaryChannel == other.primaryChannel
 				&& secondaryChannelOffset == other.secondaryChannelOffset && staChannelWidth == other.staChannelWidth
