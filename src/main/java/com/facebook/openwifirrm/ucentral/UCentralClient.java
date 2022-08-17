@@ -81,9 +81,6 @@ public class UCentralClient {
 
 	static {
 		Unirest.config()
-			// TODO currently disabling SSL/TLS cert verification
-			.verifySsl(false)
-
 			// Suppress unchecked exceptions (ex. SocketTimeoutException),
 			// instead sending a (fake) FailedResponse.
 			.interceptor(new Interceptor() {
@@ -103,6 +100,14 @@ public class UCentralClient {
 			        return new FailedResponse(e);
 			    }
 			});
+	}
+
+	/**
+	 * Toggle verifying SSL/TLS certificates. This should be set only during
+	 * initialization, otherwise it may NOT take effect.
+	 */
+	public static void verifySsl(boolean enable) {
+		Unirest.config().verifySsl(enable);
 	}
 
 	/** Gson instance */
