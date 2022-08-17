@@ -83,7 +83,13 @@ public class Modeler implements Runnable {
 		// At minimum, we may want to aggregate recent wifi scan responses and
 		// keep a rolling average for stats.
 
-		/** List of latest wifi scan results per device. */
+		/**
+		 * The "result" of a wifiscan can include multiple responses. This maps from an
+		 * AP (serial number) to a list of most recent wifiscan "results" where each
+		 * "result" itself is a list of responses from other APs.
+		 *
+		 * @see UCentralClient#wifiScan(String, boolean)
+		 */
 		public Map<String, List<List<WifiScanEntry>>> latestWifiScans =
 			new ConcurrentHashMap<>();
 
@@ -309,8 +315,7 @@ public class Modeler implements Runnable {
 					);
 
 				// Parse and validate this record
-				List<WifiScanEntry> scanEntries =
-					UCentralUtils.parseWifiScanEntries(record.payload);
+				List<WifiScanEntry> scanEntries = UCentralUtils.parseWifiScanEntries(record.payload, record.timestampMs);
 				if (scanEntries == null) {
 					continue;
 				}

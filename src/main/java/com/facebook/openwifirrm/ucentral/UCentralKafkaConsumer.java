@@ -68,10 +68,14 @@ public class UCentralKafkaConsumer {
 		/** The state payload JSON. */
 		public final JsonObject payload;
 
+		/** Unix time (ms). */
+		public final long timestampMs;
+
 		/** Constructor. */
-		public KafkaRecord(String serialNumber, JsonObject payload) {
+		public KafkaRecord(String serialNumber, JsonObject payload, long timestampMs) {
 			this.serialNumber = serialNumber;
 			this.payload = payload;
+			this.timestampMs = timestampMs;
 		}
 	}
 
@@ -245,11 +249,12 @@ public class UCentralKafkaConsumer {
 					"Offset {}: {} => {}",
 					record.offset(), serialNumber, payload.toString()
 				);
-
+				// record.timestamp() is empirically confirmed to be Unix time (ms)
+				KafkaRecord kafkaRecord = new KafkaRecord(serialNumber, payload, record.timestamp());
 				if (record.topic().equals(stateTopic)) {
-					stateRecords.add(new KafkaRecord(serialNumber, payload));
+					stateRecords.add(kafkaRecord);
 				} else if (record.topic().equals(wifiScanTopic)) {
-					wifiScanRecords.add(new KafkaRecord(serialNumber, payload));
+					wifiScanRecords.add(kafkaRecord);
 				}
 			}
 		}

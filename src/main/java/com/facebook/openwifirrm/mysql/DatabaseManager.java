@@ -429,9 +429,16 @@ public class DatabaseManager {
 		return state;
 	}
 
-	/** Insert wifi scan results into the database. */
+	/**
+	 * Insert wifi scan results into the database.
+	 *
+	 * @param serialNumber     serial number
+	 * @param timestampSeconds timestamp (Unix time in seconds).
+	 * @param entries          list of wifiscan entries
+	 * @throws SQLException
+	 */
 	public void addWifiScan(
-		String serialNumber, long ts, List<WifiScanEntry> entries
+		String serialNumber, long timestampSeconds, List<WifiScanEntry> entries
 	) throws SQLException {
 		if (ds == null) {
 			return;
@@ -444,7 +451,7 @@ public class DatabaseManager {
 				"INSERT INTO `wifiscan` (`time`, `serial`) VALUES (?, ?)",
 				Statement.RETURN_GENERATED_KEYS
 			);
-			stmt.setTimestamp(1, new Timestamp(ts * 1000));
+			stmt.setTimestamp(1, new Timestamp(timestampSeconds * 1000));
 			stmt.setString(2, serialNumber);
 			int rows = stmt.executeUpdate();
 			if (rows == 0) {

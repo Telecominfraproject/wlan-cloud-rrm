@@ -622,6 +622,7 @@ public class LeastUsedChannelOptimizerTest {
 			deviceB,
 			Arrays.asList(
 				TestUtils.createWifiScanListWithWidth(
+					null,
 					Arrays.asList(36, 157),
 					Arrays.asList(
 						"JAUWAAAAAAAAAAAAAAAAAAAAAAAAAA==",
@@ -654,6 +655,7 @@ public class LeastUsedChannelOptimizerTest {
 			deviceC,
 			Arrays.asList(
 				TestUtils.createWifiScanListWithWidth(
+					null,
 					channelsC2,
 					Arrays.asList(
 						"JAUWAAAAAAAAAAAAAAAAAAAAAAAAAA==",

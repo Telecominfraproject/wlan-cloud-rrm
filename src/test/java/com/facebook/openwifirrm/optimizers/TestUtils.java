@@ -8,6 +8,7 @@
 
 package com.facebook.openwifirrm.optimizers;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -17,6 +18,7 @@ import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 import com.facebook.openwifirrm.DeviceTopology;
+import com.facebook.openwifirrm.ucentral.UCentralUtils;
 import com.facebook.openwifirrm.ucentral.UCentralUtils.WifiScanEntry;
 import com.facebook.openwifirrm.ucentral.models.State;
 import com.google.gson.Gson;
@@ -25,6 +27,9 @@ import com.google.gson.JsonArray;
 public class TestUtils {
 	/** The Gson instance. */
 	private static final Gson gson = new Gson();
+
+	/** Default value for {@link WifiScanEntry#unixTimeMs} for testing. */
+	public static final Instant DEFAULT_WIFISCANENTRY_TIME = Instant.parse("2022-01-01T00:00:00Z");
 
 	/** Create a topology from the given devices in a single zone. */
 	public static DeviceTopology createTopology(String zone, String... devices) {
@@ -69,7 +74,9 @@ public class TestUtils {
 	public static WifiScanEntry createWifiScanEntry(int channel) {
 		WifiScanEntry entry = new WifiScanEntry();
 		entry.channel = channel;
+		entry.frequency = UCentralUtils.channelToFrequencyMHz(channel);
 		entry.signal = -60;
+		entry.unixTimeMs = TestUtils.DEFAULT_WIFISCANENTRY_TIME.toEpochMilli();
 		return entry;
 	}
 
@@ -83,10 +90,10 @@ public class TestUtils {
 
 	/** Create a wifi scan entry with the given BSSID and RSSI. */
 	public static WifiScanEntry createWifiScanEntryWithBssid(String bssid, Integer rssi) {
-		WifiScanEntry entry = new WifiScanEntry();
-		entry.channel = 36;
+		final int channel = 36;
+		WifiScanEntry entry = createWifiScanEntry(channel);
 		entry.bssid = bssid;
-		entry.signal = rssi;
+		entry.signal = rssi; // overwrite
 		return entry;
 	}
 
@@ -100,37 +107,38 @@ public class TestUtils {
 	}
 
 	/**
-	 * Create a wifi scan entry with the given channel
-	 * and channel width info (in the format of HT operation and VHT operation).
+	 * Create a wifi scan entry with the given channel and channel width info (in
+	 * the format of HT operation and VHT operation). It is the caller's
+	 * responsibility to make sure {@code channel}, {@code htOper}, and
+	 * {@code vhtOper} are consistent.
 	 */
-	public static WifiScanEntry createWifiScanEntryWithWidth(
-		int channel,
-		String htOper,
-		String vhtOper
-	) {
+	public static WifiScanEntry createWifiScanEntryWithWidth(String bssid, int channel, String htOper, String vhtOper) {
 		WifiScanEntry entry = new WifiScanEntry();
+		entry.bssid = bssid;
 		entry.channel = channel;
+		entry.frequency = UCentralUtils.channelToFrequencyMHz(channel);
 		entry.signal = -60;
 		entry.ht_oper = htOper;
 		entry.vht_oper = vhtOper;
+		entry.unixTimeMs = TestUtils.DEFAULT_WIFISCANENTRY_TIME.toEpochMilli();
 		return entry;
 	}
 
 	/**
-	 * Create a list of wifi scan entries with the given channels
-	 * and channel width info (in the format of HT operation and VHT operation).
+	 * Create a list of wifi scan entries with the given channels and channel width
+	 * info (in the format of HT operation and VHT operation). It is the caller's
+	 * responsibility to make sure {@code channels}, {@code htOper}, and
+	 * {@code vhtOper} are consistent.
 	 */
-	public static List<WifiScanEntry> createWifiScanListWithWidth(
-		List<Integer> channels,
-		List<String> htOper,
-		List<String> vhtOper
-	) {
+	public static List<WifiScanEntry> createWifiScanListWithWidth(String bssid, List<Integer> channels,
+			List<String> htOper, List<String> vhtOper) {
 		List<WifiScanEntry> wifiScanResults = new ArrayList<>();
 		for (int i = 0; i < channels.size(); i++) {
 			WifiScanEntry wifiScanResult = createWifiScanEntryWithWidth(
-				channels.get(i),
-				((i >= htOper.size()) ? null : htOper.get(i)),
-				((i >= vhtOper.size()) ? null : vhtOper.get(i))
+					bssid,
+					channels.get(i),
+					((i >= htOper.size()) ? null : htOper.get(i)),
+					((i >= vhtOper.size()) ? null : vhtOper.get(i))
 			);
 			wifiScanResults.add(wifiScanResult);
 		}
@@ -141,10 +149,8 @@ public class TestUtils {
 	public static WifiScanEntry createWifiScanEntryWithBssid(
 		int channel, String bssid
 	) {
-		WifiScanEntry entry = new WifiScanEntry();
-		entry.channel = channel;
+		WifiScanEntry entry = createWifiScanEntry(channel);
 		entry.bssid = bssid;
-		entry.signal = -60;
 		return entry;
 	}
 

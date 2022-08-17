@@ -419,7 +419,21 @@ public class UCentralClient {
 		}
 	}
 
-	/** Launch a wifi scan for a device (by serial number). */
+	/**
+	 * Launch a wifi scan for a device (by serial number).
+	 * <p>
+	 * An AP can conduct a wifiscan, which can be either active or passive. In an
+	 * active wifiscan, the AP sends out a wifiscan request and listens for
+	 * responses from other APs. In a passive wifiscan, the AP does not send out a
+	 * wifiscan request but instead just waits for periodic beacons from the other
+	 * APs. (Note that neither the responses to requests (in active mode) or the
+	 * periodic beacons are guaranteed to happen at any particular time (and it
+	 * depends on network traffic)).
+	 * <p>
+	 * The AP conducting the wifiscan goes through every channel and listens for
+	 * responses/beacons. However, the responding/beaconing APs only send responses
+	 * on channels they are currently using.
+	 */
 	public CommandInfo wifiScan(String serialNumber, boolean verbose) {
 		WifiScanRequest req = new WifiScanRequest();
 		req.serialNumber = serialNumber;

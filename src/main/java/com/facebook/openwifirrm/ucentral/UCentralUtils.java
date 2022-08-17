@@ -16,6 +16,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -23,7 +24,9 @@ import org.slf4j.LoggerFactory;
 
 import com.facebook.openwifirrm.RRMConfig;
 import com.facebook.openwifirrm.Utils;
+import com.facebook.openwifirrm.optimizers.ChannelOptimizer;
 import com.facebook.openwifirrm.ucentral.models.State;
+import com.facebook.openwifirrm.ucentral.models.WifiScanEntryResult;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -41,78 +44,74 @@ public class UCentralUtils {
 	// This class should not be instantiated.
 	private UCentralUtils() {}
 
-	/** Represents a single entry in wifi scan results. */
-	public static class WifiScanEntry {
-		public int channel;
-		public long last_seen;
-		/** Signal strength measured in dBm */
-		public int signal;
-		/** BSSID is the MAC address of the device */
-		public String bssid;
-		public String ssid;
-		public long tsf;
+	/**
+	 * Extends {@link WifiScanEntryResult} to track the response time of the entry.
+	 */
+	public static class WifiScanEntry extends WifiScanEntryResult {
 		/**
-		 * ht_oper is short for "high throughput operator". This field contains some
-		 * information already present in other fields. This is because this field was
-		 * added later in order to capture some new information but also includes some
-		 * redundant information. 802.11 defines the HT operator and vendors may define
-		 * additional fields. HT is supported on both the 2.4 GHz and 5 GHz bands.
-		 *
-		 * This field is specified as 24 bytes, but it is encoded in base64. It is
-		 * likely the case that the first byte (the Element ID, which should be 61 for
-		 * ht_oper) and the second byte (Length) are omitted in the wifi scan results,
-		 * resulting in 22 bytes, which translates to a 32 byte base64 encoded String.
+		 * Unix time in milliseconds (ms). This field is not defined in the uCentral
+		 * API. This is added it because {@link WifiScanEntryResult#tsf} is an unknown
+		 * time reference.
 		 */
-		public String ht_oper;
-		/**
-		 * vht_oper is short for "very high throughput operator". This field contains
-		 * some information already present in other fields. This is because this field
-		 * was added later in order to capture some new information but also includes
-		 * some redundant information. 802.11 defines the VHT operator and vendors may
-		 * define additional fields. VHT is supported only on the 5 GHz band.
-		 *
-		 * For information about about the contents of this field, its encoding, etc.,
-		 * please see the javadoc for {@link #ht_oper} first. The vht_oper likely
-		 * operates similarly.
-		 */
-		public String vht_oper;
-		public int capability;
-		public int frequency;
-		/** IE = information element */
-		public JsonArray ies;
+		public long unixTimeMs;
 
 		/** Default Constructor. */
 		public WifiScanEntry() {}
 
 		/** Copy Constructor. */
 		public WifiScanEntry(WifiScanEntry o) {
-			this.channel = o.channel;
-			this.last_seen = o.last_seen;
-			this.signal = o.signal;
-			this.bssid = o.bssid;
-			this.ssid = o.ssid;
-			this.tsf = o.tsf;
-			this.ht_oper = o.ht_oper;
-			this.vht_oper = o.vht_oper;
-			this.capability = o.capability;
-			this.frequency = o.frequency;
-			this.ies = o.ies;
+			super(o);
+			this.unixTimeMs = o.unixTimeMs;
+		}
+
+		@Override
+		public int hashCode() {
+			final int prime = 31;
+			int result = super.hashCode();
+			result = prime * result + Objects.hash(unixTimeMs);
+			return result;
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj) {
+				return true;
+			}
+			if (!super.equals(obj)) {
+				return false;
+			}
+			if (getClass() != obj.getClass()) {
+				return false;
+			}
+			WifiScanEntry other = (WifiScanEntry) obj;
+			return unixTimeMs == other.unixTimeMs;
+		}
+
+		@Override
+		public String toString() {
+			return String.format("WifiScanEntry[signal=%d, bssid=%s, unixTimeMs=%d]", signal, bssid, unixTimeMs);
 		}
 	}
 
 	/**
 	 * Parse a JSON wifi scan result into a list of WifiScanEntry objects.
 	 *
-	 * Returns null if any parsing/deserialization error occurred.
+	 * @param result      result of the wifiscan
+	 * @param timestampMs Unix time in ms
+	 * @return list of wifiscan entries, or null if any parsing/deserialization
+	 *         error occurred.
 	 */
-	public static List<WifiScanEntry> parseWifiScanEntries(JsonObject result) {
+	public static List<WifiScanEntry> parseWifiScanEntries(JsonObject result, long timestampMs) {
 		List<WifiScanEntry> entries = new ArrayList<>();
 		try {
 			JsonArray scanInfo = result
 				.getAsJsonObject("status")
 				.getAsJsonArray("scan");
 			for (JsonElement e : scanInfo) {
-				entries.add(gson.fromJson(e, WifiScanEntry.class));
+				WifiScanEntry entry = gson.fromJson(e, WifiScanEntry.class);
+				entry.unixTimeMs = timestampMs;
+				entries.add(entry);
+
 			}
 		} catch (Exception e) {
 			return null;
@@ -345,6 +344,24 @@ public class UCentralUtils {
 		} catch (NoSuchAlgorithmException e) {
 			logger.error("Unable to generate service key", e);
 			return "";
+		}
+	}
+
+	/**
+	 * Converts channel number to that channel's center frequency in MHz.
+	 *
+	 * @param channel channel number. See
+	 *                {@link ChannelOptimizer#AVAILABLE_CHANNELS_BAND} for channels
+	 *                in each band.
+	 * @return the center frequency of the given channel in MHz
+	 */
+	public static int channelToFrequencyMHz(int channel) {
+		if (ChannelOptimizer.AVAILABLE_CHANNELS_BAND.get(UCentralConstants.BAND_2G).contains(channel)) {
+			return 2407 + 5 * channel;
+		} else if (ChannelOptimizer.AVAILABLE_CHANNELS_BAND.get(UCentralConstants.BAND_5G).contains(channel)) {
+			return 5000 + channel;
+		} else {
+			throw new IllegalArgumentException("Must provide a valid channel.");
 		}
 	}
 }

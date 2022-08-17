@@ -397,8 +397,8 @@ public class DataCollector implements Runnable {
 			);
 			return false;
 		}
-		List<WifiScanEntry> scanEntries =
-			UCentralUtils.parseWifiScanEntries(wifiScanResult.results);
+		// wifiScanResult.executed is in seconds
+		List<WifiScanEntry> scanEntries = UCentralUtils.parseWifiScanEntries(wifiScanResult.results, 1000 * wifiScanResult.executed);
 		if (scanEntries == null) {
 			logger.error(
 				"Device {}: wifi scan returned unexpected result", serialNumber
@@ -429,7 +429,7 @@ public class DataCollector implements Runnable {
 
 	/** Insert wifi scan results into database. */
 	private void insertWifiScanResultsToDatabase(
-		String serialNumber, long ts, List<WifiScanEntry> entries
+		String serialNumber, long timestampSeconds, List<WifiScanEntry> entries
 	) {
 		if (dbManager == null) {
 			return;
@@ -437,7 +437,7 @@ public class DataCollector implements Runnable {
 
 		// Insert into database
 		try {
-			dbManager.addWifiScan(serialNumber, ts, entries);
+			dbManager.addWifiScan(serialNumber, timestampSeconds, entries);
 		} catch (SQLException e) {
 			logger.error("Failed to insert wifi scan results into database", e);
 			return;
