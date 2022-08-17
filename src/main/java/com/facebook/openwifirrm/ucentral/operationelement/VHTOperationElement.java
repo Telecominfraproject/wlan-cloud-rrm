@@ -17,7 +17,7 @@ import org.apache.commons.codec.binary.Base64;
  * Very High Throughput (VHT) Operation Element, which is potentially present in
  * wifiscan entries. Introduced in 802.11ac (2013).
  */
-public class VHTOperationElement implements OperationElement {
+public class VHTOperationElement {
 
 	/** False if the channel width is 20 MHz or 40 MHz; true otherwise. */
 	private final boolean channelWidthIndicator;
@@ -90,14 +90,9 @@ public class VHTOperationElement implements OperationElement {
 		this.vhtMcsForNss = vhtMcsForNss;
 	}
 
-	@Override
-	public boolean matchesForAggregation(OperationElement otherOper) {
+	public boolean matchesForAggregation(VHTOperationElement other) {
 		// check everything except vhtMcsForNss
-		if (otherOper == null || getClass() == otherOper.getClass()) {
-			return false;
-		}
-		VHTOperationElement other = (VHTOperationElement) otherOper;
-		return channel1 == other.channel1 && channel2 == other.channel2
+		return other != null && channel1 == other.channel1 && channel2 == other.channel2
 				&& channelWidthIndicator == other.channelWidthIndicator;
 	}
 

@@ -215,7 +215,7 @@ public class ModelerUtils {
 
 	/**
 	 * Determines if two wifiscan entries should be aggregated without consideration
-	 * for any kind of obsoletion period. (Untested) should handle APs that support
+	 * for any kind of obsoletion period. This should handle APs that support
 	 * pre-802.11n standards (no ht_oper and no vht_oper), 802.11n (supports ht_oper
 	 * but no vht_oper), and 802.11ac (supports both ht_oper and vht_oper).
 	 * Pre-802.11n, if two entries with the same bssid are in the same channel (and
@@ -226,6 +226,7 @@ public class ModelerUtils {
 	 * @return true if the entries should be aggregated
 	 */
 	private static boolean matchesForAggregation(WifiScanEntry entry1, WifiScanEntry entry2) {
+		// TODO test on real pre-802.11n APs (which do not have ht_oper and vht_oper)
 		// do not check SSID (other SSIDs can contribute to interference, and SSIDs can
 		// change any time)
 		return Objects.equals(entry1.bssid, entry2.bssid) && entry1.frequency == entry2.frequency

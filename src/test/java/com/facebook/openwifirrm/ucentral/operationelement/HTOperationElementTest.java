@@ -12,8 +12,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
 
-import com.facebook.openwifirrm.ucentral.operationelement.HTOperationElement;
-
 public class HTOperationElementTest {
 	@Test
 	void testGetHtOper() {

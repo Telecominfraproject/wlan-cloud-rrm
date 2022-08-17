@@ -17,7 +17,7 @@ import org.apache.commons.codec.binary.Base64;
  * High Throughput (HT) Operation Element, which is potentially present in
  * wifiscan entries. Introduced in 802.11n (2009).
  */
-public class HTOperationElement implements OperationElement {
+public class HTOperationElement {
 
 	/** Channel number of the primary channel. */
 	private final byte primaryChannel;
@@ -124,7 +124,7 @@ public class HTOperationElement implements OperationElement {
 		this.rifsMode = ((bytes[1] & 0b00010000) >>> 4) == 1;
 		this.htProtection = (byte) (bytes[2] >>> 6);
 		this.nongreenfieldHtStasPresent = ((bytes[2] & 0b00100000) >>> 5) == 1;
-		this.obssNonHtStasPresent = ((bytes[2] & 0b00001000) >>> 4) == 1;
+		this.obssNonHtStasPresent = ((bytes[2] & 0b00001000) >>> 3) == 1;
 		this.channelCenterFrequencySegment2 = (byte) (((bytes[2] & 0b00000111) << 5)
 				| ((bytes[3] & 0b11111000) >>> 3));
 		this.dualBeacon = ((bytes[4] & 0b00000010) >>> 1) == 1;
@@ -137,14 +137,9 @@ public class HTOperationElement implements OperationElement {
 		this.basicHtMcsSet = basicHtMcsSet;
 	}
 
-	@Override
-	public boolean matchesForAggregation(OperationElement otherOper) {
-		if (otherOper == null || getClass() == otherOper.getClass()) {
-			return false;
-		}
-		HTOperationElement other = (HTOperationElement) otherOper;
-		return primaryChannel == other.primaryChannel && secondaryChannelOffset == other.secondaryChannelOffset
-				&& staChannelWidth == other.staChannelWidth
+	public boolean matchesForAggregation(HTOperationElement other) {
+		return other != null && primaryChannel == other.primaryChannel
+				&& secondaryChannelOffset == other.secondaryChannelOffset && staChannelWidth == other.staChannelWidth
 				&& channelCenterFrequencySegment2 == other.channelCenterFrequencySegment2;
 	}
 

@@ -84,10 +84,9 @@ public class Modeler implements Runnable {
 		// keep a rolling average for stats.
 
 		/**
-		 * The "result" of a wifiscan can include multiple responses.
-		 * {@code latestWifiScans} maps from an AP (serial number) to a list of most
-		 * recent wifiscan "results" where each "result" itself is a list of responses
-		 * from other APs.
+		 * The "result" of a wifiscan can include multiple responses. This maps from an
+		 * AP (serial number) to a list of most recent wifiscan "results" where each
+		 * "result" itself is a list of responses from other APs.
 		 *
 		 * @see UCentralClient#wifiScan(String, boolean)
 		 */

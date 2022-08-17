@@ -155,6 +155,8 @@ public class ModelerUtilsTest {
 		entryCToB1.signal = -70;
 		entryCToB1.unixTimeMs += 2 * obsoletionPeriodMs;
 		dataModel.latestWifiScans.get(apB).add(Arrays.asList(entryCToB1));
+		// an obsoletion period of 0 means to get the most recent entry for each bssid
+		// regardless of how far apart the entries are for different bssids
 		aggregateMap = ModelerUtils.getAggregatedWifiScans(dataModel, 0, new MeanAggregator());
 		WifiScanEntry expectedAggregatedEntryCToB = new WifiScanEntry(entryCToB1);
 		expectedAggregatedEntryAToB = new WifiScanEntry(entryAToB3);
@@ -250,12 +252,10 @@ public class ModelerUtilsTest {
 		expectedAggregatedEntryAToB.signal = -65; // average of -60 and -70 (would be -64 if the -62 entry was included)
 		assertEquals(expectedAggregatedEntryAToB, aggregateMap.get(apB).get(bssidA));
 
-		// test that entries with different HT operation elements are not aggregated
-		// even if their other fields match
+		// Test that entries with HT operation elements which differ in the relevant
+		// fields (channel numbers and widths) are not aggregated together.
 		primaryChannel = 1;
-		// in htOper, set the secondary channel offset field as 1 and the sta channel
-		// width field as 1
-		htOper = "AWAAAAAAAAAAAAAAAAAAAAAAAAAAAA==";
+		htOper = "AWAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="; // use different Basic HT-MCS Set field
 		WifiScanEntry entryAToB4 = TestUtils.createWifiScanEntryWithWidth(bssidA, primaryChannel, htOper, null);
 		entryAToB4.signal = -72;
 		entryAToB4.unixTimeMs += 180000; // 1 min after previous entry
@@ -265,10 +265,22 @@ public class ModelerUtilsTest {
 		expectedAggregatedEntryAToB.signal = -72;
 		assertEquals(expectedAggregatedEntryAToB, aggregateMap.get(apB).get(bssidA));
 
+		// Test that entries with HT operation elements with differ only in irrelevant
+		// fields are aggregated together
+		htOper = "AWAAAAAAgAAAAAAAAAAAAAAAAAAAAA==";
+		WifiScanEntry entryAToB5 = TestUtils.createWifiScanEntryWithWidth(bssidA, primaryChannel, htOper, null);
+		entryAToB5.signal = -74;
+		entryAToB5.unixTimeMs += 240000; // 1 min after previous entry
+		dataModel.latestWifiScans.get(apB).add(Arrays.asList(entryAToB5));
+		aggregateMap = ModelerUtils.getAggregatedWifiScans(dataModel, obsoletionPeriodMs, new MeanAggregator());
+		expectedAggregatedEntryAToB = new WifiScanEntry(entryAToB5);
+		expectedAggregatedEntryAToB.signal = -73; // average of -72 and -74
+		assertEquals(expectedAggregatedEntryAToB, aggregateMap.get(apB).get(bssidA));
+
 		/*
-		 * Test that entries with different VHT operation elements are not aggregated
-		 * even if their other fields (including htOper) are the same. Use channel 42
-		 * (80 MHz wide), with the primary channel being 36 (contained "within" the
+		 * Test that entries with VHT operation elements which differ in the relevant
+		 * fields (channel numbers and widths) are not aggregated together. Use channel
+		 * 42 (80 MHz wide), with the primary channel being 36 (contained "within" the
 		 * wider channel 42). Use 36 as the entry's "channel" field as well, even if
 		 * this is not how it would be in reality, just to test htOper.
 		 */
@@ -276,12 +288,12 @@ public class ModelerUtilsTest {
 		// use secondary channel offset field of 1 and sta channel width field of 1
 		htOper = "LGAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 		String vhtOper = "ASoAAAA=";
-		WifiScanEntry entryAToB5 = TestUtils.createWifiScanEntryWithWidth(bssidA, primaryChannel, htOper, vhtOper);
-		entryAToB5.signal = -74;
-		entryAToB5.unixTimeMs += 240000; // 1 min after previous entry
-		dataModel.latestWifiScans.get(apB).add(Arrays.asList(entryAToB5));
+		WifiScanEntry entryAToB6 = TestUtils.createWifiScanEntryWithWidth(bssidA, primaryChannel, htOper, vhtOper);
+		entryAToB6.signal = -74;
+		entryAToB6.unixTimeMs += 300000; // 1 min after previous entry
+		dataModel.latestWifiScans.get(apB).add(Arrays.asList(entryAToB6));
 		aggregateMap = ModelerUtils.getAggregatedWifiScans(dataModel, obsoletionPeriodMs, new MeanAggregator());
-		expectedAggregatedEntryAToB = new WifiScanEntry(entryAToB5);
+		expectedAggregatedEntryAToB = new WifiScanEntry(entryAToB6);
 		assertEquals(expectedAggregatedEntryAToB, aggregateMap.get(apB).get(bssidA));
 
 		/*
@@ -290,12 +302,24 @@ public class ModelerUtilsTest {
 		 * but here it remains the same, just to test vhtOper.
 		 */
 		vhtOper = "ASoyAAA=";
-		WifiScanEntry entryAToB6 = TestUtils.createWifiScanEntryWithWidth(bssidA, primaryChannel, htOper, vhtOper);
-		entryAToB6.signal = -76;
-		entryAToB6.unixTimeMs += 300000; // 1 min after previous entry
-		dataModel.latestWifiScans.get(apB).add(Arrays.asList(entryAToB6));
+		WifiScanEntry entryAToB7 = TestUtils.createWifiScanEntryWithWidth(bssidA, primaryChannel, htOper, vhtOper);
+		entryAToB7.signal = -76;
+		entryAToB7.unixTimeMs += 360000; // 1 min after previous entry
+		dataModel.latestWifiScans.get(apB).add(Arrays.asList(entryAToB7));
 		aggregateMap = ModelerUtils.getAggregatedWifiScans(dataModel, obsoletionPeriodMs, new MeanAggregator());
-		expectedAggregatedEntryAToB = new WifiScanEntry(entryAToB6);
+		expectedAggregatedEntryAToB = new WifiScanEntry(entryAToB7);
+		assertEquals(expectedAggregatedEntryAToB, aggregateMap.get(apB).get(bssidA));
+
+		// Test that entries with VHT operation elements with differ only in irrelevant
+		// fields are aggregated together
+		vhtOper = "ASoygAA="; // use different Basic VHT-MCS Set and NSS Set field
+		WifiScanEntry entryAToB8 = TestUtils.createWifiScanEntryWithWidth(bssidA, primaryChannel, htOper, vhtOper);
+		entryAToB8.signal = -78;
+		entryAToB8.unixTimeMs += 420000; // 1 min after previous entry
+		dataModel.latestWifiScans.get(apB).add(Arrays.asList(entryAToB8));
+		aggregateMap = ModelerUtils.getAggregatedWifiScans(dataModel, obsoletionPeriodMs, new MeanAggregator());
+		expectedAggregatedEntryAToB = new WifiScanEntry(entryAToB8);
+		expectedAggregatedEntryAToB.signal = -77; // average of -78 and -76
 		assertEquals(expectedAggregatedEntryAToB, aggregateMap.get(apB).get(bssidA));
 	}
 }
