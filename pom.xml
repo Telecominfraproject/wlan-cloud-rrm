@@ -3,13 +3,14 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.facebook</groupId>
   <artifactId>openwifi-rrm</artifactId>
-  <version>1.0.0</version>
+  <version>2.7.0</version>
   <properties>
     <java.version>11</java.version>
     <slf4j.version>1.7.32</slf4j.version>
     <junit.version>5.7.2</junit.version>
     <swagger.version>2.1.10</swagger.version>
     <mainClassName>com.facebook.openwifirrm.Launcher</mainClassName>
+    <appendVersionString></appendVersionString>
   </properties>
   <build>
     <finalName>openwifi-rrm</finalName>

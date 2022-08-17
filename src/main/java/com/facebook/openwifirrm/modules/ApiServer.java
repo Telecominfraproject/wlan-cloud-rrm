@@ -89,7 +89,7 @@ import spark.Spark;
 @OpenAPIDefinition(
 	info = @Info(
 		title = "OpenWiFi 2.0 RRM OpenAPI",
-		version = "1.0.0",  // TODO
+		version = "2.7.0",  // NOTE: needs manual update!
 		description = "This document describes the API for the Radio Resource Management service."
 	),
 	tags = {

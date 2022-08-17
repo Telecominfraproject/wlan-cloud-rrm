@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: OpenWiFi 2.0 RRM OpenAPI
   description: This document describes the API for the Radio Resource Management service.
-  version: 1.0.0
+  version: 2.7.0
 security:
 - bearerAuth: []
 tags:
