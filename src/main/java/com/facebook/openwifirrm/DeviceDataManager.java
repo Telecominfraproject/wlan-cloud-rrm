@@ -93,26 +93,19 @@ public class DeviceDataManager {
 	 * @throws IOException
 	 */
 	private DeviceTopology readTopology(File topologyFile) throws IOException {
-		DeviceTopology topo;
-		if (!topologyFile.isFile()) {
-			// No file, write defaults to disk
-			logger.info(
-				"Topology file '{}' does not exist, creating it...",
-				topologyFile.getPath()
-			);
-			topo = new DeviceTopology();
-			Utils.writeJsonFile(topologyFile, topo);
-		} else {
+		DeviceTopology topo = null;
+
+		if (topologyFile.isFile()) {
 			// Read file
 			logger.info("Reading topology file '{}'", topologyFile.getPath());
 			String contents = Utils.readFile(topologyFile);
-			if (contents == null || contents.isBlank()) {
-				logger.info("Topology file '{}' is blank, writing defaults to it...", topologyFile.getPath());
-				topo = new DeviceTopology();
-				Utils.writeJsonFile(topologyFile, topo);
-			} else {
-				topo = gson.fromJson(contents, DeviceTopology.class);
-			}
+			topo = gson.fromJson(contents, DeviceTopology.class);
+		}
+		if (topo == null) {
+			// Missing/empty file, write defaults to disk
+			logger.info("Creating default topology file '{}'", topologyFile.getPath());
+			topo = new DeviceTopology();
+			Utils.writeJsonFile(topologyFile, topo);
 		}
 		validateTopology(topo);
 		return topo;
@@ -127,29 +120,19 @@ public class DeviceDataManager {
 	 */
 	private DeviceLayeredConfig readDeviceLayeredConfig(File deviceConfigFile)
 		throws IOException {
-		DeviceLayeredConfig cfg;
-		if (!deviceConfigFile.isFile()) {
-			// No file, write defaults to disk
-			logger.info(
-				"Device config file '{}' does not exist, creating it...",
-				deviceConfigFile.getPath()
-			);
+		DeviceLayeredConfig cfg = null;
+		if (deviceConfigFile.isFile()) {
+			// Read file
+			logger.info("Reading device config file '{}'", deviceConfigFile.getPath());
+			String contents = Utils.readFile(deviceConfigFile);
+			cfg = gson.fromJson(contents, DeviceLayeredConfig.class);
+		}
+		if (cfg == null) {
+			// Missing/empty file, write defaults to disk
+			logger.info("Creating default config file '{}'", deviceConfigFile.getPath());
 			cfg = new DeviceLayeredConfig();
 			Utils.writeJsonFile(deviceConfigFile, cfg);
 		} else {
-			// Read file
-			logger.info(
-				"Reading device config file '{}'", deviceConfigFile.getPath()
-			);
-			String contents = Utils.readFile(deviceConfigFile);
-			if (contents == null || contents.isBlank()) {
-				cfg = new DeviceLayeredConfig();
-				Utils.writeJsonFile(deviceConfigFile, cfg);
-			} else {
-				logger.info("Device config file '{}' is blank, writing defaults to it...", deviceConfigFile.getPath());
-				cfg = gson.fromJson(contents, DeviceLayeredConfig.class);
-			}
-
 			// Sanitize config (NOTE: topology must be initialized!)
 			boolean modified = sanitizeDeviceLayeredConfig(cfg);
 			if (modified) {

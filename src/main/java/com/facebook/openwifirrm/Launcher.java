@@ -70,36 +70,33 @@ public class Launcher implements Callable<Integer> {
 		RRMConfig config;
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
-		if (!configFile.isFile()) {
-			// No file, write defaults to disk
-			logger.info(
-				"Config file '{}' does not exist, creating it...",
-				configFile.getPath()
-			);
-			config = new RRMConfig();
-			Utils.writeJsonFile(configFile, config);
-		} else {
+		JSONObject userConfig = null;
+		if (configFile.isFile()) {
 			// Read file
 			logger.info("Reading config file '{}'", configFile.getPath());
 			String contents = Utils.readFile(configFile);
-			if (contents == null || contents.isBlank()) {
-				logger.info("Config file '{}' does not exist, writing defaults it...", configFile.getPath());
-				config = new RRMConfig();
-				Utils.writeJsonFile(configFile, config);
-			} else {
-				JSONObject userConfig = new JSONObject(contents);
-				// In case of any added/missing values, we want to build off the
-				// defaults in RRMConfig, so this code gets more complex...
-				JSONObject fullConfig = new JSONObject(gson.toJson(new RRMConfig()));
-				Utils.jsonMerge(fullConfig, userConfig);
-				config = gson.fromJson(fullConfig.toString(), RRMConfig.class);
-				// Compare merged config with contents as read from disk
-				// If any differences (ex. added fields), overwrite config file
-				if (!fullConfig.toString().equals(userConfig.toString())) {
-					logger.info("Rewriting config file with new changes...");
-					try (Writer writer = new FileWriter(configFile)) {
-						gson.toJson(config, writer);
-					}
+			if (!contents.isEmpty()) {
+				userConfig = new JSONObject(contents);
+			}
+		}
+		if (userConfig == null) {
+			// Missing/empty file, write defaults to disk
+			logger.info("Creating default config file '{}'", configFile.getPath());
+			config = new RRMConfig();
+			Utils.writeJsonFile(configFile, config);
+		} else {
+			// In case of any added/missing values, we want to build off the
+			// defaults in RRMConfig, so this code gets more complex...
+			JSONObject fullConfig = new JSONObject(gson.toJson(new RRMConfig()));
+			Utils.jsonMerge(fullConfig, userConfig);
+			config = gson.fromJson(fullConfig.toString(), RRMConfig.class);
+
+			// Compare merged config with contents as read from disk
+			// If any differences (ex. added fields), overwrite config file
+			if (!fullConfig.toString().equals(userConfig.toString())) {
+				logger.info("Rewriting config file with new changes...");
+				try (Writer writer = new FileWriter(configFile)) {
+					gson.toJson(config, writer);
 				}
 			}
 		}
