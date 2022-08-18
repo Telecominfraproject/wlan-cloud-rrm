@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package com.facebook.openwifirrm.optimizers;
+package com.facebook.openwifirrm.optimizers.tpc;
 
 import java.util.Map;
 

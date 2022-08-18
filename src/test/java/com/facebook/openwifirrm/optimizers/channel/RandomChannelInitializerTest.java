@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package com.facebook.openwifirrm.optimizers;
+package com.facebook.openwifirrm.optimizers.channel;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -19,42 +19,48 @@ import org.junit.jupiter.api.TestMethodOrder;
 
 import com.facebook.openwifirrm.DeviceDataManager;
 import com.facebook.openwifirrm.modules.Modeler.DataModel;
+import com.facebook.openwifirrm.optimizers.TestUtils;
 import com.facebook.openwifirrm.ucentral.UCentralConstants;
-import com.facebook.openwifirrm.ucentral.models.State;
 
 @TestMethodOrder(OrderAnnotation.class)
-public class RandomTxPowerInitializerTest {
+public class RandomChannelInitializerTest {
 	/** Test zone name. */
 	private static final String TEST_ZONE = "test-zone";
-
-	/** Create an empty device state object. */
-	private State createState() {
-		return new State();
-	}
 
 	@Test
 	@Order(1)
 	void test1() throws Exception {
+		final String band = UCentralConstants.BAND_2G;
 		final String deviceA = "aaaaaaaaaaaa";
 		final String deviceB = "bbbbbbbbbbbb";
+		final int channelWidth = 20;
 
 		DeviceDataManager deviceDataManager = new DeviceDataManager();
 		deviceDataManager.setTopology(
 			TestUtils.createTopology(TEST_ZONE, deviceA, deviceB)
 		);
 
+		// A and B will be assigned to the same channel
 		DataModel dataModel = new DataModel();
-		dataModel.latestState.put(deviceA, createState());
-		dataModel.latestState.put(deviceB, createState());
-
-		final int txPower = 16;
-		TPC optimizer = new RandomTxPowerInitializer(
-			dataModel, TEST_ZONE, deviceDataManager, txPower
+		dataModel.latestState.put(
+			deviceA, TestUtils.createState(6, channelWidth, "ddd")
 		);
-		Map<String, Map<String, Integer>> txPowerMap =
-			optimizer.computeTxPowerMap();
+		dataModel.latestState.put(
+			deviceB, TestUtils.createState(11, channelWidth, "eee")
+		);
+		dataModel.latestDeviceStatus.put(
+			deviceA, TestUtils.createDeviceStatus(band, 7)
+		);
+		dataModel.latestDeviceStatus.put(
+			deviceB, TestUtils.createDeviceStatus(band, 8)
+		);
 
-		assertEquals(txPower, txPowerMap.get(deviceA).get(UCentralConstants.BAND_5G));
-		assertEquals(txPower, txPowerMap.get(deviceB).get(UCentralConstants.BAND_5G));
+		ChannelOptimizer optimizer = new RandomChannelInitializer(
+			dataModel, TEST_ZONE, deviceDataManager
+		);
+		Map<String, Map<String, Integer>> channelMap =
+			optimizer.computeChannelMap();
+
+		assertEquals(channelMap.get(deviceA), channelMap.get(deviceB));
 	}
 }
