@@ -37,14 +37,14 @@ public abstract class ChannelOptimizer {
 	public static final int MIN_CHANNEL_WIDTH = 20;
 
 	/** Map of band to the band-specific lowest available channel*/
-	protected static final Map<String, Integer> LOWER_CHANNEL_LIMIT = new HashMap<>();
+	public static final Map<String, Integer> LOWER_CHANNEL_LIMIT = new HashMap<>();
 	static {
 		LOWER_CHANNEL_LIMIT.put(UCentralConstants.BAND_2G, 1);
 		LOWER_CHANNEL_LIMIT.put(UCentralConstants.BAND_5G, 36);
 	}
 
 	/** Map of band to the band-specific highest available channel*/
-	protected static final Map<String, Integer> UPPER_CHANNEL_LIMIT = new HashMap<>();
+	public static final Map<String, Integer> UPPER_CHANNEL_LIMIT = new HashMap<>();
 	static {
 		UPPER_CHANNEL_LIMIT.put(UCentralConstants.BAND_2G, 11);
 		UPPER_CHANNEL_LIMIT.put(UCentralConstants.BAND_5G, 165);
