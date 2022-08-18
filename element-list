@@ -2,7 +2,8 @@ com.facebook.openwifirrm
 com.facebook.openwifirrm.aggregators
 com.facebook.openwifirrm.modules
 com.facebook.openwifirrm.mysql
-com.facebook.openwifirrm.optimizers
+com.facebook.openwifirrm.optimizers.channel
+com.facebook.openwifirrm.optimizers.tpc
 com.facebook.openwifirrm.ucentral
 com.facebook.openwifirrm.ucentral.gw.models
 com.facebook.openwifirrm.ucentral.models

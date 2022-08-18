@@ -114,7 +114,11 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
-<th class="colFirst" scope="row"><a href="#com.facebook.openwifirrm.optimizers">com.facebook.openwifirrm.optimizers</a></th>
+<th class="colFirst" scope="row"><a href="#com.facebook.openwifirrm.optimizers.channel">com.facebook.openwifirrm.optimizers.channel</a></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<th class="colFirst" scope="row"><a href="#com.facebook.openwifirrm.optimizers.tpc">com.facebook.openwifirrm.optimizers.tpc</a></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 </tbody>
@@ -239,12 +243,12 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </section>
 </li>
 <li class="blockList">
-<section role="region"><a id="com.facebook.openwifirrm.optimizers">
+<section role="region"><a id="com.facebook.openwifirrm.optimizers.channel">
 <!--   -->
 </a>
-<h3>Uses of <a href="../DeviceDataManager.html" title="class in com.facebook.openwifirrm">DeviceDataManager</a> in <a href="../optimizers/package-summary.html">com.facebook.openwifirrm.optimizers</a></h3>
+<h3>Uses of <a href="../DeviceDataManager.html" title="class in com.facebook.openwifirrm">DeviceDataManager</a> in <a href="../optimizers/channel/package-summary.html">com.facebook.openwifirrm.optimizers.channel</a></h3>
 <table class="useSummary">
-<caption><span>Methods in <a href="../optimizers/package-summary.html">com.facebook.openwifirrm.optimizers</a> with parameters of type <a href="../DeviceDataManager.html" title="class in com.facebook.openwifirrm">DeviceDataManager</a></span><span class="tabEnd">&nbsp;</span></caption>
+<caption><span>Methods in <a href="../optimizers/channel/package-summary.html">com.facebook.openwifirrm.optimizers.channel</a> with parameters of type <a href="../DeviceDataManager.html" title="class in com.facebook.openwifirrm">DeviceDataManager</a></span><span class="tabEnd">&nbsp;</span></caption>
 <tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colSecond" scope="col">Method</th>
@@ -253,7 +257,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <tbody>
 <tr class="altColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">ChannelOptimizer.</span><code><span class="memberNameLink"><a href="../optimizers/ChannelOptimizer.html#applyConfig(com.facebook.openwifirrm.DeviceDataManager,com.facebook.openwifirrm.modules.ConfigManager,java.util.Map)">applyConfig</a></span>&#8203;(<a href="../DeviceDataManager.html" title="class in com.facebook.openwifirrm">DeviceDataManager</a>&nbsp;deviceDataManager,
+<th class="colSecond" scope="row"><span class="typeNameLabel">ChannelOptimizer.</span><code><span class="memberNameLink"><a href="../optimizers/channel/ChannelOptimizer.html#applyConfig(com.facebook.openwifirrm.DeviceDataManager,com.facebook.openwifirrm.modules.ConfigManager,java.util.Map)">applyConfig</a></span>&#8203;(<a href="../DeviceDataManager.html" title="class in com.facebook.openwifirrm">DeviceDataManager</a>&nbsp;deviceDataManager,
            <a href="../modules/ConfigManager.html" title="class in com.facebook.openwifirrm.modules">ConfigManager</a>&nbsp;configManager,
            <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html?is-external=true" title="class or interface in java.util" class="externalLink">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>,&#8203;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html?is-external=true" title="class or interface in java.util" class="externalLink">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>,&#8203;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Integer.html?is-external=true" title="class or interface in java.lang" class="externalLink">Integer</a>&gt;&gt;&nbsp;channelMap)</code></th>
 <td class="colLast">
@@ -261,9 +265,67 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
  manager.</div>
 </td>
 </tr>
+</tbody>
+</table>
+<table class="useSummary">
+<caption><span>Constructors in <a href="../optimizers/channel/package-summary.html">com.facebook.openwifirrm.optimizers.channel</a> with parameters of type <a href="../DeviceDataManager.html" title="class in com.facebook.openwifirrm">DeviceDataManager</a></span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Constructor</th>
+<th class="colLast" scope="col">Description</th>
+</tr>
+<tbody>
+<tr class="altColor">
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../optimizers/channel/ChannelOptimizer.html#%3Cinit%3E(com.facebook.openwifirrm.modules.Modeler.DataModel,java.lang.String,com.facebook.openwifirrm.DeviceDataManager)">ChannelOptimizer</a></span>&#8203;(<a href="../modules/Modeler.DataModel.html" title="class in com.facebook.openwifirrm.modules">Modeler.DataModel</a>&nbsp;model,
+                <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;zone,
+                <a href="../DeviceDataManager.html" title="class in com.facebook.openwifirrm">DeviceDataManager</a>&nbsp;deviceDataManager)</code></th>
+<td class="colLast">
+<div class="block">Constructor.</div>
+</td>
+</tr>
 <tr class="rowColor">
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../optimizers/channel/LeastUsedChannelOptimizer.html#%3Cinit%3E(com.facebook.openwifirrm.modules.Modeler.DataModel,java.lang.String,com.facebook.openwifirrm.DeviceDataManager)">LeastUsedChannelOptimizer</a></span>&#8203;(<a href="../modules/Modeler.DataModel.html" title="class in com.facebook.openwifirrm.modules">Modeler.DataModel</a>&nbsp;model,
+                         <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;zone,
+                         <a href="../DeviceDataManager.html" title="class in com.facebook.openwifirrm">DeviceDataManager</a>&nbsp;deviceDataManager)</code></th>
+<td class="colLast">
+<div class="block">Constructor.</div>
+</td>
+</tr>
+<tr class="altColor">
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../optimizers/channel/RandomChannelInitializer.html#%3Cinit%3E(com.facebook.openwifirrm.modules.Modeler.DataModel,java.lang.String,com.facebook.openwifirrm.DeviceDataManager)">RandomChannelInitializer</a></span>&#8203;(<a href="../modules/Modeler.DataModel.html" title="class in com.facebook.openwifirrm.modules">Modeler.DataModel</a>&nbsp;model,
+                        <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;zone,
+                        <a href="../DeviceDataManager.html" title="class in com.facebook.openwifirrm">DeviceDataManager</a>&nbsp;deviceDataManager)</code></th>
+<td class="colLast">
+<div class="block">Constructor.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../optimizers/channel/UnmanagedApAwareChannelOptimizer.html#%3Cinit%3E(com.facebook.openwifirrm.modules.Modeler.DataModel,java.lang.String,com.facebook.openwifirrm.DeviceDataManager)">UnmanagedApAwareChannelOptimizer</a></span>&#8203;(<a href="../modules/Modeler.DataModel.html" title="class in com.facebook.openwifirrm.modules">Modeler.DataModel</a>&nbsp;model,
+                                <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;zone,
+                                <a href="../DeviceDataManager.html" title="class in com.facebook.openwifirrm">DeviceDataManager</a>&nbsp;deviceDataManager)</code></th>
+<td class="colLast">
+<div class="block">Constructor.</div>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+</li>
+<li class="blockList">
+<section role="region"><a id="com.facebook.openwifirrm.optimizers.tpc">
+<!--   -->
+</a>
+<h3>Uses of <a href="../DeviceDataManager.html" title="class in com.facebook.openwifirrm">DeviceDataManager</a> in <a href="../optimizers/tpc/package-summary.html">com.facebook.openwifirrm.optimizers.tpc</a></h3>
+<table class="useSummary">
+<caption><span>Methods in <a href="../optimizers/tpc/package-summary.html">com.facebook.openwifirrm.optimizers.tpc</a> with parameters of type <a href="../DeviceDataManager.html" title="class in com.facebook.openwifirrm">DeviceDataManager</a></span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colSecond" scope="col">Method</th>
+<th class="colLast" scope="col">Description</th>
+</tr>
+<tbody>
+<tr class="altColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">TPC.</span><code><span class="memberNameLink"><a href="../optimizers/TPC.html#applyConfig(com.facebook.openwifirrm.DeviceDataManager,com.facebook.openwifirrm.modules.ConfigManager,java.util.Map)">applyConfig</a></span>&#8203;(<a href="../DeviceDataManager.html" title="class in com.facebook.openwifirrm">DeviceDataManager</a>&nbsp;deviceDataManager,
+<th class="colSecond" scope="row"><span class="typeNameLabel">TPC.</span><code><span class="memberNameLink"><a href="../optimizers/tpc/TPC.html#applyConfig(com.facebook.openwifirrm.DeviceDataManager,com.facebook.openwifirrm.modules.ConfigManager,java.util.Map)">applyConfig</a></span>&#8203;(<a href="../DeviceDataManager.html" title="class in com.facebook.openwifirrm">DeviceDataManager</a>&nbsp;deviceDataManager,
            <a href="../modules/ConfigManager.html" title="class in com.facebook.openwifirrm.modules">ConfigManager</a>&nbsp;configManager,
            <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html?is-external=true" title="class or interface in java.util" class="externalLink">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>,&#8203;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html?is-external=true" title="class or interface in java.util" class="externalLink">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>,&#8203;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Integer.html?is-external=true" title="class or interface in java.lang" class="externalLink">Integer</a>&gt;&gt;&nbsp;txPowerMap)</code></th>
 <td class="colLast">
@@ -274,30 +336,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tbody>
 </table>
 <table class="useSummary">
-<caption><span>Constructors in <a href="../optimizers/package-summary.html">com.facebook.openwifirrm.optimizers</a> with parameters of type <a href="../DeviceDataManager.html" title="class in com.facebook.openwifirrm">DeviceDataManager</a></span><span class="tabEnd">&nbsp;</span></caption>
+<caption><span>Constructors in <a href="../optimizers/tpc/package-summary.html">com.facebook.openwifirrm.optimizers.tpc</a> with parameters of type <a href="../DeviceDataManager.html" title="class in com.facebook.openwifirrm">DeviceDataManager</a></span><span class="tabEnd">&nbsp;</span></caption>
 <tr>
 <th class="colFirst" scope="col">Constructor</th>
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tbody>
 <tr class="altColor">
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../optimizers/ChannelOptimizer.html#%3Cinit%3E(com.facebook.openwifirrm.modules.Modeler.DataModel,java.lang.String,com.facebook.openwifirrm.DeviceDataManager)">ChannelOptimizer</a></span>&#8203;(<a href="../modules/Modeler.DataModel.html" title="class in com.facebook.openwifirrm.modules">Modeler.DataModel</a>&nbsp;model,
-                <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;zone,
-                <a href="../DeviceDataManager.html" title="class in com.facebook.openwifirrm">DeviceDataManager</a>&nbsp;deviceDataManager)</code></th>
-<td class="colLast">
-<div class="block">Constructor.</div>
-</td>
-</tr>
-<tr class="rowColor">
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../optimizers/LeastUsedChannelOptimizer.html#%3Cinit%3E(com.facebook.openwifirrm.modules.Modeler.DataModel,java.lang.String,com.facebook.openwifirrm.DeviceDataManager)">LeastUsedChannelOptimizer</a></span>&#8203;(<a href="../modules/Modeler.DataModel.html" title="class in com.facebook.openwifirrm.modules">Modeler.DataModel</a>&nbsp;model,
-                         <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;zone,
-                         <a href="../DeviceDataManager.html" title="class in com.facebook.openwifirrm">DeviceDataManager</a>&nbsp;deviceDataManager)</code></th>
-<td class="colLast">
-<div class="block">Constructor.</div>
-</td>
-</tr>
-<tr class="altColor">
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../optimizers/LocationBasedOptimalTPC.html#%3Cinit%3E(com.facebook.openwifirrm.modules.Modeler.DataModel,java.lang.String,com.facebook.openwifirrm.DeviceDataManager)">LocationBasedOptimalTPC</a></span>&#8203;(<a href="../modules/Modeler.DataModel.html" title="class in com.facebook.openwifirrm.modules">Modeler.DataModel</a>&nbsp;model,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../optimizers/tpc/LocationBasedOptimalTPC.html#%3Cinit%3E(com.facebook.openwifirrm.modules.Modeler.DataModel,java.lang.String,com.facebook.openwifirrm.DeviceDataManager)">LocationBasedOptimalTPC</a></span>&#8203;(<a href="../modules/Modeler.DataModel.html" title="class in com.facebook.openwifirrm.modules">Modeler.DataModel</a>&nbsp;model,
                        <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;zone,
                        <a href="../DeviceDataManager.html" title="class in com.facebook.openwifirrm">DeviceDataManager</a>&nbsp;deviceDataManager)</code></th>
 <td class="colLast">
@@ -305,7 +351,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../optimizers/MeasurementBasedApApTPC.html#%3Cinit%3E(com.facebook.openwifirrm.modules.Modeler.DataModel,java.lang.String,com.facebook.openwifirrm.DeviceDataManager)">MeasurementBasedApApTPC</a></span>&#8203;(<a href="../modules/Modeler.DataModel.html" title="class in com.facebook.openwifirrm.modules">Modeler.DataModel</a>&nbsp;model,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../optimizers/tpc/MeasurementBasedApApTPC.html#%3Cinit%3E(com.facebook.openwifirrm.modules.Modeler.DataModel,java.lang.String,com.facebook.openwifirrm.DeviceDataManager)">MeasurementBasedApApTPC</a></span>&#8203;(<a href="../modules/Modeler.DataModel.html" title="class in com.facebook.openwifirrm.modules">Modeler.DataModel</a>&nbsp;model,
                        <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;zone,
                        <a href="../DeviceDataManager.html" title="class in com.facebook.openwifirrm">DeviceDataManager</a>&nbsp;deviceDataManager)</code></th>
 <td class="colLast">
@@ -313,7 +359,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </td>
 </tr>
 <tr class="altColor">
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../optimizers/MeasurementBasedApApTPC.html#%3Cinit%3E(com.facebook.openwifirrm.modules.Modeler.DataModel,java.lang.String,com.facebook.openwifirrm.DeviceDataManager,int,int)">MeasurementBasedApApTPC</a></span>&#8203;(<a href="../modules/Modeler.DataModel.html" title="class in com.facebook.openwifirrm.modules">Modeler.DataModel</a>&nbsp;model,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../optimizers/tpc/MeasurementBasedApApTPC.html#%3Cinit%3E(com.facebook.openwifirrm.modules.Modeler.DataModel,java.lang.String,com.facebook.openwifirrm.DeviceDataManager,int,int)">MeasurementBasedApApTPC</a></span>&#8203;(<a href="../modules/Modeler.DataModel.html" title="class in com.facebook.openwifirrm.modules">Modeler.DataModel</a>&nbsp;model,
                        <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;zone,
                        <a href="../DeviceDataManager.html" title="class in com.facebook.openwifirrm">DeviceDataManager</a>&nbsp;deviceDataManager,
                        int&nbsp;coverageThreshold,
@@ -323,7 +369,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../optimizers/MeasurementBasedApClientTPC.html#%3Cinit%3E(com.facebook.openwifirrm.modules.Modeler.DataModel,java.lang.String,com.facebook.openwifirrm.DeviceDataManager)">MeasurementBasedApClientTPC</a></span>&#8203;(<a href="../modules/Modeler.DataModel.html" title="class in com.facebook.openwifirrm.modules">Modeler.DataModel</a>&nbsp;model,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../optimizers/tpc/MeasurementBasedApClientTPC.html#%3Cinit%3E(com.facebook.openwifirrm.modules.Modeler.DataModel,java.lang.String,com.facebook.openwifirrm.DeviceDataManager)">MeasurementBasedApClientTPC</a></span>&#8203;(<a href="../modules/Modeler.DataModel.html" title="class in com.facebook.openwifirrm.modules">Modeler.DataModel</a>&nbsp;model,
                            <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;zone,
                            <a href="../DeviceDataManager.html" title="class in com.facebook.openwifirrm">DeviceDataManager</a>&nbsp;deviceDataManager)</code></th>
 <td class="colLast">
@@ -331,7 +377,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </td>
 </tr>
 <tr class="altColor">
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../optimizers/MeasurementBasedApClientTPC.html#%3Cinit%3E(com.facebook.openwifirrm.modules.Modeler.DataModel,java.lang.String,com.facebook.openwifirrm.DeviceDataManager,int)">MeasurementBasedApClientTPC</a></span>&#8203;(<a href="../modules/Modeler.DataModel.html" title="class in com.facebook.openwifirrm.modules">Modeler.DataModel</a>&nbsp;model,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../optimizers/tpc/MeasurementBasedApClientTPC.html#%3Cinit%3E(com.facebook.openwifirrm.modules.Modeler.DataModel,java.lang.String,com.facebook.openwifirrm.DeviceDataManager,int)">MeasurementBasedApClientTPC</a></span>&#8203;(<a href="../modules/Modeler.DataModel.html" title="class in com.facebook.openwifirrm.modules">Modeler.DataModel</a>&nbsp;model,
                            <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;zone,
                            <a href="../DeviceDataManager.html" title="class in com.facebook.openwifirrm">DeviceDataManager</a>&nbsp;deviceDataManager,
                            int&nbsp;targetMcs)</code></th>
@@ -340,23 +386,15 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../optimizers/RandomChannelInitializer.html#%3Cinit%3E(com.facebook.openwifirrm.modules.Modeler.DataModel,java.lang.String,com.facebook.openwifirrm.DeviceDataManager)">RandomChannelInitializer</a></span>&#8203;(<a href="../modules/Modeler.DataModel.html" title="class in com.facebook.openwifirrm.modules">Modeler.DataModel</a>&nbsp;model,
-                        <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;zone,
-                        <a href="../DeviceDataManager.html" title="class in com.facebook.openwifirrm">DeviceDataManager</a>&nbsp;deviceDataManager)</code></th>
-<td class="colLast">
-<div class="block">Constructor.</div>
-</td>
-</tr>
-<tr class="altColor">
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../optimizers/RandomTxPowerInitializer.html#%3Cinit%3E(com.facebook.openwifirrm.modules.Modeler.DataModel,java.lang.String,com.facebook.openwifirrm.DeviceDataManager)">RandomTxPowerInitializer</a></span>&#8203;(<a href="../modules/Modeler.DataModel.html" title="class in com.facebook.openwifirrm.modules">Modeler.DataModel</a>&nbsp;model,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../optimizers/tpc/RandomTxPowerInitializer.html#%3Cinit%3E(com.facebook.openwifirrm.modules.Modeler.DataModel,java.lang.String,com.facebook.openwifirrm.DeviceDataManager)">RandomTxPowerInitializer</a></span>&#8203;(<a href="../modules/Modeler.DataModel.html" title="class in com.facebook.openwifirrm.modules">Modeler.DataModel</a>&nbsp;model,
                         <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;zone,
                         <a href="../DeviceDataManager.html" title="class in com.facebook.openwifirrm">DeviceDataManager</a>&nbsp;deviceDataManager)</code></th>
 <td class="colLast">
 <div class="block">Constructor (uses default tx power).</div>
 </td>
 </tr>
-<tr class="rowColor">
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../optimizers/RandomTxPowerInitializer.html#%3Cinit%3E(com.facebook.openwifirrm.modules.Modeler.DataModel,java.lang.String,com.facebook.openwifirrm.DeviceDataManager,int)">RandomTxPowerInitializer</a></span>&#8203;(<a href="../modules/Modeler.DataModel.html" title="class in com.facebook.openwifirrm.modules">Modeler.DataModel</a>&nbsp;model,
+<tr class="altColor">
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../optimizers/tpc/RandomTxPowerInitializer.html#%3Cinit%3E(com.facebook.openwifirrm.modules.Modeler.DataModel,java.lang.String,com.facebook.openwifirrm.DeviceDataManager,int)">RandomTxPowerInitializer</a></span>&#8203;(<a href="../modules/Modeler.DataModel.html" title="class in com.facebook.openwifirrm.modules">Modeler.DataModel</a>&nbsp;model,
                         <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;zone,
                         <a href="../DeviceDataManager.html" title="class in com.facebook.openwifirrm">DeviceDataManager</a>&nbsp;deviceDataManager,
                         int&nbsp;txPower)</code></th>
@@ -364,18 +402,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Constructor.</div>
 </td>
 </tr>
-<tr class="altColor">
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../optimizers/TPC.html#%3Cinit%3E(com.facebook.openwifirrm.modules.Modeler.DataModel,java.lang.String,com.facebook.openwifirrm.DeviceDataManager)">TPC</a></span>&#8203;(<a href="../modules/Modeler.DataModel.html" title="class in com.facebook.openwifirrm.modules">Modeler.DataModel</a>&nbsp;model,
+<tr class="rowColor">
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../optimizers/tpc/TPC.html#%3Cinit%3E(com.facebook.openwifirrm.modules.Modeler.DataModel,java.lang.String,com.facebook.openwifirrm.DeviceDataManager)">TPC</a></span>&#8203;(<a href="../modules/Modeler.DataModel.html" title="class in com.facebook.openwifirrm.modules">Modeler.DataModel</a>&nbsp;model,
    <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;zone,
    <a href="../DeviceDataManager.html" title="class in com.facebook.openwifirrm">DeviceDataManager</a>&nbsp;deviceDataManager)</code></th>
-<td class="colLast">
-<div class="block">Constructor.</div>
-</td>
-</tr>
-<tr class="rowColor">
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../optimizers/UnmanagedApAwareChannelOptimizer.html#%3Cinit%3E(com.facebook.openwifirrm.modules.Modeler.DataModel,java.lang.String,com.facebook.openwifirrm.DeviceDataManager)">UnmanagedApAwareChannelOptimizer</a></span>&#8203;(<a href="../modules/Modeler.DataModel.html" title="class in com.facebook.openwifirrm.modules">Modeler.DataModel</a>&nbsp;model,
-                                <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;zone,
-                                <a href="../DeviceDataManager.html" title="class in com.facebook.openwifirrm">DeviceDataManager</a>&nbsp;deviceDataManager)</code></th>
 <td class="colLast">
 <div class="block">Constructor.</div>
 </td>
