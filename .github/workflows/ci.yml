@@ -38,6 +38,7 @@ jobs:
         registry: tip-tip-wlan-cloud-ucentral.jfrog.io
         registry_user: ucentral
         registry_password: ${{ secrets.DOCKER_REGISTRY_PASSWORD }}
+        checkout_fetch_depth: 0
 
     - name: Notify on failure via Slack
       if: failure() && github.ref == 'refs/heads/main'
