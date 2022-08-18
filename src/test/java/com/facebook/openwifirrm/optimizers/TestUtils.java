@@ -89,8 +89,7 @@ public class TestUtils {
 	}
 
 	/** Create a wifi scan entry with the given BSSID and RSSI. */
-	public static WifiScanEntry createWifiScanEntryWithBssid(String bssid, Integer rssi) {
-		final int channel = 36;
+	public static WifiScanEntry createWifiScanEntryWithBssid(String bssid, Integer rssi, int channel) {
 		WifiScanEntry entry = createWifiScanEntry(channel);
 		entry.bssid = bssid;
 		entry.signal = rssi; // overwrite
@@ -98,12 +97,12 @@ public class TestUtils {
 	}
 
 	/** Create a list of wifi scan entries with the BSSIDs and RSSIs. */
-	public static List<WifiScanEntry> createWifiScanListWithBssid(Map<String, Integer> bssidToRssi) {
+	public static List<WifiScanEntry> createWifiScanListWithBssid(Map<String, Integer> bssidToRssi, int channel) {
 		Set<String> bssidSet = bssidToRssi.keySet();
 		return bssidSet
-			.stream()
-			.map(bssid -> createWifiScanEntryWithBssid(bssid, bssidToRssi.get(bssid)))
-			.collect(Collectors.toList());
+				.stream()
+				.map(bssid -> createWifiScanEntryWithBssid(bssid, bssidToRssi.get(bssid), channel))
+				.collect(Collectors.toList());
 	}
 
 	/**
@@ -176,7 +175,18 @@ public class TestUtils {
 		return createState(channel, channelWidth, 20, 1, 20, 0, bssid);
 	}
 
-	/** Create a device state object with the two given radio channels. */
+	/**
+	 * Create a device state object with the two given radio channels.
+	 *
+	 * @param channelA      a channel number
+	 * @param channelWidthA channel width (MHz) of channelA
+	 * @param txPowerA      tx power for channelA
+	 * @param channelB      a channel number
+	 * @param channelWidthB channel width (MHz) of channelB
+	 * @param txPowerB      tx power for channelB
+	 * @param bssid         bssid
+	 * @return State with given fields
+	 */
 	public static State createState(
 		int channelA,
 		int channelWidthA,

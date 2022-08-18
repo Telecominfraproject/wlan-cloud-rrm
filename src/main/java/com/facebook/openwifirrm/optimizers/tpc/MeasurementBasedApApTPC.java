@@ -59,8 +59,8 @@ public class MeasurementBasedApApTPC extends TPC {
 	/** coverage threshold between APs, in dB */
 	private final int coverageThreshold;
 
-	/** Nth smallest RSSI is used for Tx power calculation */
-	private final int nthSmallestRssi;
+	/** Nth smallest RSSI (zero-indexed) is used for Tx power calculation */
+	private final int nthSmallestRssi; // TODO non-zero values untested
 
 	/** Constructor. */
 	public MeasurementBasedApApTPC(
@@ -260,10 +260,7 @@ public class MeasurementBasedApApTPC extends TPC {
 			);
 			logger.debug("  Old tx_power: {}", currentTxPower);
 			logger.debug("  New tx_power: {}", newTxPower);
-
-			Map<String, Integer> radioMap = new TreeMap<>();
-			radioMap.put(band, newTxPower);
-			txPowerMap.put(serialNumber, radioMap);
+			txPowerMap.computeIfAbsent(serialNumber, k -> new TreeMap<>()).put(band, newTxPower);
 		}
 	}
 
