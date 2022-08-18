@@ -89,13 +89,13 @@ loadScripts(document, 'script');</script>
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
 <li>Nested&nbsp;|&nbsp;</li>
-<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#field.summary">Field</a>&nbsp;|&nbsp;</li>
 <li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>
 </ul>
 <ul class="subNavList">
 <li>Detail:&nbsp;</li>
-<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#field.detail">Field</a>&nbsp;|&nbsp;</li>
 <li><a href="#constructor.detail">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.detail">Method</a></li>
 </ul>
@@ -141,6 +141,53 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <div class="summary">
 <ul class="blockList">
 <li class="blockList">
+<!-- =========== FIELD SUMMARY =========== -->
+<section role="region">
+<ul class="blockList">
+<li class="blockList"><a id="field.summary">
+<!--   -->
+</a>
+<h3>Field Summary</h3>
+<table class="memberSummary">
+<caption><span>Fields</span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colSecond" scope="col">Field</th>
+<th class="colLast" scope="col">Description</th>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>byte</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#channel1">channel1</a></span></code></th>
+<td class="colLast">
+<div class="block">If the channel is 20 MHz, 40 MHz, or 80 MHz wide, this parameter is the
+ channel number.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>byte</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#channel2">channel2</a></span></code></th>
+<td class="colLast">
+<div class="block">This should be zero unless the channel is 160MHz or 80+80 MHz wide.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>byte</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#channelWidth">channelWidth</a></span></code></th>
+<td class="colLast">
+<div class="block">This field is 0 if the channel width is 20 MHz or 40 MHz, and 1 otherwise.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>byte[]</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#vhtMcsForNss">vhtMcsForNss</a></span></code></th>
+<td class="colLast">
+<div class="block">An 8-element array where each element is between 0 and 4 inclusive.</div>
+</td>
+</tr>
+</table>
+</li>
+</ul>
+</section>
 <!-- ======== CONSTRUCTOR SUMMARY ======== -->
 <section role="region">
 <ul class="blockList">
@@ -155,7 +202,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr class="altColor">
-<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(boolean,byte,byte,byte%5B%5D)">VHTOperationElement</a></span>&#8203;(boolean&nbsp;channelWidthIndicator,
+<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(byte,byte,byte,byte%5B%5D)">VHTOperationElement</a></span>&#8203;(byte&nbsp;channelWidth,
                    byte&nbsp;channel1,
                    byte&nbsp;channel2,
                    byte[]&nbsp;vhtMcsForNss)</code></th>
@@ -231,6 +278,71 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <div class="details">
 <ul class="blockList">
 <li class="blockList">
+<!-- ============ FIELD DETAIL =========== -->
+<section role="region">
+<ul class="blockList">
+<li class="blockList"><a id="field.detail">
+<!--   -->
+</a>
+<h3>Field Detail</h3>
+<a id="channelWidth">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>channelWidth</h4>
+<pre>public final&nbsp;byte channelWidth</pre>
+<div class="block">This field is 0 if the channel width is 20 MHz or 40 MHz, and 1 otherwise.
+ Values of 2 and 3 are deprecated.</div>
+</li>
+</ul>
+<a id="channel1">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>channel1</h4>
+<pre>public final&nbsp;byte channel1</pre>
+<div class="block">If the channel is 20 MHz, 40 MHz, or 80 MHz wide, this parameter is the
+ channel number. E.g., the channel centered at 5180 MHz is channel 36. For a
+ 160 MHz wide channel, this parameter is the channel number of the 80MHz
+ channel that contains the primary channel. For a 80+80 MHz wide channel, this
+ parameter is the channel number of the primary channel.</div>
+</li>
+</ul>
+<a id="channel2">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>channel2</h4>
+<pre>public final&nbsp;byte channel2</pre>
+<div class="block">This should be zero unless the channel is 160MHz or 80+80 MHz wide. If the
+ channel is 160 MHz wide, this parameter is the channel number of the 160 MHz
+ wide channel. If the channel is 80+80 MHz wide, this parameter is the channel
+ index of the secondary 80 MHz wide channel.</div>
+</li>
+</ul>
+<a id="vhtMcsForNss">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>vhtMcsForNss</h4>
+<pre>public final&nbsp;byte[] vhtMcsForNss</pre>
+<div class="block">An 8-element array where each element is between 0 and 4 inclusive. MCS means
+ Modulation and Coding Scheme. NSS means Number of Spatial Streams. There can
+ be 1, 2, ..., or 8 spatial streams. For each NSS, the corresponding element
+ in the array should specify which MCSs are supported for that NSS in the
+ following manner: 0 indicates support for VHT-MCS 0-7, 1 indicates support
+ for VHT-MCS 0-8, 2 indicates support for VHT-MCS 0-9, and 3 indicates that no
+ VHT-MCS is supported for that NSS. For the specifics of what each VHT-MCS is,
+ see IEEE 802.11-2020, Table "21-29" through Table "21-60".</div>
+</li>
+</ul>
+</li>
+</ul>
+</section>
 <!-- ========= CONSTRUCTOR DETAIL ======== -->
 <section role="region">
 <ul class="blockList">
@@ -253,13 +365,13 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 </dl>
 </li>
 </ul>
-<a id="&lt;init&gt;(boolean,byte,byte,byte[])">
+<a id="&lt;init&gt;(byte,byte,byte,byte[])">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>VHTOperationElement</h4>
-<pre>public&nbsp;VHTOperationElement&#8203;(boolean&nbsp;channelWidthIndicator,
+<pre>public&nbsp;VHTOperationElement&#8203;(byte&nbsp;channelWidth,
                            byte&nbsp;channel1,
                            byte&nbsp;channel2,
                            byte[]&nbsp;vhtMcsForNss)</pre>
@@ -399,13 +511,13 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
 <li>Nested&nbsp;|&nbsp;</li>
-<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#field.summary">Field</a>&nbsp;|&nbsp;</li>
 <li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>
 </ul>
 <ul class="subNavList">
 <li>Detail:&nbsp;</li>
-<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#field.detail">Field</a>&nbsp;|&nbsp;</li>
 <li><a href="#constructor.detail">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.detail">Method</a></li>
 </ul>

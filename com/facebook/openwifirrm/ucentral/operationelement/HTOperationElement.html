@@ -89,13 +89,13 @@ loadScripts(document, 'script');</script>
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
 <li>Nested&nbsp;|&nbsp;</li>
-<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#field.summary">Field</a>&nbsp;|&nbsp;</li>
 <li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>
 </ul>
 <ul class="subNavList">
 <li>Detail:&nbsp;</li>
-<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#field.detail">Field</a>&nbsp;|&nbsp;</li>
 <li><a href="#constructor.detail">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.detail">Method</a></li>
 </ul>
@@ -141,6 +141,112 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <div class="summary">
 <ul class="blockList">
 <li class="blockList">
+<!-- =========== FIELD SUMMARY =========== -->
+<section role="region">
+<ul class="blockList">
+<li class="blockList"><a id="field.summary">
+<!--   -->
+</a>
+<h3>Field Summary</h3>
+<table class="memberSummary">
+<caption><span>Fields</span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colSecond" scope="col">Field</th>
+<th class="colLast" scope="col">Description</th>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>byte[]</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#basicHtMcsSet">basicHtMcsSet</a></span></code></th>
+<td class="colLast">
+<div class="block">Indicates the HT-MCS values that are supported by all HT STAs in the BSS.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>byte</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#channelCenterFrequencySegment2">channelCenterFrequencySegment2</a></span></code></th>
+<td class="colLast">
+<div class="block">Defines the channel center frequency for a 160 or 80+80 MHz BSS bandwidth
+ with NSS support less than Max VHT NSS.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>boolean</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#dualBeacon">dualBeacon</a></span></code></th>
+<td class="colLast">
+<div class="block">False if no STBC beacon is transmitted; true otherwise.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>boolean</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#dualCtsProtection">dualCtsProtection</a></span></code></th>
+<td class="colLast">
+<div class="block">False if dual CTS protection is not required; true otherwise.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>byte</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#htProtection">htProtection</a></span></code></th>
+<td class="colLast">
+<div class="block">A 0 indicates no protection mode.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>boolean</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#nongreenfieldHtStasPresent">nongreenfieldHtStasPresent</a></span></code></th>
+<td class="colLast">
+<div class="block">False if all HT STAs that are associated are HT-greenfield capable or all HT
+ peer mesh STAs are HT-greenfield capable; true otherwise.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>boolean</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#obssNonHtStasPresent">obssNonHtStasPresent</a></span></code></th>
+<td class="colLast">
+<div class="block">Indicates if the use of protection for non-HT STAs by overlapping BSSs is
+ determined to be desirable.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>byte</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#primaryChannel">primaryChannel</a></span></code></th>
+<td class="colLast">
+<div class="block">Channel number of the primary channel.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>boolean</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#rifsMode">rifsMode</a></span></code></th>
+<td class="colLast">
+<div class="block">True if RIFS is permitted; false otherwise.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>byte</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#secondaryChannelOffset">secondaryChannelOffset</a></span></code></th>
+<td class="colLast">
+<div class="block">Indicates the offset of the secondary channel relative to the primary
+ channel.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>boolean</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#staChannelWidth">staChannelWidth</a></span></code></th>
+<td class="colLast">
+<div class="block">Defines the channel widths that can be used to transmit to the STA.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>boolean</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#stbcBeacon">stbcBeacon</a></span></code></th>
+<td class="colLast">
+<div class="block">False in a primary beacon.</div>
+</td>
+</tr>
+</table>
+</li>
+</ul>
+</section>
 <!-- ======== CONSTRUCTOR SUMMARY ======== -->
 <section role="region">
 <ul class="blockList">
@@ -247,6 +353,149 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <div class="details">
 <ul class="blockList">
 <li class="blockList">
+<!-- ============ FIELD DETAIL =========== -->
+<section role="region">
+<ul class="blockList">
+<li class="blockList"><a id="field.detail">
+<!--   -->
+</a>
+<h3>Field Detail</h3>
+<a id="primaryChannel">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>primaryChannel</h4>
+<pre>public final&nbsp;byte primaryChannel</pre>
+<div class="block">Channel number of the primary channel.</div>
+</li>
+</ul>
+<a id="secondaryChannelOffset">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>secondaryChannelOffset</h4>
+<pre>public final&nbsp;byte secondaryChannelOffset</pre>
+<div class="block">Indicates the offset of the secondary channel relative to the primary
+ channel. A 1 indicates that the secondary channel is above the primary
+ channel. A 3 indicates that the secondary channel is below the primary
+ channel. A 0 indicates that there is no secondary channel present. The value
+ 2 is reserved.</div>
+</li>
+</ul>
+<a id="staChannelWidth">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>staChannelWidth</h4>
+<pre>public final&nbsp;boolean staChannelWidth</pre>
+<div class="block">Defines the channel widths that can be used to transmit to the STA. With
+ exceptions, false allows a 20 MHz channel width. True allows use of any
+ channel width in the supported channel width set. See 802.11 for exceptions.</div>
+</li>
+</ul>
+<a id="rifsMode">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>rifsMode</h4>
+<pre>public final&nbsp;boolean rifsMode</pre>
+<div class="block">True if RIFS is permitted; false otherwise.</div>
+</li>
+</ul>
+<a id="htProtection">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>htProtection</h4>
+<pre>public final&nbsp;byte htProtection</pre>
+<div class="block">A 0 indicates no protection mode. A 1 indicates nonmember protection mode. A
+ 2 indicates 20 MHz protection mode. A 3 indicates non-HT mixed mode.</div>
+</li>
+</ul>
+<a id="nongreenfieldHtStasPresent">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>nongreenfieldHtStasPresent</h4>
+<pre>public final&nbsp;boolean nongreenfieldHtStasPresent</pre>
+<div class="block">False if all HT STAs that are associated are HT-greenfield capable or all HT
+ peer mesh STAs are HT-greenfield capable; true otherwise.</div>
+</li>
+</ul>
+<a id="obssNonHtStasPresent">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>obssNonHtStasPresent</h4>
+<pre>public final&nbsp;boolean obssNonHtStasPresent</pre>
+<div class="block">Indicates if the use of protection for non-HT STAs by overlapping BSSs is
+ determined to be desirable. See 802.11 for details.</div>
+</li>
+</ul>
+<a id="channelCenterFrequencySegment2">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>channelCenterFrequencySegment2</h4>
+<pre>public final&nbsp;byte channelCenterFrequencySegment2</pre>
+<div class="block">Defines the channel center frequency for a 160 or 80+80 MHz BSS bandwidth
+ with NSS support less than Max VHT NSS. This is 0 for non-VHT STAs. See
+ 802.11 for details.</div>
+</li>
+</ul>
+<a id="dualBeacon">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>dualBeacon</h4>
+<pre>public final&nbsp;boolean dualBeacon</pre>
+<div class="block">False if no STBC beacon is transmitted; true otherwise.</div>
+</li>
+</ul>
+<a id="dualCtsProtection">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>dualCtsProtection</h4>
+<pre>public final&nbsp;boolean dualCtsProtection</pre>
+<div class="block">False if dual CTS protection is not required; true otherwise.</div>
+</li>
+</ul>
+<a id="stbcBeacon">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>stbcBeacon</h4>
+<pre>public final&nbsp;boolean stbcBeacon</pre>
+<div class="block">False in a primary beacon. True in an STBC beacon.</div>
+</li>
+</ul>
+<a id="basicHtMcsSet">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>basicHtMcsSet</h4>
+<pre>public final&nbsp;byte[] basicHtMcsSet</pre>
+<div class="block">Indicates the HT-MCS values that are supported by all HT STAs in the BSS. A
+ bitmap where a bit is set to 1 to indicate support for that MCS and 0
+ otherwise, where bit 0 corresponds to MCS 0.</div>
+</li>
+</ul>
+</li>
+</ul>
+</section>
 <!-- ========= CONSTRUCTOR DETAIL ======== -->
 <section role="region">
 <ul class="blockList">
@@ -435,13 +684,13 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
 <li>Nested&nbsp;|&nbsp;</li>
-<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#field.summary">Field</a>&nbsp;|&nbsp;</li>
 <li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>
 </ul>
 <ul class="subNavList">
 <li>Detail:&nbsp;</li>
-<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#field.detail">Field</a>&nbsp;|&nbsp;</li>
 <li><a href="#constructor.detail">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.detail">Method</a></li>
 </ul>

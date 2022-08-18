@@ -328,6 +328,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">The HTTP basic auth username (if enabled)
  (<code>APISERVERPARAMS_BASICAUTHUSER</code>)</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/operationelement/HTOperationElement.html#basicHtMcsSet">basicHtMcsSet</a></span> - Variable in class com.facebook.openwifirrm.ucentral.operationelement.<a href="com/facebook/openwifirrm/ucentral/operationelement/HTOperationElement.html" title="class in com.facebook.openwifirrm.ucentral.operationelement">HTOperationElement</a></dt>
+<dd>
+<div class="block">Indicates the HT-MCS values that are supported by all HT STAs in the BSS.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/models/State.Interface.SSID.Association.Rate.html#bitrate">bitrate</a></span> - Variable in class com.facebook.openwifirrm.ucentral.models.<a href="com/facebook/openwifirrm/ucentral/models/State.Interface.SSID.Association.Rate.html" title="class in com.facebook.openwifirrm.ucentral.models">State.Interface.SSID.Association.Rate</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/gw/models/UserInfo.html#blacklisted">blacklisted</a></span> - Variable in class com.facebook.openwifirrm.ucentral.gw.models.<a href="com/facebook/openwifirrm/ucentral/gw/models/UserInfo.html" title="class in com.facebook.openwifirrm.ucentral.gw.models">UserInfo</a></dt>
@@ -394,6 +398,20 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/models/WifiScanEntryResult.html#channel">channel</a></span> - Variable in class com.facebook.openwifirrm.ucentral.models.<a href="com/facebook/openwifirrm/ucentral/models/WifiScanEntryResult.html" title="class in com.facebook.openwifirrm.ucentral.models">WifiScanEntryResult</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/operationelement/VHTOperationElement.html#channel1">channel1</a></span> - Variable in class com.facebook.openwifirrm.ucentral.operationelement.<a href="com/facebook/openwifirrm/ucentral/operationelement/VHTOperationElement.html" title="class in com.facebook.openwifirrm.ucentral.operationelement">VHTOperationElement</a></dt>
+<dd>
+<div class="block">If the channel is 20 MHz, 40 MHz, or 80 MHz wide, this parameter is the
+ channel number.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/operationelement/VHTOperationElement.html#channel2">channel2</a></span> - Variable in class com.facebook.openwifirrm.ucentral.operationelement.<a href="com/facebook/openwifirrm/ucentral/operationelement/VHTOperationElement.html" title="class in com.facebook.openwifirrm.ucentral.operationelement">VHTOperationElement</a></dt>
+<dd>
+<div class="block">This should be zero unless the channel is 160MHz or 80+80 MHz wide.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/operationelement/HTOperationElement.html#channelCenterFrequencySegment2">channelCenterFrequencySegment2</a></span> - Variable in class com.facebook.openwifirrm.ucentral.operationelement.<a href="com/facebook/openwifirrm/ucentral/operationelement/HTOperationElement.html" title="class in com.facebook.openwifirrm.ucentral.operationelement">HTOperationElement</a></dt>
+<dd>
+<div class="block">Defines the channel center frequency for a 160 or 80+80 MHz BSS bandwidth
+ with NSS support less than Max VHT NSS.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/RRMAlgorithm.AlgorithmResult.html#channelMap">channelMap</a></span> - Variable in class com.facebook.openwifirrm.<a href="com/facebook/openwifirrm/RRMAlgorithm.AlgorithmResult.html" title="class in com.facebook.openwifirrm">RRMAlgorithm.AlgorithmResult</a></dt>
 <dd>
 <div class="block">Computed channel assignments.</div>
@@ -409,6 +427,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/UCentralUtils.html#channelToFrequencyMHz(int)">channelToFrequencyMHz(int)</a></span> - Static method in class com.facebook.openwifirrm.ucentral.<a href="com/facebook/openwifirrm/ucentral/UCentralUtils.html" title="class in com.facebook.openwifirrm.ucentral">UCentralUtils</a></dt>
 <dd>
 <div class="block">Converts channel number to that channel's center frequency in MHz.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/operationelement/VHTOperationElement.html#channelWidth">channelWidth</a></span> - Variable in class com.facebook.openwifirrm.ucentral.operationelement.<a href="com/facebook/openwifirrm/ucentral/operationelement/VHTOperationElement.html" title="class in com.facebook.openwifirrm.ucentral.operationelement">VHTOperationElement</a></dt>
+<dd>
+<div class="block">This field is 0 if the channel width is 20 MHz or 40 MHz, and 1 otherwise.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/prov/models/DiGraphEntry.html#child">child</a></span> - Variable in class com.facebook.openwifirrm.ucentral.prov.models.<a href="com/facebook/openwifirrm/ucentral/prov/models/DiGraphEntry.html" title="class in com.facebook.openwifirrm.ucentral.prov.models">DiGraphEntry</a></dt>
 <dd>&nbsp;</dd>
@@ -815,6 +837,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">If set, do not apply any changes from scheduled algorithms
  (<code>SCHEDULERPARAMS_DRYRUN</code>)</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/operationelement/HTOperationElement.html#dualBeacon">dualBeacon</a></span> - Variable in class com.facebook.openwifirrm.ucentral.operationelement.<a href="com/facebook/openwifirrm/ucentral/operationelement/HTOperationElement.html" title="class in com.facebook.openwifirrm.ucentral.operationelement">HTOperationElement</a></dt>
+<dd>
+<div class="block">False if no STBC beacon is transmitted; true otherwise.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/operationelement/HTOperationElement.html#dualCtsProtection">dualCtsProtection</a></span> - Variable in class com.facebook.openwifirrm.ucentral.operationelement.<a href="com/facebook/openwifirrm/ucentral/operationelement/HTOperationElement.html" title="class in com.facebook.openwifirrm.ucentral.operationelement">HTOperationElement</a></dt>
+<dd>
+<div class="block">False if dual CTS protection is not required; true otherwise.</div>
 </dd>
 </dl>
 <a id="I:E">
@@ -1247,6 +1277,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/operationelement/HTOperationElement.html#%3Cinit%3E(java.lang.String)">HTOperationElement(String)</a></span> - Constructor for class com.facebook.openwifirrm.ucentral.operationelement.<a href="com/facebook/openwifirrm/ucentral/operationelement/HTOperationElement.html" title="class in com.facebook.openwifirrm.ucentral.operationelement">HTOperationElement</a></dt>
 <dd>
 <div class="block">Constructs an <code>HTOperationElement</code> by decoding <code>htOper</code>.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/operationelement/HTOperationElement.html#htProtection">htProtection</a></span> - Variable in class com.facebook.openwifirrm.ucentral.operationelement.<a href="com/facebook/openwifirrm/ucentral/operationelement/HTOperationElement.html" title="class in com.facebook.openwifirrm.ucentral.operationelement">HTOperationElement</a></dt>
+<dd>
+<div class="block">A 0 indicates no protection mode.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/RRMConfig.ModuleConfig.ApiServerParams.html#httpPort">httpPort</a></span> - Variable in class com.facebook.openwifirrm.<a href="com/facebook/openwifirrm/RRMConfig.ModuleConfig.ApiServerParams.html" title="class in com.facebook.openwifirrm">RRMConfig.ModuleConfig.ApiServerParams</a></dt>
 <dd>
@@ -1716,6 +1750,11 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/gw/models/VerifiedCertificate.html#NO_CERTIFICATE">NO_CERTIFICATE</a></span> - com.facebook.openwifirrm.ucentral.gw.models.<a href="com/facebook/openwifirrm/ucentral/gw/models/VerifiedCertificate.html" title="enum in com.facebook.openwifirrm.ucentral.gw.models">VerifiedCertificate</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/operationelement/HTOperationElement.html#nongreenfieldHtStasPresent">nongreenfieldHtStasPresent</a></span> - Variable in class com.facebook.openwifirrm.ucentral.operationelement.<a href="com/facebook/openwifirrm/ucentral/operationelement/HTOperationElement.html" title="class in com.facebook.openwifirrm.ucentral.operationelement">HTOperationElement</a></dt>
+<dd>
+<div class="block">False if all HT STAs that are associated are HT-greenfield capable or all HT
+ peer mesh STAs are HT-greenfield capable; true otherwise.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/gw/models/NoteInfo.html#note">note</a></span> - Variable in class com.facebook.openwifirrm.ucentral.gw.models.<a href="com/facebook/openwifirrm/ucentral/gw/models/NoteInfo.html" title="class in com.facebook.openwifirrm.ucentral.gw.models">NoteInfo</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/facebook/openwifirrm/ucentral/gw/models/NoteInfo.html" title="class in com.facebook.openwifirrm.ucentral.gw.models"><span class="typeNameLink">NoteInfo</span></a> - Class in <a href="com/facebook/openwifirrm/ucentral/gw/models/package-summary.html">com.facebook.openwifirrm.ucentral.gw.models</a></dt>
@@ -1748,6 +1787,11 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/gw/models/UserInfo.html#oauthUserInfo">oauthUserInfo</a></span> - Variable in class com.facebook.openwifirrm.ucentral.gw.models.<a href="com/facebook/openwifirrm/ucentral/gw/models/UserInfo.html" title="class in com.facebook.openwifirrm.ucentral.gw.models">UserInfo</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/operationelement/HTOperationElement.html#obssNonHtStasPresent">obssNonHtStasPresent</a></span> - Variable in class com.facebook.openwifirrm.ucentral.operationelement.<a href="com/facebook/openwifirrm/ucentral/operationelement/HTOperationElement.html" title="class in com.facebook.openwifirrm.ucentral.operationelement">HTOperationElement</a></dt>
+<dd>
+<div class="block">Indicates if the use of protection for non-HT STAs by overlapping BSSs is
+ determined to be desirable.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/RRMConfig.ModuleConfig.ApiServerParams.html#openWifiAuthCacheSize">openWifiAuthCacheSize</a></span> - Variable in class com.facebook.openwifirrm.<a href="com/facebook/openwifirrm/RRMConfig.ModuleConfig.ApiServerParams.html" title="class in com.facebook.openwifirrm">RRMConfig.ModuleConfig.ApiServerParams</a></dt>
 <dd>
 <div class="block">The maximum cache size for OpenWiFi tokens
@@ -1840,6 +1884,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/gw/models/MobilePhoneNumber.html#primary">primary</a></span> - Variable in class com.facebook.openwifirrm.ucentral.gw.models.<a href="com/facebook/openwifirrm/ucentral/gw/models/MobilePhoneNumber.html" title="class in com.facebook.openwifirrm.ucentral.gw.models">MobilePhoneNumber</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/operationelement/HTOperationElement.html#primaryChannel">primaryChannel</a></span> - Variable in class com.facebook.openwifirrm.ucentral.operationelement.<a href="com/facebook/openwifirrm/ucentral/operationelement/HTOperationElement.html" title="class in com.facebook.openwifirrm.ucentral.operationelement">HTOperationElement</a></dt>
+<dd>
+<div class="block">Channel number of the primary channel.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/optimizers/channel/ChannelOptimizer.html#PRIORITY_CHANNELS_2G">PRIORITY_CHANNELS_2G</a></span> - Static variable in class com.facebook.openwifirrm.optimizers.channel.<a href="com/facebook/openwifirrm/optimizers/channel/ChannelOptimizer.html" title="class in com.facebook.openwifirrm.optimizers.channel">ChannelOptimizer</a></dt>
 <dd>
 <div class="block">List of priority channels on 2.4GHz.</div>
@@ -1984,6 +2032,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/modules/Modeler.html#revalidate()">revalidate()</a></span> - Method in class com.facebook.openwifirrm.modules.<a href="com/facebook/openwifirrm/modules/Modeler.html" title="class in com.facebook.openwifirrm.modules">Modeler</a></dt>
 <dd>
 <div class="block">Revalidate the data model to remove any non-RRM-enabled devices.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/operationelement/HTOperationElement.html#rifsMode">rifsMode</a></span> - Variable in class com.facebook.openwifirrm.ucentral.operationelement.<a href="com/facebook/openwifirrm/ucentral/operationelement/HTOperationElement.html" title="class in com.facebook.openwifirrm.ucentral.operationelement">HTOperationElement</a></dt>
+<dd>
+<div class="block">True if RIFS is permitted; false otherwise.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/optimizers/channel/LeastUsedChannelOptimizer.html#rng">rng</a></span> - Variable in class com.facebook.openwifirrm.optimizers.channel.<a href="com/facebook/openwifirrm/optimizers/channel/LeastUsedChannelOptimizer.html" title="class in com.facebook.openwifirrm.optimizers.channel">LeastUsedChannelOptimizer</a></dt>
 <dd>
@@ -2147,6 +2199,11 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">RRMScheduler parameters.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/operationelement/HTOperationElement.html#secondaryChannelOffset">secondaryChannelOffset</a></span> - Variable in class com.facebook.openwifirrm.ucentral.operationelement.<a href="com/facebook/openwifirrm/ucentral/operationelement/HTOperationElement.html" title="class in com.facebook.openwifirrm.ucentral.operationelement">HTOperationElement</a></dt>
+<dd>
+<div class="block">Indicates the offset of the secondary channel relative to the primary
+ channel.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/gw/models/UserInfo.html#securityPolicy">securityPolicy</a></span> - Variable in class com.facebook.openwifirrm.ucentral.gw.models.<a href="com/facebook/openwifirrm/ucentral/gw/models/UserInfo.html" title="class in com.facebook.openwifirrm.ucentral.gw.models">UserInfo</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/gw/models/UserInfo.html#securityPolicyChange">securityPolicyChange</a></span> - Variable in class com.facebook.openwifirrm.ucentral.gw.models.<a href="com/facebook/openwifirrm/ucentral/gw/models/UserInfo.html" title="class in com.facebook.openwifirrm.ucentral.gw.models">UserInfo</a></dt>
@@ -2289,6 +2346,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/models/State.Interface.html#ssids">ssids</a></span> - Variable in class com.facebook.openwifirrm.ucentral.models.<a href="com/facebook/openwifirrm/ucentral/models/State.Interface.html" title="class in com.facebook.openwifirrm.ucentral.models">State.Interface</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/operationelement/HTOperationElement.html#staChannelWidth">staChannelWidth</a></span> - Variable in class com.facebook.openwifirrm.ucentral.operationelement.<a href="com/facebook/openwifirrm/ucentral/operationelement/HTOperationElement.html" title="class in com.facebook.openwifirrm.ucentral.operationelement">HTOperationElement</a></dt>
+<dd>
+<div class="block">Defines the channel widths that can be used to transmit to the STA.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/gw/models/SystemInfoResults.html#start">start</a></span> - Variable in class com.facebook.openwifirrm.ucentral.gw.models.<a href="com/facebook/openwifirrm/ucentral/gw/models/SystemInfoResults.html" title="class in com.facebook.openwifirrm.ucentral.gw.models">SystemInfoResults</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/modules/RRMScheduler.html#start(com.facebook.openwifirrm.modules.ConfigManager,com.facebook.openwifirrm.modules.Modeler)">start(ConfigManager, Modeler)</a></span> - Method in class com.facebook.openwifirrm.modules.<a href="com/facebook/openwifirrm/modules/RRMScheduler.html" title="class in com.facebook.openwifirrm.modules">RRMScheduler</a></dt>
@@ -2352,6 +2413,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/gw/models/CommandInfo.html#status">status</a></span> - Variable in class com.facebook.openwifirrm.ucentral.gw.models.<a href="com/facebook/openwifirrm/ucentral/gw/models/CommandInfo.html" title="class in com.facebook.openwifirrm.ucentral.gw.models">CommandInfo</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/operationelement/HTOperationElement.html#stbcBeacon">stbcBeacon</a></span> - Variable in class com.facebook.openwifirrm.ucentral.operationelement.<a href="com/facebook/openwifirrm/ucentral/operationelement/HTOperationElement.html" title="class in com.facebook.openwifirrm.ucentral.operationelement">HTOperationElement</a></dt>
+<dd>
+<div class="block">False in a primary beacon.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/gw/models/CommandInfo.html#submitted">submitted</a></span> - Variable in class com.facebook.openwifirrm.ucentral.gw.models.<a href="com/facebook/openwifirrm/ucentral/gw/models/CommandInfo.html" title="class in com.facebook.openwifirrm.ucentral.gw.models">CommandInfo</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/gw/models/CommandInfo.html#submittedBy">submittedBy</a></span> - Variable in class com.facebook.openwifirrm.ucentral.gw.models.<a href="com/facebook/openwifirrm/ucentral/gw/models/CommandInfo.html" title="class in com.facebook.openwifirrm.ucentral.gw.models">CommandInfo</a></dt>
@@ -2820,12 +2885,16 @@ the order they are declared.</div>
 <dd>
 <div class="block">vht_oper is short for "very high throughput operation element".</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/operationelement/VHTOperationElement.html#vhtMcsForNss">vhtMcsForNss</a></span> - Variable in class com.facebook.openwifirrm.ucentral.operationelement.<a href="com/facebook/openwifirrm/ucentral/operationelement/VHTOperationElement.html" title="class in com.facebook.openwifirrm.ucentral.operationelement">VHTOperationElement</a></dt>
+<dd>
+<div class="block">An 8-element array where each element is between 0 and 4 inclusive.</div>
+</dd>
 <dt><a href="com/facebook/openwifirrm/ucentral/operationelement/VHTOperationElement.html" title="class in com.facebook.openwifirrm.ucentral.operationelement"><span class="typeNameLink">VHTOperationElement</span></a> - Class in <a href="com/facebook/openwifirrm/ucentral/operationelement/package-summary.html">com.facebook.openwifirrm.ucentral.operationelement</a></dt>
 <dd>
 <div class="block">Very High Throughput (VHT) Operation Element, which is potentially present in
  wifiscan entries.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/operationelement/VHTOperationElement.html#%3Cinit%3E(boolean,byte,byte,byte%5B%5D)">VHTOperationElement(boolean, byte, byte, byte[])</a></span> - Constructor for class com.facebook.openwifirrm.ucentral.operationelement.<a href="com/facebook/openwifirrm/ucentral/operationelement/VHTOperationElement.html" title="class in com.facebook.openwifirrm.ucentral.operationelement">VHTOperationElement</a></dt>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/operationelement/VHTOperationElement.html#%3Cinit%3E(byte,byte,byte,byte%5B%5D)">VHTOperationElement(byte, byte, byte, byte[])</a></span> - Constructor for class com.facebook.openwifirrm.ucentral.operationelement.<a href="com/facebook/openwifirrm/ucentral/operationelement/VHTOperationElement.html" title="class in com.facebook.openwifirrm.ucentral.operationelement">VHTOperationElement</a></dt>
 <dd>
 <div class="block">Constructs an <code>HTOperationElement</code> using the given field values.</div>
 </dd>
