@@ -100,9 +100,9 @@ public class TestUtils {
 	public static List<WifiScanEntry> createWifiScanListWithBssid(Map<String, Integer> bssidToRssi, int channel) {
 		Set<String> bssidSet = bssidToRssi.keySet();
 		return bssidSet
-				.stream()
-				.map(bssid -> createWifiScanEntryWithBssid(bssid, bssidToRssi.get(bssid), channel))
-				.collect(Collectors.toList());
+			.stream().map(bssid -> createWifiScanEntryWithBssid(bssid,
+				bssidToRssi.get(bssid), channel))
+			.collect(Collectors.toList());
 	}
 
 	/**

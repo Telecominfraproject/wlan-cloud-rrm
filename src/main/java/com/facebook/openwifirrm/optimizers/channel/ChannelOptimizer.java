@@ -24,6 +24,7 @@ import com.facebook.openwifirrm.DeviceDataManager;
 import com.facebook.openwifirrm.modules.ConfigManager;
 import com.facebook.openwifirrm.modules.Modeler.DataModel;
 import com.facebook.openwifirrm.ucentral.UCentralConstants;
+import com.facebook.openwifirrm.ucentral.UCentralUtils;
 import com.facebook.openwifirrm.ucentral.UCentralUtils.WifiScanEntry;
 import com.facebook.openwifirrm.ucentral.models.State;
 
@@ -35,20 +36,6 @@ public abstract class ChannelOptimizer {
 
 	/** Minimum supported channel width (MHz), inclusive. */
 	public static final int MIN_CHANNEL_WIDTH = 20;
-
-	/** Map of band to the band-specific lowest available channel*/
-	public static final Map<String, Integer> LOWER_CHANNEL_LIMIT = new HashMap<>();
-	static {
-		LOWER_CHANNEL_LIMIT.put(UCentralConstants.BAND_2G, 1);
-		LOWER_CHANNEL_LIMIT.put(UCentralConstants.BAND_5G, 36);
-	}
-
-	/** Map of band to the band-specific highest available channel*/
-	public static final Map<String, Integer> UPPER_CHANNEL_LIMIT = new HashMap<>();
-	static {
-		UPPER_CHANNEL_LIMIT.put(UCentralConstants.BAND_2G, 11);
-		UPPER_CHANNEL_LIMIT.put(UCentralConstants.BAND_5G, 165);
-	}
 
 	/** List of available channels per band for use. */
 	public static final Map<String, List<Integer>> AVAILABLE_CHANNELS_BAND =
@@ -319,8 +306,8 @@ public abstract class ChannelOptimizer {
 		Map<String, List<String>> bandsMap
 	) {
 		Map<String, List<WifiScanEntry>> deviceToWifiScans = new HashMap<>();
-		int maxChannel = UPPER_CHANNEL_LIMIT.get(band);
-		int minChannel = LOWER_CHANNEL_LIMIT.get(band);
+		int maxChannel = UCentralUtils.UPPER_CHANNEL_LIMIT.get(band);
+		int minChannel = UCentralUtils.LOWER_CHANNEL_LIMIT.get(band);
 
 		for (
 			Map.Entry<String, List<List<WifiScanEntry>>> e :
@@ -400,8 +387,8 @@ public abstract class ChannelOptimizer {
 		String serialNumber,
 		State state
 	) {
-		int maxChannel = UPPER_CHANNEL_LIMIT.get(band);
-		int minChannel = LOWER_CHANNEL_LIMIT.get(band);
+		int maxChannel = UCentralUtils.UPPER_CHANNEL_LIMIT.get(band);
+		int minChannel = UCentralUtils.LOWER_CHANNEL_LIMIT.get(band);
 		int currentChannel = 0;
 		int currentChannelWidth = MIN_CHANNEL_WIDTH;
 		// Use the channel value to check the corresponding radio for the band

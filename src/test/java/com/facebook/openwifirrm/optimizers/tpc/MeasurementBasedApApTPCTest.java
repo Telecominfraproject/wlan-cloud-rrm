@@ -25,8 +25,8 @@ import com.facebook.openwifirrm.DeviceConfig;
 import com.facebook.openwifirrm.DeviceDataManager;
 import com.facebook.openwifirrm.modules.Modeler.DataModel;
 import com.facebook.openwifirrm.optimizers.TestUtils;
-import com.facebook.openwifirrm.optimizers.channel.ChannelOptimizer;
 import com.facebook.openwifirrm.ucentral.UCentralConstants;
+import com.facebook.openwifirrm.ucentral.UCentralUtils;
 import com.facebook.openwifirrm.ucentral.UCentralUtils.WifiScanEntry;
 import com.facebook.openwifirrm.ucentral.models.State;
 import com.google.gson.JsonArray;
@@ -36,6 +36,8 @@ public class MeasurementBasedApApTPCTest {
 	/** Test zone name. */
 	private static final String TEST_ZONE = "test-zone";
 	private static final int MAX_TX_POWER = 30;
+	/** Default channel width. */
+	private static final int DEFAULT_CHANNEL_WIDTH = 20;
 
 	// Serial numbers
 	private static final String DEVICE_A = "aaaaaaaaaaaa";
@@ -78,9 +80,12 @@ public class MeasurementBasedApApTPCTest {
 	private static DataModel createModel() {
 		DataModel model = new DataModel();
 
-		State stateA = TestUtils.createState(1, 20, MAX_TX_POWER, 36, 20, MAX_TX_POWER, BSSID_A);
-		State stateB = TestUtils.createState(1, 20, MAX_TX_POWER, 36, 20, MAX_TX_POWER, BSSID_B);
-		State stateC = TestUtils.createState(1, 20, MAX_TX_POWER, 36, 20, MAX_TX_POWER, BSSID_C);
+		State stateA = TestUtils.createState(1, DEFAULT_CHANNEL_WIDTH,
+			MAX_TX_POWER, 36, DEFAULT_CHANNEL_WIDTH, MAX_TX_POWER, BSSID_A);
+		State stateB = TestUtils.createState(1, DEFAULT_CHANNEL_WIDTH,
+			MAX_TX_POWER, 36, DEFAULT_CHANNEL_WIDTH, MAX_TX_POWER, BSSID_B);
+		State stateC = TestUtils.createState(1, DEFAULT_CHANNEL_WIDTH,
+			MAX_TX_POWER, 36, DEFAULT_CHANNEL_WIDTH, MAX_TX_POWER, BSSID_C);
 
 		model.latestState.put(DEVICE_A, stateA);
 		model.latestState.put(DEVICE_B, stateB);
@@ -252,8 +257,13 @@ public class MeasurementBasedApApTPCTest {
 		assertEquals(30, newTxPower);
 	}
 
+	/**
+	 * Tests the tx power map calculations in the given band.
+	 *
+	 * @param band "2G" or "5G"
+	 */
 	private static void testComputeTxPowerMapInBand(String band) {
-		int channel = ChannelOptimizer.LOWER_CHANNEL_LIMIT.get(band);
+		int channel = UCentralUtils.LOWER_CHANNEL_LIMIT.get(band);
 		// First example here taken from algorithm design doc from @pohanhf
 		DataModel dataModel = createModel();
 		dataModel.latestWifiScans = createLatestWifiScansB(channel);

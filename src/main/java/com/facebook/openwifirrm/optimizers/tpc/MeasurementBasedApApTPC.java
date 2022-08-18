@@ -22,8 +22,8 @@ import org.slf4j.LoggerFactory;
 
 import com.facebook.openwifirrm.DeviceDataManager;
 import com.facebook.openwifirrm.modules.Modeler.DataModel;
-import com.facebook.openwifirrm.optimizers.channel.ChannelOptimizer;
 import com.facebook.openwifirrm.ucentral.UCentralConstants;
+import com.facebook.openwifirrm.ucentral.UCentralUtils;
 import com.facebook.openwifirrm.ucentral.UCentralUtils.WifiScanEntry;
 import com.facebook.openwifirrm.ucentral.models.State;
 import com.google.gson.JsonArray;
@@ -116,7 +116,7 @@ public class MeasurementBasedApApTPC extends TPC {
 	 * latest device status.
 	 *
 	 * @param latestDeviceStatus JsonArray containing radio config for the AP
-	 * @param band               "2G" or "5G"
+	 * @param band "2G" or "5G"
 	 * @return the tx power, or 0 if none found
 	 */
 	protected static int getCurrentTxPower(JsonArray latestDeviceStatus, String band) {
@@ -131,18 +131,6 @@ public class MeasurementBasedApApTPC extends TPC {
 			}
 		}
 		return 0;
-	}
-
-	/**
-	 * Determines if the given channel is in the given band.
-	 *
-	 * @param channel channel number
-	 * @param band    "2G" or "5G"
-	 * @return true if the given channel is in the given band; false otherwise
-	 */
-	protected static boolean isChannelInBand(int channel, String band) {
-		return ChannelOptimizer.LOWER_CHANNEL_LIMIT.get(band) <= channel
-				&& channel <= ChannelOptimizer.UPPER_CHANNEL_LIMIT.get(band);
 	}
 
 	/**
@@ -168,7 +156,9 @@ public class MeasurementBasedApApTPC extends TPC {
 	 *         neighboring APs.
 	 */
 	protected static Map<String, List<Integer>> buildRssiMap(
-			Set<String> managedBSSIDs, Map<String, List<List<WifiScanEntry>>> latestWifiScans, String band
+			Set<String> managedBSSIDs,
+			Map<String, List<List<WifiScanEntry>>> latestWifiScans,
+			String band
 	) {
 		Map<String, List<Integer>> bssidToRssiValues = new HashMap<>();
 		managedBSSIDs.stream()
@@ -180,10 +170,11 @@ public class MeasurementBasedApApTPC extends TPC {
 
 			// At a given AP, if we receive a signal from ap_2, then it gets added to the rssi list for ap_2
 			latestScan.stream()
-					.filter(entry -> (managedBSSIDs.contains(entry.bssid) && isChannelInBand(entry.channel, band)))
-					.forEach(entry -> {
-						bssidToRssiValues.get(entry.bssid).add(entry.signal);
-					});
+				.filter(entry -> (managedBSSIDs.contains(entry.bssid)
+					&& UCentralUtils.isChannelInBand(entry.channel, band)))
+				.forEach(entry -> {
+					bssidToRssiValues.get(entry.bssid).add(entry.signal);
+				});
 		}
 		bssidToRssiValues.values().stream()
 			.forEach(rssiList -> Collections.sort(rssiList));
