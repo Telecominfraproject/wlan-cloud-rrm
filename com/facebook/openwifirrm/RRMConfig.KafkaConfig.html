@@ -177,13 +177,21 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 </td>
 </tr>
 <tr class="rowColor">
+<td class="colFirst"><code>long</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#pollTimeoutMs">pollTimeoutMs</a></span></code></th>
+<td class="colLast">
+<div class="block">Kafka consumer poll timeout duration, in ms
+ (<code>KAFKACONFIG_POLLTIMEOUTMS</code>)</div>
+</td>
+</tr>
+<tr class="altColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#serviceEventsTopic">serviceEventsTopic</a></span></code></th>
 <td class="colLast">
 <div class="block">Kafka topic holding uCentral microservice events.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#stateTopic">stateTopic</a></span></code></th>
 <td class="colLast">
@@ -191,7 +199,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
  (<code>KAFKACONFIG_STATETOPIC</code>)</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#wifiScanTopic">wifiScanTopic</a></span></code></th>
 <td class="colLast">
@@ -313,12 +321,23 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <a id="autoOffsetReset">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>autoOffsetReset</h4>
 <pre>public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> autoOffsetReset</pre>
 <div class="block">Kafka "auto.offset.reset" config ["earliest", "latest"]
  (<code>KAFKACONFIG_AUTOOFFSETRESET</code>)</div>
+</li>
+</ul>
+<a id="pollTimeoutMs">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>pollTimeoutMs</h4>
+<pre>public&nbsp;long pollTimeoutMs</pre>
+<div class="block">Kafka consumer poll timeout duration, in ms
+ (<code>KAFKACONFIG_POLLTIMEOUTMS</code>)</div>
 </li>
 </ul>
 </li>

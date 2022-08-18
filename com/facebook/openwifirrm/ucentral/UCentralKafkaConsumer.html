@@ -186,10 +186,11 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr class="altColor">
-<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(com.facebook.openwifirrm.ucentral.UCentralClient,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String)">UCentralKafkaConsumer</a></span>&#8203;(<a href="UCentralClient.html" title="class in com.facebook.openwifirrm.ucentral">UCentralClient</a>&nbsp;client,
+<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(com.facebook.openwifirrm.ucentral.UCentralClient,java.lang.String,java.lang.String,java.lang.String,long,java.lang.String,java.lang.String,java.lang.String)">UCentralKafkaConsumer</a></span>&#8203;(<a href="UCentralClient.html" title="class in com.facebook.openwifirrm.ucentral">UCentralClient</a>&nbsp;client,
                      <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;bootstrapServer,
                      <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;groupId,
                      <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;autoOffsetReset,
+                     long&nbsp;pollTimeoutMs,
                      <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;stateTopic,
                      <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;wifiScanTopic,
                      <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;serviceEventsTopic)</code></th>
@@ -283,7 +284,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a id="&lt;init&gt;(com.facebook.openwifirrm.ucentral.UCentralClient,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String)">
+<a id="&lt;init&gt;(com.facebook.openwifirrm.ucentral.UCentralClient,java.lang.String,java.lang.String,java.lang.String,long,java.lang.String,java.lang.String,java.lang.String)">
 <!--   -->
 </a>
 <ul class="blockListLast">
@@ -293,6 +294,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
                              <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;bootstrapServer,
                              <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;groupId,
                              <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;autoOffsetReset,
+                             long&nbsp;pollTimeoutMs,
                              <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;stateTopic,
                              <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;wifiScanTopic,
                              <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;serviceEventsTopic)</pre>
@@ -303,6 +305,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <dd><code>bootstrapServer</code> - the Kafka bootstrap server</dd>
 <dd><code>groupId</code> - the Kafka consumer group ID</dd>
 <dd><code>autoOffsetReset</code> - the "auto.offset.reset" config</dd>
+<dd><code>pollTimeoutMs</code> - the poll timeout in ms</dd>
 <dd><code>stateTopic</code> - the uCentral state topic (or empty/null to skip)</dd>
 <dd><code>wifiScanTopic</code> - the uCentral wifiscan topic (or empty/null to skip)</dd>
 <dd><code>serviceEventsTopic</code> - the uCentral service_events topic (required)</dd>
