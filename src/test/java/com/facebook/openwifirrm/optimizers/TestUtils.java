@@ -88,7 +88,7 @@ public class TestUtils {
 			.collect(Collectors.toList());
 	}
 
-	/** Create a wifi scan entry with the given BSSID and RSSI. */
+	/** Create a wifi scan entry with the given BSSID, RSSI, and channel. */
 	public static WifiScanEntry createWifiScanEntryWithBssid(String bssid, Integer rssi, int channel) {
 		WifiScanEntry entry = createWifiScanEntry(channel);
 		entry.bssid = bssid;
@@ -96,7 +96,7 @@ public class TestUtils {
 		return entry;
 	}
 
-	/** Create a list of wifi scan entries with the BSSIDs and RSSIs. */
+	/** Create a list of wifi scan entries with the BSSIDs, RSSIs, and channel. */
 	public static List<WifiScanEntry> createWifiScanListWithBssid(Map<String, Integer> bssidToRssi, int channel) {
 		Set<String> bssidSet = bssidToRssi.keySet();
 		return bssidSet

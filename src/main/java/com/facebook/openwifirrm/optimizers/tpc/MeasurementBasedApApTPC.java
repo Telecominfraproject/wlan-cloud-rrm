@@ -116,6 +116,7 @@ public class MeasurementBasedApApTPC extends TPC {
 	 * latest device status.
 	 *
 	 * @param latestDeviceStatus JsonArray containing radio config for the AP
+	 * @param band               "2G" or "5G"
 	 * @return the tx power, or 0 if none found
 	 */
 	protected static int getCurrentTxPower(JsonArray latestDeviceStatus, String band) {
@@ -133,10 +134,11 @@ public class MeasurementBasedApApTPC extends TPC {
 	}
 
 	/**
+	 * Determines if the given channel is in the given band.
 	 *
-	 * @param channel channel index (e.g., 36)
+	 * @param channel channel number
 	 * @param band    "2G" or "5G"
-	 * @return true if the given channel is in the given band
+	 * @return true if the given channel is in the given band; false otherwise
 	 */
 	protected static boolean isChannelInBand(int channel, String band) {
 		return ChannelOptimizer.LOWER_CHANNEL_LIMIT.get(band) <= channel
@@ -151,6 +153,19 @@ public class MeasurementBasedApApTPC extends TPC {
 	 * entry in the map with an empty list of RSSI values.
 	 *
 	 * @param managedBSSIDs set of all BSSIDs of APs we are managing
+	 */
+
+	/**
+	 * Build a map from BSSID to a sorted (ascending) list of RSSIs from neighboring
+	 * APs. Every managed BSSID is a key in the returned map; if that BSSID does not
+	 * have an RSSI for that AP, the BSSID is mapped to an empty list.
+	 *
+	 * @param managedBSSIDs   set of all BSSIDs of APs we are managing
+	 * @param latestWifiScans @see Modeler.DataModel#latestWifiScans for data
+	 *                        structure
+	 * @param band            "2G" or "5G"
+	 * @return a map from BSSID to a sorted (ascending) list of RSSIs from
+	 *         neighboring APs.
 	 */
 	protected static Map<String, List<Integer>> buildRssiMap(
 			Set<String> managedBSSIDs, Map<String, List<List<WifiScanEntry>>> latestWifiScans, String band
@@ -177,8 +192,15 @@ public class MeasurementBasedApApTPC extends TPC {
 
 	/**
 	 * Compute adjusted tx power (dBm) based on inputs.
-	 * @param currentTxPower the current tx power (dBm)
-	 * @param rssiValues RSSI values received by managed neighboring APs in ascending order
+	 *
+	 * @param serialNumber      serial number of the AP
+	 * @param currentTxPower    the current tx power (dBm)
+	 * @param rssiValues        sorted (ascending) list of RSSIs from neighboring
+	 *                          APs
+	 * @param coverageThreshold desired value for the {@code nthSmallestRssi}
+	 * @param nthSmallestRssi   which RSSI to use to "calibrate" to determine the
+	 *                          new tx power
+	 * @return new tx power (dBm)
 	 */
 	protected static int computeTxPower(
 		String serialNumber,
@@ -218,6 +240,14 @@ public class MeasurementBasedApApTPC extends TPC {
 		return newTxPower;
 	}
 
+	/**
+	 * Calculate new tx powers for the given band.
+	 *
+	 * @param band       "2G" or "5G"
+	 * @param txPowerMap this map from serial number to band to new tx power (dBm)
+	 *                   must be passed in empty, and it is filled in by this method
+	 *                   with the new tx powers.
+	 */
 	protected void buildTxPowerMapForBand(String band, Map<String, Map<String, Integer>> txPowerMap) {
 		Set<String> managedBSSIDs = getManagedBSSIDs(model);
 		Map<String, List<Integer>> bssidToRssiValues = buildRssiMap(managedBSSIDs, model.latestWifiScans, band);
