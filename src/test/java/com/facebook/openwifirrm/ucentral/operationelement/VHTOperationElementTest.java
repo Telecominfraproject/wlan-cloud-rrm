@@ -18,7 +18,7 @@ public class VHTOperationElementTest {
 	void testGetVhtOper() {
 		String vhtOper = "ACQAAAA=";
 		VHTOperationElement vhtOperObj = new VHTOperationElement(vhtOper);
-		boolean expectedChannelWidthIndicator = false; // 20 MHz channel width
+		byte expectedChannelWidthIndicator = 0; // 20 MHz channel width
 		byte expectedChannel1 = 36;
 		byte expectedChannel2 = 0;
 		byte[] expectedVhtMcsForNss = new byte[] { 0, 0, 0, 0, 0, 0, 0, 0 };
@@ -27,7 +27,7 @@ public class VHTOperationElementTest {
 
 		vhtOper = "AToAUAE=";
 		vhtOperObj = new VHTOperationElement(vhtOper);
-		expectedChannelWidthIndicator = true; // 80 MHz channel width
+		expectedChannelWidthIndicator = 1; // 80 MHz channel width
 		expectedChannel1 = 58;
 		// same channel2
 		expectedVhtMcsForNss = new byte[] { 1, 1, 0, 0, 0, 0, 0, 1 };
