@@ -191,7 +191,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#addWifiScan(java.lang.String,long,java.util.List)">addWifiScan</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;serialNumber,
-           long&nbsp;ts,
+           long&nbsp;timestampSeconds,
            <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="../ucentral/UCentralUtils.WifiScanEntry.html" title="class in com.facebook.openwifirrm.ucentral">UCentralUtils.WifiScanEntry</a>&gt;&nbsp;entries)</code></th>
 <td class="colLast">
 <div class="block">Insert wifi scan results into the database.</div>
@@ -356,11 +356,15 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <li class="blockList">
 <h4>addWifiScan</h4>
 <pre class="methodSignature">public&nbsp;void&nbsp;addWifiScan&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;serialNumber,
-                        long&nbsp;ts,
+                        long&nbsp;timestampSeconds,
                         <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="../ucentral/UCentralUtils.WifiScanEntry.html" title="class in com.facebook.openwifirrm.ucentral">UCentralUtils.WifiScanEntry</a>&gt;&nbsp;entries)
                  throws <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.sql/java/sql/SQLException.html?is-external=true" title="class or interface in java.sql" class="externalLink">SQLException</a></pre>
 <div class="block">Insert wifi scan results into the database.</div>
 <dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>serialNumber</code> - serial number</dd>
+<dd><code>timestampSeconds</code> - timestamp (Unix time in seconds).</dd>
+<dd><code>entries</code> - list of wifiscan entries</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
 <dd><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.sql/java/sql/SQLException.html?is-external=true" title="class or interface in java.sql" class="externalLink">SQLException</a></code></dd>
 </dl>

@@ -26,7 +26,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9,"i5":9};
+var data = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9,"i5":9,"i6":9};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -158,7 +158,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <td class="colFirst"><code>static class&nbsp;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="UCentralUtils.WifiScanEntry.html" title="class in com.facebook.openwifirrm.ucentral">UCentralUtils.WifiScanEntry</a></span></code></th>
 <td class="colLast">
-<div class="block">Represents a single entry in wifi scan results.</div>
+<div class="block">Extends <a href="models/WifiScanEntryResult.html" title="class in com.facebook.openwifirrm.ucentral.models"><code>WifiScanEntryResult</code></a> to track the response time of the entry.</div>
 </td>
 </tr>
 </table>
@@ -180,27 +180,34 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr id="i0" class="altColor">
+<td class="colFirst"><code>static int</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#channelToFrequencyMHz(int)">channelToFrequencyMHz</a></span>&#8203;(int&nbsp;channel)</code></th>
+<td class="colLast">
+<div class="block">Converts channel number to that channel's center frequency in MHz.</div>
+</td>
+</tr>
+<tr id="i1" class="rowColor">
 <td class="colFirst"><code>static <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#generateServiceKey(com.facebook.openwifirrm.RRMConfig.ServiceConfig)">generateServiceKey</a></span>&#8203;(<a href="../RRMConfig.ServiceConfig.html" title="class in com.facebook.openwifirrm">RRMConfig.ServiceConfig</a>&nbsp;serviceConfig)</code></th>
 <td class="colLast">
 <div class="block">Generate the RRM service key.</div>
 </td>
 </tr>
-<tr id="i1" class="rowColor">
+<tr id="i2" class="altColor">
 <td class="colFirst"><code>static <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html?is-external=true" title="class or interface in java.util" class="externalLink">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>,&#8203;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&gt;&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getBandsMap(java.util.Map)">getBandsMap</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html?is-external=true" title="class or interface in java.util" class="externalLink">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>,&#8203;com.google.gson.JsonArray&gt;&nbsp;deviceStatus)</code></th>
 <td class="colLast">
 <div class="block">Get the APs on a band who participate in an optimization algorithm.</div>
 </td>
 </tr>
-<tr id="i2" class="altColor">
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code>static <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html?is-external=true" title="class or interface in java.util" class="externalLink">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>,&#8203;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getBssidsMap(java.util.Map)">getBssidsMap</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html?is-external=true" title="class or interface in java.util" class="externalLink">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>,&#8203;<a href="models/State.html" title="class in com.facebook.openwifirrm.ucentral.models">State</a>&gt;&nbsp;latestState)</code></th>
 <td class="colLast">
 <div class="block">Get the mapping between bssids and APs.</div>
 </td>
 </tr>
-<tr id="i3" class="rowColor">
+<tr id="i4" class="altColor">
 <td class="colFirst"><code>static <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html?is-external=true" title="class or interface in java.util" class="externalLink">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>,&#8203;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html?is-external=true" title="class or interface in java.util" class="externalLink">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>,&#8203;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Integer.html?is-external=true" title="class or interface in java.lang" class="externalLink">Integer</a>&gt;&gt;&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getDeviceAvailableChannels(java.util.Map,java.util.Map,java.util.Map)">getDeviceAvailableChannels</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html?is-external=true" title="class or interface in java.util" class="externalLink">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>,&#8203;com.google.gson.JsonArray&gt;&nbsp;deviceStatus,
                           <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html?is-external=true" title="class or interface in java.util" class="externalLink">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>,&#8203;com.google.gson.JsonObject&gt;&nbsp;deviceCapabilities,
@@ -209,14 +216,15 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <div class="block">Get the capabilities of the APs who participate in an optimization algorithm.</div>
 </td>
 </tr>
-<tr id="i4" class="altColor">
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code>static <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="UCentralUtils.WifiScanEntry.html" title="class in com.facebook.openwifirrm.ucentral">UCentralUtils.WifiScanEntry</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#parseWifiScanEntries(com.google.gson.JsonObject)">parseWifiScanEntries</a></span>&#8203;(com.google.gson.JsonObject&nbsp;result)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#parseWifiScanEntries(com.google.gson.JsonObject,long)">parseWifiScanEntries</a></span>&#8203;(com.google.gson.JsonObject&nbsp;result,
+                    long&nbsp;timestampMs)</code></th>
 <td class="colLast">
 <div class="block">Parse a JSON wifi scan result into a list of WifiScanEntry objects.</div>
 </td>
 </tr>
-<tr id="i5" class="rowColor">
+<tr id="i6" class="altColor">
 <td class="colFirst"><code>static boolean</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setRadioConfigField(java.lang.String,com.facebook.openwifirrm.ucentral.UCentralApConfiguration,java.lang.String,java.util.Map)">setRadioConfigField</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;serialNumber,
                    <a href="UCentralApConfiguration.html" title="class in com.facebook.openwifirrm.ucentral">UCentralApConfiguration</a>&nbsp;config,
@@ -250,16 +258,23 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a id="parseWifiScanEntries(com.google.gson.JsonObject)">
+<a id="parseWifiScanEntries(com.google.gson.JsonObject,long)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>parseWifiScanEntries</h4>
-<pre class="methodSignature">public static&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="UCentralUtils.WifiScanEntry.html" title="class in com.facebook.openwifirrm.ucentral">UCentralUtils.WifiScanEntry</a>&gt;&nbsp;parseWifiScanEntries&#8203;(com.google.gson.JsonObject&nbsp;result)</pre>
-<div class="block">Parse a JSON wifi scan result into a list of WifiScanEntry objects.
-
- Returns null if any parsing/deserialization error occurred.</div>
+<pre class="methodSignature">public static&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="UCentralUtils.WifiScanEntry.html" title="class in com.facebook.openwifirrm.ucentral">UCentralUtils.WifiScanEntry</a>&gt;&nbsp;parseWifiScanEntries&#8203;(com.google.gson.JsonObject&nbsp;result,
+                                                                     long&nbsp;timestampMs)</pre>
+<div class="block">Parse a JSON wifi scan result into a list of WifiScanEntry objects.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>result</code> - result of the wifiscan</dd>
+<dd><code>timestampMs</code> - Unix time in ms</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>list of wifiscan entries, or null if any parsing/deserialization
+         error occurred.</dd>
+</dl>
 </li>
 </ul>
 <a id="setRadioConfigField(java.lang.String,com.facebook.openwifirrm.ucentral.UCentralApConfiguration,java.lang.String,java.util.Map)">
@@ -327,11 +342,29 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <a id="generateServiceKey(com.facebook.openwifirrm.RRMConfig.ServiceConfig)">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>generateServiceKey</h4>
 <pre class="methodSignature">public static&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;generateServiceKey&#8203;(<a href="../RRMConfig.ServiceConfig.html" title="class in com.facebook.openwifirrm">RRMConfig.ServiceConfig</a>&nbsp;serviceConfig)</pre>
 <div class="block">Generate the RRM service key.</div>
+</li>
+</ul>
+<a id="channelToFrequencyMHz(int)">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>channelToFrequencyMHz</h4>
+<pre class="methodSignature">public static&nbsp;int&nbsp;channelToFrequencyMHz&#8203;(int&nbsp;channel)</pre>
+<div class="block">Converts channel number to that channel's center frequency in MHz.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>channel</code> - channel number. See
+                <a href="../optimizers/ChannelOptimizer.html#AVAILABLE_CHANNELS_BAND"><code>ChannelOptimizer.AVAILABLE_CHANNELS_BAND</code></a> for channels
+                in each band.</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the center frequency of the given channel in MHz</dd>
+</dl>
 </li>
 </ul>
 </li>

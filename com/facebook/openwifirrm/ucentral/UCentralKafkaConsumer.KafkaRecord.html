@@ -166,6 +166,13 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <div class="block">The device serial number.</div>
 </td>
 </tr>
+<tr class="altColor">
+<td class="colFirst"><code>long</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#timestampMs">timestampMs</a></span></code></th>
+<td class="colLast">
+<div class="block">Unix time (ms).</div>
+</td>
+</tr>
 </table>
 </li>
 </ul>
@@ -184,8 +191,9 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr class="altColor">
-<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(java.lang.String,com.google.gson.JsonObject)">KafkaRecord</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;serialNumber,
-           com.google.gson.JsonObject&nbsp;payload)</code></th>
+<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(java.lang.String,com.google.gson.JsonObject,long)">KafkaRecord</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;serialNumber,
+           com.google.gson.JsonObject&nbsp;payload,
+           long&nbsp;timestampMs)</code></th>
 <td class="colLast">
 <div class="block">Constructor.</div>
 </td>
@@ -237,11 +245,21 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <a id="payload">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>payload</h4>
 <pre>public final&nbsp;com.google.gson.JsonObject payload</pre>
 <div class="block">The state payload JSON.</div>
+</li>
+</ul>
+<a id="timestampMs">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>timestampMs</h4>
+<pre>public final&nbsp;long timestampMs</pre>
+<div class="block">Unix time (ms).</div>
 </li>
 </ul>
 </li>
@@ -254,14 +272,15 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a id="&lt;init&gt;(java.lang.String,com.google.gson.JsonObject)">
+<a id="&lt;init&gt;(java.lang.String,com.google.gson.JsonObject,long)">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>KafkaRecord</h4>
 <pre>public&nbsp;KafkaRecord&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;serialNumber,
-                   com.google.gson.JsonObject&nbsp;payload)</pre>
+                   com.google.gson.JsonObject&nbsp;payload,
+                   long&nbsp;timestampMs)</pre>
 <div class="block">Constructor.</div>
 </li>
 </ul>

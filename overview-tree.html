@@ -97,12 +97,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <span class="packageHierarchyLabel">Package Hierarchies:</span>
 <ul class="horizontal">
 <li><a href="com/facebook/openwifirrm/package-tree.html">com.facebook.openwifirrm</a>, </li>
+<li><a href="com/facebook/openwifirrm/aggregators/package-tree.html">com.facebook.openwifirrm.aggregators</a>, </li>
 <li><a href="com/facebook/openwifirrm/modules/package-tree.html">com.facebook.openwifirrm.modules</a>, </li>
 <li><a href="com/facebook/openwifirrm/mysql/package-tree.html">com.facebook.openwifirrm.mysql</a>, </li>
 <li><a href="com/facebook/openwifirrm/optimizers/package-tree.html">com.facebook.openwifirrm.optimizers</a>, </li>
 <li><a href="com/facebook/openwifirrm/ucentral/package-tree.html">com.facebook.openwifirrm.ucentral</a>, </li>
 <li><a href="com/facebook/openwifirrm/ucentral/gw/models/package-tree.html">com.facebook.openwifirrm.ucentral.gw.models</a>, </li>
 <li><a href="com/facebook/openwifirrm/ucentral/models/package-tree.html">com.facebook.openwifirrm.ucentral.models</a>, </li>
+<li><a href="com/facebook/openwifirrm/ucentral/operationelement/package-tree.html">com.facebook.openwifirrm.ucentral.operationelement</a>, </li>
 <li><a href="com/facebook/openwifirrm/ucentral/prov/models/package-tree.html">com.facebook.openwifirrm.ucentral.prov.models</a>, </li>
 <li><a href="com/facebook/openwifirrm/ucentral/prov/rrm/models/package-tree.html">com.facebook.openwifirrm.ucentral.prov.rrm.models</a></li>
 </ul>
@@ -188,10 +190,12 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li class="circle">com.facebook.openwifirrm.ucentral.prov.models.<a href="com/facebook/openwifirrm/ucentral/prov/models/DiGraphEntry.html" title="class in com.facebook.openwifirrm.ucentral.prov.models"><span class="typeNameLink">DiGraphEntry</span></a></li>
 <li class="circle">com.facebook.openwifirrm.ucentral.prov.models.<a href="com/facebook/openwifirrm/ucentral/prov/models/Entity.html" title="class in com.facebook.openwifirrm.ucentral.prov.models"><span class="typeNameLink">Entity</span></a></li>
 <li class="circle">com.facebook.openwifirrm.ucentral.prov.models.<a href="com/facebook/openwifirrm/ucentral/prov/models/EntityList.html" title="class in com.facebook.openwifirrm.ucentral.prov.models"><span class="typeNameLink">EntityList</span></a></li>
+<li class="circle">com.facebook.openwifirrm.ucentral.operationelement.<a href="com/facebook/openwifirrm/ucentral/operationelement/HTOperationElement.html" title="class in com.facebook.openwifirrm.ucentral.operationelement"><span class="typeNameLink">HTOperationElement</span></a></li>
 <li class="circle">com.facebook.openwifirrm.ucentral.prov.models.<a href="com/facebook/openwifirrm/ucentral/prov/models/InventoryTag.html" title="class in com.facebook.openwifirrm.ucentral.prov.models"><span class="typeNameLink">InventoryTag</span></a></li>
 <li class="circle">com.facebook.openwifirrm.ucentral.prov.models.<a href="com/facebook/openwifirrm/ucentral/prov/models/InventoryTagList.html" title="class in com.facebook.openwifirrm.ucentral.prov.models"><span class="typeNameLink">InventoryTagList</span></a></li>
 <li class="circle">com.facebook.openwifirrm.ucentral.<a href="com/facebook/openwifirrm/ucentral/KafkaRunner.html" title="class in com.facebook.openwifirrm.ucentral"><span class="typeNameLink">KafkaRunner</span></a> (implements java.lang.<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Runnable.html?is-external=true" title="class or interface in java.lang" class="externalLink">Runnable</a>)</li>
 <li class="circle">com.facebook.openwifirrm.<a href="com/facebook/openwifirrm/Launcher.html" title="class in com.facebook.openwifirrm"><span class="typeNameLink">Launcher</span></a> (implements java.util.concurrent.<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/concurrent/Callable.html?is-external=true" title="class or interface in java.util.concurrent" class="externalLink">Callable</a>&lt;V&gt;)</li>
+<li class="circle">com.facebook.openwifirrm.aggregators.<a href="com/facebook/openwifirrm/aggregators/MeanAggregator.html" title="class in com.facebook.openwifirrm.aggregators"><span class="typeNameLink">MeanAggregator</span></a> (implements com.facebook.openwifirrm.aggregators.<a href="com/facebook/openwifirrm/aggregators/Aggregator.html" title="interface in com.facebook.openwifirrm.aggregators">Aggregator</a>&lt;T&gt;)</li>
 <li class="circle">com.facebook.openwifirrm.ucentral.gw.models.<a href="com/facebook/openwifirrm/ucentral/gw/models/MfaAuthInfo.html" title="class in com.facebook.openwifirrm.ucentral.gw.models"><span class="typeNameLink">MfaAuthInfo</span></a></li>
 <li class="circle">com.facebook.openwifirrm.ucentral.gw.models.<a href="com/facebook/openwifirrm/ucentral/gw/models/MobilePhoneNumber.html" title="class in com.facebook.openwifirrm.ucentral.gw.models"><span class="typeNameLink">MobilePhoneNumber</span></a></li>
 <li class="circle">com.facebook.openwifirrm.modules.<a href="com/facebook/openwifirrm/modules/Modeler.html" title="class in com.facebook.openwifirrm.modules"><span class="typeNameLink">Modeler</span></a> (implements java.lang.<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Runnable.html?is-external=true" title="class or interface in java.lang" class="externalLink">Runnable</a>)</li>
@@ -251,15 +255,20 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li class="circle">com.facebook.openwifirrm.ucentral.<a href="com/facebook/openwifirrm/ucentral/UCentralKafkaConsumer.KafkaRecord.html" title="class in com.facebook.openwifirrm.ucentral"><span class="typeNameLink">UCentralKafkaConsumer.KafkaRecord</span></a></li>
 <li class="circle">com.facebook.openwifirrm.ucentral.<a href="com/facebook/openwifirrm/ucentral/UCentralKafkaProducer.html" title="class in com.facebook.openwifirrm.ucentral"><span class="typeNameLink">UCentralKafkaProducer</span></a></li>
 <li class="circle">com.facebook.openwifirrm.ucentral.<a href="com/facebook/openwifirrm/ucentral/UCentralUtils.html" title="class in com.facebook.openwifirrm.ucentral"><span class="typeNameLink">UCentralUtils</span></a></li>
-<li class="circle">com.facebook.openwifirrm.ucentral.<a href="com/facebook/openwifirrm/ucentral/UCentralUtils.WifiScanEntry.html" title="class in com.facebook.openwifirrm.ucentral"><span class="typeNameLink">UCentralUtils.WifiScanEntry</span></a></li>
 <li class="circle">com.facebook.openwifirrm.ucentral.gw.models.<a href="com/facebook/openwifirrm/ucentral/gw/models/UserInfo.html" title="class in com.facebook.openwifirrm.ucentral.gw.models"><span class="typeNameLink">UserInfo</span></a></li>
 <li class="circle">com.facebook.openwifirrm.ucentral.gw.models.<a href="com/facebook/openwifirrm/ucentral/gw/models/UserLoginLoginExtensions.html" title="class in com.facebook.openwifirrm.ucentral.gw.models"><span class="typeNameLink">UserLoginLoginExtensions</span></a></li>
 <li class="circle">com.facebook.openwifirrm.<a href="com/facebook/openwifirrm/Utils.html" title="class in com.facebook.openwifirrm"><span class="typeNameLink">Utils</span></a></li>
 <li class="circle">com.facebook.openwifirrm.ucentral.prov.models.<a href="com/facebook/openwifirrm/ucentral/prov/models/Venue.html" title="class in com.facebook.openwifirrm.ucentral.prov.models"><span class="typeNameLink">Venue</span></a></li>
 <li class="circle">com.facebook.openwifirrm.ucentral.prov.models.<a href="com/facebook/openwifirrm/ucentral/prov/models/VenueList.html" title="class in com.facebook.openwifirrm.ucentral.prov.models"><span class="typeNameLink">VenueList</span></a></li>
 <li class="circle">com.facebook.openwifirrm.<a href="com/facebook/openwifirrm/VersionProvider.html" title="class in com.facebook.openwifirrm"><span class="typeNameLink">VersionProvider</span></a> (implements picocli.CommandLine.IVersionProvider)</li>
+<li class="circle">com.facebook.openwifirrm.ucentral.operationelement.<a href="com/facebook/openwifirrm/ucentral/operationelement/VHTOperationElement.html" title="class in com.facebook.openwifirrm.ucentral.operationelement"><span class="typeNameLink">VHTOperationElement</span></a></li>
 <li class="circle">com.facebook.openwifirrm.ucentral.gw.models.<a href="com/facebook/openwifirrm/ucentral/gw/models/WebTokenAclTemplate.html" title="class in com.facebook.openwifirrm.ucentral.gw.models"><span class="typeNameLink">WebTokenAclTemplate</span></a></li>
 <li class="circle">com.facebook.openwifirrm.ucentral.gw.models.<a href="com/facebook/openwifirrm/ucentral/gw/models/WebTokenResult.html" title="class in com.facebook.openwifirrm.ucentral.gw.models"><span class="typeNameLink">WebTokenResult</span></a></li>
+<li class="circle">com.facebook.openwifirrm.ucentral.models.<a href="com/facebook/openwifirrm/ucentral/models/WifiScanEntryResult.html" title="class in com.facebook.openwifirrm.ucentral.models"><span class="typeNameLink">WifiScanEntryResult</span></a>
+<ul>
+<li class="circle">com.facebook.openwifirrm.ucentral.<a href="com/facebook/openwifirrm/ucentral/UCentralUtils.WifiScanEntry.html" title="class in com.facebook.openwifirrm.ucentral"><span class="typeNameLink">UCentralUtils.WifiScanEntry</span></a></li>
+</ul>
+</li>
 <li class="circle">com.facebook.openwifirrm.ucentral.gw.models.<a href="com/facebook/openwifirrm/ucentral/gw/models/WifiScanRequest.html" title="class in com.facebook.openwifirrm.ucentral.gw.models"><span class="typeNameLink">WifiScanRequest</span></a></li>
 </ul>
 </li>
@@ -268,6 +277,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <section role="region">
 <h2 title="Interface Hierarchy">Interface Hierarchy</h2>
 <ul>
+<li class="circle">com.facebook.openwifirrm.aggregators.<a href="com/facebook/openwifirrm/aggregators/Aggregator.html" title="interface in com.facebook.openwifirrm.aggregators"><span class="typeNameLink">Aggregator</span></a>&lt;T&gt;</li>
 <li class="circle">com.facebook.openwifirrm.modules.<a href="com/facebook/openwifirrm/modules/ConfigManager.ConfigListener.html" title="interface in com.facebook.openwifirrm.modules"><span class="typeNameLink">ConfigManager.ConfigListener</span></a></li>
 <li class="circle">com.facebook.openwifirrm.modules.<a href="com/facebook/openwifirrm/modules/DataCollector.DataListener.html" title="interface in com.facebook.openwifirrm.modules"><span class="typeNameLink">DataCollector.DataListener</span></a></li>
 <li class="circle">com.facebook.openwifirrm.<a href="com/facebook/openwifirrm/DeviceDataManager.DeviceApConfigFunction.html" title="interface in com.facebook.openwifirrm"><span class="typeNameLink">DeviceDataManager.DeviceApConfigFunction</span></a></li>
