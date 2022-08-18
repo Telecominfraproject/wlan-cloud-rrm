@@ -60,7 +60,8 @@ public abstract class TPC {
 	}
 
 	/**
-	 * Compute tx power assignments.
+	 * Compute tx power assignments. This is the core method of this class.
+	 *
 	 * @return the map of devices (by serial number) to radio to tx power
 	 */
 	public abstract Map<String, Map<String, Integer>> computeTxPowerMap();

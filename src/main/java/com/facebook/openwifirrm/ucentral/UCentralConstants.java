@@ -8,15 +8,23 @@
 
 package com.facebook.openwifirrm.ucentral;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 /**
  * Constants related to uCentral.
  */
 public final class UCentralConstants {
 
+	// eventually, we may add more bands (e.g., 6G)
 	/** String of the 2.4 GHz band */
 	public static final String BAND_2G = "2G";
 	/** String of the 5 GHz band */
 	public static final String BAND_5G = "5G";
+	/** List of all bands */
+	public static final List<String> BANDS = Collections
+		.unmodifiableList(Arrays.asList(BAND_2G, BAND_5G));
 
 	// This class should not be instantiated.
 	private UCentralConstants() {}

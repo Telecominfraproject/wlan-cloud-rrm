@@ -41,6 +41,20 @@ public class UCentralUtils {
 	/** The Gson instance. */
 	private static final Gson gson = new Gson();
 
+	/** Map of band to the band-specific lowest available channel*/
+	public static final Map<String, Integer> LOWER_CHANNEL_LIMIT = new HashMap<>();
+	static {
+		UCentralUtils.LOWER_CHANNEL_LIMIT.put(UCentralConstants.BAND_2G, 1);
+		UCentralUtils.LOWER_CHANNEL_LIMIT.put(UCentralConstants.BAND_5G, 36);
+	}
+
+	/** Map of band to the band-specific highest available channel*/
+	public static final Map<String, Integer> UPPER_CHANNEL_LIMIT = new HashMap<>();
+	static {
+		UCentralUtils.UPPER_CHANNEL_LIMIT.put(UCentralConstants.BAND_2G, 11);
+		UCentralUtils.UPPER_CHANNEL_LIMIT.put(UCentralConstants.BAND_5G, 165);
+	}
+
 	// This class should not be instantiated.
 	private UCentralUtils() {}
 
@@ -363,5 +377,17 @@ public class UCentralUtils {
 		} else {
 			throw new IllegalArgumentException("Must provide a valid channel.");
 		}
+	}
+
+	/**
+	 * Determines if the given channel is in the given band.
+	 *
+	 * @param channel channel number
+	 * @param band    "2G" or "5G"
+	 * @return true if the given channel is in the given band; false otherwise
+	 */
+	public static boolean isChannelInBand(int channel, String band) {
+		return LOWER_CHANNEL_LIMIT.get(band) <= channel
+				&& channel <= UPPER_CHANNEL_LIMIT.get(band);
 	}
 }

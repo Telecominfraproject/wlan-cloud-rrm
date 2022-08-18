@@ -77,8 +77,8 @@ public class LeastUsedChannelOptimizer extends ChannelOptimizer {
 	protected static Map<Integer, Integer> getOccupiedOverlapChannels(
 		Map<Integer, Integer> occupiedChannels
 	) {
-		int maxChannel = UPPER_CHANNEL_LIMIT.get(UCentralConstants.BAND_2G);
-		int minChannel = LOWER_CHANNEL_LIMIT.get(UCentralConstants.BAND_2G);
+		int maxChannel = UCentralUtils.UPPER_CHANNEL_LIMIT.get(UCentralConstants.BAND_2G);
+		int minChannel = UCentralUtils.LOWER_CHANNEL_LIMIT.get(UCentralConstants.BAND_2G);
 		Map<Integer, Integer> occupiedOverlapChannels = new TreeMap<>();
 		for (int overlapChannel : AVAILABLE_CHANNELS_BAND.get(UCentralConstants.BAND_2G)) {
 			int occupancy = 0;
