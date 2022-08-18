@@ -21,7 +21,6 @@ Unit tests are written using [JUnit 5].
 ```
 $ java -jar openwifi-rrm.jar [-h]
 ```
-The command-line interface is implemented using [picocli].
 
 To start the service, use the `run` command while providing configuration via
 either environment variables (`--config-env`) or a static JSON file
@@ -55,4 +54,3 @@ See [LICENSE](LICENSE).
 
 [Apache Maven]: https://maven.apache.org/
 [JUnit 5]: https://junit.org/junit5/
-[picocli]: https://picocli.info/
