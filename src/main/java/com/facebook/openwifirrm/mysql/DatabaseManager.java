@@ -435,7 +435,6 @@ public class DatabaseManager {
 	 * @param serialNumber     serial number
 	 * @param timestampSeconds timestamp (Unix time in seconds).
 	 * @param entries          list of wifiscan entries
-	 * @throws SQLException
 	 */
 	public void addWifiScan(
 		String serialNumber, long timestampSeconds, List<WifiScanEntry> entries
