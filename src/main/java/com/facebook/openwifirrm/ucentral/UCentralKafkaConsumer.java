@@ -39,14 +39,14 @@ import com.google.gson.JsonObject;
 public class UCentralKafkaConsumer {
 	private static final Logger logger = LoggerFactory.getLogger(UCentralKafkaConsumer.class);
 
-	/** Poll timeout duration. */
-	private static final Duration POLL_TIMEOUT = Duration.ofMillis(10000);
-
 	/** The consumer instance. */
 	private final KafkaConsumer<String, String> consumer;
 
 	/** The uCentral API client */
 	private final UCentralClient client;
+
+	/** Poll timeout duration. */
+	private final Duration pollTimeout;
 
 	/** The uCentral state topic. */
 	private final String stateTopic;
@@ -100,6 +100,7 @@ public class UCentralKafkaConsumer {
 	 * @param bootstrapServer the Kafka bootstrap server
 	 * @param groupId the Kafka consumer group ID
 	 * @param autoOffsetReset the "auto.offset.reset" config
+	 * @param pollTimeoutMs the poll timeout in ms
 	 * @param stateTopic the uCentral state topic (or empty/null to skip)
 	 * @param wifiScanTopic the uCentral wifiscan topic (or empty/null to skip)
 	 * @param serviceEventsTopic the uCentral service_events topic (required)
@@ -109,11 +110,13 @@ public class UCentralKafkaConsumer {
 		String bootstrapServer,
 		String groupId,
 		String autoOffsetReset,
+		long pollTimeoutMs,
 		String stateTopic,
 		String wifiScanTopic,
 		String serviceEventsTopic
 	) {
 		this.client = client;
+		this.pollTimeout = Duration.ofMillis(pollTimeoutMs);
 		this.stateTopic = stateTopic;
 		this.wifiScanTopic = wifiScanTopic;
 		this.serviceEventsTopic = serviceEventsTopic;
@@ -148,7 +151,7 @@ public class UCentralKafkaConsumer {
 			.stream()
 			.filter(t -> t != null && !t.isEmpty())
 			.collect(Collectors.toList());
-		Map<String, List<PartitionInfo>> topics = consumer.listTopics(POLL_TIMEOUT);
+		Map<String, List<PartitionInfo>> topics = consumer.listTopics(pollTimeout);
 		logger.info("Found topics: {}", String.join(", ", topics.keySet()));
 		while (!topics.keySet().containsAll(subscribeTopics)) {
 			logger.info(
@@ -161,7 +164,7 @@ public class UCentralKafkaConsumer {
 			} catch (InterruptedException e) {
 				throw new RuntimeException("Interrupted while waiting for Kafka topics", e);
 			}
-			topics = consumer.listTopics(POLL_TIMEOUT);
+			topics = consumer.listTopics(pollTimeout);
 		}
 		consumer.subscribe(subscribeTopics, new ConsumerRebalanceListener() {
 			@Override
@@ -200,7 +203,7 @@ public class UCentralKafkaConsumer {
 
 	/** Poll for data. */
 	public void poll() {
-		ConsumerRecords<String, String> records = consumer.poll(POLL_TIMEOUT);
+		ConsumerRecords<String, String> records = consumer.poll(pollTimeout);
 		logger.debug("Poll returned with {} record(s)", records.count());
 
 		List<KafkaRecord> stateRecords = new ArrayList<>();
