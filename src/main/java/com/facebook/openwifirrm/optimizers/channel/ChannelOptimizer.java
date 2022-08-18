@@ -10,7 +10,6 @@ package com.facebook.openwifirrm.optimizers.channel;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Base64;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -26,6 +25,8 @@ import com.facebook.openwifirrm.modules.Modeler.DataModel;
 import com.facebook.openwifirrm.ucentral.UCentralConstants;
 import com.facebook.openwifirrm.ucentral.UCentralUtils.WifiScanEntry;
 import com.facebook.openwifirrm.ucentral.models.State;
+import com.facebook.openwifirrm.ucentral.operationelement.HTOperationElement;
+import com.facebook.openwifirrm.ucentral.operationelement.VHTOperationElement;
 
 /**
  * Channel optimizer base class.
@@ -179,15 +180,6 @@ public abstract class ChannelOptimizer {
 		}
 	}
 
-	/** Convert the input string into a byte array. */
-	private static byte[] decodeBase64(String s) {
-		try {
-			return Base64.getDecoder().decode(s);
-		} catch (IllegalArgumentException e) {
-			return null;
-		}
-	}
-
 	/**
 	 * Get the channel width based on the HT operation and VHT operation in wifi scan.
 	 * @param channel the current channel (from the scan result)
@@ -209,76 +201,33 @@ public abstract class ChannelOptimizer {
 			return MIN_CHANNEL_WIDTH;
 		}
 
-		// Decode HT operation information element
-		byte[] htOperDecode =  decodeBase64(htOper);
-		if (htOperDecode == null) {
-			return MIN_CHANNEL_WIDTH;
-		}
-		// The second byte of HT operation contains the channel width information.
-		// The third bit (so we & 4 = 100 below) in the second byte is STA channel width.
-		// 0 for a 20 MHz channel width, 1 for any other channel widths.
-		int htChannelWidth = htOperDecode[1] & 4;
-
+		HTOperationElement htOperObj = new HTOperationElement(htOper);
 		if (vhtOper == null) {
-			// HT mode, it only supports 20/40 MHz
-			// Therefore, htChannelWidth > 0 means 40 MHz, htChannelWidth = 0 means 20 MHz.
-			if (htChannelWidth == 0) {
-				return 20;
-			} else {
-				return 40;
-			}
+			// HT mode only supports 20/40 MHz
+			return htOperObj.staChannelWidth ? 40 : 20;
 		} else {
-			// VHT/HE mode, it supports 20/40/160/8080 MHz
-
-			// Decode VHT operation information element
-			byte[] vhtOperDecode = decodeBase64(vhtOper);
-			if (vhtOperDecode == null) {
-				return MIN_CHANNEL_WIDTH;
-			}
-			// The first byte of VHT operation is channel width, which takes values 0-3.
-			// 0 for 20 MHz or 40 MHz
-			// 1 for 80 MHz, 160 MHz , or 80+80 MHz BSS bandwidth
-			// 2 and 3 are deprecated
-			int vhtChannelWidth = vhtOperDecode[0] & 255;
-			// The second byte of VHT operation is channel center frequency segment 0.
-			// For 80 MHz BSS bandwidth, indicates the channel center frequency index
-			// for the 80 MHz channel on which the VHT BSS operates.
-			// For 160 MHz or 80+80 MHz BSS bandwidth, it contains the channel center
-			// frequency index for the first 80 MHz channel.
-			int channelOffset1 = vhtOperDecode[1] & 255;
-			// The third byte of VHT operation is channel center frequency segment 1.
-			// For a 20, 40, or 80 MHz BSS bandwidth, this subfield is set to 0.
-			// For 160 MHz or 80+80 MHz BSS bandwidth, it contains the channel center
-			// frequency index for the second 80 MHz channel.
-			int channelOffset2 = vhtOperDecode[2] & 255;
-
-			if (htChannelWidth == 0 && vhtChannelWidth == 0) {
+			// VHT/HE mode supports 20/40/160/80+80 MHz
+			VHTOperationElement vhtOperObj = new VHTOperationElement(vhtOper);
+			if (!htOperObj.staChannelWidth && vhtOperObj.channelWidth == 0) {
 				return 20;
-			} else if (htChannelWidth > 0 && vhtChannelWidth == 0) {
+			} else if (htOperObj.staChannelWidth && vhtOperObj.channelWidth == 0) {
 				return 40;
-			} else if (
-				htChannelWidth > 0 &&
-				vhtChannelWidth == 1 &&
-				channelOffset2 == 0
-			) {
+			} else if (htOperObj.staChannelWidth && vhtOperObj.channelWidth == 1 && vhtOperObj.channel2 == 0) {
 				return 80;
 			} else if (
-				htChannelWidth > 0 &&
-				vhtChannelWidth == 1 &&
-				channelOffset2 != 0
+					htOperObj.staChannelWidth
+					&& vhtOperObj.channelWidth == 1
+					&& vhtOperObj.channel2 != 0
 			) {
 				// if it is 160 MHz, it use two consecutive 80 MHz bands
 				// the difference of 8 means it is consecutive
-				if (Math.abs(channelOffset1 - channelOffset2) == 8) {
-					return 160;
-				} else {
-					return 8080;
-				}
+				int channelDiff = Math.abs(vhtOperObj.channel1 - vhtOperObj.channel2);
+				// the "8080" below does not mean 8080 MHz wide, it refers to 80+80 MHz channel
+				return channelDiff == 8 ? 160 : 8080;
 			} else {
 				return MIN_CHANNEL_WIDTH;
 			}
 		}
-
 	}
 
 	/**

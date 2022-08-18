@@ -19,8 +19,11 @@ import org.apache.commons.codec.binary.Base64;
  */
 public class VHTOperationElement {
 
-	/** False if the channel width is 20 MHz or 40 MHz; true otherwise. */
-	private final boolean channelWidthIndicator;
+	/**
+	 * This field is 0 if the channel width is 20 MHz or 40 MHz, and 1 otherwise.
+	 * Values of 2 and 3 are deprecated.
+	 */
+	public final byte channelWidth;
 	/**
 	 * If the channel is 20 MHz, 40 MHz, or 80 MHz wide, this parameter is the
 	 * channel number. E.g., the channel centered at 5180 MHz is channel 36. For a
@@ -28,14 +31,14 @@ public class VHTOperationElement {
 	 * channel that contains the primary channel. For a 80+80 MHz wide channel, this
 	 * parameter is the channel number of the primary channel.
 	 */
-	private final byte channel1;
+	public final byte channel1;
 	/**
 	 * This should be zero unless the channel is 160MHz or 80+80 MHz wide. If the
 	 * channel is 160 MHz wide, this parameter is the channel number of the 160 MHz
 	 * wide channel. If the channel is 80+80 MHz wide, this parameter is the channel
 	 * index of the secondary 80 MHz wide channel.
 	 */
-	private final byte channel2;
+	public final byte channel2;
 	/**
 	 * An 8-element array where each element is between 0 and 4 inclusive. MCS means
 	 * Modulation and Coding Scheme. NSS means Number of Spatial Streams. There can
@@ -46,7 +49,7 @@ public class VHTOperationElement {
 	 * VHT-MCS is supported for that NSS. For the specifics of what each VHT-MCS is,
 	 * see IEEE 802.11-2020, Table "21-29" through Table "21-60".
 	 */
-	private final byte[] vhtMcsForNss;
+	public final byte[] vhtMcsForNss;
 
 	/**
 	 * Constructs a {@code VHTOperationElement} by decoding {@code vhtOper}.
@@ -56,7 +59,7 @@ public class VHTOperationElement {
 	 */
 	public VHTOperationElement(String vhtOper) {
 		byte[] bytes = Base64.decodeBase64(vhtOper);
-		this.channelWidthIndicator = bytes[0] == 1;
+		this.channelWidth = bytes[0];
 		this.channel1 = bytes[1];
 		this.channel2 = bytes[2];
 		byte[] vhtMcsForNss = new byte[8];
@@ -78,13 +81,13 @@ public class VHTOperationElement {
 	 * For details about the parameters, see the javadocs for the corresponding
 	 * member variables.
 	 */
-	public VHTOperationElement(boolean channelWidthIndicator, byte channel1, byte channel2, byte[] vhtMcsForNss) {
+	public VHTOperationElement(byte channelWidth, byte channel1, byte channel2, byte[] vhtMcsForNss) {
 		/*
 		 * XXX some combinations of channelWidth, channel, channel2, and vhtMcsAtNss are
 		 * invalid, but this is not checked here. If fidelity to 802.11 is required, the
 		 * caller of this method must make sure to pass in valid parameters.
 		 */
-		this.channelWidthIndicator = channelWidthIndicator;
+		this.channelWidth = channelWidth;
 		this.channel1 = channel1;
 		this.channel2 = channel2;
 		this.vhtMcsForNss = vhtMcsForNss;
@@ -101,7 +104,7 @@ public class VHTOperationElement {
 	public boolean matchesForAggregation(VHTOperationElement other) {
 		// check everything except vhtMcsForNss
 		return other != null && channel1 == other.channel1 && channel2 == other.channel2
-				&& channelWidthIndicator == other.channelWidthIndicator;
+				&& channelWidth == other.channelWidth;
 	}
 
 	/**
@@ -133,7 +136,7 @@ public class VHTOperationElement {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + Arrays.hashCode(vhtMcsForNss);
-		result = prime * result + Objects.hash(channel1, channel2, channelWidthIndicator);
+		result = prime * result + Objects.hash(channel1, channel2, channelWidth);
 		return result;
 	}
 
@@ -150,7 +153,7 @@ public class VHTOperationElement {
 		}
 		VHTOperationElement other = (VHTOperationElement) obj;
 		return channel1 == other.channel1 && channel2 == other.channel2
-				&& channelWidthIndicator == other.channelWidthIndicator
+				&& channelWidth == other.channelWidth
 				&& Arrays.equals(vhtMcsForNss, other.vhtMcsForNss);
 	}
 }
