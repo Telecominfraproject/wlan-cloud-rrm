@@ -23,7 +23,7 @@ public class VHTOperationElement {
 	 * This field is 0 if the channel width is 20 MHz or 40 MHz, and 1 otherwise.
 	 * Values of 2 and 3 are deprecated.
 	 */
-	private final byte channelWidth;
+	public final byte channelWidth;
 	/**
 	 * If the channel is 20 MHz, 40 MHz, or 80 MHz wide, this parameter is the
 	 * channel number. E.g., the channel centered at 5180 MHz is channel 36. For a
@@ -31,14 +31,14 @@ public class VHTOperationElement {
 	 * channel that contains the primary channel. For a 80+80 MHz wide channel, this
 	 * parameter is the channel number of the primary channel.
 	 */
-	private final byte channel1;
+	public final byte channel1;
 	/**
 	 * This should be zero unless the channel is 160MHz or 80+80 MHz wide. If the
 	 * channel is 160 MHz wide, this parameter is the channel number of the 160 MHz
 	 * wide channel. If the channel is 80+80 MHz wide, this parameter is the channel
 	 * index of the secondary 80 MHz wide channel.
 	 */
-	private final byte channel2;
+	public final byte channel2;
 	/**
 	 * An 8-element array where each element is between 0 and 4 inclusive. MCS means
 	 * Modulation and Coding Scheme. NSS means Number of Spatial Streams. There can
@@ -49,7 +49,7 @@ public class VHTOperationElement {
 	 * VHT-MCS is supported for that NSS. For the specifics of what each VHT-MCS is,
 	 * see IEEE 802.11-2020, Table "21-29" through Table "21-60".
 	 */
-	private final byte[] vhtMcsForNss;
+	public final byte[] vhtMcsForNss;
 
 	/**
 	 * Constructs a {@code VHTOperationElement} by decoding {@code vhtOper}.
