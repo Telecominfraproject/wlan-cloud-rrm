@@ -169,6 +169,12 @@ public class RRMConfig {
 		 * ({@code KAFKACONFIG_AUTOOFFSETRESET})
 		 */
 		public String autoOffsetReset = "latest";
+
+		/**
+		 * Kafka consumer poll timeout duration, in ms
+		 * ({@code KAFKACONFIG_POLLTIMEOUTMS})
+		 */
+		public long pollTimeoutMs = 10000;
 	}
 
 	/** uCentral Kafka configuration. */
@@ -480,6 +486,9 @@ public class RRMConfig {
 		}
 		if ((v = env.get("KAFKACONFIG_AUTOOFFSETRESET")) != null) {
 			kafkaConfig.autoOffsetReset = v;
+		}
+		if ((v = env.get("KAFKACONFIG_POLLTIMEOUTMS")) != null) {
+			kafkaConfig.pollTimeoutMs = Long.parseLong(v);
 		}
 
 		/* DatabaseConfig */

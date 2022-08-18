@@ -179,6 +179,7 @@ public class Launcher implements Callable<Integer> {
 				config.kafkaConfig.bootstrapServer,
 				config.kafkaConfig.groupId,
 				config.kafkaConfig.autoOffsetReset,
+				config.kafkaConfig.pollTimeoutMs,
 				config.kafkaConfig.stateTopic,
 				config.kafkaConfig.wifiScanTopic,
 				config.kafkaConfig.serviceEventsTopic
