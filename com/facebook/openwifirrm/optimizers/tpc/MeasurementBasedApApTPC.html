@@ -26,7 +26,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":9,"i1":9,"i2":10,"i3":9,"i4":9,"i5":9};
+var data = {"i0":9,"i1":10,"i2":9,"i3":10,"i4":9,"i5":9};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -140,7 +140,6 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 extends <a href="TPC.html" title="class in com.facebook.openwifirrm.optimizers.tpc">TPC</a></pre>
 <div class="block">Measurement-based AP-AP TPC algorithm.
 
- TODO: support both 2G and 5G
  TODO: implement the channel-specific TPC operation</div>
 </li>
 </ul>
@@ -245,13 +244,23 @@ extends <a href="TPC.html" title="class in com.facebook.openwifirrm.optimizers.t
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>protected static <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html?is-external=true" title="class or interface in java.util" class="externalLink">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>,&#8203;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Integer.html?is-external=true" title="class or interface in java.lang" class="externalLink">Integer</a>&gt;&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#buildRssiMap(java.util.Set,java.util.Map)">buildRssiMap</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Set.html?is-external=true" title="class or interface in java.util" class="externalLink">Set</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&gt;&nbsp;managedBSSIDs,
-            <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html?is-external=true" title="class or interface in java.util" class="externalLink">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>,&#8203;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="../../ucentral/UCentralUtils.WifiScanEntry.html" title="class in com.facebook.openwifirrm.ucentral">UCentralUtils.WifiScanEntry</a>&gt;&gt;&gt;&nbsp;latestWifiScans)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#buildRssiMap(java.util.Set,java.util.Map,java.lang.String)">buildRssiMap</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Set.html?is-external=true" title="class or interface in java.util" class="externalLink">Set</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&gt;&nbsp;managedBSSIDs,
+            <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html?is-external=true" title="class or interface in java.util" class="externalLink">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>,&#8203;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="../../ucentral/UCentralUtils.WifiScanEntry.html" title="class in com.facebook.openwifirrm.ucentral">UCentralUtils.WifiScanEntry</a>&gt;&gt;&gt;&nbsp;latestWifiScans,
+            <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;band)</code></th>
 <td class="colLast">
-<div class="block">Get a map from BSSID to the received signal strength at neighboring APs (RSSI).</div>
+<div class="block">Build a map from BSSID to a sorted (ascending) list of RSSIs from
+ neighboring APs.</div>
 </td>
 </tr>
 <tr id="i1" class="rowColor">
+<td class="colFirst"><code>protected void</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#buildTxPowerMapForBand(java.lang.String,java.util.Map)">buildTxPowerMapForBand</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;band,
+                      <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html?is-external=true" title="class or interface in java.util" class="externalLink">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>,&#8203;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html?is-external=true" title="class or interface in java.util" class="externalLink">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>,&#8203;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Integer.html?is-external=true" title="class or interface in java.lang" class="externalLink">Integer</a>&gt;&gt;&nbsp;txPowerMap)</code></th>
+<td class="colLast">
+<div class="block">Calculate new tx powers for the given band.</div>
+</td>
+</tr>
+<tr id="i2" class="altColor">
 <td class="colFirst"><code>protected static int</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#computeTxPower(java.lang.String,int,java.util.List,int,int)">computeTxPower</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;serialNumber,
               int&nbsp;currentTxPower,
@@ -262,33 +271,27 @@ extends <a href="TPC.html" title="class in com.facebook.openwifirrm.optimizers.t
 <div class="block">Compute adjusted tx power (dBm) based on inputs.</div>
 </td>
 </tr>
-<tr id="i2" class="altColor">
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html?is-external=true" title="class or interface in java.util" class="externalLink">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>,&#8203;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html?is-external=true" title="class or interface in java.util" class="externalLink">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>,&#8203;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Integer.html?is-external=true" title="class or interface in java.lang" class="externalLink">Integer</a>&gt;&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#computeTxPowerMap()">computeTxPowerMap</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Compute tx power assignments.</div>
 </td>
 </tr>
-<tr id="i3" class="rowColor">
+<tr id="i4" class="altColor">
 <td class="colFirst"><code>protected static int</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getCurrentTxPower(com.google.gson.JsonArray)">getCurrentTxPower</a></span>&#8203;(com.google.gson.JsonArray&nbsp;latestDeviceStatus)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getCurrentTxPower(com.google.gson.JsonArray,java.lang.String)">getCurrentTxPower</a></span>&#8203;(com.google.gson.JsonArray&nbsp;latestDeviceStatus,
+                 <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;band)</code></th>
 <td class="colLast">
-<div class="block">Get the current 5GHz radio tx power (the first one found) for an AP using
- the latest device status.</div>
+<div class="block">Get the current band radio tx power (the first one found) for an AP using the
+ latest device status.</div>
 </td>
 </tr>
-<tr id="i4" class="altColor">
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code>protected static <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Set.html?is-external=true" title="class or interface in java.util" class="externalLink">Set</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getManagedBSSIDs(com.facebook.openwifirrm.modules.Modeler.DataModel)">getManagedBSSIDs</a></span>&#8203;(<a href="../../modules/Modeler.DataModel.html" title="class in com.facebook.openwifirrm.modules">Modeler.DataModel</a>&nbsp;model)</code></th>
 <td class="colLast">
 <div class="block">Retrieve BSSIDs of APs we are managing.</div>
-</td>
-</tr>
-<tr id="i5" class="rowColor">
-<td class="colFirst"><code>protected static boolean</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#isChannel5G(int)">isChannel5G</a></span>&#8203;(int&nbsp;channel)</code></th>
-<td class="colLast">
-<div class="block">Return true if the given channel is a 5GHz channel.</div>
 </td>
 </tr>
 </table>
@@ -425,49 +428,47 @@ extends <a href="TPC.html" title="class in com.facebook.openwifirrm.optimizers.t
 <div class="block">Retrieve BSSIDs of APs we are managing.</div>
 </li>
 </ul>
-<a id="getCurrentTxPower(com.google.gson.JsonArray)">
+<a id="getCurrentTxPower(com.google.gson.JsonArray,java.lang.String)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>getCurrentTxPower</h4>
-<pre class="methodSignature">protected static&nbsp;int&nbsp;getCurrentTxPower&#8203;(com.google.gson.JsonArray&nbsp;latestDeviceStatus)</pre>
-<div class="block">Get the current 5GHz radio tx power (the first one found) for an AP using
- the latest device status.</div>
+<pre class="methodSignature">protected static&nbsp;int&nbsp;getCurrentTxPower&#8203;(com.google.gson.JsonArray&nbsp;latestDeviceStatus,
+                                       <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;band)</pre>
+<div class="block">Get the current band radio tx power (the first one found) for an AP using the
+ latest device status.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>latestDeviceStatus</code> - JsonArray containing radio config for the AP</dd>
+<dd><code>band</code> - "2G" or "5G"</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the tx power, or 0 if none found</dd>
 </dl>
 </li>
 </ul>
-<a id="isChannel5G(int)">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>isChannel5G</h4>
-<pre class="methodSignature">protected static&nbsp;boolean&nbsp;isChannel5G&#8203;(int&nbsp;channel)</pre>
-<div class="block">Return true if the given channel is a 5GHz channel.</div>
-</li>
-</ul>
-<a id="buildRssiMap(java.util.Set,java.util.Map)">
+<a id="buildRssiMap(java.util.Set,java.util.Map,java.lang.String)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>buildRssiMap</h4>
 <pre class="methodSignature">protected static&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html?is-external=true" title="class or interface in java.util" class="externalLink">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>,&#8203;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Integer.html?is-external=true" title="class or interface in java.lang" class="externalLink">Integer</a>&gt;&gt;&nbsp;buildRssiMap&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Set.html?is-external=true" title="class or interface in java.util" class="externalLink">Set</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&gt;&nbsp;managedBSSIDs,
-                                                              <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html?is-external=true" title="class or interface in java.util" class="externalLink">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>,&#8203;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="../../ucentral/UCentralUtils.WifiScanEntry.html" title="class in com.facebook.openwifirrm.ucentral">UCentralUtils.WifiScanEntry</a>&gt;&gt;&gt;&nbsp;latestWifiScans)</pre>
-<div class="block">Get a map from BSSID to the received signal strength at neighboring APs (RSSI).
- List of RSSIs are returned in sorted, ascending order.
-
- If no neighboring APs have received signal from a source, then it gets an
- entry in the map with an empty list of RSSI values.</div>
+                                                              <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html?is-external=true" title="class or interface in java.util" class="externalLink">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>,&#8203;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="../../ucentral/UCentralUtils.WifiScanEntry.html" title="class in com.facebook.openwifirrm.ucentral">UCentralUtils.WifiScanEntry</a>&gt;&gt;&gt;&nbsp;latestWifiScans,
+                                                              <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;band)</pre>
+<div class="block">Build a map from BSSID to a sorted (ascending) list of RSSIs from
+ neighboring APs. Every managed BSSID is a key in the returned map; if
+ that BSSID does not have an RSSI for that AP, the BSSID is mapped to an
+ empty list.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>managedBSSIDs</code> - set of all BSSIDs of APs we are managing</dd>
+<dd><code>latestWifiScans</code> - <a href="../../modules/Modeler.DataModel.html#latestWifiScans"><code>Modeler.DataModel.latestWifiScans</code></a> for data
+                        structure</dd>
+<dd><code>band</code> - "2G" or "5G"</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>a map from BSSID to a sorted (ascending) list of RSSIs from
+         neighboring APs.</dd>
 </dl>
 </li>
 </ul>
@@ -485,8 +486,33 @@ extends <a href="TPC.html" title="class in com.facebook.openwifirrm.optimizers.t
 <div class="block">Compute adjusted tx power (dBm) based on inputs.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>serialNumber</code> - serial number of the AP</dd>
 <dd><code>currentTxPower</code> - the current tx power (dBm)</dd>
-<dd><code>rssiValues</code> - RSSI values received by managed neighboring APs in ascending order</dd>
+<dd><code>rssiValues</code> - sorted (ascending) list of RSSIs from neighboring
+                          APs</dd>
+<dd><code>coverageThreshold</code> - desired value for the <code>nthSmallestRssi</code></dd>
+<dd><code>nthSmallestRssi</code> - which RSSI to use to "calibrate" to determine the
+                          new tx power</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>new tx power (dBm)</dd>
+</dl>
+</li>
+</ul>
+<a id="buildTxPowerMapForBand(java.lang.String,java.util.Map)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>buildTxPowerMapForBand</h4>
+<pre class="methodSignature">protected&nbsp;void&nbsp;buildTxPowerMapForBand&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;band,
+                                      <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html?is-external=true" title="class or interface in java.util" class="externalLink">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>,&#8203;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html?is-external=true" title="class or interface in java.util" class="externalLink">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>,&#8203;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Integer.html?is-external=true" title="class or interface in java.lang" class="externalLink">Integer</a>&gt;&gt;&nbsp;txPowerMap)</pre>
+<div class="block">Calculate new tx powers for the given band.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>band</code> - "2G" or "5G"</dd>
+<dd><code>txPowerMap</code> - this map from serial number to band to new tx power (dBm)
+                   must be passed in empty, and it is filled in by this method
+                   with the new tx powers.</dd>
 </dl>
 </li>
 </ul>
@@ -498,7 +524,7 @@ extends <a href="TPC.html" title="class in com.facebook.openwifirrm.optimizers.t
 <h4>computeTxPowerMap</h4>
 <pre class="methodSignature">public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html?is-external=true" title="class or interface in java.util" class="externalLink">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>,&#8203;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html?is-external=true" title="class or interface in java.util" class="externalLink">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>,&#8203;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Integer.html?is-external=true" title="class or interface in java.lang" class="externalLink">Integer</a>&gt;&gt;&nbsp;computeTxPowerMap()</pre>
 <div class="block"><span class="descfrmTypeLabel">Description copied from class:&nbsp;<code><a href="TPC.html#computeTxPowerMap()">TPC</a></code></span></div>
-<div class="block">Compute tx power assignments.</div>
+<div class="block">Compute tx power assignments. This is the core method of this class.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="TPC.html#computeTxPowerMap()">computeTxPowerMap</a></code>&nbsp;in class&nbsp;<code><a href="TPC.html" title="class in com.facebook.openwifirrm.optimizers.tpc">TPC</a></code></dd>
