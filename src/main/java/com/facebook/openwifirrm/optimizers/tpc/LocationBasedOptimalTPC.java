@@ -130,6 +130,14 @@ public class LocationBasedOptimalTPC extends TPC {
 		}
 	}
 
+	/**
+	 * Calculate new tx powers for the given band.
+	 *
+	 * @param band       "2G" or "5G"
+	 * @param txPowerMap this map from serial number to band to new tx power
+	 *                   (dBm) must be passed in empty, and it is filled in by
+	 *                   this method with the new tx powers.
+	 */
 	private void buildTxPowerMapForBand(
 		String band,
 		Map<String, Map<String, Integer>> txPowerMap
@@ -257,6 +265,5 @@ public class LocationBasedOptimalTPC extends TPC {
 			buildTxPowerMapForBand(band, txPowerMap);
 		}
 		return txPowerMap;
-
 	}
 }

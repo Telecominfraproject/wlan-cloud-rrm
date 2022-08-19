@@ -52,7 +52,7 @@ public class LeastUsedChannelOptimizerTest {
 		// A -> No APs on current channel, so stay on it (48)
 		int aExpectedChannel = 48;
 		dataModel.latestDeviceStatus.put(
-			deviceA, TestUtils.createDeviceStatus(band, aExpectedChannel)
+			deviceA, TestUtils.createDeviceStatusSingleBand(band, aExpectedChannel)
 		);
 		dataModel.latestState.put(
 			deviceA, TestUtils.createState(aExpectedChannel, channelWidth, dummyBssid)
@@ -72,7 +72,7 @@ public class LeastUsedChannelOptimizerTest {
 		channelsB.addAll(ChannelOptimizer.AVAILABLE_CHANNELS_BAND.get(band));
 		int bExpectedChannel = channelsB.removeLast();
 		dataModel.latestDeviceStatus.put(
-			deviceB, TestUtils.createDeviceStatus(band, 40)
+			deviceB, TestUtils.createDeviceStatusSingleBand(band, 40)
 		);
 		dataModel.latestState.put(
 			deviceB, TestUtils.createState(40, channelWidth, dummyBssid)
@@ -90,7 +90,7 @@ public class LeastUsedChannelOptimizerTest {
 		channelsC.addAll(ChannelOptimizer.AVAILABLE_CHANNELS_BAND.get(band));
 		int cExpectedChannel = channelsC.removeFirst();
 		dataModel.latestDeviceStatus.put(
-			deviceC, TestUtils.createDeviceStatus(band, 149)
+			deviceC, TestUtils.createDeviceStatusSingleBand(band, 149)
 		);
 		dataModel.latestState.put(
 			deviceC, TestUtils.createState(149, channelWidth, dummyBssid)
@@ -129,7 +129,7 @@ public class LeastUsedChannelOptimizerTest {
 		// A -> No APs on current channel, so stay on it (1)
 		int aExpectedChannel = 1;
 		dataModel.latestDeviceStatus.put(
-			deviceA, TestUtils.createDeviceStatus(band, aExpectedChannel)
+			deviceA, TestUtils.createDeviceStatusSingleBand(band, aExpectedChannel)
 		);
 		dataModel.latestState.put(
 			deviceA, TestUtils.createState(aExpectedChannel, channelWidth, dummyBssid)
@@ -149,7 +149,7 @@ public class LeastUsedChannelOptimizerTest {
 		channelsB.addAll(ChannelOptimizer.AVAILABLE_CHANNELS_BAND.get(band));
 		int bExpectedChannel = channelsB.removeLast();
 		dataModel.latestDeviceStatus.put(
-			deviceB, TestUtils.createDeviceStatus(band, 6)
+			deviceB, TestUtils.createDeviceStatusSingleBand(band, 6)
 		);
 		dataModel.latestState.put(
 			deviceB, TestUtils.createState(6, channelWidth, dummyBssid)
@@ -164,7 +164,7 @@ public class LeastUsedChannelOptimizerTest {
 		// C -> Assigned to only free prioritized channel (1)
 		int cExpectedChannel = 1;
 		dataModel.latestDeviceStatus.put(
-			deviceC, TestUtils.createDeviceStatus(band, 6)
+			deviceC, TestUtils.createDeviceStatusSingleBand(band, 6)
 		);
 		dataModel.latestState.put(
 			deviceC, TestUtils.createState(6, channelWidth, dummyBssid)
@@ -213,7 +213,7 @@ public class LeastUsedChannelOptimizerTest {
 		// A, B, C should just be assigned to the same userChannel
 		int aExpectedChannel = 48;
 		dataModel.latestDeviceStatus.put(
-			deviceA, TestUtils.createDeviceStatus(band, aExpectedChannel)
+			deviceA, TestUtils.createDeviceStatusSingleBand(band, aExpectedChannel)
 		);
 		dataModel.latestState.put(
 			deviceA, TestUtils.createState(aExpectedChannel, channelWidth, dummyBssid)
@@ -232,7 +232,7 @@ public class LeastUsedChannelOptimizerTest {
 		channelsB.addAll(ChannelOptimizer.AVAILABLE_CHANNELS_BAND.get(band));
 		channelsB.removeLast();
 		dataModel.latestDeviceStatus.put(
-			deviceB, TestUtils.createDeviceStatus(band, 40)
+			deviceB, TestUtils.createDeviceStatusSingleBand(band, 40)
 		);
 		dataModel.latestState.put(
 			deviceB, TestUtils.createState(40, channelWidth, dummyBssid)
@@ -249,7 +249,7 @@ public class LeastUsedChannelOptimizerTest {
 		channelsC.addAll(ChannelOptimizer.AVAILABLE_CHANNELS_BAND.get(band));
 		channelsC.removeFirst();
 		dataModel.latestDeviceStatus.put(
-			deviceC, TestUtils.createDeviceStatus(band, 149)
+			deviceC, TestUtils.createDeviceStatusSingleBand(band, 149)
 		);
 		dataModel.latestState.put(
 			deviceC, TestUtils.createState(149, channelWidth, dummyBssid)
@@ -295,7 +295,7 @@ public class LeastUsedChannelOptimizerTest {
 		// so stay on it (48)
 		int aExpectedChannel = 48;
 		dataModel.latestDeviceStatus.put(
-			deviceA, TestUtils.createDeviceStatus(band, aExpectedChannel)
+			deviceA, TestUtils.createDeviceStatusSingleBand(band, aExpectedChannel)
 		);
 		dataModel.latestState.put(
 			deviceA, TestUtils.createState(aExpectedChannel, channelWidth, dummyBssid)
@@ -316,7 +316,7 @@ public class LeastUsedChannelOptimizerTest {
 		channelsB.addAll(ChannelOptimizer.AVAILABLE_CHANNELS_BAND.get(band));
 		channelsB.removeLast();
 		dataModel.latestDeviceStatus.put(
-			deviceB, TestUtils.createDeviceStatus(band, 40)
+			deviceB, TestUtils.createDeviceStatusSingleBand(band, 40)
 		);
 		dataModel.latestState.put(
 			deviceB, TestUtils.createState(40, channelWidth, dummyBssid)
@@ -334,7 +334,7 @@ public class LeastUsedChannelOptimizerTest {
 		channelsC.addAll(ChannelOptimizer.AVAILABLE_CHANNELS_BAND.get(band));
 		channelsC.removeFirst();
 		dataModel.latestDeviceStatus.put(
-			deviceC, TestUtils.createDeviceStatus(band, 149)
+			deviceC, TestUtils.createDeviceStatusSingleBand(band, 149)
 		);
 		dataModel.latestState.put(
 			deviceC, TestUtils.createState(149, channelWidth, dummyBssid)
@@ -374,7 +374,7 @@ public class LeastUsedChannelOptimizerTest {
 		// A -> No APs on current channel, so stay on it (48)
 		int aExpectedChannel = 157;
 		dataModel.latestDeviceStatus.put(
-			deviceA, TestUtils.createDeviceStatus(band, aExpectedChannel)
+			deviceA, TestUtils.createDeviceStatusSingleBand(band, aExpectedChannel)
 		);
 		dataModel.latestState.put(
 			deviceA, TestUtils.createState(aExpectedChannel, channelWidth, dummyBssid)
@@ -396,7 +396,7 @@ public class LeastUsedChannelOptimizerTest {
 		channelsB.addAll(Arrays.asList(40, 48, 153, 161));
 		int bExpectedChannel = channelsB.removeLast() - 4; // upper extension
 		dataModel.latestDeviceStatus.put(
-			deviceB, TestUtils.createDeviceStatus(band, 40)
+			deviceB, TestUtils.createDeviceStatusSingleBand(band, 40)
 		);
 		dataModel.latestState.put(
 			deviceB, TestUtils.createState(40, channelWidth, dummyBssid)
@@ -414,7 +414,7 @@ public class LeastUsedChannelOptimizerTest {
 		channelsC.addAll(ChannelOptimizer.AVAILABLE_CHANNELS_BAND.get(band));
 		int cExpectedChannel = channelsC.removeFirst();
 		dataModel.latestDeviceStatus.put(
-			deviceC, TestUtils.createDeviceStatus(band, 149)
+			deviceC, TestUtils.createDeviceStatusSingleBand(band, 149)
 		);
 		dataModel.latestState.put(
 			deviceC, TestUtils.createState(149, channelWidth, dummyBssid)
@@ -431,7 +431,7 @@ public class LeastUsedChannelOptimizerTest {
 		channelsD.addAll(Arrays.asList(36, 44, 149, 157));
 		int dExpectedChannel = channelsD.removeLast();
 		dataModel.latestDeviceStatus.put(
-			deviceD, TestUtils.createDeviceStatus(band, 40)
+			deviceD, TestUtils.createDeviceStatusSingleBand(band, 40)
 		);
 		dataModel.latestState.put(
 			deviceD, TestUtils.createState(40, channelWidth, dummyBssid)
@@ -474,7 +474,7 @@ public class LeastUsedChannelOptimizerTest {
 		// A -> No APs on current channel, so stay on it (36)
 		int aExpectedChannel = 36;
 		dataModel.latestDeviceStatus.put(
-			deviceA, TestUtils.createDeviceStatus(band, aExpectedChannel)
+			deviceA, TestUtils.createDeviceStatusSingleBand(band, aExpectedChannel)
 		);
 		dataModel.latestState.put(
 			deviceA, TestUtils.createState(aExpectedChannel, channelWidth, dummyBssid)
@@ -494,7 +494,7 @@ public class LeastUsedChannelOptimizerTest {
 		channelsB.addAll(Arrays.asList(40, 48, 149));
 		int bExpectedChannel = channelsB.removeLast();
 		dataModel.latestDeviceStatus.put(
-			deviceB, TestUtils.createDeviceStatus(band, 36)
+			deviceB, TestUtils.createDeviceStatusSingleBand(band, 36)
 		);
 		dataModel.latestState.put(
 			deviceB, TestUtils.createState(36, channelWidth, dummyBssid)
@@ -512,7 +512,7 @@ public class LeastUsedChannelOptimizerTest {
 		channelsC.addAll(ChannelOptimizer.AVAILABLE_CHANNELS_BAND.get(band));
 		int cExpectedChannel = channelsC.removeFirst();
 		dataModel.latestDeviceStatus.put(
-			deviceC, TestUtils.createDeviceStatus(band, 149)
+			deviceC, TestUtils.createDeviceStatusSingleBand(band, 149)
 		);
 		dataModel.latestState.put(
 			deviceC, TestUtils.createState(149, channelWidth, dummyBssid)
@@ -531,7 +531,7 @@ public class LeastUsedChannelOptimizerTest {
 		channelsD.addAll(Arrays.asList(40, 48, 153, 161));
 		int dExpectedChannel = channelsD.removeLast() - 12;
 		dataModel.latestDeviceStatus.put(
-			deviceD, TestUtils.createDeviceStatus(band, 36)
+			deviceD, TestUtils.createDeviceStatusSingleBand(band, 36)
 		);
 		dataModel.latestState.put(
 			deviceD, TestUtils.createState(36, channelWidth, dummyBssid)
@@ -553,7 +553,7 @@ public class LeastUsedChannelOptimizerTest {
 		deviceDataManager.setDeviceApConfig(deviceE, apConfig);
 		int eExpectedChannel = 36;
 		dataModel.latestDeviceStatus.put(
-			deviceE, TestUtils.createDeviceStatus(band, eExpectedChannel)
+			deviceE, TestUtils.createDeviceStatusSingleBand(band, eExpectedChannel)
 		);
 		dataModel.latestState.put(
 			deviceE, TestUtils.createState(eExpectedChannel, channelWidth, dummyBssid)
@@ -595,7 +595,7 @@ public class LeastUsedChannelOptimizerTest {
 		// A -> No APs on current channel, so stay on it (48)
 		int aExpectedChannel = 48;
 		dataModel.latestDeviceStatus.put(
-			deviceA, TestUtils.createDeviceStatus(band, aExpectedChannel)
+			deviceA, TestUtils.createDeviceStatusSingleBand(band, aExpectedChannel)
 		);
 		dataModel.latestState.put(
 			deviceA, TestUtils.createState(aExpectedChannel, channelWidth, dummyBssid)
@@ -614,7 +614,7 @@ public class LeastUsedChannelOptimizerTest {
 		// Assign to only free channel (165)
 		int bExpectedChannel = 165;
 		dataModel.latestDeviceStatus.put(
-			deviceB, TestUtils.createDeviceStatus(band, 48)
+			deviceB, TestUtils.createDeviceStatusSingleBand(band, 48)
 		);
 		dataModel.latestState.put(
 			deviceB, TestUtils.createState(48, channelWidth, dummyBssid)
@@ -644,7 +644,7 @@ public class LeastUsedChannelOptimizerTest {
 		channelsC2.addAll(Arrays.asList(36, 157, 165));
 		int cExpectedChannel = channelsC1.removeFirst();
 		dataModel.latestDeviceStatus.put(
-			deviceC, TestUtils.createDeviceStatus(band, 149)
+			deviceC, TestUtils.createDeviceStatusSingleBand(band, 149)
 		);
 		dataModel.latestState.put(
 			deviceC, TestUtils.createState(149, channelWidth, dummyBssid)

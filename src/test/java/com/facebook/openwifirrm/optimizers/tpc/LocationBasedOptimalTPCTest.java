@@ -35,6 +35,8 @@ public class LocationBasedOptimalTPCTest {
 	private static final String TEST_ZONE = "test-zone";
 	/** Default channel width (MHz). */
 	private static final int DEFAULT_CHANNEL_WIDTH = 20;
+	private static final int DEFAULT_TX_POWER = 20;
+
 	@Test
 	@Order(1)
 	void testPermutations() throws Exception {
@@ -106,23 +108,21 @@ public class LocationBasedOptimalTPCTest {
 		deviceDataManager.setDeviceApConfig(deviceC, apCfgC);
 
 		DataModel dataModel = new DataModel();
+		for (String device : Arrays.asList(deviceA, deviceB, deviceC)) {
+			dataModel.latestDeviceStatus.put(device,
+				TestUtils.createDeviceStatus(UCentralConstants.BANDS));
+			dataModel.latestState.put(device,
+				TestUtils.createState(
+					UCentralUtils.LOWER_CHANNEL_LIMIT
+						.get(UCentralConstants.BAND_2G),
+					DEFAULT_CHANNEL_WIDTH, DEFAULT_TX_POWER,
+					UCentralUtils.LOWER_CHANNEL_LIMIT
+						.get(UCentralConstants.BAND_5G),
+					DEFAULT_CHANNEL_WIDTH, DEFAULT_TX_POWER, dummyBssid));
+		}
+
 		Map<String, Map<String, Integer>> expected = new HashMap<>();
 		for (String band : UCentralConstants.BANDS) {
-			int channel = UCentralUtils.LOWER_CHANNEL_LIMIT.get(band);
-
-			dataModel.latestDeviceStatus.put(deviceA,
-				TestUtils.createDeviceStatus(band, channel));
-			dataModel.latestState.put(deviceA, TestUtils.createState(channel,
-				DEFAULT_CHANNEL_WIDTH, dummyBssid));
-			dataModel.latestDeviceStatus.put(deviceB,
-				TestUtils.createDeviceStatus(band, channel));
-			dataModel.latestState.put(deviceB, TestUtils.createState(channel,
-				DEFAULT_CHANNEL_WIDTH, dummyBssid));
-			dataModel.latestDeviceStatus.put(deviceC,
-				TestUtils.createDeviceStatus(band, channel));
-			dataModel.latestState.put(deviceC, TestUtils.createState(channel,
-				DEFAULT_CHANNEL_WIDTH, dummyBssid));
-
 			expected.computeIfAbsent(deviceA, k -> new TreeMap<>()).put(band,
 				30);
 			expected.computeIfAbsent(deviceB, k -> new TreeMap<>()).put(band,
@@ -156,32 +156,31 @@ public class LocationBasedOptimalTPCTest {
 		deviceDataManager2.setDeviceApConfig(deviceC, apCfgC2);
 
 		DataModel dataModel2 = new DataModel();
+		for (String device : Arrays.asList(deviceA, deviceB, deviceC)) {
+			dataModel2.latestDeviceStatus.put(device,
+				TestUtils.createDeviceStatus(UCentralConstants.BANDS));
+			dataModel2.latestState.put(device,
+				TestUtils.createState(
+					UCentralUtils.LOWER_CHANNEL_LIMIT
+						.get(UCentralConstants.BAND_2G),
+					DEFAULT_CHANNEL_WIDTH, DEFAULT_TX_POWER,
+					UCentralUtils.LOWER_CHANNEL_LIMIT
+						.get(UCentralConstants.BAND_5G),
+					DEFAULT_CHANNEL_WIDTH, DEFAULT_TX_POWER, dummyBssid));
+		}
+
 		Map<String, Map<String, Integer>> expected2 = new HashMap<>();
 		for (String band : UCentralConstants.BANDS) {
-			int channel = UCentralUtils.LOWER_CHANNEL_LIMIT.get(band);
-
-			dataModel2.latestDeviceStatus.put(deviceA,
-				TestUtils.createDeviceStatus(band, channel));
-			dataModel2.latestState.put(deviceA, TestUtils.createState(channel,
-				DEFAULT_CHANNEL_WIDTH, dummyBssid));
-			dataModel2.latestDeviceStatus.put(deviceB,
-				TestUtils.createDeviceStatus(band, channel));
-			dataModel2.latestState.put(deviceB, TestUtils.createState(channel,
-				DEFAULT_CHANNEL_WIDTH, dummyBssid));
-			dataModel2.latestDeviceStatus.put(deviceC,
-				TestUtils.createDeviceStatus(band, channel));
-			dataModel2.latestState.put(deviceC, TestUtils.createState(channel,
-				DEFAULT_CHANNEL_WIDTH, dummyBssid));
 			expected2.computeIfAbsent(deviceA, k -> new TreeMap<>()).put(band,
 				30);
 			expected2.computeIfAbsent(deviceC, k -> new TreeMap<>()).put(band,
 				0);
 		}
 
-		LocationBasedOptimalTPC optimizer5 = new LocationBasedOptimalTPC(
+		LocationBasedOptimalTPC optimizer2 = new LocationBasedOptimalTPC(
 			dataModel2, TEST_ZONE, deviceDataManager2);
 
-		assertEquals(expected2, optimizer5.computeTxPowerMap());
+		assertEquals(expected2, optimizer2.computeTxPowerMap());
 	}
 
 	@Test
@@ -235,17 +234,17 @@ public class LocationBasedOptimalTPCTest {
 		for (String band : UCentralConstants.BANDS) {
 			int channel = UCentralUtils.LOWER_CHANNEL_LIMIT.get(band);
 			dataModel2.latestDeviceStatus.put(deviceA,
-				TestUtils.createDeviceStatus(band, channel));
+				TestUtils.createDeviceStatusSingleBand(band, channel));
 			dataModel2.latestState.put(deviceA,
 				TestUtils.createState(channel, DEFAULT_CHANNEL_WIDTH,
 					dummyBssid));
 			dataModel2.latestDeviceStatus.put(deviceB,
-				TestUtils.createDeviceStatus(band, channel));
+				TestUtils.createDeviceStatusSingleBand(band, channel));
 			dataModel2.latestState.put(deviceB,
 				TestUtils.createState(channel, DEFAULT_CHANNEL_WIDTH,
 					dummyBssid));
 			dataModel2.latestDeviceStatus.put(deviceC,
-				TestUtils.createDeviceStatus(band, channel));
+				TestUtils.createDeviceStatusSingleBand(band, channel));
 			dataModel2.latestState.put(deviceC,
 				TestUtils.createState(channel, DEFAULT_CHANNEL_WIDTH,
 					dummyBssid));
@@ -286,19 +285,19 @@ public class LocationBasedOptimalTPCTest {
 		DataModel dataModel3 = new DataModel();
 		for (String band : UCentralConstants.BANDS) {
 			dataModel3.latestDeviceStatus.put(
-				deviceA, TestUtils.createDeviceStatus(band, 36)
+				deviceA, TestUtils.createDeviceStatusSingleBand(band, 36)
 			);
 			dataModel3.latestState.put(
 				deviceA, TestUtils.createState(36, 20, dummyBssid)
 			);
 			dataModel3.latestDeviceStatus.put(
-				deviceB, TestUtils.createDeviceStatus(band, 36)
+				deviceB, TestUtils.createDeviceStatusSingleBand(band, 36)
 			);
 			dataModel3.latestState.put(
 				deviceB, TestUtils.createState(36, 20, dummyBssid)
 			);
 			dataModel3.latestDeviceStatus.put(
-				deviceC, TestUtils.createDeviceStatus(band, 36)
+				deviceC, TestUtils.createDeviceStatusSingleBand(band, 36)
 			);
 			dataModel3.latestState.put(
 				deviceC, TestUtils.createState(36, 20, dummyBssid)
@@ -334,15 +333,15 @@ public class LocationBasedOptimalTPCTest {
 		DataModel dataModel4 = new DataModel();
 		for (String band : UCentralConstants.BANDS) {
 			dataModel4.latestDeviceStatus.put(deviceA,
-				TestUtils.createDeviceStatus(band, 36));
+				TestUtils.createDeviceStatusSingleBand(band, 36));
 			dataModel4.latestState.put(deviceA,
 				TestUtils.createState(36, 20, dummyBssid));
 			dataModel4.latestDeviceStatus.put(deviceB,
-				TestUtils.createDeviceStatus(band, 36));
+				TestUtils.createDeviceStatusSingleBand(band, 36));
 			dataModel4.latestState.put(deviceB,
 				TestUtils.createState(36, 20, dummyBssid));
 			dataModel4.latestDeviceStatus.put(deviceC,
-				TestUtils.createDeviceStatus(band, 36));
+				TestUtils.createDeviceStatusSingleBand(band, 36));
 			dataModel4.latestState.put(deviceC,
 				TestUtils.createState(36, 20, dummyBssid));
 		}

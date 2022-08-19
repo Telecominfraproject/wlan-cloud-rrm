@@ -36,7 +36,7 @@ public class MeasurementBasedApApTPCTest {
 	/** Test zone name. */
 	private static final String TEST_ZONE = "test-zone";
 	private static final int MAX_TX_POWER = 30;
-	/** Default channel width (MHZ). */
+	/** Default channel width (MHz). */
 	private static final int DEFAULT_CHANNEL_WIDTH = 20;
 
 	// Serial numbers

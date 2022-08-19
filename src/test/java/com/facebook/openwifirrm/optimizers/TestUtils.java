@@ -23,6 +23,7 @@ import com.facebook.openwifirrm.ucentral.UCentralUtils.WifiScanEntry;
 import com.facebook.openwifirrm.ucentral.models.State;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
 public class TestUtils {
 	/** The Gson instance. */
@@ -38,21 +39,49 @@ public class TestUtils {
 		return topology;
 	}
 
-	/** Create a radio info entry with the given channel on a given band. */
-	public static JsonArray createDeviceStatus(String band, int channel) {
-		JsonArray jsonList = gson.fromJson(
-			String.format(
-				"[{\"band\": %s,\"channel\": %d,\"channel-mode\":\"HE\"," +
-				"\"channel-width\":20,\"country\":\"CA\",\"tx-power\":20}]",
-				band,
-				channel
-			),
-			JsonArray.class
-		);
+	/**
+	 * Create a radio info entry for the given band and channel.
+	 *
+	 * @param band    band
+	 * @param channel channel number
+	 * @return a radio info entry as a {@code JsonObject}
+	 */
+	private static JsonObject createDeviceStatusRadioObject(String band,
+		int channel
+	) {
+		return gson.fromJson(String.format(
+			"{\"band\": %s,\"channel\": %d,\"channel-mode\":\"HE\","
+				+ "\"channel-width\":20,\"country\":\"CA\",\"tx-power\":20}",
+			band, channel), JsonObject.class);
+	}
+
+	/**
+	 * Create an array with one radio info entry with the given channel on a
+	 * given band.
+	 */
+	public static JsonArray createDeviceStatusSingleBand(String band, int channel) {
+		JsonArray jsonList = new JsonArray();
+		jsonList.add(createDeviceStatusRadioObject(band, channel));
 		return jsonList;
 	}
 
-	/** Create a radio info entry with the given tx powers and channels. */
+	/**
+	 * Create an array with one radio info entry per given band (using the
+	 * lowest channel).
+	 */
+	public static JsonArray createDeviceStatus(List<String> bands) {
+		JsonArray jsonList = new JsonArray();
+		for (String band : bands) {
+			int channel = UCentralUtils.LOWER_CHANNEL_LIMIT.get(band);
+			jsonList.add(createDeviceStatusRadioObject(band, channel));
+		}
+		return jsonList;
+	}
+
+	/**
+	 * Create an array with two radio info entries (2G and 5G), with the given
+	 * tx powers and channels.
+	 */
 	public static JsonArray createDeviceStatusDualBand(int channel2G, int txPower2G, int channel5G, int txPower5G) {
 		JsonArray jsonList = gson.fromJson(
 			String.format(
