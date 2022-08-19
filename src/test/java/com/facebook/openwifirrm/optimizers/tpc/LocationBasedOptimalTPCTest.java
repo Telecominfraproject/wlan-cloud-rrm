@@ -37,6 +37,12 @@ public class LocationBasedOptimalTPCTest {
 	private static final int DEFAULT_CHANNEL_WIDTH = 20;
 	/** Default tx power. */
 	private static final int DEFAULT_TX_POWER = 20;
+	/** Default 2G channel. */
+	private static final int DEFAULT_CHANNEL_2G = UCentralUtils.LOWER_CHANNEL_LIMIT
+		.get(UCentralConstants.BAND_2G);
+	/** Default 5G channel. */
+	private static final int DEFAULT_CHANNEL_5G = UCentralUtils.LOWER_CHANNEL_LIMIT
+		.get(UCentralConstants.BAND_2G);
 
 	@Test
 	@Order(1)
@@ -99,7 +105,8 @@ public class LocationBasedOptimalTPCTest {
 		apCfgA.location = new ArrayList<>(Arrays.asList(408, 317));
 		apCfgA.allowedTxPowers = new HashMap<>();
 		UCentralConstants.BANDS.stream().forEach(
-			band -> apCfgA.allowedTxPowers.put(band, Arrays.asList(29, 30)));
+			band -> apCfgA.allowedTxPowers.put(band, Arrays.asList(29, 30))
+		);
 		apCfgB.boundary = 500;
 		apCfgB.location = new ArrayList<>(Arrays.asList(453, 49));
 		apCfgC.boundary = 500;
@@ -114,22 +121,28 @@ public class LocationBasedOptimalTPCTest {
 				TestUtils.createDeviceStatus(UCentralConstants.BANDS));
 			dataModel.latestState.put(device,
 				TestUtils.createState(
-					UCentralUtils.LOWER_CHANNEL_LIMIT
-						.get(UCentralConstants.BAND_2G),
-					DEFAULT_CHANNEL_WIDTH, DEFAULT_TX_POWER,
-					UCentralUtils.LOWER_CHANNEL_LIMIT
-						.get(UCentralConstants.BAND_5G),
-					DEFAULT_CHANNEL_WIDTH, DEFAULT_TX_POWER, dummyBssid));
+					DEFAULT_CHANNEL_2G,
+					DEFAULT_CHANNEL_WIDTH,
+					DEFAULT_TX_POWER,
+					DEFAULT_CHANNEL_5G,
+					DEFAULT_CHANNEL_WIDTH,
+					DEFAULT_TX_POWER,
+					dummyBssid
+				)
+			);
 		}
 
 		Map<String, Map<String, Integer>> expected = new HashMap<>();
 		for (String band : UCentralConstants.BANDS) {
-			expected.computeIfAbsent(deviceA, k -> new TreeMap<>()).put(band,
-				30);
-			expected.computeIfAbsent(deviceB, k -> new TreeMap<>()).put(band,
-				29);
-			expected.computeIfAbsent(deviceC, k -> new TreeMap<>()).put(band,
-				30);
+			expected.computeIfAbsent(deviceA, k -> new TreeMap<>()).put(
+				band, 30
+			);
+			expected.computeIfAbsent(deviceB, k -> new TreeMap<>()).put(
+				band, 29
+			);
+			expected.computeIfAbsent(deviceC, k -> new TreeMap<>()).put(
+				band, 30
+			);
 		}
 
 		LocationBasedOptimalTPC optimizer = new LocationBasedOptimalTPC(
@@ -163,20 +176,25 @@ public class LocationBasedOptimalTPCTest {
 				TestUtils.createDeviceStatus(UCentralConstants.BANDS));
 			dataModel2.latestState.put(device,
 				TestUtils.createState(
-					UCentralUtils.LOWER_CHANNEL_LIMIT
-						.get(UCentralConstants.BAND_2G),
-					DEFAULT_CHANNEL_WIDTH, DEFAULT_TX_POWER,
-					UCentralUtils.LOWER_CHANNEL_LIMIT
-						.get(UCentralConstants.BAND_5G),
-					DEFAULT_CHANNEL_WIDTH, DEFAULT_TX_POWER, dummyBssid));
+					DEFAULT_CHANNEL_2G,
+					DEFAULT_CHANNEL_WIDTH,
+					DEFAULT_TX_POWER,
+					DEFAULT_CHANNEL_5G,
+					DEFAULT_CHANNEL_WIDTH,
+					DEFAULT_TX_POWER,
+					dummyBssid
+				)
+			);
 		}
 
 		Map<String, Map<String, Integer>> expected2 = new HashMap<>();
 		for (String band : UCentralConstants.BANDS) {
-			expected2.computeIfAbsent(deviceA, k -> new TreeMap<>()).put(band,
-				30);
-			expected2.computeIfAbsent(deviceC, k -> new TreeMap<>()).put(band,
-				0);
+			expected2.computeIfAbsent(deviceA, k -> new TreeMap<>()).put(
+				band, 30
+			);
+			expected2.computeIfAbsent(deviceC, k -> new TreeMap<>()).put(
+				band, 0
+			);
 		}
 
 		LocationBasedOptimalTPC optimizer2 = new LocationBasedOptimalTPC(
@@ -238,12 +256,15 @@ public class LocationBasedOptimalTPCTest {
 				TestUtils.createDeviceStatus(UCentralConstants.BANDS));
 			dataModel2.latestState.put(device,
 				TestUtils.createState(
-					UCentralUtils.LOWER_CHANNEL_LIMIT
-						.get(UCentralConstants.BAND_2G),
-					DEFAULT_CHANNEL_WIDTH, DEFAULT_TX_POWER,
-					UCentralUtils.LOWER_CHANNEL_LIMIT
-						.get(UCentralConstants.BAND_5G),
-					DEFAULT_CHANNEL_WIDTH, DEFAULT_TX_POWER, dummyBssid));
+					DEFAULT_CHANNEL_2G,
+					DEFAULT_CHANNEL_WIDTH,
+					DEFAULT_TX_POWER,
+					DEFAULT_CHANNEL_5G,
+					DEFAULT_CHANNEL_WIDTH,
+					DEFAULT_TX_POWER,
+					dummyBssid
+				)
+			);
 		}
 
 		Map<String, Map<String, Integer>> expected2 = new HashMap<>();
@@ -284,12 +305,15 @@ public class LocationBasedOptimalTPCTest {
 				TestUtils.createDeviceStatus(UCentralConstants.BANDS));
 			dataModel3.latestState.put(device,
 				TestUtils.createState(
-					UCentralUtils.LOWER_CHANNEL_LIMIT
-						.get(UCentralConstants.BAND_2G),
-					DEFAULT_CHANNEL_WIDTH, DEFAULT_TX_POWER,
-					UCentralUtils.LOWER_CHANNEL_LIMIT
-						.get(UCentralConstants.BAND_5G),
-					DEFAULT_CHANNEL_WIDTH, DEFAULT_TX_POWER, dummyBssid));
+					DEFAULT_CHANNEL_2G,
+					DEFAULT_CHANNEL_WIDTH,
+					DEFAULT_TX_POWER,
+					DEFAULT_CHANNEL_5G,
+					DEFAULT_CHANNEL_WIDTH,
+					DEFAULT_TX_POWER,
+					dummyBssid
+				)
+			);
 		}
 
 		Map<String, Map<String, Integer>> expected3 = new HashMap<>();
@@ -324,12 +348,15 @@ public class LocationBasedOptimalTPCTest {
 				TestUtils.createDeviceStatus(UCentralConstants.BANDS));
 			dataModel4.latestState.put(device,
 				TestUtils.createState(
-					UCentralUtils.LOWER_CHANNEL_LIMIT
-						.get(UCentralConstants.BAND_2G),
-					DEFAULT_CHANNEL_WIDTH, DEFAULT_TX_POWER,
-					UCentralUtils.LOWER_CHANNEL_LIMIT
-						.get(UCentralConstants.BAND_5G),
-					DEFAULT_CHANNEL_WIDTH, DEFAULT_TX_POWER, dummyBssid));
+					DEFAULT_CHANNEL_2G,
+					DEFAULT_CHANNEL_WIDTH,
+					DEFAULT_TX_POWER,
+					DEFAULT_CHANNEL_2G,
+					DEFAULT_CHANNEL_WIDTH,
+					DEFAULT_TX_POWER,
+					dummyBssid
+				)
+			);
 		}
 
 		Map<String, Map<String, Integer>> expected4 = new HashMap<>();

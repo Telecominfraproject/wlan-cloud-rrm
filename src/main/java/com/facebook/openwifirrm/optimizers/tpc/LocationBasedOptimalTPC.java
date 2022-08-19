@@ -139,8 +139,7 @@ public class LocationBasedOptimalTPC extends TPC {
 	 *                   this method with the new tx powers.
 	 */
 	private void buildTxPowerMapForBand(
-		String band,
-		Map<String, Map<String, Integer>> txPowerMap
+		String band, Map<String, Map<String, Integer>> txPowerMap
 	) {
 		int numOfAPs = 0;
 		int boundary = 100;

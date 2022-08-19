@@ -46,13 +46,18 @@ public class TestUtils {
 	 * @param channel channel number
 	 * @return a radio info entry as a {@code JsonObject}
 	 */
-	private static JsonObject createDeviceStatusRadioObject(String band,
-		int channel
+	private static JsonObject createDeviceStatusRadioObject(
+		String band, int channel
 	) {
-		return gson.fromJson(String.format(
-			"{\"band\": %s,\"channel\": %d,\"channel-mode\":\"HE\","
-				+ "\"channel-width\":20,\"country\":\"CA\",\"tx-power\":20}",
-			band, channel), JsonObject.class);
+		return gson.fromJson(
+			String.format(
+				"{\"band\": %s,\"channel\": %d,\"channel-mode\":\"HE\","
+					+ "\"channel-width\":20,\"country\":\"CA\",\"tx-power\":20}",
+				band,
+				channel
+			),
+			JsonObject.class
+		);
 	}
 
 	/**
