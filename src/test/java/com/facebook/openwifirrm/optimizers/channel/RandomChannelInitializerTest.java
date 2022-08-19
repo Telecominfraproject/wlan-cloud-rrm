@@ -49,10 +49,10 @@ public class RandomChannelInitializerTest {
 			deviceB, TestUtils.createState(11, channelWidth, "eee")
 		);
 		dataModel.latestDeviceStatus.put(
-			deviceA, TestUtils.createDeviceStatusSingleBand(band, 7)
+			deviceA, TestUtils.createDeviceStatus(band, 7)
 		);
 		dataModel.latestDeviceStatus.put(
-			deviceB, TestUtils.createDeviceStatusSingleBand(band, 8)
+			deviceB, TestUtils.createDeviceStatus(band, 8)
 		);
 
 		ChannelOptimizer optimizer = new RandomChannelInitializer(

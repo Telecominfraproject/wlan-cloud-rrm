@@ -53,7 +53,7 @@ public class UnmanagedApAwareChannelOptimizerTest {
 		// A -> No APs on current channel, so stay on it (48)
 		int aExpectedChannel = 48;
 		dataModel.latestDeviceStatus.put(
-			deviceA, TestUtils.createDeviceStatusSingleBand(band, aExpectedChannel)
+			deviceA, TestUtils.createDeviceStatus(band, aExpectedChannel)
 		);
 		dataModel.latestState.put(
 			deviceA, TestUtils.createState(aExpectedChannel, channelWidth, bssidA)
@@ -75,7 +75,7 @@ public class UnmanagedApAwareChannelOptimizerTest {
 		channelsB.addAll(ChannelOptimizer.AVAILABLE_CHANNELS_BAND.get(band));
 		int bExpectedChannel = channelsB.removeLast();
 		dataModel.latestDeviceStatus.put(
-			deviceB, TestUtils.createDeviceStatusSingleBand(band, 40)
+			deviceB, TestUtils.createDeviceStatus(band, 40)
 		);
 		dataModel.latestState.put(
 			deviceB, TestUtils.createState(40, channelWidth, bssidB)
@@ -100,7 +100,7 @@ public class UnmanagedApAwareChannelOptimizerTest {
 		);
 		int cExpectedChannel = 48;
 		dataModel.latestDeviceStatus.put(
-			deviceC, TestUtils.createDeviceStatusSingleBand(band, 149)
+			deviceC, TestUtils.createDeviceStatus(band, 149)
 		);
 		dataModel.latestState.put(
 			deviceC, TestUtils.createState(149, channelWidth, bssidC)
@@ -141,7 +141,7 @@ public class UnmanagedApAwareChannelOptimizerTest {
 		// A -> No APs on current channel, so stay on it (1)
 		int aExpectedChannel = 1;
 		dataModel.latestDeviceStatus.put(
-			deviceA, TestUtils.createDeviceStatusSingleBand(band, aExpectedChannel)
+			deviceA, TestUtils.createDeviceStatus(band, aExpectedChannel)
 		);
 		dataModel.latestState.put(
 			deviceA, TestUtils.createState(aExpectedChannel, channelWidth, bssidA)
@@ -161,7 +161,7 @@ public class UnmanagedApAwareChannelOptimizerTest {
 		channelsB.addAll(ChannelOptimizer.AVAILABLE_CHANNELS_BAND.get(band));
 		int bExpectedChannel = channelsB.removeLast();
 		dataModel.latestDeviceStatus.put(
-			deviceB, TestUtils.createDeviceStatusSingleBand(band, 6)
+			deviceB, TestUtils.createDeviceStatus(band, 6)
 		);
 		dataModel.latestState.put(
 			deviceB, TestUtils.createState(6, channelWidth, bssidB)
@@ -176,7 +176,7 @@ public class UnmanagedApAwareChannelOptimizerTest {
 		// C -> Assigned to only free prioritized channel (1)
 		int cExpectedChannel = 1;
 		dataModel.latestDeviceStatus.put(
-			deviceC, TestUtils.createDeviceStatusSingleBand(band, 6)
+			deviceC, TestUtils.createDeviceStatus(band, 6)
 		);
 		dataModel.latestState.put(
 			deviceC, TestUtils.createState(6, channelWidth, bssidC)

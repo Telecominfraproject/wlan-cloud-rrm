@@ -76,7 +76,7 @@ public class LocationBasedOptimalTPC extends TPC {
 
 	/**
 	 * Get the optimal tx power for all the participant APs.
-	 * 
+	 *
 	 * @param sampleSpace the boundary of the space
 	 * @param numOfAPs the number of APs
 	 * @param apLocX the location x of the APs
@@ -133,7 +133,7 @@ public class LocationBasedOptimalTPC extends TPC {
 	/**
 	 * Calculate new tx powers for the given band.
 	 *
-	 * @param band       "2G" or "5G"
+	 * @param band       band
 	 * @param txPowerMap this map from serial number to band to new tx power
 	 *                   (dBm) must be passed in empty, and it is filled in by
 	 *                   this method with the new tx powers.

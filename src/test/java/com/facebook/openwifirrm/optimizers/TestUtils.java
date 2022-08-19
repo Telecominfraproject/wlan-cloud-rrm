@@ -59,7 +59,7 @@ public class TestUtils {
 	 * Create an array with one radio info entry with the given channel on a
 	 * given band.
 	 */
-	public static JsonArray createDeviceStatusSingleBand(String band, int channel) {
+	public static JsonArray createDeviceStatus(String band, int channel) {
 		JsonArray jsonList = new JsonArray();
 		jsonList.add(createDeviceStatusRadioObject(band, channel));
 		return jsonList;
