@@ -35,6 +35,7 @@ public class LocationBasedOptimalTPCTest {
 	private static final String TEST_ZONE = "test-zone";
 	/** Default channel width (MHz). */
 	private static final int DEFAULT_CHANNEL_WIDTH = 20;
+	/** Default tx power. */
 	private static final int DEFAULT_TX_POWER = 20;
 
 	@Test
@@ -141,7 +142,8 @@ public class LocationBasedOptimalTPCTest {
 		// The other two still participate the algorithm.
 		DeviceDataManager deviceDataManager2 = new DeviceDataManager();
 		deviceDataManager2.setTopology(
-			TestUtils.createTopology(TEST_ZONE, deviceA, deviceB, deviceC));
+			TestUtils.createTopology(TEST_ZONE, deviceA, deviceB, deviceC)
+		);
 		final DeviceConfig apCfgA2 = new DeviceConfig();
 		final DeviceConfig apCfgB2 = new DeviceConfig();
 		final DeviceConfig apCfgC2 = new DeviceConfig();
