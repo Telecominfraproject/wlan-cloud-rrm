@@ -144,12 +144,13 @@ public class MeasurementBasedApApTPC extends TPC {
 	 */
 
 	/**
-	 * Build a map from BSSID to a sorted (ascending) list of RSSIs from neighboring
-	 * APs. Every managed BSSID is a key in the returned map; if that BSSID does not
-	 * have an RSSI for that AP, the BSSID is mapped to an empty list.
+	 * Build a map from BSSID to a sorted (ascending) list of RSSIs from
+	 * neighboring APs. Every managed BSSID is a key in the returned map; if
+	 * that BSSID does not have an RSSI for that AP, the BSSID is mapped to an
+	 * empty list.
 	 *
 	 * @param managedBSSIDs   set of all BSSIDs of APs we are managing
-	 * @param latestWifiScans @see Modeler.DataModel#latestWifiScans for data
+	 * @param latestWifiScans {@link DataModel#latestWifiScans} for data
 	 *                        structure
 	 * @param band            "2G" or "5G"
 	 * @return a map from BSSID to a sorted (ascending) list of RSSIs from

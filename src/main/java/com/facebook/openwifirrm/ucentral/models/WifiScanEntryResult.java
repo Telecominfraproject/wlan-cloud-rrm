@@ -37,15 +37,15 @@ public class WifiScanEntryResult {
 	public String ht_oper;
 	/**
 	 * vht_oper is short for "very high throughput operation element". Note that
-	 * this field, when non-null, contains some information already present in other
-	 * fields. This field may be null, however, since pre-802.11ac BSSs do not
-	 * support HT. For BSSs that do support VHT, VHT is supported on the 5G band.
-	 * VHT operation is controlled by both the HT operation element and the VHT
-	 * operation element.
+	 * this field, when non-null, contains some information already present in
+	 * other fields. This field may be null, however, since pre-802.11ac BSSs do
+	 * not support HT. For BSSs that do support VHT, VHT is supported on the 5G
+	 * band. VHT operation is controlled by both the HT operation element and
+	 * the VHT operation element.
 	 *
-	 * For information about about the contents of this field, its encoding, etc.,
-	 * please see the javadoc for {@link ht_oper} first. The vht_oper likely
-	 * operates similarly.
+	 * For information about about the contents of this field, its encoding,
+	 * etc., please see the javadoc for {@link #ht_oper} first. The vht_oper
+	 * likely operates similarly.
 	 */
 	public String vht_oper;
 	public int capability;
