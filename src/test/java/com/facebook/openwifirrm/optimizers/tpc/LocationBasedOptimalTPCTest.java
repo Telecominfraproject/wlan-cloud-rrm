@@ -231,23 +231,17 @@ public class LocationBasedOptimalTPCTest {
 		deviceDataManager2.setDeviceApConfig(deviceC, apCfgC2);
 
 		DataModel dataModel2 = new DataModel();
-		for (String band : UCentralConstants.BANDS) {
-			int channel = UCentralUtils.LOWER_CHANNEL_LIMIT.get(band);
-			dataModel2.latestDeviceStatus.put(deviceA,
-				TestUtils.createDeviceStatus(band, channel));
-			dataModel2.latestState.put(deviceA,
-				TestUtils.createState(channel, DEFAULT_CHANNEL_WIDTH,
-					dummyBssid));
-			dataModel2.latestDeviceStatus.put(deviceB,
-				TestUtils.createDeviceStatus(band, channel));
-			dataModel2.latestState.put(deviceB,
-				TestUtils.createState(channel, DEFAULT_CHANNEL_WIDTH,
-					dummyBssid));
-			dataModel2.latestDeviceStatus.put(deviceC,
-				TestUtils.createDeviceStatus(band, channel));
-			dataModel2.latestState.put(deviceC,
-				TestUtils.createState(channel, DEFAULT_CHANNEL_WIDTH,
-					dummyBssid));
+		for (String device : Arrays.asList(deviceA, deviceB, deviceC)) {
+			dataModel2.latestDeviceStatus.put(device,
+				TestUtils.createDeviceStatus(UCentralConstants.BANDS));
+			dataModel2.latestState.put(device,
+				TestUtils.createState(
+					UCentralUtils.LOWER_CHANNEL_LIMIT
+						.get(UCentralConstants.BAND_2G),
+					DEFAULT_CHANNEL_WIDTH, DEFAULT_TX_POWER,
+					UCentralUtils.LOWER_CHANNEL_LIMIT
+						.get(UCentralConstants.BAND_5G),
+					DEFAULT_CHANNEL_WIDTH, DEFAULT_TX_POWER, dummyBssid));
 		}
 
 		Map<String, Map<String, Integer>> expected2 = new HashMap<>();
@@ -283,25 +277,17 @@ public class LocationBasedOptimalTPCTest {
 		deviceDataManager3.setDeviceApConfig(deviceC, apCfgC3);
 
 		DataModel dataModel3 = new DataModel();
-		for (String band : UCentralConstants.BANDS) {
-			dataModel3.latestDeviceStatus.put(
-				deviceA, TestUtils.createDeviceStatus(band, 36)
-			);
-			dataModel3.latestState.put(
-				deviceA, TestUtils.createState(36, 20, dummyBssid)
-			);
-			dataModel3.latestDeviceStatus.put(
-				deviceB, TestUtils.createDeviceStatus(band, 36)
-			);
-			dataModel3.latestState.put(
-				deviceB, TestUtils.createState(36, 20, dummyBssid)
-			);
-			dataModel3.latestDeviceStatus.put(
-				deviceC, TestUtils.createDeviceStatus(band, 36)
-			);
-			dataModel3.latestState.put(
-				deviceC, TestUtils.createState(36, 20, dummyBssid)
-			);
+		for (String device : Arrays.asList(deviceA, deviceB, deviceC)) {
+			dataModel3.latestDeviceStatus.put(device,
+				TestUtils.createDeviceStatus(UCentralConstants.BANDS));
+			dataModel3.latestState.put(device,
+				TestUtils.createState(
+					UCentralUtils.LOWER_CHANNEL_LIMIT
+						.get(UCentralConstants.BAND_2G),
+					DEFAULT_CHANNEL_WIDTH, DEFAULT_TX_POWER,
+					UCentralUtils.LOWER_CHANNEL_LIMIT
+						.get(UCentralConstants.BAND_5G),
+					DEFAULT_CHANNEL_WIDTH, DEFAULT_TX_POWER, dummyBssid));
 		}
 
 		Map<String, Map<String, Integer>> expected3 = new HashMap<>();
@@ -331,19 +317,17 @@ public class LocationBasedOptimalTPCTest {
 		deviceDataManager4.setDeviceApConfig(deviceC, apCfgC4);
 
 		DataModel dataModel4 = new DataModel();
-		for (String band : UCentralConstants.BANDS) {
-			dataModel4.latestDeviceStatus.put(deviceA,
-				TestUtils.createDeviceStatus(band, 36));
-			dataModel4.latestState.put(deviceA,
-				TestUtils.createState(36, 20, dummyBssid));
-			dataModel4.latestDeviceStatus.put(deviceB,
-				TestUtils.createDeviceStatus(band, 36));
-			dataModel4.latestState.put(deviceB,
-				TestUtils.createState(36, 20, dummyBssid));
-			dataModel4.latestDeviceStatus.put(deviceC,
-				TestUtils.createDeviceStatus(band, 36));
-			dataModel4.latestState.put(deviceC,
-				TestUtils.createState(36, 20, dummyBssid));
+		for (String device : Arrays.asList(deviceA, deviceB, deviceC)) {
+			dataModel4.latestDeviceStatus.put(device,
+				TestUtils.createDeviceStatus(UCentralConstants.BANDS));
+			dataModel4.latestState.put(device,
+				TestUtils.createState(
+					UCentralUtils.LOWER_CHANNEL_LIMIT
+						.get(UCentralConstants.BAND_2G),
+					DEFAULT_CHANNEL_WIDTH, DEFAULT_TX_POWER,
+					UCentralUtils.LOWER_CHANNEL_LIMIT
+						.get(UCentralConstants.BAND_5G),
+					DEFAULT_CHANNEL_WIDTH, DEFAULT_TX_POWER, dummyBssid));
 		}
 
 		Map<String, Map<String, Integer>> expected4 = new HashMap<>();
