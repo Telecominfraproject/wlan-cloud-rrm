@@ -260,6 +260,15 @@ public class DataCollector implements Runnable {
 			Math.max(params.capabilitiesIntervalSec, 1) * 1_000_000_000L;
 
 		for (DeviceWithStatus device : devices) {
+			// Check if online/connected
+			if (!device.connected) {
+				logger.info(
+					"Skipping capabilities for {} (device offline)",
+					device.serialNumber
+				);
+				continue;
+			}
+
 			// Check last request time
 			DeviceData data = deviceDataMap.get(device.serialNumber);
 			if (
@@ -297,6 +306,15 @@ public class DataCollector implements Runnable {
 		final long WIFI_SCAN_INTERVAL_NS =
 			Math.max(params.wifiScanIntervalSec, 1) * 1_000_000_000L;
 		for (DeviceWithStatus device : devices) {
+			// Check if online/connected
+			if (!device.connected) {
+				logger.info(
+					"Skipping wifi scan for {} (device offline)",
+					device.serialNumber
+				);
+				continue;
+			}
+
 			// Check if scans are enabled in device config
 			DeviceConfig deviceConfig =
 				deviceDataManager.getDeviceConfig(device.serialNumber);
