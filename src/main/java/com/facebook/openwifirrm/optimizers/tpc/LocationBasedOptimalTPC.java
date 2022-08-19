@@ -48,7 +48,7 @@ public class LocationBasedOptimalTPC extends TPC {
 	 * Iterative way to generate permutations with repetitions.
 	 *
 	 * @param choices all the choices to be considered
-	 * @param n       the number of items in a permutation
+	 * @param n the number of items in a permutation
 	 * @return the list of all the combinations
 	 */
 	protected static List<List<Integer>> getPermutationsWithRepetitions(
@@ -75,13 +75,14 @@ public class LocationBasedOptimalTPC extends TPC {
 	}
 
 	/**
-	 * Get the optimal TX power for all the participant APs
+	 * Get the optimal tx power for all the participant APs.
+	 * 
 	 * @param sampleSpace the boundary of the space
 	 * @param numOfAPs the number of APs
 	 * @param apLocX the location x of the APs
 	 * @param apLocY the location y of the APs
-	 * @param txPowerChoices the TX power options in consideration
-	 * @return the TX power of each device
+	 * @param txPowerChoices the tx power options in consideration
+	 * @return the tx power of each device
 	 */
 	public static List<Integer> runLocationBasedOptimalTPC(
 		int sampleSpace,
@@ -96,7 +97,7 @@ public class LocationBasedOptimalTPC extends TPC {
 		int optimalIndex = permutations.size();
 		double optimalMetric = Double.POSITIVE_INFINITY;
 		logger.info(
-			"Number of TX power combinations: {}",
+			"Number of tx power combinations: {}",
 			permutations.size()
 		);
 
@@ -129,11 +130,10 @@ public class LocationBasedOptimalTPC extends TPC {
 		}
 	}
 
-	@Override
-	public Map<String, Map<String, Integer>> computeTxPowerMap() {
-		// (TODO) Only support 5G radio now
-		Map<String, Map<String, Integer>> txPowerMap = new TreeMap<>();
-
+	private void buildTxPowerMapForBand(
+		String band,
+		Map<String, Map<String, Integer>> txPowerMap
+	) {
 		int numOfAPs = 0;
 		int boundary = 100;
 		Map<String, Integer> validAPs = new TreeMap<>();
@@ -186,8 +186,8 @@ public class LocationBasedOptimalTPC extends TPC {
 
 			// Update the txPowerChoices for the optimization
 			Map<String, List<Integer>> allowedTxPowers = deviceCfg.allowedTxPowers;
-			if (allowedTxPowers != null && allowedTxPowers.get(UCentralConstants.BAND_5G) != null) {
-				txPowerChoices.retainAll(allowedTxPowers.get(UCentralConstants.BAND_5G));
+			if (allowedTxPowers != null && allowedTxPowers.get(band) != null) {
+				txPowerChoices.retainAll(allowedTxPowers.get(band));
 			}
 
 			// Update the boundary for the optimization
@@ -199,7 +199,7 @@ public class LocationBasedOptimalTPC extends TPC {
 		// Report error if none of the APs has the location data or active
 		if (apLocX.isEmpty()) {
 			logger.error("No valid APs, missing location data or inactive APs!");
-			return txPowerMap;
+			return;
 		}
 
 		// Report error if the boundary is smaller than the given location
@@ -208,13 +208,13 @@ public class LocationBasedOptimalTPC extends TPC {
 			Collections.max(apLocY).intValue() > boundary
 		) {
 			logger.error("Invalid boundary: {}!", boundary);
-			return txPowerMap;
+			return;
 		}
 
 		// Report error if the size of the txPower choices is 0.
 		if (txPowerChoices.isEmpty()) {
 			logger.error("Invalid txPower choices! It is empty!");
-			return txPowerMap;
+			return;
 		}
 
 		// Report error if the number of combinations is too high (>1000).
@@ -223,7 +223,7 @@ public class LocationBasedOptimalTPC extends TPC {
 				"Invalid operation: complexity issue!! Number of combinations: {}",
 				(int) Math.pow(txPowerChoices.size(), numOfAPs)
 			);
-			return txPowerMap;
+			return;
 		}
 
 		// Run the optimal TPC algorithm
@@ -239,15 +239,24 @@ public class LocationBasedOptimalTPC extends TPC {
 		for (Map.Entry<String, Integer> e : validAPs.entrySet()) {
 			String serialNumber = e.getKey();
 			int txPower = txPowerList.get(e.getValue());
-			Map<String, Integer> radioMap = new TreeMap<>();
-			radioMap.put(UCentralConstants.BAND_5G, txPower);
-			txPowerMap.put(serialNumber, radioMap);
+			txPowerMap.computeIfAbsent(serialNumber, k -> new TreeMap<>())
+				.put(band, txPower);
+
 			logger.info(
 				"Device {}: Assigning tx power = {}",
 				serialNumber,
 				txPower
 			);
 		}
+	}
+
+	@Override
+	public Map<String, Map<String, Integer>> computeTxPowerMap() {
+		Map<String, Map<String, Integer>> txPowerMap = new TreeMap<>();
+		for (String band : UCentralConstants.BANDS) {
+			buildTxPowerMapForBand(band, txPowerMap);
+		}
 		return txPowerMap;
+
 	}
 }
