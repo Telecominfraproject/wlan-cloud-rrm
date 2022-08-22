@@ -42,7 +42,7 @@ public class LocationBasedOptimalTPCTest {
 		.get(UCentralConstants.BAND_2G);
 	/** Default 5G channel. */
 	private static final int DEFAULT_CHANNEL_5G = UCentralUtils.LOWER_CHANNEL_LIMIT
-		.get(UCentralConstants.BAND_2G);
+		.get(UCentralConstants.BAND_5G);
 
 	@Test
 	@Order(1)
