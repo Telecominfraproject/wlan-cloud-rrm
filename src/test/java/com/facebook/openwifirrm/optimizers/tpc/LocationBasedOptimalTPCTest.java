@@ -15,6 +15,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
@@ -26,11 +27,22 @@ import com.facebook.openwifirrm.DeviceDataManager;
 import com.facebook.openwifirrm.modules.Modeler.DataModel;
 import com.facebook.openwifirrm.optimizers.TestUtils;
 import com.facebook.openwifirrm.ucentral.UCentralConstants;
+import com.facebook.openwifirrm.ucentral.UCentralUtils;
 
 @TestMethodOrder(OrderAnnotation.class)
 public class LocationBasedOptimalTPCTest {
 	/** Test zone name. */
 	private static final String TEST_ZONE = "test-zone";
+	/** Default channel width (MHz). */
+	private static final int DEFAULT_CHANNEL_WIDTH = 20;
+	/** Default tx power. */
+	private static final int DEFAULT_TX_POWER = 20;
+	/** Default 2G channel. */
+	private static final int DEFAULT_CHANNEL_2G = UCentralUtils.LOWER_CHANNEL_LIMIT
+		.get(UCentralConstants.BAND_2G);
+	/** Default 5G channel. */
+	private static final int DEFAULT_CHANNEL_5G = UCentralUtils.LOWER_CHANNEL_LIMIT
+		.get(UCentralConstants.BAND_5G);
 
 	@Test
 	@Order(1)
@@ -77,7 +89,6 @@ public class LocationBasedOptimalTPCTest {
 	@Test
 	@Order(3)
 	void testLocationBasedOptimalTPCSuccessCase() throws Exception {
-		final String band = UCentralConstants.BAND_5G;
 		final String deviceA = "aaaaaaaaaaaa";
 		final String deviceB = "bbbbbbbbbbbb";
 		final String deviceC = "cccccccccccc";
@@ -93,7 +104,9 @@ public class LocationBasedOptimalTPCTest {
 		apCfgA.boundary = 500;
 		apCfgA.location = new ArrayList<>(Arrays.asList(408, 317));
 		apCfgA.allowedTxPowers = new HashMap<>();
-		apCfgA.allowedTxPowers.put(band, Arrays.asList(29, 30));
+		UCentralConstants.BANDS.stream().forEach(
+			band -> apCfgA.allowedTxPowers.put(band, Arrays.asList(29, 30))
+		);
 		apCfgB.boundary = 500;
 		apCfgB.location = new ArrayList<>(Arrays.asList(453, 49));
 		apCfgC.boundary = 500;
@@ -103,41 +116,40 @@ public class LocationBasedOptimalTPCTest {
 		deviceDataManager.setDeviceApConfig(deviceC, apCfgC);
 
 		DataModel dataModel = new DataModel();
-		dataModel.latestDeviceStatus.put(
-			deviceA, TestUtils.createDeviceStatus(band, 36)
-		);
-		dataModel.latestState.put(
-			deviceA, TestUtils.createState(36, 20, dummyBssid)
-		);
-		dataModel.latestDeviceStatus.put(
-			deviceB, TestUtils.createDeviceStatus(band, 36)
-		);
-		dataModel.latestState.put(
-			deviceB, TestUtils.createState(36, 20, dummyBssid)
-		);
-		dataModel.latestDeviceStatus.put(
-			deviceC, TestUtils.createDeviceStatus(band, 36)
-		);
-		dataModel.latestState.put(
-			deviceC, TestUtils.createState(36, 20, dummyBssid)
-		);
+		for (String device : Arrays.asList(deviceA, deviceB, deviceC)) {
+			dataModel.latestDeviceStatus.put(device,
+				TestUtils.createDeviceStatus(UCentralConstants.BANDS));
+			dataModel.latestState.put(device,
+				TestUtils.createState(
+					DEFAULT_CHANNEL_2G,
+					DEFAULT_CHANNEL_WIDTH,
+					DEFAULT_TX_POWER,
+					DEFAULT_CHANNEL_5G,
+					DEFAULT_CHANNEL_WIDTH,
+					DEFAULT_TX_POWER,
+					dummyBssid
+				)
+			);
+		}
+
 		Map<String, Map<String, Integer>> expected = new HashMap<>();
-		Map<String, Integer> radioMapA = new HashMap<>();
-		radioMapA.put(band, 30);
-		expected.put(deviceA, radioMapA);
-		Map<String, Integer> radioMapB = new HashMap<>();
-		radioMapB.put(band, 29);
-		expected.put(deviceB, radioMapB);
-		Map<String, Integer> radioMapC = new HashMap<>();
-		radioMapC.put(band, 30);
-		expected.put(deviceC, radioMapC);
+		for (String band : UCentralConstants.BANDS) {
+			expected.computeIfAbsent(deviceA, k -> new TreeMap<>()).put(
+				band, 30
+			);
+			expected.computeIfAbsent(deviceB, k -> new TreeMap<>()).put(
+				band, 29
+			);
+			expected.computeIfAbsent(deviceC, k -> new TreeMap<>()).put(
+				band, 30
+			);
+		}
 
 		LocationBasedOptimalTPC optimizer = new LocationBasedOptimalTPC(
 			dataModel, TEST_ZONE, deviceDataManager
 		);
 
-		assertEquals(expected, optimizer.computeTxPowerMap()
-		);
+		assertEquals(expected, optimizer.computeTxPowerMap());
 
 		// deviceB is removed due to negative location data.
 		// The other two still participate the algorithm.
@@ -159,43 +171,41 @@ public class LocationBasedOptimalTPCTest {
 		deviceDataManager2.setDeviceApConfig(deviceC, apCfgC2);
 
 		DataModel dataModel2 = new DataModel();
-		dataModel2.latestDeviceStatus.put(
-			deviceA, TestUtils.createDeviceStatus(band, 36)
-		);
-		dataModel2.latestState.put(
-			deviceA, TestUtils.createState(36, 20, dummyBssid)
-		);
-		dataModel2.latestDeviceStatus.put(
-			deviceB, TestUtils.createDeviceStatus(band, 36)
-		);
-		dataModel2.latestState.put(
-			deviceB, TestUtils.createState(36, 20, dummyBssid)
-		);
-		dataModel2.latestDeviceStatus.put(
-			deviceC, TestUtils.createDeviceStatus(band, 36)
-		);
-		dataModel2.latestState.put(
-			deviceC, TestUtils.createState(36, 20, dummyBssid)
-		);
+		for (String device : Arrays.asList(deviceA, deviceB, deviceC)) {
+			dataModel2.latestDeviceStatus.put(device,
+				TestUtils.createDeviceStatus(UCentralConstants.BANDS));
+			dataModel2.latestState.put(device,
+				TestUtils.createState(
+					DEFAULT_CHANNEL_2G,
+					DEFAULT_CHANNEL_WIDTH,
+					DEFAULT_TX_POWER,
+					DEFAULT_CHANNEL_5G,
+					DEFAULT_CHANNEL_WIDTH,
+					DEFAULT_TX_POWER,
+					dummyBssid
+				)
+			);
+		}
+
 		Map<String, Map<String, Integer>> expected2 = new HashMap<>();
-		Map<String, Integer> radioMapA2 = new HashMap<>();
-		radioMapA2.put(band, 30);
-		expected2.put(deviceA, radioMapA2);
-		Map<String, Integer> radioMapC2 = new HashMap<>();
-		radioMapC2.put(band, 0);
-		expected2.put(deviceC, radioMapC2);
+		for (String band : UCentralConstants.BANDS) {
+			expected2.computeIfAbsent(deviceA, k -> new TreeMap<>()).put(
+				band, 30
+			);
+			expected2.computeIfAbsent(deviceC, k -> new TreeMap<>()).put(
+				band, 0
+			);
+		}
 
-		LocationBasedOptimalTPC optimizer5 = new LocationBasedOptimalTPC(
-			dataModel2, TEST_ZONE, deviceDataManager2
-		);
+		LocationBasedOptimalTPC optimizer2 = new LocationBasedOptimalTPC(
+			dataModel2, TEST_ZONE, deviceDataManager2);
 
-		assertEquals(expected2, optimizer5.computeTxPowerMap()
-		);
+		assertEquals(expected2, optimizer2.computeTxPowerMap());
 	}
+
 	@Test
 	@Order(4)
 	void testLocationBasedOptimalTPCFailedCase() throws Exception {
-		final String band = UCentralConstants.BAND_5G;
 		final String deviceA = "aaaaaaaaaaaa";
 		final String deviceB = "bbbbbbbbbbbb";
 		final String deviceC = "cccccccccccc";
@@ -220,8 +230,7 @@ public class LocationBasedOptimalTPCTest {
 			dataModel1, TEST_ZONE, deviceDataManager1
 		);
 
-		assertEquals(expected1, optimizer1.computeTxPowerMap()
-		);
+		assertEquals(expected1, optimizer1.computeTxPowerMap());
 
 		// Invalid boundary since it is smaller than the given location!
 		DeviceDataManager deviceDataManager2 = new DeviceDataManager();
@@ -242,32 +251,29 @@ public class LocationBasedOptimalTPCTest {
 		deviceDataManager2.setDeviceApConfig(deviceC, apCfgC2);
 
 		DataModel dataModel2 = new DataModel();
-		dataModel2.latestDeviceStatus.put(
-			deviceA, TestUtils.createDeviceStatus(band, 36)
-		);
-		dataModel2.latestState.put(
-			deviceA, TestUtils.createState(36, 20, dummyBssid)
-		);
-		dataModel2.latestDeviceStatus.put(
-			deviceB, TestUtils.createDeviceStatus(band, 36)
-		);
-		dataModel2.latestState.put(
-			deviceB, TestUtils.createState(36, 20, dummyBssid)
-		);
-		dataModel2.latestDeviceStatus.put(
-			deviceC, TestUtils.createDeviceStatus(band, 36)
-		);
-		dataModel2.latestState.put(
-			deviceC, TestUtils.createState(36, 20, dummyBssid)
-		);
+		for (String device : Arrays.asList(deviceA, deviceB, deviceC)) {
+			dataModel2.latestDeviceStatus.put(device,
+				TestUtils.createDeviceStatus(UCentralConstants.BANDS));
+			dataModel2.latestState.put(device,
+				TestUtils.createState(
+					DEFAULT_CHANNEL_2G,
+					DEFAULT_CHANNEL_WIDTH,
+					DEFAULT_TX_POWER,
+					DEFAULT_CHANNEL_5G,
+					DEFAULT_CHANNEL_WIDTH,
+					DEFAULT_TX_POWER,
+					dummyBssid
+				)
+			);
+		}
+
 		Map<String, Map<String, Integer>> expected2 = new HashMap<>();
 
 		LocationBasedOptimalTPC optimizer2 = new LocationBasedOptimalTPC(
 			dataModel2, TEST_ZONE, deviceDataManager2
 		);
 
-		assertEquals(expected2, optimizer2.computeTxPowerMap()
-		);
+		assertEquals(expected2, optimizer2.computeTxPowerMap());
 
 		// Invalid txPower choices! The intersection is an empty set.
 		DeviceDataManager deviceDataManager3 = new DeviceDataManager();
@@ -280,11 +286,13 @@ public class LocationBasedOptimalTPCTest {
 		apCfgA3.boundary = 100;
 		apCfgA3.location = new ArrayList<>(Arrays.asList(10, 10));
 		apCfgA3.allowedTxPowers = new HashMap<>();
-		apCfgA3.allowedTxPowers.put(band, Arrays.asList(1, 2));
+		UCentralConstants.BANDS.stream().forEach(
+			band -> apCfgA3.allowedTxPowers.put(band, Arrays.asList(1, 2)));
 		apCfgB3.boundary = 100;
 		apCfgB3.location = new ArrayList<>(Arrays.asList(30, 10));
 		apCfgB3.allowedTxPowers = new HashMap<>();
-		apCfgB3.allowedTxPowers.put(band, Arrays.asList(3, 4));
+		UCentralConstants.BANDS.stream().forEach(
+			band -> apCfgB3.allowedTxPowers.put(band, Arrays.asList(3, 4)));
 		apCfgC3.boundary = 100;
 		apCfgC3.location = new ArrayList<>(Arrays.asList(50, 10));
 		deviceDataManager3.setDeviceApConfig(deviceA, apCfgA3);
@@ -292,32 +300,29 @@ public class LocationBasedOptimalTPCTest {
 		deviceDataManager3.setDeviceApConfig(deviceC, apCfgC3);
 
 		DataModel dataModel3 = new DataModel();
-		dataModel3.latestDeviceStatus.put(
-			deviceA, TestUtils.createDeviceStatus(band, 36)
-		);
-		dataModel3.latestState.put(
-			deviceA, TestUtils.createState(36, 20, dummyBssid)
-		);
-		dataModel3.latestDeviceStatus.put(
-			deviceB, TestUtils.createDeviceStatus(band, 36)
-		);
-		dataModel3.latestState.put(
-			deviceB, TestUtils.createState(36, 20, dummyBssid)
-		);
-		dataModel3.latestDeviceStatus.put(
-			deviceC, TestUtils.createDeviceStatus(band, 36)
-		);
-		dataModel3.latestState.put(
-			deviceC, TestUtils.createState(36, 20, dummyBssid)
-		);
+		for (String device : Arrays.asList(deviceA, deviceB, deviceC)) {
+			dataModel3.latestDeviceStatus.put(device,
+				TestUtils.createDeviceStatus(UCentralConstants.BANDS));
+			dataModel3.latestState.put(device,
+				TestUtils.createState(
+					DEFAULT_CHANNEL_2G,
+					DEFAULT_CHANNEL_WIDTH,
+					DEFAULT_TX_POWER,
+					DEFAULT_CHANNEL_5G,
+					DEFAULT_CHANNEL_WIDTH,
+					DEFAULT_TX_POWER,
+					dummyBssid
+				)
+			);
+		}
+
 		Map<String, Map<String, Integer>> expected3 = new HashMap<>();
 
 		LocationBasedOptimalTPC optimizer3 = new LocationBasedOptimalTPC(
 			dataModel3, TEST_ZONE, deviceDataManager3
 		);
 
-		assertEquals(expected3, optimizer3.computeTxPowerMap()
-		);
+		assertEquals(expected3, optimizer3.computeTxPowerMap());
 
 		// Invalid operation! Complexity issue!
 		DeviceDataManager deviceDataManager4 = new DeviceDataManager();
@@ -338,31 +343,28 @@ public class LocationBasedOptimalTPCTest {
 		deviceDataManager4.setDeviceApConfig(deviceC, apCfgC4);
 
 		DataModel dataModel4 = new DataModel();
-		dataModel4.latestDeviceStatus.put(
-			deviceA, TestUtils.createDeviceStatus(band, 36)
-		);
-		dataModel4.latestState.put(
-			deviceA, TestUtils.createState(36, 20, dummyBssid)
-		);
-		dataModel4.latestDeviceStatus.put(
-			deviceB, TestUtils.createDeviceStatus(band, 36)
-		);
-		dataModel4.latestState.put(
-			deviceB, TestUtils.createState(36, 20, dummyBssid)
-		);
-		dataModel4.latestDeviceStatus.put(
-			deviceC, TestUtils.createDeviceStatus(band, 36)
-		);
-		dataModel4.latestState.put(
-			deviceC, TestUtils.createState(36, 20, dummyBssid)
-		);
+		for (String device : Arrays.asList(deviceA, deviceB, deviceC)) {
+			dataModel4.latestDeviceStatus.put(device,
+				TestUtils.createDeviceStatus(UCentralConstants.BANDS));
+			dataModel4.latestState.put(device,
+				TestUtils.createState(
+					DEFAULT_CHANNEL_2G,
+					DEFAULT_CHANNEL_WIDTH,
+					DEFAULT_TX_POWER,
+					DEFAULT_CHANNEL_2G,
+					DEFAULT_CHANNEL_WIDTH,
+					DEFAULT_TX_POWER,
+					dummyBssid
+				)
+			);
+		}
+
 		Map<String, Map<String, Integer>> expected4 = new HashMap<>();
 
 		LocationBasedOptimalTPC optimizer4 = new LocationBasedOptimalTPC(
 			dataModel4, TEST_ZONE, deviceDataManager4
 		);
 
-		assertEquals(expected4, optimizer4.computeTxPowerMap()
-		);
+		assertEquals(expected4, optimizer4.computeTxPowerMap());
 	}
 }
