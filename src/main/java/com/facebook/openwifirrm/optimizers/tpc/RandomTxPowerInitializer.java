@@ -9,6 +9,7 @@
 package com.facebook.openwifirrm.optimizers.tpc;
 
 import java.util.Map;
+import java.util.Random;
 import java.util.TreeMap;
 
 import org.slf4j.Logger;
@@ -29,17 +30,14 @@ public class RandomTxPowerInitializer extends TPC {
 	/** The RRM algorithm ID. */
 	public static final String ALGORITHM_ID = "random";
 
-	/** Default tx power. */
-	public static final int DEFAULT_TX_POWER = 23;
-
 	/** The fixed tx power (dBm). */
 	private final int txPower;
 
-	/** Constructor (uses default tx power). */
+	/** Constructor (uses random tx power). */
 	public RandomTxPowerInitializer(
 		DataModel model, String zone, DeviceDataManager deviceDataManager
 	) {
-		this(model, zone, deviceDataManager, DEFAULT_TX_POWER);
+		this(model, zone, deviceDataManager, getRandomTxPower());
 	}
 
 	/** Constructor. */
@@ -53,12 +51,20 @@ public class RandomTxPowerInitializer extends TPC {
 		this.txPower = txPower;
 	}
 
+	/** Get a random tx power in [MIN_TX_POWER, MAX_TX_POWER], both inclusive */
+	public static int getRandomTxPower() {
+		Random rand = new Random();
+		return rand.nextInt(TPC.MAX_TX_POWER + 1 - TPC.MIN_TX_POWER) + TPC.MIN_TX_POWER;
+	}
+
 	@Override
 	public Map<String, Map<String, Integer>> computeTxPowerMap() {
 		Map<String, Map<String, Integer>> txPowerMap = new TreeMap<>();
 		for (String serialNumber : model.latestState.keySet()) {
 			Map<String, Integer> radioMap = new TreeMap<>();
-			radioMap.put(UCentralConstants.BAND_5G, txPower);
+			for (String band : UCentralConstants.BANDS) {
+				radioMap.put(band, txPower);
+			}
 			txPowerMap.put(serialNumber, radioMap);
 		}
 		if (!txPowerMap.isEmpty()) {
