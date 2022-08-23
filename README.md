@@ -1,5 +1,12 @@
 # OpenWiFi RRM Service
-OpenWiFi uCentral-based radio resource management (RRM) service.
+OpenWiFi uCentral-based radio resource management (RRM) service, providing a
+cloud-based Wi-Fi RRM layer for APs running the OpenWiFi SDK.
+
+This service collects data from OpenWiFi APs (e.g. Wi-Fi scans, stats,
+capabilities) via the uCentral Gateway and Kafka, and integrates with the
+OpenWiFi Provisioning service to perform optimization across configured
+"venues". It pushes new device configuration parameters to APs after RRM
+algorithms are run (manually or periodically).
 
 ## Requirements
 * **Running:** JRE 11.

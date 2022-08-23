@@ -3,7 +3,7 @@ This document describes the RRM algorithms implemented by this service.
 
 ## Channel Optimization
 `ChannelOptimizer` and its subclasses implement various channel optimization
-algorithms.
+algorithms, with the goal of minimizing co-channel interference.
 
 ### `RandomChannelInitializer`
 This algorithm randomly selects a channel, and then assigns all APs to that
@@ -50,7 +50,8 @@ Parameters:
 * `mode`: "unmanaged_aware"
 
 ## Transmit Power Control
-`TPC` and its subclasses implement various transmit power control algorithms.
+`TPC` and its subclasses implement various transmit power control algorithms,
+with the goal of minimizing interference while avoiding coverage holes.
 
 ### `RandomTxPowerinitializer`
 This algorithm randomly selects a Tx power value, and then assigns all APs to

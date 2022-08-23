@@ -76,7 +76,7 @@ The client supports two modes:
 `KafkaRunner` wraps the following [Apache Kafka] clients, handling the run loop
 and graceful shutdown:
 * `UCentralKafkaConsumer` implements the Kafka consumer for OpenWiFi topics, and
-  passes data (ex. device state, wifi scan results, system endpoints) to other
+  passes data (ex. device state, Wi-Fi scan results, system endpoints) to other
   modules via listener interfaces.
 * `UCentralKafkaProducer` implements the Kafka producer, which is responsible
   for periodically pushing system events required for discoverability by other
@@ -92,7 +92,7 @@ The *modules* implement the service's application logic.
 
 ### Data Collector
 `DataCollector` collects data from all OpenWiFi devices as follows:
-* Issues WiFi scan commands periodically and handles responses
+* Issues Wi-Fi scan commands periodically and handles responses
 * Registers Kafka listeners to write records into the RRM database
 * Registers config listeners to configure the stats interval in OpenWiFi devices
 * Periodically queries capabilities for OpenWiFi devices
@@ -113,7 +113,7 @@ various access methods.
 `Modeler` subscribes to raw uCentral data, then prepares it for use by an
 optimizer. The "model" is defined in `DataModel` and includes the following
 information for each device:
-* Recent wifi scan results
+* Recent Wi-Fi scan results
 * Statistics (or "state")
 * Configuration (or "status")
 * Capabilities
