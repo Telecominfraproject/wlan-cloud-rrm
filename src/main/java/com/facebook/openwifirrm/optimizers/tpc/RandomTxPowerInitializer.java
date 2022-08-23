@@ -33,13 +33,11 @@ public class RandomTxPowerInitializer extends TPC {
 	/** The fixed tx power (dBm). */
 	private final int txPower;
 
-	/** Constructor (uses default tx power). */
+	/** Constructor (uses random tx power). */
 	public RandomTxPowerInitializer(
 		DataModel model, String zone, DeviceDataManager deviceDataManager
 	) {
-		super(model, zone, deviceDataManager);
-		Random rand = new Random();
-		this.txPower = rand.nextInt(TPC.MAX_TX_POWER + 1 - TPC.MIN_TX_POWER) + TPC.MIN_TX_POWER;
+		this(model, zone, deviceDataManager, getRandomTxPower());
 	}
 
 	/** Constructor. */
@@ -51,6 +49,11 @@ public class RandomTxPowerInitializer extends TPC {
 	) {
 		super(model, zone, deviceDataManager);
 		this.txPower = txPower;
+	}
+
+	public static int getRandomTxPower() {
+		Random rand = new Random();
+		return rand.nextInt(TPC.MAX_TX_POWER + 1 - TPC.MIN_TX_POWER) + TPC.MIN_TX_POWER;
 	}
 
 	@Override
