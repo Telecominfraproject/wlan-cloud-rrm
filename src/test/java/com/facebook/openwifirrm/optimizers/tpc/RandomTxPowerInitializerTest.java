@@ -33,7 +33,7 @@ public class RandomTxPowerInitializerTest {
 	/** Test zone name. */
 	private static final String TEST_ZONE = "test-zone";
 
-	/** Serial numbers */
+	// Serial numbers
 	private static final String DEVICE_A = "aaaaaaaaaaaa";
 	private static final String DEVICE_B = "bbbbbbbbbbbb";
 

@@ -51,6 +51,7 @@ public class RandomTxPowerInitializer extends TPC {
 		this.txPower = txPower;
 	}
 
+	/** Get a random tx power in [MIN_TX_POWER, MAX_TX_POWER], both inclusive */
 	public static int getRandomTxPower() {
 		Random rand = new Random();
 		return rand.nextInt(TPC.MAX_TX_POWER + 1 - TPC.MIN_TX_POWER) + TPC.MIN_TX_POWER;
