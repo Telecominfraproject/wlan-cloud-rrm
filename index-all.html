@@ -709,10 +709,6 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Default tx power.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/optimizers/tpc/RandomTxPowerInitializer.html#DEFAULT_TX_POWER">DEFAULT_TX_POWER</a></span> - Static variable in class com.facebook.openwifirrm.optimizers.tpc.<a href="com/facebook/openwifirrm/optimizers/tpc/RandomTxPowerInitializer.html" title="class in com.facebook.openwifirrm.optimizers.tpc">RandomTxPowerInitializer</a></dt>
-<dd>
-<div class="block">Default tx power.</div>
-</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/prov/models/Entity.html#defaultEntity">defaultEntity</a></span> - Variable in class com.facebook.openwifirrm.ucentral.prov.models.<a href="com/facebook/openwifirrm/ucentral/prov/models/Entity.html" title="class in com.facebook.openwifirrm.ucentral.prov.models">Entity</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/gw/models/AclTemplate.html#Delete">Delete</a></span> - Variable in class com.facebook.openwifirrm.ucentral.gw.models.<a href="com/facebook/openwifirrm/ucentral/gw/models/AclTemplate.html" title="class in com.facebook.openwifirrm.ucentral.gw.models">AclTemplate</a></dt>
@@ -1153,6 +1149,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/UCentralApConfiguration.html#getRadioCount()">getRadioCount()</a></span> - Method in class com.facebook.openwifirrm.ucentral.<a href="com/facebook/openwifirrm/ucentral/UCentralApConfiguration.html" title="class in com.facebook.openwifirrm.ucentral">UCentralApConfiguration</a></dt>
 <dd>
 <div class="block">Return the number of radios, or -1 if the field is missing/malformed.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/optimizers/tpc/RandomTxPowerInitializer.html#getRandomTxPower()">getRandomTxPower()</a></span> - Static method in class com.facebook.openwifirrm.optimizers.tpc.<a href="com/facebook/openwifirrm/optimizers/tpc/RandomTxPowerInitializer.html" title="class in com.facebook.openwifirrm.optimizers.tpc">RandomTxPowerInitializer</a></dt>
+<dd>
+<div class="block">Get a random tx power in [MIN_TX_POWER, MAX_TX_POWER], both inclusive</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/optimizers/channel/LeastUsedChannelOptimizer.html#getScanRespsByBandwidth(java.lang.String,java.lang.String,int,java.util.Map)">getScanRespsByBandwidth(String, String, int, Map&lt;String, List&lt;UCentralUtils.WifiScanEntry&gt;&gt;)</a></span> - Method in class com.facebook.openwifirrm.optimizers.channel.<a href="com/facebook/openwifirrm/optimizers/channel/LeastUsedChannelOptimizer.html" title="class in com.facebook.openwifirrm.optimizers.channel">LeastUsedChannelOptimizer</a></dt>
 <dd>
@@ -1981,7 +1981,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/optimizers/tpc/RandomTxPowerInitializer.html#%3Cinit%3E(com.facebook.openwifirrm.modules.Modeler.DataModel,java.lang.String,com.facebook.openwifirrm.DeviceDataManager)">RandomTxPowerInitializer(Modeler.DataModel, String, DeviceDataManager)</a></span> - Constructor for class com.facebook.openwifirrm.optimizers.tpc.<a href="com/facebook/openwifirrm/optimizers/tpc/RandomTxPowerInitializer.html" title="class in com.facebook.openwifirrm.optimizers.tpc">RandomTxPowerInitializer</a></dt>
 <dd>
-<div class="block">Constructor (uses default tx power).</div>
+<div class="block">Constructor (uses random tx power).</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/optimizers/tpc/RandomTxPowerInitializer.html#%3Cinit%3E(com.facebook.openwifirrm.modules.Modeler.DataModel,java.lang.String,com.facebook.openwifirrm.DeviceDataManager,int)">RandomTxPowerInitializer(Modeler.DataModel, String, DeviceDataManager, int)</a></span> - Constructor for class com.facebook.openwifirrm.optimizers.tpc.<a href="com/facebook/openwifirrm/optimizers/tpc/RandomTxPowerInitializer.html" title="class in com.facebook.openwifirrm.optimizers.tpc">RandomTxPowerInitializer</a></dt>
 <dd>
