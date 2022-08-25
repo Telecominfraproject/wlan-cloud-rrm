@@ -217,7 +217,7 @@ public class TestUtils {
 	/** Create a device state object with the given radio channel. */
 	public static State createState(int channel, int channelWidth, String bssid) {
 		return createState(
-			channel, channelWidth, 20, 1, DEFAULT_CHANNEL_WIDTH, 0, bssid
+			channel, channelWidth, 20, bssid, 1, DEFAULT_CHANNEL_WIDTH, 0, bssid
 		);
 	}
 
@@ -237,10 +237,11 @@ public class TestUtils {
 		int channelA,
 		int channelWidthA,
 		int txPowerA,
+		String bssidA,
 		int channelB,
 		int channelWidthB,
 		int txPowerB,
-		String bssid
+		String bssidB
 	) {
 		// @formatter:off
 		State state = gson.fromJson(
@@ -281,9 +282,48 @@ public class TestUtils {
 			"           \"radio\": {\n" +
 			"				\"$ref\": \"#/radios/0\"\n" +
 			"			},\n" +
-			"			\"ssid\": \"OpenWifi_dddd\"\n" +
-			"		}\n" +
-			"	 ]\n" +
+			"			\"ssid\": \"OpenWifi_dddd_0\"\n" +
+			"		 }\n" +
+			"	   ]\n" +
+			"    },\n" +
+			"    {\n" +
+			"      \"counters\": {\n" +
+			"        \"collisions\": 0,\n" +
+			"        \"multicast\": 6,\n" +
+			"        \"rx_bytes\": 13759,\n" +
+			"        \"rx_dropped\": 0,\n" +
+			"        \"rx_errors\": 0,\n" +
+			"        \"rx_packets\": 60,\n" +
+			"        \"tx_bytes\": 7051,\n" +
+			"        \"tx_dropped\": 0,\n" +
+			"        \"tx_errors\": 0,\n" +
+			"        \"tx_packets\": 27\n" +
+			"      },\n" +
+			"      \"location\": \"/interfaces/1\",\n" +
+			"      \"name\": \"up0v1\",\n" +
+			"	   \"ssids\": [\n" +
+			"		 {\n" +
+			"			\"counters\": {\n" +
+			"        		\"collisions\": 0,\n" +
+			"        		\"multicast\": 6,\n" +
+			"        		\"rx_bytes\": 13759,\n" +
+			"        		\"rx_dropped\": 0,\n" +
+			"        		\"rx_errors\": 0,\n" +
+			"        		\"rx_packets\": 60,\n" +
+			"        		\"tx_bytes\": 7051,\n" +
+			"        		\"tx_dropped\": 0,\n" +
+			"        		\"tx_errors\": 0,\n" +
+			"        		\"tx_packets\": 27\n" +
+			"      		},\n" +
+			"			\"iface\": \"wlan1\",\n" +
+			"			\"mode\": \"ap\",\n" +
+			"			\"phy\": \"platform/soc/c000000.wifi\",\n" +
+			"           \"radio\": {\n" +
+			"				\"$ref\": \"#/radios/1\"\n" +
+			"			},\n" +
+			"			\"ssid\": \"OpenWifi_dddd_1\"\n" +
+			"		 }\n" +
+			"	   ]\n" +
 			"    },\n" +
 			"    {\n" +
 			"      \"counters\": {\n" +
@@ -298,7 +338,7 @@ public class TestUtils {
 			"        \"tx_errors\": 0,\n" +
 			"        \"tx_packets\": 10\n" +
 			"      },\n" +
-			"      \"location\": \"/interfaces/1\",\n" +
+			"      \"location\": \"/interfaces/2\",\n" +
 			"      \"name\": \"down1v0\"\n" +
 			"    }\n" +
 			"  ],\n" +
@@ -345,7 +385,8 @@ public class TestUtils {
 		state.radios[1].addProperty("channel", channelB);
 		state.radios[1].addProperty("channel_width", channelWidthB);
 		state.radios[1].addProperty("tx_power", txPowerB);
-		state.interfaces[0].ssids[0].bssid = bssid;
+		state.interfaces[0].ssids[0].bssid = bssidA;
+		state.interfaces[1].ssids[0].bssid = bssidB;
 		return state;
 	}
 }

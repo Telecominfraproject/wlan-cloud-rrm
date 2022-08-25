@@ -81,11 +81,11 @@ public class MeasurementBasedApApTPCTest {
 		DataModel model = new DataModel();
 
 		State stateA = TestUtils.createState(1, DEFAULT_CHANNEL_WIDTH,
-			MAX_TX_POWER, 36, DEFAULT_CHANNEL_WIDTH, MAX_TX_POWER, BSSID_A);
+			MAX_TX_POWER, BSSID_A, 36, DEFAULT_CHANNEL_WIDTH, MAX_TX_POWER, BSSID_A);
 		State stateB = TestUtils.createState(1, DEFAULT_CHANNEL_WIDTH,
-			MAX_TX_POWER, 36, DEFAULT_CHANNEL_WIDTH, MAX_TX_POWER, BSSID_B);
+			MAX_TX_POWER, BSSID_B, 36, DEFAULT_CHANNEL_WIDTH, MAX_TX_POWER, BSSID_B);
 		State stateC = TestUtils.createState(1, DEFAULT_CHANNEL_WIDTH,
-			MAX_TX_POWER, 36, DEFAULT_CHANNEL_WIDTH, MAX_TX_POWER, BSSID_C);
+			MAX_TX_POWER, BSSID_C, 36, DEFAULT_CHANNEL_WIDTH, MAX_TX_POWER, BSSID_C);
 
 		model.latestState.put(DEVICE_A, stateA);
 		model.latestState.put(DEVICE_B, stateB);
