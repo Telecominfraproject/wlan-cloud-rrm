@@ -9,8 +9,10 @@
 package com.facebook.openwifirrm.optimizers.channel;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 import java.util.Map;
+import java.util.Random;
 
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
@@ -62,5 +64,45 @@ public class RandomChannelInitializerTest {
 			optimizer.computeChannelMap();
 
 		assertEquals(channelMap.get(deviceA), channelMap.get(deviceB));
+	}
+
+	@Test
+	@Order(2)
+	void testSettingDifferentChannelPerAp() throws Exception {
+		final String band = UCentralConstants.BAND_2G;
+		final String deviceA = "aaaaaaaaaaaa";
+		final String deviceB = "bbbbbbbbbbbb";
+		final int channelWidth = 20;
+
+		DeviceDataManager deviceDataManager = new DeviceDataManager();
+		deviceDataManager.setTopology(
+			TestUtils.createTopology(TEST_ZONE, deviceA, deviceB)
+		);
+
+		// A and B will be assigned to the same channel
+		DataModel dataModel = new DataModel();
+		dataModel.latestState.put(
+			deviceA, TestUtils.createState(6, channelWidth, "ddd")
+		);
+		dataModel.latestState.put(
+			deviceB, TestUtils.createState(11, channelWidth, "eee")
+		);
+		dataModel.latestDeviceStatus.put(
+			deviceA, TestUtils.createDeviceStatus(band, 7)
+		);
+		dataModel.latestDeviceStatus.put(
+			deviceB, TestUtils.createDeviceStatus(band, 8)
+		);
+
+		ChannelOptimizer optimizer = new RandomChannelInitializer(
+			dataModel, TEST_ZONE, deviceDataManager, true, new Random(10)
+		);
+		Map<String, Map<String, Integer>> channelMap =
+			optimizer.computeChannelMap();
+
+		Map<String, Integer> deviceAChannel = channelMap.get(deviceA);
+		Map<String, Integer> deviceBChannel = channelMap.get(deviceB);
+
+		assertNotEquals(deviceAChannel, deviceBChannel);
 	}
 }

@@ -28,7 +28,8 @@ import com.facebook.openwifirrm.ucentral.models.State;
 /**
  * Random channel initializer.
  * <p>
- * Randomly assign APs to the same channel.
+ * Randomly assign APs to the same channel unless otherwise specified.
+ * If specified, all APs will be assigned a random channel.
  */
 public class RandomChannelInitializer extends ChannelOptimizer {
 	private static final Logger logger = LoggerFactory.getLogger(RandomChannelInitializer.class);
@@ -37,13 +38,37 @@ public class RandomChannelInitializer extends ChannelOptimizer {
 	public static final String ALGORITHM_ID = "random";
 
 	/** The PRNG instance. */
-	private final Random rng = new Random();
+	private Random rng = new Random();
+
+	/** Whether to set a different value per AP or use a single value for all APs */
+	private boolean setDifferentChannelsPerAp = false;
 
 	/** Constructor. */
 	public RandomChannelInitializer(
 		DataModel model, String zone, DeviceDataManager deviceDataManager
 	) {
 		super(model, zone, deviceDataManager);
+	}
+
+	/** Constructor (allows setting different channel per AP) */
+	public RandomChannelInitializer(
+		DataModel model, String zone, DeviceDataManager deviceDataManager, boolean setDifferentChannelsPerAp
+	) {
+		this(model, zone, deviceDataManager);
+		this.setDifferentChannelsPerAp = setDifferentChannelsPerAp;
+	}
+
+	/** Constructor (allows setting different channel per AP and passing
+	 * in a custom Random class to allow seeding) */
+	public RandomChannelInitializer(
+		DataModel model,
+		String zone,
+		DeviceDataManager deviceDataManager,
+		boolean setDifferentChannelsPerAp,
+		Random rng
+	) {
+		this(model, zone, deviceDataManager, setDifferentChannelsPerAp);
+		this.rng = rng;
 	}
 
 	@Override
@@ -95,10 +120,14 @@ public class RandomChannelInitializer extends ChannelOptimizer {
 			}
 
 			// Randomly assign all the devices to the same channel
-			int channelIndex = rng.nextInt(availableChannelsList.size());
-			int newChannel = availableChannelsList.get(channelIndex);
+			int defaultChannelIndex = rng.nextInt(availableChannelsList.size());
 
 			for (String serialNumber : entry.getValue()) {
+				int newChannel = availableChannelsList.get(
+					this.setDifferentChannelsPerAp ?
+						rng.nextInt(availableChannelsList.size()) : defaultChannelIndex
+				);
+
 				State state = model.latestState.get(serialNumber);
 				if (state == null) {
 					logger.debug(
