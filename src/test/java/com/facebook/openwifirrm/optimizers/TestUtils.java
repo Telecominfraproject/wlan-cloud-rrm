@@ -50,7 +50,7 @@ public class TestUtils {
 	 * @return a radio info entry as a {@code JsonObject}
 	 */
 	private static JsonObject createDeviceStatusRadioObject(
-		String band, int channel
+		String band, int channel, int channelWidth
 	) {
 		return gson.fromJson(
 			String.format(
@@ -58,7 +58,7 @@ public class TestUtils {
 					+ "\"channel-width\":%d,\"country\":\"CA\",\"tx-power\":20}",
 				band,
 				channel,
-				DEFAULT_CHANNEL_WIDTH
+				channelWidth
 			),
 			JsonObject.class
 		);
@@ -70,7 +70,9 @@ public class TestUtils {
 	 */
 	public static JsonArray createDeviceStatus(String band, int channel) {
 		JsonArray jsonList = new JsonArray();
-		jsonList.add(createDeviceStatusRadioObject(band, channel));
+		jsonList.add(createDeviceStatusRadioObject(
+			band, channel, DEFAULT_CHANNEL_WIDTH
+		));
 		return jsonList;
 	}
 
@@ -82,7 +84,9 @@ public class TestUtils {
 		JsonArray jsonList = new JsonArray();
 		for (String band : bands) {
 			int channel = UCentralUtils.LOWER_CHANNEL_LIMIT.get(band);
-			jsonList.add(createDeviceStatusRadioObject(band, channel));
+			jsonList.add(createDeviceStatusRadioObject(
+				band, channel, DEFAULT_CHANNEL_WIDTH
+			));
 		}
 		return jsonList;
 	}
