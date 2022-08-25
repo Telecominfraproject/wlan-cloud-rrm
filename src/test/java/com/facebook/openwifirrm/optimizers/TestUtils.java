@@ -32,6 +32,9 @@ public class TestUtils {
 	/** Default value for {@link WifiScanEntry#unixTimeMs} for testing. */
 	public static final Instant DEFAULT_WIFISCANENTRY_TIME = Instant.parse("2022-01-01T00:00:00Z");
 
+	/** Default channel width in MHz */
+	public static final int DEFAULT_CHANNEL_WIDTH = 20;
+
 	/** Create a topology from the given devices in a single zone. */
 	public static DeviceTopology createTopology(String zone, String... devices) {
 		DeviceTopology topology = new DeviceTopology();
@@ -52,9 +55,10 @@ public class TestUtils {
 		return gson.fromJson(
 			String.format(
 				"{\"band\": %s,\"channel\": %d,\"channel-mode\":\"HE\","
-					+ "\"channel-width\":20,\"country\":\"CA\",\"tx-power\":20}",
+					+ "\"channel-width\":%d,\"country\":\"CA\",\"tx-power\":20}",
 				band,
-				channel
+				channel,
+				DEFAULT_CHANNEL_WIDTH
 			),
 			JsonObject.class
 		);
@@ -91,12 +95,14 @@ public class TestUtils {
 		JsonArray jsonList = gson.fromJson(
 			String.format(
 				"[{\"band\": \"2G\",\"channel\": %d,\"channel-mode\":\"HE\"," +
-				"\"channel-width\":20,\"country\":\"CA\",\"tx-power\":%d}," +
+				"\"channel-width\":%d,\"country\":\"CA\",\"tx-power\":%d}," +
 				"{\"band\": \"5G\",\"channel\": %d,\"channel-mode\":\"HE\"," +
-				"\"channel-width\":20,\"country\":\"CA\",\"tx-power\":%d}]",
+				"\"channel-width\":%d,\"country\":\"CA\",\"tx-power\":%d}]",
 				channel2G,
+				DEFAULT_CHANNEL_WIDTH,
 				txPower2G,
 				channel5G,
+				DEFAULT_CHANNEL_WIDTH,
 				txPower5G
 			),
 			JsonArray.class
@@ -206,7 +212,9 @@ public class TestUtils {
 
 	/** Create a device state object with the given radio channel. */
 	public static State createState(int channel, int channelWidth, String bssid) {
-		return createState(channel, channelWidth, 20, 1, 20, 0, bssid);
+		return createState(
+			channel, channelWidth, 20, 1, DEFAULT_CHANNEL_WIDTH, 0, bssid
+		);
 	}
 
 	/**
