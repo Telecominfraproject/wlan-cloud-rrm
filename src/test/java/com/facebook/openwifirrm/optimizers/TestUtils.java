@@ -230,6 +230,7 @@ public class TestUtils {
 		int txPowerB,
 		String bssid
 	) {
+		// @formatter:off
 		State state = gson.fromJson(
 			"{\n" +
 			"  \"interfaces\": [\n" +
@@ -325,6 +326,7 @@ public class TestUtils {
 			"}",
 			State.class
 		);
+		// @formatter:on
 		state.radios[0].addProperty("channel", channelA);
 		state.radios[0].addProperty("channel_width", channelWidthA);
 		state.radios[0].addProperty("tx_power", txPowerA);

@@ -233,18 +233,24 @@ public class DeviceDataManager {
 			cfg.zoneConfig = new TreeMap<>();
 			modified = true;
 		} else {
+			// remove if:
+			// - zone doesn't exist
+			// - config object is empty
 			modified |= cfg.zoneConfig.entrySet().removeIf(entry ->
-				!isZoneInTopology(entry.getKey()) /* zone doesn't exist */ ||
-				entry.getValue().isEmpty()  /* config object is empty */
+				!isZoneInTopology(entry.getKey()) ||
+				entry.getValue().isEmpty()
 			);
 		}
 		if (cfg.apConfig == null) {
 			cfg.apConfig = new TreeMap<>();
 			modified = true;
 		} else {
+			// remove if:
+			// - AP doesn't exist
+			// - config object is empty
 			modified |= cfg.apConfig.entrySet().removeIf(entry ->
-				!isDeviceInTopology(entry.getKey()) /* AP doesn't exist */ ||
-				entry.getValue().isEmpty()  /* config object is empty */
+				!isDeviceInTopology(entry.getKey()) ||
+				entry.getValue().isEmpty()
 			);
 		}
 
@@ -437,6 +443,7 @@ public class DeviceDataManager {
 	/**
 	 * Return config (with all config layers applied) for all devices in a given
 	 * zone, or null if not present in the topology.
+	 *
 	 * @return map of serial number to computed config
 	 */
 	public Map<String, DeviceConfig> getAllDeviceConfigs(String zone) {

@@ -414,6 +414,8 @@ public class RRMConfig {
 		RRMConfig config = new RRMConfig();
 		String v;
 
+		// @formatter:off
+
 		/* ServiceConfig */
 		ServiceConfig serviceConfig = config.serviceConfig;
 		if ((v = env.get("SERVICECONFIG_NAME")) != null) {
@@ -585,6 +587,8 @@ public class RRMConfig {
 		if ((v = env.get("SCHEDULERPARAMS_DRYRUN")) != null) {
 			schedulerParams.dryRun = Boolean.parseBoolean(v);
 		}
+
+		// @formatter:on
 
 		return config;
 	}

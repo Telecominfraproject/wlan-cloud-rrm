@@ -18,6 +18,9 @@ $ mvn package [-DskipTests]
 ```
 This will build a runnable JAR located at `target/openwifi-rrm.jar`.
 
+Alternatively, Docker builds can be launched using the provided
+[Dockerfile](Dockerfile).
+
 ## Testing
 ```
 $ mvn test
@@ -42,18 +45,22 @@ either environment variables (`--config-env`) or a static JSON file
     * Env: `DATABASECONFIG_SERVER`, `DATABASECONFIG_USER`, `DATABASECONFIG_PASSWORD`
     * JSON: `databaseConfig` structure
 
-## Docker
-Docker builds can be launched using the provided [Dockerfile](Dockerfile).
-
 ## OpenAPI
 This service provides an OpenAPI HTTP interface on the port specified in the
 service configuration (`moduleConfig.apiServerParams`). An auto-generated
 OpenAPI 3.0 document is hosted at the endpoints `/openapi.{yaml,json}` and is
-written to `openapi.yaml` in the project root during the Maven "compile" phase.
+written to [openapi.yaml](openapi.yaml) during the Maven "compile" phase.
 
-## Implementation
+## For Developers
 See [IMPLEMENTATION.md](IMPLEMENTATION.md) for service architecture details and
 [ALGORITHMS.md](ALGORITHMS.md) for descriptions of the RRM algorithms.
+
+Code is auto-formatted using [Spotless] with a custom Eclipse style config (see
+[spotless/eclipse-java-formatter.xml](spotless/eclipse-java-formatter.xml)).
+This can be applied via Maven (but is *not* enforced at build time):
+```
+$ mvn spotless:apply
+```
 
 ## License
 See [LICENSE](LICENSE).
@@ -61,3 +68,4 @@ See [LICENSE](LICENSE).
 
 [Apache Maven]: https://maven.apache.org/
 [JUnit 5]: https://junit.org/junit5/
+[Spotless]: https://github.com/diffplug/spotless
