@@ -142,7 +142,14 @@ public class ProvMonitor implements Runnable {
 				topo.computeIfAbsent(venue, k -> new TreeSet<>());
 			zone.add(tag.serialNumber);
 		}
-		deviceDataManager.setTopology(topo);
+
+		try {
+			deviceDataManager.setTopology(topo);
+		} catch (IllegalArgumentException exc) {
+			logger.info("Failed validating the topology ({}), aborting sync", exc.getMessage());
+			return;
+		}
+
 		logger.info(
 			"Synced topology with owprov: {} zone(s), {} total device(s)",
 			topo.size(),
