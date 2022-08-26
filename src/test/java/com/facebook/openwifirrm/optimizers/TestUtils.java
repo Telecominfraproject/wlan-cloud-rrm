@@ -377,16 +377,16 @@ public class TestUtils {
 			String ifaceString = createStateInterfaceString(index);
 			ifaceStrings[index] = ifaceString;
 		}
-		StringBuffer stateString = new StringBuffer();
+		StringBuffer stateSb = new StringBuffer();
 		// @formatter:off
-		stateString.append(
+		stateSb.append(
 			"{\n" +
 			"  \"interfaces\": [\n"
 		);
 		for (String ifaceString : ifaceStrings) {
-			stateString.append(ifaceString);
+			stateSb.append(ifaceString);
 		}
-		stateString.append(String.format(
+		stateSb.append(String.format(
 			"    {\n" +
 			"      \"counters\": {\n" +
 			"        \"collisions\": 0,\n" +
@@ -441,7 +441,7 @@ public class TestUtils {
 			numRadios
 		));
 		// @formatter:on
-		State state = gson.fromJson(stateString.toString(), State.class);
+		State state = gson.fromJson(stateSb.toString(), State.class);
 		state.radios[0].addProperty("channel", channelA);
 		state.radios[0].addProperty("channel_width", channelWidthA);
 		state.radios[0].addProperty("tx_power", txPowerA);

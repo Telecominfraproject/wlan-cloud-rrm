@@ -363,8 +363,6 @@ public class LeastUsedChannelOptimizer extends ChannelOptimizer {
 				int[] currentChannelInfo = getCurrentChannel(band, serialNumber, state);
 				int currentChannel = currentChannelInfo[0];
 				int currentChannelWidth = currentChannelInfo[1];
-				// TODO Look into whether we should filter as described below
-				// TODO Look into if we actually filter...
 				// Filter out APs if the number of radios in the state and config mismatches
 				// Happen when an AP's radio is enabled/disabled on the fly
 				if (currentChannel == 0) {
