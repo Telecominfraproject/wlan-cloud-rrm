@@ -404,7 +404,7 @@ public class TestUtils {
 			"      \"name\": \"down1v0\"\n" +
 			"    }\n" +
 			"  ],\n" +
-			"  \"radios\": [\n" + // TODO hardcoded two radios
+			"  \"radios\": [\n" + // hardcoded two radios
 			"    {\n" +
 			"      \"active_ms\": 564328,\n" +
 			"      \"busy_ms\": 36998,\n" +
