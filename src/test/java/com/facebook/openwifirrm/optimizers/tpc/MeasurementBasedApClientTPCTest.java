@@ -11,6 +11,8 @@ package com.facebook.openwifirrm.optimizers.tpc;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
@@ -31,15 +33,21 @@ public class MeasurementBasedApClientTPCTest {
 
 	/** Create a device state object containing the given parameters. */
 	private State createState(
-		String serialNumber, int curTxPower, int bandwidth, int... clientRssi
+		String serialNumber, int curTxPower, int bandwidth, int[] channels, int... clientRssi
 	) {
 		State state = new State();
-		state.radios = new JsonObject[] { new JsonObject() };
-		state.radios[0].addProperty("channel", 36);
-		state.radios[0].addProperty(
-			"channel_width", Integer.toString(bandwidth)
-		);
-		state.radios[0].addProperty("tx_power", curTxPower);
+		state.radios = new JsonObject[channels.length];
+		int curIndex = 0;
+		for (int channel : channels) {
+			JsonObject radio = new JsonObject();
+			radio.addProperty("channel", channel);
+			radio.addProperty(
+				"channel_width", Integer.toString(bandwidth)
+			);
+			radio.addProperty("tx_power", curTxPower);
+			state.radios[curIndex] = radio;
+			curIndex += 1;
+		}
 		state.interfaces = new State.Interface[] { state.new Interface() };
 		state.interfaces[0].ssids = new State.Interface.SSID[] {
 			state.interfaces[0].new SSID()
@@ -59,7 +67,7 @@ public class MeasurementBasedApClientTPCTest {
 
 	@Test
 	@Order(1)
-	void test1() throws Exception {
+	void testComputeCorrectTxPower() throws Exception {
 		final String deviceA = "aaaaaaaaaaaa";
 		final String deviceB = "bbbbbbbbbbbb";
 		final String deviceC = "cccccccccccc";
@@ -76,23 +84,23 @@ public class MeasurementBasedApClientTPCTest {
 		DataModel dataModel = new DataModel();
 		dataModel.latestState.put(
 			deviceA,
-			createState(deviceA, 20 /*txPower*/, 20 /*bandwidth*/)
+			createState(deviceA, 20 /*txPower*/, 20 /*bandwidth*/, new int[] {36} /*channel*/)
 		);
 		dataModel.latestState.put(
 			deviceB,
-			createState(deviceB, 20 /*txPower*/, 20 /*bandwidth*/, -65)
+			createState(deviceB, 20 /*txPower*/, 20 /*bandwidth*/, new int[] {36}, -65)
 		);
 		dataModel.latestState.put(
 			deviceC,
-			createState(deviceC, 21 /*txPower*/, 40 /*bandwidth*/, -65, -73, -58)
+			createState(deviceC, 21 /*txPower*/, 40 /*bandwidth*/, new int[] {36}, -65, -73, -58)
 		);
 		dataModel.latestState.put(
 			deviceD,
-			createState(deviceD, 22 /*txPower*/, 20 /*bandwidth*/, -80)
+			createState(deviceD, 22 /*txPower*/, 20 /*bandwidth*/, new int[] {36},-80)
 		);
 		dataModel.latestState.put(
 			deviceE,
-			createState(deviceE, 23 /*txPower*/, 20 /*bandwidth*/, -45)
+			createState(deviceE, 23 /*txPower*/, 20 /*bandwidth*/, new int[] {36}, -45)
 		);
 
 		TPC optimizer = new MeasurementBasedApClientTPC(dataModel, TEST_ZONE, deviceDataManager);
@@ -113,5 +121,57 @@ public class MeasurementBasedApClientTPCTest {
 
 		// Device E: 1 client with RSSI -45 => set to min txPower
 		assertEquals(TPC.MIN_TX_POWER, txPowerMap.get(deviceE).get(UCentralConstants.BAND_5G));
+	}
+
+	@Test
+	@Order(2)
+	void testVariousBands() throws Exception {
+		final String deviceA = "aaaaaaaaaaaa";
+		final String deviceB = "bbbbbbbbbbbb";
+		final String deviceC = "cccccccccccc";
+		final String deviceD = "dddddddddddd";
+
+		DeviceDataManager deviceDataManager = new DeviceDataManager();
+		deviceDataManager.setTopology(
+			TestUtils.createTopology(
+				TEST_ZONE, deviceA, deviceB, deviceC, deviceD
+			)
+		);
+
+		DataModel dataModel = new DataModel();
+		// 2G only
+		dataModel.latestState.put(
+			deviceA,
+			createState(deviceA, 20 /*txPower*/, 20 /*bandwidth*/, new int[]{2} /*channel*/)
+		);
+		// 5G only
+		dataModel.latestState.put(
+			deviceB,
+			createState(deviceB, 20 /*txPower*/, 20 /*bandwidth*/, new int[]{36} /*channel*/)
+		);
+		// 2G and 5G
+		dataModel.latestState.put(
+			deviceC,
+			createState(deviceC, 20 /*txPower*/, 20 /*bandwidth*/, new int[]{2, 36} /*channel*/)
+		);
+		// No valid bands in 2G or 5G
+		dataModel.latestState.put(
+			deviceD,
+			createState(deviceA, 20 /*txPower*/, 20 /*bandwidth*/, new int[]{25} /*channel*/)
+		);
+
+		TPC optimizer = new MeasurementBasedApClientTPC(dataModel, TEST_ZONE, deviceDataManager);
+		Map<String, Map<String, Integer>> txPowerMap =
+			optimizer.computeTxPowerMap();
+
+		Set<String> expectedBands = new TreeSet<>();
+		expectedBands.add(UCentralConstants.BAND_2G);
+		assertEquals(expectedBands, txPowerMap.get(deviceA).keySet());
+		expectedBands.add(UCentralConstants.BAND_5G);
+		assertEquals(expectedBands, txPowerMap.get(deviceC).keySet());
+		expectedBands.remove(UCentralConstants.BAND_2G);
+		assertEquals(expectedBands, txPowerMap.get(deviceB).keySet());
+		expectedBands.remove(UCentralConstants.BAND_5G);
+		assertEquals(expectedBands, txPowerMap.get(deviceD).keySet());
 	}
 }
