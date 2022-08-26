@@ -265,7 +265,7 @@ public class UCentralClient {
 			!serviceEndpoints.containsKey(OWSEC_SERVICE)
 		) {
 			return false;
-		};
+		}
 		if (usePublicEndpoints && accessToken == null) {
 			return false;
 		}
@@ -279,7 +279,7 @@ public class UCentralClient {
 	public boolean isProvInitialized() {
 		if (!serviceEndpoints.containsKey(OWPROV_SERVICE)) {
 			return false;
-		};
+		}
 		if (usePublicEndpoints && accessToken == null) {
 			return false;
 		}

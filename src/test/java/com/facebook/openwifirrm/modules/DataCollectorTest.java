@@ -26,6 +26,7 @@ public class DataCollectorTest {
 	@Test
 	void test_parseStateRecord() throws Exception {
 		final String serialNumber = "112233445566";
+		// @formatter:off
 		final String payloadJson =
 			"{\"serial\":\"112233445566\",\"state\":{\"interfaces\":[" +
 			"{\"clients\":[{\"ipv4_addresses\":[\"192.168.20.1\"]," +
@@ -82,6 +83,7 @@ public class DataCollectorTest {
 			"\"unit\":{\"load\":[0,0,0],\"localtime\":1649306810,\"memory\":" +
 			"{\"buffered\":9961472,\"cached\":27217920,\"free\":757035008," +
 			"\"total\":973139968},\"uptime\":73107}},\"uuid\":1648808043}";
+		// @formatter:on
 		JsonObject payload = new Gson().fromJson(payloadJson, JsonObject.class);
 
 		// Parse into records

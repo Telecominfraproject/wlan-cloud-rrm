@@ -109,7 +109,7 @@ public class LocationBasedOptimalTPC extends TPC {
 				.stream()
 				.mapToDouble(i->i)
 				.boxed()
-				.collect(Collectors.toList());;
+				.collect(Collectors.toList());
 			double[][][] rxPower = ModelerUtils
 				.generateRxPower(sampleSpace, numOfAPs, apLocX, apLocY, txPowerTemp);
 			double[][] heatMap = ModelerUtils

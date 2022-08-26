@@ -106,6 +106,8 @@ public class DatabaseManager {
 			Connection conn = getConnection();
 			Statement stmt = conn.createStatement()
 		) {
+			// @formatter:off
+
 			// Create tables
 			String sql =
 				"CREATE TABLE IF NOT EXISTS `state` (" +
@@ -152,7 +154,8 @@ public class DatabaseManager {
 					"DO SELECT 1";  // no-op
 				stmt.executeUpdate(sql);
 
-				final String oldDate = "DATE_SUB(NOW(), INTERVAL " + dataRetentionIntervalDays + " DAY)";
+				final String oldDate =
+					"DATE_SUB(NOW(), INTERVAL " + dataRetentionIntervalDays + " DAY)";
 				sql =
 					"ALTER EVENT " + EVENT_NAME + " " +
 					"DO BEGIN " +
@@ -163,6 +166,8 @@ public class DatabaseManager {
 							"WHERE DATE(wifiscan.time) < " + oldDate + "; " +
 					"END;";
 				stmt.executeUpdate(sql);
+
+				// @formatter:on
 			} else {
 				sql = "DROP EVENT IF EXISTS " + EVENT_NAME;
 				stmt.executeUpdate(sql);
@@ -219,10 +224,12 @@ public class DatabaseManager {
 
 		long startTime = System.nanoTime();
 		try (Connection conn = getConnection()) {
+			// @formatter:off
 			PreparedStatement stmt = conn.prepareStatement(
 				"INSERT INTO `state` (`time`, `metric`, `value`, `serial`) " +
 				"VALUES (?, ?, ?, ?)"
 			);
+			// @formatter:on
 
 			// Disable auto-commit
 			boolean autoCommit = conn.getAutoCommit();
@@ -267,9 +274,11 @@ public class DatabaseManager {
 			// Fetch latest (device, timestamp) records
 			Map<String, Timestamp> deviceToTs = new HashMap<>();
 			try (Statement stmt = conn.createStatement()) {
+				// @formatter:off
 				String sql =
 					"SELECT `serial`, `time` FROM `state` " +
 					"WHERE `id` IN (SELECT MAX(`id`) FROM `state` GROUP BY `serial`)";
+				// @formatter:on
 				try (ResultSet rs = stmt.executeQuery(sql)) {
 					while (rs.next()) {
 						String serial = rs.getString(1);
@@ -472,11 +481,13 @@ public class DatabaseManager {
 			stmt.close();
 
 			// Insert scan result entries to "wifiscan_results"
+			// @formatter:off
 			stmt = conn.prepareStatement(
 				"INSERT INTO `wifiscan_results` (" +
 				  "`scan_id`, `bssid`, `ssid`, `lastseen`, `rssi`, `channel`" +
 				") VALUES (?, ?, ?, ?, ?, ?)"
 			);
+			// @formatter:on
 			for (WifiScanEntry entry : entries) {
 				long bssid = 0;
 				try {
@@ -523,10 +534,12 @@ public class DatabaseManager {
 		try (Connection conn = getConnection()) {
 			// Fetch latest N scan IDs
 			Map<Long, Long> scanIdToTs = new HashMap<>();
+			// @formatter:off
 			PreparedStatement stmt1 = conn.prepareStatement(
 				"SELECT `id`, `time` FROM `wifiscan` WHERE `serial` = ? " +
 				"ORDER BY `id` DESC LIMIT " + count
 			);
+			// @formatter:on
 			stmt1.setString(1, serialNumber);
 			try (ResultSet rs = stmt1.executeQuery()) {
 				while (rs.next()) {

@@ -131,18 +131,14 @@ public abstract class ChannelOptimizer {
 		this.deviceConfigs = deviceDataManager.getAllDeviceConfigs(zone);
 
 		// Remove model entries not in the given zone
-		this.model.latestWifiScans.keySet().removeIf(serialNumber ->
-			!deviceConfigs.containsKey(serialNumber)
-		);
-		this.model.latestState.keySet().removeIf(serialNumber ->
-			!deviceConfigs.containsKey(serialNumber)
-		);
-		this.model.latestDeviceStatus.keySet().removeIf(serialNumber ->
-			!deviceConfigs.containsKey(serialNumber)
-		);
-		this.model.latestDeviceCapabilities.keySet().removeIf(serialNumber ->
-			!deviceConfigs.containsKey(serialNumber)
-		);
+		this.model.latestWifiScans.keySet()
+			.removeIf(serialNumber -> !deviceConfigs.containsKey(serialNumber));
+		this.model.latestState.keySet()
+			.removeIf(serialNumber -> !deviceConfigs.containsKey(serialNumber));
+		this.model.latestDeviceStatus.keySet()
+			.removeIf(serialNumber -> !deviceConfigs.containsKey(serialNumber));
+		this.model.latestDeviceCapabilities.keySet()
+			.removeIf(serialNumber -> !deviceConfigs.containsKey(serialNumber));
 	}
 
 	/**

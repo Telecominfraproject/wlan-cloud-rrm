@@ -1153,10 +1153,12 @@ public class ApiServer implements Runnable {
 			parameters = {
 				@Parameter(
 					name = "mode",
-					description = "The assignment algorithm to use:\n"
-							+ "- " + RandomChannelInitializer.ALGORITHM_ID + ": random channel initialization\n"
-							+ "- " + LeastUsedChannelOptimizer.ALGORITHM_ID + ": least used channel assignment\n"
-							+ "- " + UnmanagedApAwareChannelOptimizer.ALGORITHM_ID + ": unmanaged AP aware least used channel assignment\n",
+					// @formatter:off
+					description = "The assignment algorithm to use:\n" +
+							"- " + RandomChannelInitializer.ALGORITHM_ID + ": random channel initialization\n" +
+							"- " + LeastUsedChannelOptimizer.ALGORITHM_ID + ": least used channel assignment\n" +
+							"- " + UnmanagedApAwareChannelOptimizer.ALGORITHM_ID + ": unmanaged AP aware least used channel assignment\n",
+					// @formatter:on
 					in = ParameterIn.QUERY,
 					schema = @Schema(
 						type = "string",
@@ -1256,11 +1258,13 @@ public class ApiServer implements Runnable {
 			parameters = {
 				@Parameter(
 					name = "mode",
-					description = "The assignment algorithm to use:\n"
-							+ "- " + RandomTxPowerInitializer.ALGORITHM_ID + ": random tx power initializer\n"
-							+ "- " + MeasurementBasedApClientTPC.ALGORITHM_ID + ": measurement-based AP-client TPC algorithm\n"
-							+ "- " + MeasurementBasedApApTPC.ALGORITHM_ID + ": measurement-based AP-AP TPC algorithm\n"
-							+ "- " + LocationBasedOptimalTPC.ALGORITHM_ID + ": location-based optimal TPC algorithm\n",
+					// @formatter:off
+					description = "The assignment algorithm to use:\n" +
+							"- " + RandomTxPowerInitializer.ALGORITHM_ID + ": random tx power initializer\n" +
+							"- " + MeasurementBasedApClientTPC.ALGORITHM_ID + ": measurement-based AP-client TPC algorithm\n" +
+							"- " + MeasurementBasedApApTPC.ALGORITHM_ID + ": measurement-based AP-AP TPC algorithm\n" +
+							"- " + LocationBasedOptimalTPC.ALGORITHM_ID + ": location-based optimal TPC algorithm\n",
+					// @formatter:on
 					in = ParameterIn.QUERY,
 					schema = @Schema(
 						type = "string",
