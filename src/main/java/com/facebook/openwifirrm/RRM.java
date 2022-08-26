@@ -44,11 +44,14 @@ public class RRM {
 	 * Wrap a {@code Runnable} as a {@code Callable<Object>}.
 	 *
 	 * This is similar to {@link Executors#callable(Runnable)} but will log any
-	 * exceptions thrown and then call {@link System#exit(int)}.
+	 * exceptions thrown and then call {@link System#exit(int)}, and will also
+	 * name the threads.
 	 */
 	private static Callable<Object> wrapRunnable(Runnable task) {
 		return () -> {
 			try {
+				Thread.currentThread()
+					.setName("RRM_" + task.getClass().getSimpleName());
 				task.run();
 			} catch (Exception e) {
 				logger.error("Exception raised in task!", e);

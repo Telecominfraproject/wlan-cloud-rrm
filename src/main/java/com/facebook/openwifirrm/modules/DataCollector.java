@@ -26,6 +26,7 @@ import org.slf4j.LoggerFactory;
 import com.facebook.openwifirrm.DeviceConfig;
 import com.facebook.openwifirrm.DeviceDataManager;
 import com.facebook.openwifirrm.RRMConfig.ModuleConfig.DataCollectorParams;
+import com.facebook.openwifirrm.Utils;
 import com.facebook.openwifirrm.mysql.DatabaseManager;
 import com.facebook.openwifirrm.mysql.StateRecord;
 import com.facebook.openwifirrm.ucentral.UCentralApConfiguration;
@@ -115,7 +116,12 @@ public class DataCollector implements Runnable {
 		this.client = client;
 		this.dbManager = dbManager;
 		this.executor =
-			Executors.newFixedThreadPool(params.executorThreadCount);
+			Executors.newFixedThreadPool(
+				params.executorThreadCount,
+				new Utils.NamedThreadFactory(
+					"RRM_" + this.getClass().getSimpleName()
+				)
+			);
 
 		// Register config hooks
 		configManager.addConfigListener(
