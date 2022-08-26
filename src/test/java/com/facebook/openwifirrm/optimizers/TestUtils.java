@@ -214,11 +214,120 @@ public class TestUtils {
 		return wifiScanList;
 	}
 
+	private static String createStateInterfaceString(int index) {
+		// @formatter:off
+		return String.format(
+			"    {\n" +
+			"      \"counters\": {\n" +
+			"        \"collisions\": 0,\n" +
+			"        \"multicast\": 6,\n" +
+			"        \"rx_bytes\": 13759,\n" +
+			"        \"rx_dropped\": 0,\n" +
+			"        \"rx_errors\": 0,\n" +
+			"        \"rx_packets\": 60,\n" +
+			"        \"tx_bytes\": 7051,\n" +
+			"        \"tx_dropped\": 0,\n" +
+			"        \"tx_errors\": 0,\n" +
+			"        \"tx_packets\": 27\n" +
+			"      },\n" +
+			"      \"location\": \"/interfaces/%d\",\n" +
+			"      \"name\": \"up0v%d\",\n" +
+			"	   \"ssids\": [\n" +
+			"		 {\n" +
+			"			\"counters\": {\n" +
+			"        		\"collisions\": 0,\n" +
+			"        		\"multicast\": 6,\n" +
+			"        		\"rx_bytes\": 13759,\n" +
+			"        		\"rx_dropped\": 0,\n" +
+			"        		\"rx_errors\": 0,\n" +
+			"        		\"rx_packets\": 60,\n" +
+			"        		\"tx_bytes\": 7051,\n" +
+			"        		\"tx_dropped\": 0,\n" +
+			"        		\"tx_errors\": 0,\n" +
+			"        		\"tx_packets\": 27\n" +
+			"      		},\n" +
+			"			\"iface\": \"wlan%d\",\n" +
+			"			\"mode\": \"ap\",\n" +
+			"			\"phy\": \"platform/soc/c000000.wifi\",\n" +
+			"           \"radio\": {\n" +
+			"				\"$ref\": \"#/radios/%d\"\n" +
+			"			},\n" +
+			"			\"ssid\": \"OpenWifi_dddd_%d\"\n" +
+			"		 }\n" +
+			"	   ]\n" +
+			"    },\n",
+			index,
+			index,
+			index,
+			index,
+			index
+		);
+		// @formatter:on
+	}
+
 	/** Create a device state object with the given radio channel. */
 	public static State createState(int channel, int channelWidth, String bssid) {
-		return createState(
-			channel, channelWidth, 20, bssid, 1, DEFAULT_CHANNEL_WIDTH, 0, bssid
+		final int numRadios = 1;
+		String ifaceString = createStateInterfaceString(0);
+		StringBuffer stateString = new StringBuffer();
+		// @formatter:off
+		stateString.append(
+			"{\n" +
+			"  \"interfaces\": [\n"
 		);
+		stateString.append(ifaceString);
+		stateString.append(String.format(
+			"    {\n" +
+			"      \"counters\": {\n" +
+			"        \"collisions\": 0,\n" +
+			"        \"multicast\": 0,\n" +
+			"        \"rx_bytes\": 0,\n" +
+			"        \"rx_dropped\": 0,\n" +
+			"        \"rx_errors\": 0,\n" +
+			"        \"rx_packets\": 0,\n" +
+			"        \"tx_bytes\": 4660,\n" +
+			"        \"tx_dropped\": 0,\n" +
+			"        \"tx_errors\": 0,\n" +
+			"        \"tx_packets\": 10\n" +
+			"      },\n" +
+			"      \"location\": \"/interfaces/%d\",\n" +
+			"      \"name\": \"down1v0\"\n" +
+			"    }\n" +
+			"  ],\n" +
+			"  \"radios\": [\n" + // TODO hardcoded one radio
+			"    {\n" +
+			"      \"active_ms\": 564328,\n" +
+			"      \"busy_ms\": 36998,\n" +
+			"      \"noise\": 4294967193,\n" +
+			"      \"phy\": \"platform/soc/c000000.wifi\",\n" +
+			"      \"receive_ms\": 28,\n" +
+			"      \"temperature\": 45,\n" +
+			"      \"transmit_ms\": 4893\n" +
+			"    }\n" +
+			"  ],\n" +
+			"  \"unit\": {\n" +
+			"    \"load\": [\n" +
+			"      0,\n" +
+			"      0,\n" +
+			"      0\n" +
+			"    ],\n" +
+			"    \"localtime\": 1632527275,\n" +
+			"    \"memory\": {\n" +
+			"      \"free\": 788930560,\n" +
+			"      \"total\": 973561856\n" +
+			"    },\n" +
+			"    \"uptime\": 684456\n" +
+			"  }\n" +
+			"}",
+			numRadios
+		));
+		// @formatter:on
+		State state = gson.fromJson(stateString.toString(), State.class);
+		state.radios[0].addProperty("channel", channel);
+		state.radios[0].addProperty("channel_width", channelWidth);
+		state.radios[0].addProperty("tx_power", DEFAULT_CHANNEL_WIDTH);
+		state.interfaces[0].ssids[0].bssid = bssid;
+		return state;
 	}
 
 	/**
@@ -243,88 +352,22 @@ public class TestUtils {
 		int txPowerB,
 		String bssidB
 	) {
+		final int numRadios = 2;
+		String[] ifaceStrings = new String[numRadios];
+		for (int index = 0; index < numRadios; index++) {
+			String ifaceString = createStateInterfaceString(index);
+			ifaceStrings[index] = ifaceString;
+		}
+		StringBuffer stateString = new StringBuffer();
 		// @formatter:off
-		State state = gson.fromJson(
+		stateString.append(
 			"{\n" +
-			"  \"interfaces\": [\n" +
-			"    {\n" +
-			"      \"counters\": {\n" +
-			"        \"collisions\": 0,\n" +
-			"        \"multicast\": 6,\n" +
-			"        \"rx_bytes\": 13759,\n" +
-			"        \"rx_dropped\": 0,\n" +
-			"        \"rx_errors\": 0,\n" +
-			"        \"rx_packets\": 60,\n" +
-			"        \"tx_bytes\": 7051,\n" +
-			"        \"tx_dropped\": 0,\n" +
-			"        \"tx_errors\": 0,\n" +
-			"        \"tx_packets\": 27\n" +
-			"      },\n" +
-			"      \"location\": \"/interfaces/0\",\n" +
-			"      \"name\": \"up0v0\",\n" +
-			"	   \"ssids\": [\n" +
-			"		 {\n" +
-			"			\"counters\": {\n" +
-			"        		\"collisions\": 0,\n" +
-			"        		\"multicast\": 6,\n" +
-			"        		\"rx_bytes\": 13759,\n" +
-			"        		\"rx_dropped\": 0,\n" +
-			"        		\"rx_errors\": 0,\n" +
-			"        		\"rx_packets\": 60,\n" +
-			"        		\"tx_bytes\": 7051,\n" +
-			"        		\"tx_dropped\": 0,\n" +
-			"        		\"tx_errors\": 0,\n" +
-			"        		\"tx_packets\": 27\n" +
-			"      		},\n" +
-			"			\"iface\": \"wlan0\",\n" +
-			"			\"mode\": \"ap\",\n" +
-			"			\"phy\": \"platform/soc/c000000.wifi\",\n" +
-			"           \"radio\": {\n" +
-			"				\"$ref\": \"#/radios/0\"\n" +
-			"			},\n" +
-			"			\"ssid\": \"OpenWifi_dddd_0\"\n" +
-			"		 }\n" +
-			"	   ]\n" +
-			"    },\n" +
-			"    {\n" +
-			"      \"counters\": {\n" +
-			"        \"collisions\": 0,\n" +
-			"        \"multicast\": 6,\n" +
-			"        \"rx_bytes\": 13759,\n" +
-			"        \"rx_dropped\": 0,\n" +
-			"        \"rx_errors\": 0,\n" +
-			"        \"rx_packets\": 60,\n" +
-			"        \"tx_bytes\": 7051,\n" +
-			"        \"tx_dropped\": 0,\n" +
-			"        \"tx_errors\": 0,\n" +
-			"        \"tx_packets\": 27\n" +
-			"      },\n" +
-			"      \"location\": \"/interfaces/1\",\n" +
-			"      \"name\": \"up0v1\",\n" +
-			"	   \"ssids\": [\n" +
-			"		 {\n" +
-			"			\"counters\": {\n" +
-			"        		\"collisions\": 0,\n" +
-			"        		\"multicast\": 6,\n" +
-			"        		\"rx_bytes\": 13759,\n" +
-			"        		\"rx_dropped\": 0,\n" +
-			"        		\"rx_errors\": 0,\n" +
-			"        		\"rx_packets\": 60,\n" +
-			"        		\"tx_bytes\": 7051,\n" +
-			"        		\"tx_dropped\": 0,\n" +
-			"        		\"tx_errors\": 0,\n" +
-			"        		\"tx_packets\": 27\n" +
-			"      		},\n" +
-			"			\"iface\": \"wlan1\",\n" +
-			"			\"mode\": \"ap\",\n" +
-			"			\"phy\": \"platform/soc/c000000.wifi\",\n" +
-			"           \"radio\": {\n" +
-			"				\"$ref\": \"#/radios/1\"\n" +
-			"			},\n" +
-			"			\"ssid\": \"OpenWifi_dddd_1\"\n" +
-			"		 }\n" +
-			"	   ]\n" +
-			"    },\n" +
+			"  \"interfaces\": [\n"
+		);
+		for (String ifaceString : ifaceStrings) {
+			stateString.append(ifaceString);
+		}
+		stateString.append(String.format(
 			"    {\n" +
 			"      \"counters\": {\n" +
 			"        \"collisions\": 0,\n" +
@@ -338,11 +381,11 @@ public class TestUtils {
 			"        \"tx_errors\": 0,\n" +
 			"        \"tx_packets\": 10\n" +
 			"      },\n" +
-			"      \"location\": \"/interfaces/2\",\n" +
+			"      \"location\": \"/interfaces/%d\",\n" +
 			"      \"name\": \"down1v0\"\n" +
 			"    }\n" +
 			"  ],\n" +
-			"  \"radios\": [\n" +
+			"  \"radios\": [\n" + // TODO hardcoded two radios
 			"    {\n" +
 			"      \"active_ms\": 564328,\n" +
 			"      \"busy_ms\": 36998,\n" +
@@ -376,9 +419,10 @@ public class TestUtils {
 			"    \"uptime\": 684456\n" +
 			"  }\n" +
 			"}",
-			State.class
-		);
+			numRadios
+		));
 		// @formatter:on
+		State state = gson.fromJson(stateString.toString(), State.class);
 		state.radios[0].addProperty("channel", channelA);
 		state.radios[0].addProperty("channel_width", channelWidthA);
 		state.radios[0].addProperty("tx_power", txPowerA);
