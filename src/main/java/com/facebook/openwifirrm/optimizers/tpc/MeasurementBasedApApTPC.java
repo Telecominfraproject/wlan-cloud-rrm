@@ -267,6 +267,10 @@ public class MeasurementBasedApApTPC extends TPC {
 			}
 			JsonArray radioStatuses = allStatuses.get(serialNumber).getAsJsonArray();
 			int currentTxPower = getCurrentTxPower(radioStatuses, band);
+			if (currentTxPower == 0) {
+				// this AP is not on the band of interest
+				continue;
+			}
 			String bssid = state.interfaces[0].ssids[0].bssid;
 			List<Integer> rssiValues = bssidToRssiValues.get(bssid);
 			logger.debug("Device <{}> : BSSID <{}>", serialNumber, bssid);
