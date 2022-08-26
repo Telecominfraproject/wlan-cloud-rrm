@@ -43,11 +43,13 @@ public class TestUtils {
 	}
 
 	/**
-	 * Create a radio info entry for the given band and channel.
+	 * Create a radio info object which forms one element of the list of radio
+	 * info objects representing a device's status.
 	 *
-	 * @param band    band
+	 * @param band band (e.g., "2G")
 	 * @param channel channel number
-	 * @return a radio info entry as a {@code JsonObject}
+	 * @param channelWidth channel width in MHz
+	 * @return a radio info object as a {@code JsonObject}
 	 */
 	private static JsonObject createDeviceStatusRadioObject(
 		String band, int channel, int channelWidth
@@ -214,6 +216,15 @@ public class TestUtils {
 		return wifiScanList;
 	}
 
+	/**
+	 * Create the String representation of an element of
+	 * {@link State#interfaces}.
+	 *
+	 * @param index index of this interface in the list of interfaces in a
+	 *              {@link State}
+	 * @return the String representation of a an element of
+	 *         {@link State#interfaces}
+	 */
 	private static String createStateInterfaceString(int index) {
 		// @formatter:off
 		return String.format(
@@ -265,7 +276,14 @@ public class TestUtils {
 		// @formatter:on
 	}
 
-	/** Create a device state object with the given radio channel. */
+	/**
+	 * Create a device state object with one radio.
+	 * 
+	 * @param channel channel number
+	 * @param channelWidth channel width in MHz
+	 * @param bssid bssid
+	 * @return the state of an AP with one radio
+	 */
 	public static State createState(int channel, int channelWidth, String bssid) {
 		final int numRadios = 1;
 		String ifaceString = createStateInterfaceString(0);
@@ -331,16 +349,17 @@ public class TestUtils {
 	}
 
 	/**
-	 * Create a device state object with the two given radio channels.
-	 *
-	 * @param channelA      a channel number
+	 * Create a device state object with one radio.
+	 * 
+	 * @param channelA channel number
 	 * @param channelWidthA channel width (MHz) of channelA
-	 * @param txPowerA      tx power for channelA
-	 * @param channelB      a channel number
+	 * @param txPowerA tx power for channelA
+	 * @param bssidA bssid for radio on channelA
+	 * @param channelB channel number
 	 * @param channelWidthB channel width (MHz) of channelB
-	 * @param txPowerB      tx power for channelB
-	 * @param bssid         bssid
-	 * @return State with given fields
+	 * @param txPowerB tx power for channelB
+	 * @param bssidB bssid for radio on channelB
+	 * @return the state of an AP with two radios
 	 */
 	public static State createState(
 		int channelA,
