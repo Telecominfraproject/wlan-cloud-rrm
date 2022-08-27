@@ -366,12 +366,16 @@ public class TestUtils {
 	 *
 	 * @param channels array of channel numbers
 	 * @param channelWidths array of channel widths (MHz)
+	 * @param txPowers array of tx powers (dBm)
 	 * @param bssids array of BSSIDs
 	 * @return the state of an AP with radios described by the given parameters
 	 */
-	public static State createState(int[] channels, int[] channelWidths, String[] bssids) {
+	public static State createState(
+		int[] channels, int[] channelWidths, int[] txPowers, String[] bssids
+	) {
 		if (!(channels.length == channelWidths.length
-			&& channelWidths.length == bssids.length)
+			&& channelWidths.length == txPowers.length
+			&& txPowers.length == bssids.length)
 		) {
 			throw new IllegalArgumentException(
 				"All arguments must have the same length."
@@ -389,7 +393,7 @@ public class TestUtils {
 			state.radios[i] = createStateRadio();
 			state.radios[i].addProperty("channel", channels[i]);
 			state.radios[i].addProperty("channel_width", channelWidths[i]);
-			state.radios[i].addProperty("tx_power", DEFAULT_CHANNEL_WIDTH);
+			state.radios[i].addProperty("tx_power", txPowers[i]);
 			state.interfaces[i].ssids[0].bssid = bssids[i];
 		}
 		state.unit = createStateUnit();
@@ -406,9 +410,10 @@ public class TestUtils {
 	 */
 	public static State createState(int channel, int channelWidth, String bssid) {
 		return createState(
-			new int[] {channel},
-			new int[] {channelWidth},
-			new String[] {bssid}
+			new int[] { channel },
+			new int[] { channelWidth },
+			new int[] { 20 },
+			new String[] { bssid }
 		);
 	}
 
@@ -436,9 +441,10 @@ public class TestUtils {
 		String bssidB
 	) {
 		return createState(
-			new int[] {channelA, channelB},
-			new int[] {channelWidthA, channelWidthB},
-			new String[] {bssidA, bssidB}
+			new int[] { channelA, channelB },
+			new int[] { channelWidthA, channelWidthB },
+			new int[] { txPowerA, txPowerB },
+			new String[] { bssidA, bssidB }
 		);
 	}
 }
