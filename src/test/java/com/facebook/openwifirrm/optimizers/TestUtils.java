@@ -217,14 +217,14 @@ public class TestUtils {
 	}
 
 	/**
-	 * Create an uplink interface with one radio, to place in
+	 * Create an uplink0 interface with one radio, to place in
 	 * {@link State#interfaces}.
 	 *
-	 * @param index index of this interface in {@link State#interfaces}
+	 * @param index index of this interface
 	 * @return an uplink interface with no radios, to place in
 	 *         {@link State#interfaces}
 	 */
-	private static State.Interface createUp0StateInterface(int index) {
+	private static State.Interface createUpStateInterface(int index) {
 		// @formatter:off
 		return gson.fromJson(
 			String.format(
@@ -279,14 +279,14 @@ public class TestUtils {
 	}
 
 	/**
-	 * Create a downlink interface with no radios, to place in
+	 * Create a downlink1 interface with no radios, to place in
 	 * {@link State#interfaces}.
 	 *
 	 * @param index index of this interface in {@link State#interfaces}
 	 * @return a downlink interface with no radios, to place in
 	 *         {@link State#interfaces}
 	 */
-	private static State.Interface createDown1StateInterface(int index) {
+	private static State.Interface createDownStateInterface(int index) {
 		// @formatter:off
 		return gson.fromJson(
 			String.format(
@@ -381,9 +381,9 @@ public class TestUtils {
 		State state = new State();
 		state.interfaces = new State.Interface[numRadios + 1];
 		for (int index = 0; index < numRadios; index++) {
-			state.interfaces[index] = createUp0StateInterface(0);
+			state.interfaces[index] = createUpStateInterface(index);
 		}
-		state.interfaces[numRadios] = createDown1StateInterface(1);
+		state.interfaces[numRadios] = createDownStateInterface(numRadios);
 		state.radios = new JsonObject[numRadios];
 		for (int i = 0; i < numRadios; i++) {
 			state.radios[i] = createStateRadio();
@@ -413,7 +413,7 @@ public class TestUtils {
 	}
 
 	/**
-	 * Create a device state object with one radio.
+	 * Create a device state object with two radios.
 	 *
 	 * @param channelA channel number
 	 * @param channelWidthA channel width (MHz) of channelA
