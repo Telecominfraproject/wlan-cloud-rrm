@@ -117,7 +117,7 @@ public class MeasurementBasedApApTPC extends TPC {
 	 *
 	 * @param latestDeviceStatus JsonArray containing radio config for the AP
 	 * @param band "2G" or "5G"
-	 * @return the tx power, or 0 if none found
+	 * @return the tx power, or -1 if none found
 	 */
 	protected static int getCurrentTxPower(JsonArray latestDeviceStatus, String band) {
 		for (JsonElement e : latestDeviceStatus) {
@@ -130,7 +130,7 @@ public class MeasurementBasedApApTPC extends TPC {
 				return radioObject.get("tx-power").getAsInt();
 			}
 		}
-		return 0;
+		return -1;
 	}
 
 	/**
@@ -267,7 +267,7 @@ public class MeasurementBasedApApTPC extends TPC {
 			}
 			JsonArray radioStatuses = allStatuses.get(serialNumber).getAsJsonArray();
 			int currentTxPower = getCurrentTxPower(radioStatuses, band);
-			if (currentTxPower == 0) {
+			if (currentTxPower < 0) {
 				// this AP is not on the band of interest
 				continue;
 			}
