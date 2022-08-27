@@ -32,6 +32,9 @@ public class TestUtils {
 	/** Default value for {@link WifiScanEntry#unixTimeMs} for testing. */
 	public static final Instant DEFAULT_WIFISCANENTRY_TIME = Instant.parse("2022-01-01T00:00:00Z");
 
+	/** Default channel width in MHz */
+	public static final int DEFAULT_CHANNEL_WIDTH = 20;
+
 	/** Create a topology from the given devices in a single zone. */
 	public static DeviceTopology createTopology(String zone, String... devices) {
 		DeviceTopology topology = new DeviceTopology();
@@ -40,21 +43,24 @@ public class TestUtils {
 	}
 
 	/**
-	 * Create a radio info entry for the given band and channel.
+	 * Create a radio info object which forms one element of the list of radio
+	 * info objects representing a device's status.
 	 *
-	 * @param band    band
+	 * @param band band (e.g., "2G")
 	 * @param channel channel number
-	 * @return a radio info entry as a {@code JsonObject}
+	 * @param channelWidth channel width in MHz
+	 * @return a radio info object as a {@code JsonObject}
 	 */
 	private static JsonObject createDeviceStatusRadioObject(
-		String band, int channel
+		String band, int channel, int channelWidth
 	) {
 		return gson.fromJson(
 			String.format(
 				"{\"band\": %s,\"channel\": %d,\"channel-mode\":\"HE\","
-					+ "\"channel-width\":20,\"country\":\"CA\",\"tx-power\":20}",
+					+ "\"channel-width\":%d,\"country\":\"CA\",\"tx-power\":20}",
 				band,
-				channel
+				channel,
+				channelWidth
 			),
 			JsonObject.class
 		);
@@ -66,7 +72,9 @@ public class TestUtils {
 	 */
 	public static JsonArray createDeviceStatus(String band, int channel) {
 		JsonArray jsonList = new JsonArray();
-		jsonList.add(createDeviceStatusRadioObject(band, channel));
+		jsonList.add(createDeviceStatusRadioObject(
+			band, channel, DEFAULT_CHANNEL_WIDTH
+		));
 		return jsonList;
 	}
 
@@ -78,7 +86,9 @@ public class TestUtils {
 		JsonArray jsonList = new JsonArray();
 		for (String band : bands) {
 			int channel = UCentralUtils.LOWER_CHANNEL_LIMIT.get(band);
-			jsonList.add(createDeviceStatusRadioObject(band, channel));
+			jsonList.add(createDeviceStatusRadioObject(
+				band, channel, DEFAULT_CHANNEL_WIDTH
+			));
 		}
 		return jsonList;
 	}
@@ -91,12 +101,14 @@ public class TestUtils {
 		JsonArray jsonList = gson.fromJson(
 			String.format(
 				"[{\"band\": \"2G\",\"channel\": %d,\"channel-mode\":\"HE\"," +
-				"\"channel-width\":20,\"country\":\"CA\",\"tx-power\":%d}," +
+				"\"channel-width\":%d,\"country\":\"CA\",\"tx-power\":%d}," +
 				"{\"band\": \"5G\",\"channel\": %d,\"channel-mode\":\"HE\"," +
-				"\"channel-width\":20,\"country\":\"CA\",\"tx-power\":%d}]",
+				"\"channel-width\":%d,\"country\":\"CA\",\"tx-power\":%d}]",
 				channel2G,
+				DEFAULT_CHANNEL_WIDTH,
 				txPower2G,
 				channel5G,
+				DEFAULT_CHANNEL_WIDTH,
 				txPower5G
 			),
 			JsonArray.class
@@ -204,113 +216,128 @@ public class TestUtils {
 		return wifiScanList;
 	}
 
-	/** Create a device state object with the given radio channel. */
-	public static State createState(int channel, int channelWidth, String bssid) {
-		return createState(channel, channelWidth, 20, 1, 20, 0, bssid);
+	/**
+	 * Create an uplink0 interface with one radio, to place in
+	 * {@link State#interfaces}.
+	 *
+	 * @param index index of this interface
+	 * @return an uplink interface with no radios, to place in
+	 *         {@link State#interfaces}
+	 */
+	private static State.Interface createUpStateInterface(int index) {
+		// @formatter:off
+		return gson.fromJson(
+			String.format(
+				"    {\n" +
+				"      \"counters\": {\n" +
+				"        \"collisions\": 0,\n" +
+				"        \"multicast\": 6,\n" +
+				"        \"rx_bytes\": 13759,\n" +
+				"        \"rx_dropped\": 0,\n" +
+				"        \"rx_errors\": 0,\n" +
+				"        \"rx_packets\": 60,\n" +
+				"        \"tx_bytes\": 7051,\n" +
+				"        \"tx_dropped\": 0,\n" +
+				"        \"tx_errors\": 0,\n" +
+				"        \"tx_packets\": 27\n" +
+				"      },\n" +
+				"      \"location\": \"/interfaces/%d\",\n" +
+				"      \"name\": \"up0v%d\",\n" +
+				"	   \"ssids\": [\n" +
+				"		 {\n" +
+				"			\"counters\": {\n" +
+				"        		\"collisions\": 0,\n" +
+				"        		\"multicast\": 6,\n" +
+				"        		\"rx_bytes\": 13759,\n" +
+				"        		\"rx_dropped\": 0,\n" +
+				"        		\"rx_errors\": 0,\n" +
+				"        		\"rx_packets\": 60,\n" +
+				"        		\"tx_bytes\": 7051,\n" +
+				"        		\"tx_dropped\": 0,\n" +
+				"        		\"tx_errors\": 0,\n" +
+				"        		\"tx_packets\": 27\n" +
+				"      		},\n" +
+				"			\"iface\": \"wlan%d\",\n" +
+				"			\"mode\": \"ap\",\n" +
+				"			\"phy\": \"platform/soc/c000000.wifi\",\n" +
+				"           \"radio\": {\n" +
+				"				\"$ref\": \"#/radios/%d\"\n" +
+				"			},\n" +
+				"			\"ssid\": \"OpenWifi_dddd_%d\"\n" +
+				"		 }\n" +
+				"	   ]\n" +
+				"    }\n",
+				index,
+				index,
+				index,
+				index,
+				index
+			),
+			State.Interface.class
+		);
+		// @formatter:on
 	}
 
 	/**
-	 * Create a device state object with the two given radio channels.
+	 * Create a downlink1 interface with no radios, to place in
+	 * {@link State#interfaces}.
 	 *
-	 * @param channelA      a channel number
-	 * @param channelWidthA channel width (MHz) of channelA
-	 * @param txPowerA      tx power for channelA
-	 * @param channelB      a channel number
-	 * @param channelWidthB channel width (MHz) of channelB
-	 * @param txPowerB      tx power for channelB
-	 * @param bssid         bssid
-	 * @return State with given fields
+	 * @param index index of this interface in {@link State#interfaces}
+	 * @return a downlink interface with no radios, to place in
+	 *         {@link State#interfaces}
 	 */
-	public static State createState(
-		int channelA,
-		int channelWidthA,
-		int txPowerA,
-		int channelB,
-		int channelWidthB,
-		int txPowerB,
-		String bssid
-	) {
+	private static State.Interface createDownStateInterface(int index) {
 		// @formatter:off
-		State state = gson.fromJson(
-			"{\n" +
-			"  \"interfaces\": [\n" +
-			"    {\n" +
-			"      \"counters\": {\n" +
-			"        \"collisions\": 0,\n" +
-			"        \"multicast\": 6,\n" +
-			"        \"rx_bytes\": 13759,\n" +
-			"        \"rx_dropped\": 0,\n" +
-			"        \"rx_errors\": 0,\n" +
-			"        \"rx_packets\": 60,\n" +
-			"        \"tx_bytes\": 7051,\n" +
-			"        \"tx_dropped\": 0,\n" +
-			"        \"tx_errors\": 0,\n" +
-			"        \"tx_packets\": 27\n" +
-			"      },\n" +
-			"      \"location\": \"/interfaces/0\",\n" +
-			"      \"name\": \"up0v0\",\n" +
-			"	   \"ssids\": [\n" +
-			"		 {\n" +
-			"			\"counters\": {\n" +
-			"        		\"collisions\": 0,\n" +
-			"        		\"multicast\": 6,\n" +
-			"        		\"rx_bytes\": 13759,\n" +
-			"        		\"rx_dropped\": 0,\n" +
-			"        		\"rx_errors\": 0,\n" +
-			"        		\"rx_packets\": 60,\n" +
-			"        		\"tx_bytes\": 7051,\n" +
-			"        		\"tx_dropped\": 0,\n" +
-			"        		\"tx_errors\": 0,\n" +
-			"        		\"tx_packets\": 27\n" +
-			"      		},\n" +
-			"			\"iface\": \"wlan0\",\n" +
-			"			\"mode\": \"ap\",\n" +
-			"			\"phy\": \"platform/soc/c000000.wifi\",\n" +
-			"           \"radio\": {\n" +
-			"				\"$ref\": \"#/radios/0\"\n" +
-			"			},\n" +
-			"			\"ssid\": \"OpenWifi_dddd\"\n" +
-			"		}\n" +
-			"	 ]\n" +
-			"    },\n" +
-			"    {\n" +
-			"      \"counters\": {\n" +
-			"        \"collisions\": 0,\n" +
-			"        \"multicast\": 0,\n" +
-			"        \"rx_bytes\": 0,\n" +
-			"        \"rx_dropped\": 0,\n" +
-			"        \"rx_errors\": 0,\n" +
-			"        \"rx_packets\": 0,\n" +
-			"        \"tx_bytes\": 4660,\n" +
-			"        \"tx_dropped\": 0,\n" +
-			"        \"tx_errors\": 0,\n" +
-			"        \"tx_packets\": 10\n" +
-			"      },\n" +
-			"      \"location\": \"/interfaces/1\",\n" +
-			"      \"name\": \"down1v0\"\n" +
-			"    }\n" +
-			"  ],\n" +
-			"  \"radios\": [\n" +
-			"    {\n" +
-			"      \"active_ms\": 564328,\n" +
-			"      \"busy_ms\": 36998,\n" +
-			"      \"noise\": 4294967193,\n" +
-			"      \"phy\": \"platform/soc/c000000.wifi\",\n" +
-			"      \"receive_ms\": 28,\n" +
-			"      \"temperature\": 45,\n" +
-			"      \"transmit_ms\": 4893\n" +
-			"    },\n" +
-			"    {\n" +
-			"      \"active_ms\": 564328,\n" +
-			"      \"busy_ms\": 36998,\n" +
-			"      \"noise\": 4294967193,\n" +
-			"      \"phy\": \"platform/soc/c000000.wifi\",\n" +
-			"      \"receive_ms\": 28,\n" +
-			"      \"temperature\": 45,\n" +
-			"      \"transmit_ms\": 4893\n" +
-			"    }\n" +
-			"  ],\n" +
-			"  \"unit\": {\n" +
+		return gson.fromJson(
+			String.format(
+				"    {\n" +
+				"      \"counters\": {\n" +
+				"        \"collisions\": 0,\n" +
+				"        \"multicast\": 0,\n" +
+				"        \"rx_bytes\": 0,\n" +
+				"        \"rx_dropped\": 0,\n" +
+				"        \"rx_errors\": 0,\n" +
+				"        \"rx_packets\": 0,\n" +
+				"        \"tx_bytes\": 4660,\n" +
+				"        \"tx_dropped\": 0,\n" +
+				"        \"tx_errors\": 0,\n" +
+				"        \"tx_packets\": 10\n" +
+				"      },\n" +
+				"      \"location\": \"/interfaces/%d\",\n" +
+				"      \"name\": \"down1v0\"\n" +
+				"    }\n",
+				index
+			),
+			State.Interface.class
+		);
+		// @formatter:on
+	}
+
+	/** Create an element of {@link State#radios}. */
+	private static JsonObject createStateRadio() {
+		// @formatter:off
+		return gson.fromJson(
+			String.format(
+				"    {\n" +
+				"      \"active_ms\": 564328,\n" +
+				"      \"busy_ms\": 36998,\n" +
+				"      \"noise\": 4294967193,\n" +
+				"      \"phy\": \"platform/soc/c000000.wifi\",\n" +
+				"      \"receive_ms\": 28,\n" +
+				"      \"temperature\": 45,\n" +
+				"      \"transmit_ms\": 4893\n" +
+				"    }\n"
+			),
+			JsonObject.class
+		);
+		// @formatter:on
+	}
+
+	/** Create a {@code State.Unit}. */
+	private static State.Unit createStateUnit() {
+		// @formatter:off
+		return gson.fromJson(
+			"  {\n" +
 			"    \"load\": [\n" +
 			"      0,\n" +
 			"      0,\n" +
@@ -322,18 +349,96 @@ public class TestUtils {
 			"      \"total\": 973561856\n" +
 			"    },\n" +
 			"    \"uptime\": 684456\n" +
-			"  }\n" +
-			"}",
-			State.class
+			"  }\n",
+			State.Unit.class
 		);
 		// @formatter:on
-		state.radios[0].addProperty("channel", channelA);
-		state.radios[0].addProperty("channel_width", channelWidthA);
-		state.radios[0].addProperty("tx_power", txPowerA);
-		state.radios[1].addProperty("channel", channelB);
-		state.radios[1].addProperty("channel_width", channelWidthB);
-		state.radios[1].addProperty("tx_power", txPowerB);
-		state.interfaces[0].ssids[0].bssid = bssid;
+	}
+
+	/**
+	 * Create a state with the appropriate interfaces and radios for the given
+	 * channels with the associated channel widths and bssids.
+	 * <p>
+	 * All arguments must have the same length, and an index represents the
+	 * details of a radio (e.g., the first radio is on {@code channels[0]} with
+	 * a channel width of {@code channelWidths[0]} and its bssid is
+	 * {@code bssids[0]}).
+	 *
+	 * @param channels array of channel numbers
+	 * @param channelWidths array of channel widths (MHz)
+	 * @param bssids array of BSSIDs
+	 * @return the state of an AP with radios described by the given parameters
+	 */
+	public static State createState(int[] channels, int[] channelWidths, String[] bssids) {
+		if (!(channels.length == channelWidths.length
+			&& channelWidths.length == bssids.length)
+		) {
+			throw new IllegalArgumentException(
+				"All arguments must have the same length."
+			);
+		}
+		final int numRadios = channels.length;
+		State state = new State();
+		state.interfaces = new State.Interface[numRadios + 1];
+		for (int index = 0; index < numRadios; index++) {
+			state.interfaces[index] = createUpStateInterface(index);
+		}
+		state.interfaces[numRadios] = createDownStateInterface(numRadios);
+		state.radios = new JsonObject[numRadios];
+		for (int i = 0; i < numRadios; i++) {
+			state.radios[i] = createStateRadio();
+			state.radios[i].addProperty("channel", channels[i]);
+			state.radios[i].addProperty("channel_width", channelWidths[i]);
+			state.radios[i].addProperty("tx_power", DEFAULT_CHANNEL_WIDTH);
+			state.interfaces[i].ssids[0].bssid = bssids[i];
+		}
+		state.unit = createStateUnit();
 		return state;
+	}
+
+	/**
+	 * Create a device state object with one radio.
+	 *
+	 * @param channel channel number
+	 * @param channelWidth channel width in MHz
+	 * @param bssid bssid
+	 * @return the state of an AP with one radio
+	 */
+	public static State createState(int channel, int channelWidth, String bssid) {
+		return createState(
+			new int[] {channel},
+			new int[] {channelWidth},
+			new String[] {bssid}
+		);
+	}
+
+	/**
+	 * Create a device state object with two radios.
+	 *
+	 * @param channelA channel number
+	 * @param channelWidthA channel width (MHz) of channelA
+	 * @param txPowerA tx power for channelA
+	 * @param bssidA bssid for radio on channelA
+	 * @param channelB channel number
+	 * @param channelWidthB channel width (MHz) of channelB
+	 * @param txPowerB tx power for channelB
+	 * @param bssidB bssid for radio on channelB
+	 * @return the state of an AP with two radios
+	 */
+	public static State createState(
+		int channelA,
+		int channelWidthA,
+		int txPowerA,
+		String bssidA,
+		int channelB,
+		int channelWidthB,
+		int txPowerB,
+		String bssidB
+	) {
+		return createState(
+			new int[] {channelA, channelB},
+			new int[] {channelWidthA, channelWidthB},
+			new String[] {bssidA, bssidB}
+		);
 	}
 }
