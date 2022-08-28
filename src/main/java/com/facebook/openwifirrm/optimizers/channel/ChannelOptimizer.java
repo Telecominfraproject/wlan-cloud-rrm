@@ -251,8 +251,6 @@ public abstract class ChannelOptimizer {
 		Map<String, List<String>> bandsMap
 	) {
 		Map<String, List<WifiScanEntry>> deviceToWifiScans = new HashMap<>();
-		int maxChannel = UCentralUtils.UPPER_CHANNEL_LIMIT.get(band);
-		int minChannel = UCentralUtils.LOWER_CHANNEL_LIMIT.get(band);
 
 		for (
 			Map.Entry<String, List<List<WifiScanEntry>>> e :
@@ -286,7 +284,7 @@ public abstract class ChannelOptimizer {
 			List<WifiScanEntry> scanResps = wifiScanList.get(wifiScanList.size() - 1);
 			List<WifiScanEntry> scanRespsFiltered = new ArrayList<WifiScanEntry>();
 			for (WifiScanEntry entry : scanResps) {
-				if (entry.channel <= maxChannel && entry.channel >= minChannel) {
+				if (UCentralUtils.isChannelInBand(entry.channel, band)) {
 					int channelWidth = getChannelWidthFromWiFiScan(
 						entry.channel,
 						entry.ht_oper,
@@ -332,8 +330,6 @@ public abstract class ChannelOptimizer {
 		String serialNumber,
 		State state
 	) {
-		int maxChannel = UCentralUtils.UPPER_CHANNEL_LIMIT.get(band);
-		int minChannel = UCentralUtils.LOWER_CHANNEL_LIMIT.get(band);
 		int currentChannel = 0;
 		int currentChannelWidth = MIN_CHANNEL_WIDTH;
 		// Use the channel value to check the corresponding radio for the band
@@ -345,7 +341,7 @@ public abstract class ChannelOptimizer {
 			int tempChannel = state.radios[radioIndex]
 				.get("channel")
 				.getAsInt();
-			if (tempChannel <= maxChannel && tempChannel >= minChannel) {
+			if (UCentralUtils.isChannelInBand(tempChannel, band)) {
 				currentChannel = tempChannel;
 				currentChannelWidth = state.radios[radioIndex]
 					.get("channel_width")
