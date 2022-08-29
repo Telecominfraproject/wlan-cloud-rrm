@@ -69,52 +69,37 @@ public class RandomTxPowerInitializerTest {
 			createModel(),
 			TEST_ZONE,
 			createDeviceDataManager(),
-			false,
 			new Random(0)
 		);
 
 		Map<String, Map<String, Integer>> txPowerMap =
 			optimizer.computeTxPowerMap();
 
-		// first generated random number for seed of 0
-		int txPower = 2;
-		for (String band : UCentralConstants.BANDS) {
-			assertEquals(txPower, txPowerMap.get(DEVICE_A).get(band));
-			assertEquals(txPower, txPowerMap.get(DEVICE_B).get(band));
-		}
+		assertEquals(
+			20,
+			txPowerMap.get(DEVICE_A).get(UCentralConstants.BAND_2G)
+		);
+		assertEquals(
+			11,
+			txPowerMap.get(DEVICE_A).get(UCentralConstants.BAND_5G)
+		);
+		assertEquals(
+			2,
+			txPowerMap.get(DEVICE_B).get(UCentralConstants.BAND_2G)
+		);
+		assertEquals(
+			2,
+			txPowerMap.get(DEVICE_B).get(UCentralConstants.BAND_5G)
+		);
 	}
 
 	@Test
 	@Order(2)
-	void testRandomTxPower() throws Exception {
-		TPC optimizer = new RandomTxPowerInitializer(
-			createModel(),
-			TEST_ZONE,
-			createDeviceDataManager()
-		);
-		Map<String, Map<String, Integer>> txPowerMap =
-			optimizer.computeTxPowerMap();
-		Set<Integer> txPowerSet = new TreeSet<>();
-		for (String serialNumber : txPowerMap.keySet()) {
-			txPowerSet.addAll(txPowerMap.get(serialNumber).values());
-		}
-		// One unique tx power for all devices and bands
-		assertEquals(1, txPowerSet.size());
-		for (int txPower : txPowerSet) {
-			assertTrue(
-				txPower >= TPC.MIN_TX_POWER && txPower <= TPC.MAX_TX_POWER
-			);
-		}
-	}
-
-	@Test
-	@Order(3)
-	void testRandomTxPowerPerAp() throws Exception {
+	void testRandomTxPowerInAvailableList() throws Exception {
 		TPC optimizer = new RandomTxPowerInitializer(
 			createModel(),
 			TEST_ZONE,
 			createDeviceDataManager(),
-			true,
 			new Random(0)
 		);
 		Map<String, Map<String, Integer>> txPowerMap =

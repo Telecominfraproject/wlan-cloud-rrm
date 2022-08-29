@@ -69,7 +69,7 @@ public class DeviceConfig {
 	 */
 	public Map<String, List<Integer>> allowedTxPowers;
 
-	/** The RRM-assigned tx powers to use (map from radio to tx power) */
+	/** The RRM-assigned tx powers to use (map from band to tx power) */
 	public Map<String, Integer> autoTxPowers;
 
 	/** The user-assigned tx powers to use, overriding "autoTxPowers" */

@@ -8,22 +8,36 @@
 
 package com.facebook.openwifirrm.optimizers.tpc;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import com.facebook.openwifirrm.DeviceConfig;
 import com.facebook.openwifirrm.DeviceDataManager;
 import com.facebook.openwifirrm.modules.ConfigManager;
 import com.facebook.openwifirrm.modules.Modeler.DataModel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * TPC (Transmit Power Control) base class.
  */
 public abstract class TPC {
+	private static final Logger logger = LoggerFactory.getLogger(TPC.class);
+
 	/** Minimum supported tx power (dBm), inclusive. */
 	public static final int MIN_TX_POWER = 0;
 
 	/** Maximum supported tx power (dBm), inclusive. */
 	public static final int MAX_TX_POWER = 30;
+
+	public static final List<Integer> DEFAULT_TX_POWERS_LIST = IntStream
+		.rangeClosed(MIN_TX_POWER, MAX_TX_POWER)
+		.boxed()
+		.collect(Collectors.toList());
 
 	/** The input data model. */
 	protected final DataModel model;
@@ -44,8 +58,6 @@ public abstract class TPC {
 		this.zone = zone;
 		this.deviceConfigs = deviceDataManager.getAllDeviceConfigs(zone);
 
-		// TODO!! Actually use device configs (allowedTxPowers, userTxPowers)
-
 		// Remove model entries not in the given zone
 		this.model.latestWifiScans.keySet()
 			.removeIf(serialNumber -> !deviceConfigs.containsKey(serialNumber)
@@ -59,6 +71,67 @@ public abstract class TPC {
 		this.model.latestDeviceCapabilities.keySet()
 			.removeIf(serialNumber -> !deviceConfigs.containsKey(serialNumber)
 			);
+	}
+
+	/**
+	 * Get the available tx powers based on user and allowed channels from deviceConfig
+	 * @param band the operational band
+	 * @param serialNumber the device
+	 * @return the available tx powers of the device
+	 */
+	protected List<Integer> getAvailableTxPowersList(
+		String band,
+		String serialNumber
+	) {
+		List<Integer> newAvailableTxPowersList =
+			new ArrayList<>(DEFAULT_TX_POWERS_LIST);
+
+		// Update the available tx powers based on user tx powers or allowed tx powers
+		DeviceConfig deviceCfg = deviceConfigs.get(serialNumber);
+		if (deviceCfg == null) {
+			return newAvailableTxPowersList;
+		}
+		if (
+			deviceCfg.userTxPowers != null &&
+				deviceCfg.userTxPowers.get(band) != null
+		) {
+			newAvailableTxPowersList = Arrays.asList(
+				deviceCfg.userTxPowers.get(band)
+			);
+			logger.debug(
+				"Device {}: userTxPowers {}",
+				serialNumber,
+				deviceCfg.userTxPowers.get(band)
+			);
+		} else if (
+			deviceCfg.allowedTxPowers != null &&
+				deviceCfg.allowedTxPowers.get(band) != null
+		) {
+			List<Integer> allowedTxPowers = deviceCfg.allowedTxPowers.get(band);
+			logger.debug(
+				"Device {}: allowedTxPowers {}",
+				serialNumber,
+				allowedTxPowers
+			);
+			newAvailableTxPowersList.retainAll(allowedTxPowers);
+		}
+
+		// If the intersection of the above steps gives an empty list,
+		// turn back to use the default available tx powers list
+		if (newAvailableTxPowersList.isEmpty()) {
+			logger.debug(
+				"Device {}: the updated availableTxPowersList is empty!!! " +
+					"userTxPowers or allowedTxPowers might be invalid " +
+					"Fall back to the default available tx powers list"
+			);
+			newAvailableTxPowersList = new ArrayList<>(DEFAULT_TX_POWERS_LIST);
+		}
+		logger.debug(
+			"Device {}: the updated availableTxPowersList is {}",
+			serialNumber,
+			newAvailableTxPowersList
+		);
+		return newAvailableTxPowersList;
 	}
 
 	/**
