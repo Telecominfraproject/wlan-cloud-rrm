@@ -244,7 +244,7 @@ public class RRMConfig {
 			 * automatic scans)
 			 * ({@code DATACOLLECTORPARAMS_WIFISCANINTERVALSEC})
 			 */
-			public int wifiScanIntervalSec = 60;
+			public int wifiScanIntervalSec = 900;
 
 			/**
 			 * The capabilities request interval (per device), in seconds
