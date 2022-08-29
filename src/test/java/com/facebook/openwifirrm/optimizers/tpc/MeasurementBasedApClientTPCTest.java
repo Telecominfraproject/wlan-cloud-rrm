@@ -23,47 +23,11 @@ import com.facebook.openwifirrm.DeviceDataManager;
 import com.facebook.openwifirrm.modules.Modeler.DataModel;
 import com.facebook.openwifirrm.optimizers.TestUtils;
 import com.facebook.openwifirrm.ucentral.UCentralConstants;
-import com.facebook.openwifirrm.ucentral.models.State;
-import com.google.gson.JsonObject;
 
 @TestMethodOrder(OrderAnnotation.class)
 public class MeasurementBasedApClientTPCTest {
 	/** Test zone name. */
 	private static final String TEST_ZONE = "test-zone";
-
-	/** Create a device state object containing the given parameters. */
-	private State createState(
-		String serialNumber, int curTxPower, int bandwidth, int[] channels, int... clientRssi
-	) {
-		State state = new State();
-		state.radios = new JsonObject[channels.length];
-		int curIndex = 0;
-		for (int channel : channels) {
-			JsonObject radio = new JsonObject();
-			radio.addProperty("channel", channel);
-			radio.addProperty(
-				"channel_width", Integer.toString(bandwidth)
-			);
-			radio.addProperty("tx_power", curTxPower);
-			state.radios[curIndex] = radio;
-			curIndex += 1;
-		}
-		state.interfaces = new State.Interface[] { state.new Interface() };
-		state.interfaces[0].ssids = new State.Interface.SSID[] {
-			state.interfaces[0].new SSID()
-		};
-		state.interfaces[0].ssids[0].ssid = "test-ssid-" + serialNumber;
-		state.interfaces[0].ssids[0].associations =
-			new State.Interface.SSID.Association[clientRssi.length];
-		for (int i = 0; i < clientRssi.length; i++) {
-			State.Interface.SSID.Association client =
-				state.interfaces[0].ssids[0].new Association();
-			client.bssid = client.station = "test-client-" + i;
-			client.rssi = clientRssi[i];
-			state.interfaces[0].ssids[0].associations[i] = client;
-		}
-		return state;
-	}
 
 	@Test
 	@Order(1)
@@ -84,23 +48,23 @@ public class MeasurementBasedApClientTPCTest {
 		DataModel dataModel = new DataModel();
 		dataModel.latestState.put(
 			deviceA,
-			createState(deviceA, 20 /*txPower*/, 20 /*bandwidth*/, new int[] {36} /*channel*/)
+			TestUtils.createState(36, 20, 20, null, new int[] {})
 		);
 		dataModel.latestState.put(
 			deviceB,
-			createState(deviceB, 20 /*txPower*/, 20 /*bandwidth*/, new int[] {36}, -65)
+			TestUtils.createState(36, 20, 20, "", new int[] {-65})
 		);
 		dataModel.latestState.put(
 			deviceC,
-			createState(deviceC, 21 /*txPower*/, 40 /*bandwidth*/, new int[] {36}, -65, -73, -58)
+			TestUtils.createState(36,40, 21, null, new int[] {-65, -73, -58})
 		);
 		dataModel.latestState.put(
 			deviceD,
-			createState(deviceD, 22 /*txPower*/, 20 /*bandwidth*/, new int[] {36},-80)
+			TestUtils.createState(36, 20, 22, null, new int[] {-80})
 		);
 		dataModel.latestState.put(
 			deviceE,
-			createState(deviceE, 23 /*txPower*/, 20 /*bandwidth*/, new int[] {36}, -45)
+			TestUtils.createState(36, 20, 23, null, new int[] {-45})
 		);
 
 		TPC optimizer = new MeasurementBasedApClientTPC(dataModel, TEST_ZONE, deviceDataManager);
@@ -142,22 +106,22 @@ public class MeasurementBasedApClientTPCTest {
 		// 2G only
 		dataModel.latestState.put(
 			deviceA,
-			createState(deviceA, 20 /*txPower*/, 20 /*bandwidth*/, new int[]{2} /*channel*/)
+			TestUtils.createState(1, 20, 20, null, new int[] {})
 		);
 		// 5G only
 		dataModel.latestState.put(
 			deviceB,
-			createState(deviceB, 20 /*txPower*/, 20 /*bandwidth*/, new int[]{36} /*channel*/)
+			TestUtils.createState(36, 20, 20, null, new int[] {})
 		);
 		// 2G and 5G
 		dataModel.latestState.put(
 			deviceC,
-			createState(deviceC, 20 /*txPower*/, 20 /*bandwidth*/, new int[]{2, 36} /*channel*/)
+			TestUtils.createState(1, 20, 20, null, new int[] {}, 36, 20, 20, null, new int[] {})
 		);
 		// No valid bands in 2G or 5G
 		dataModel.latestState.put(
 			deviceD,
-			createState(deviceA, 20 /*txPower*/, 20 /*bandwidth*/, new int[]{25} /*channel*/)
+			TestUtils.createState(25, 20, 20, null, new int[] {})
 		);
 
 		TPC optimizer = new MeasurementBasedApClientTPC(dataModel, TEST_ZONE, deviceDataManager);

@@ -108,7 +108,7 @@ public class MeasurementBasedApClientTPC extends TPC {
 		return SNR_min + currentTxPower - clientRssi + NP + NF - M;
 	}
 
-	/** Compute adjusted tx power (dBm) for the given radio. */
+	/** Compute new tx power (dBm) for the given radio. */
 	private int computeTxPowerForRadio(
 		String serialNumber, State state, JsonObject radio
 	) {
