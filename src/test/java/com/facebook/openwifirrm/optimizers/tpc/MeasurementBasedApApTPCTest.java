@@ -102,10 +102,12 @@ public class MeasurementBasedApApTPCTest {
 		model.latestDeviceStatus.put(
 			DEVICE_C,
 			deviceCIn5G
-				? TestUtils.createDeviceStatusDualBand(1, MAX_TX_POWER, 36,
-					MAX_TX_POWER)
-				: TestUtils.createDeviceStatus(UCentralConstants.BAND_2G, 1,
-					MAX_TX_POWER)
+				? TestUtils.createDeviceStatusDualBand(
+					1, MAX_TX_POWER, 36, MAX_TX_POWER
+				)
+				: TestUtils.createDeviceStatus(
+					UCentralConstants.BAND_2G, 1, MAX_TX_POWER
+				)
 		);
 
 		return model;
@@ -178,12 +180,14 @@ public class MeasurementBasedApApTPCTest {
 	 */
 	private static Map<String, List<List<WifiScanEntry>>> createLatestWifiScansWithMissingEntries(int channel) {
 		Map<String, Integer> rssiFromA = Map.ofEntries(Map.entry(BSSID_B, -38));
-		List<WifiScanEntry> wifiScanA = TestUtils
-			.createWifiScanListWithBssid(rssiFromA, channel);
+		List<WifiScanEntry> wifiScanA = TestUtils.createWifiScanListWithBssid(
+			rssiFromA, channel
+		);
 
 		Map<String, Integer> rssiFromB = Map.ofEntries(Map.entry(BSSID_A, -39));
-		List<WifiScanEntry> wifiScanB = TestUtils
-			.createWifiScanListWithBssid(rssiFromB, channel);
+		List<WifiScanEntry> wifiScanB = TestUtils.createWifiScanListWithBssid(
+			rssiFromB, channel
+		);
 
 		Map<String, List<List<WifiScanEntry>>> latestWifiScans = new HashMap<>();
 		latestWifiScans.put(DEVICE_A, List.of(wifiScanA));
@@ -356,9 +360,12 @@ public class MeasurementBasedApApTPCTest {
 			String serialNumber = mapEntry.getKey();
 			List<WifiScanEntry> entriesToMerge = mapEntry.getValue().get(0);
 			dataModel.latestWifiScans
-				.computeIfAbsent(serialNumber,
-					k -> new ArrayList<List<WifiScanEntry>>())
-				.get(0).addAll(entriesToMerge);
+				.computeIfAbsent(
+					serialNumber,
+					k -> new ArrayList<List<WifiScanEntry>>()
+				)
+				.get(0)
+				.addAll(entriesToMerge);
 		}
 
 		MeasurementBasedApApTPC optimizer = new MeasurementBasedApApTPC(dataModel, TEST_ZONE, deviceDataManager, -80, 0);
