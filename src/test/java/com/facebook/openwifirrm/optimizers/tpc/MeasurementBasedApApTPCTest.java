@@ -79,10 +79,9 @@ public class MeasurementBasedApApTPCTest {
 	 * Creates a data model with 3 devices. All are at max_tx_power, which
 	 * represents the first step in greedy TPC.
 	 *
-	 * @param deviceCIn5G true if device C should operate in the 5G band
 	 * @return a data model
 	 */
-	private static DataModel createModel(boolean deviceCIn5G) {
+	private static DataModel createModel() {
 		DataModel model = new DataModel();
 
 		State stateA = TestUtils.createState(1, DEFAULT_CHANNEL_WIDTH,
@@ -99,16 +98,7 @@ public class MeasurementBasedApApTPCTest {
 
 		model.latestDeviceStatus.put(DEVICE_A, TestUtils.createDeviceStatusDualBand(1, MAX_TX_POWER, 36, MAX_TX_POWER));
 		model.latestDeviceStatus.put(DEVICE_B, TestUtils.createDeviceStatusDualBand(1, MAX_TX_POWER, 36, MAX_TX_POWER));
-		model.latestDeviceStatus.put(
-			DEVICE_C,
-			deviceCIn5G
-				? TestUtils.createDeviceStatusDualBand(
-					1, MAX_TX_POWER, 36, MAX_TX_POWER
-				)
-				: TestUtils.createDeviceStatus(
-					UCentralConstants.BAND_2G, 1, MAX_TX_POWER
-				)
-		);
+		model.latestDeviceStatus.put(DEVICE_C, TestUtils.createDeviceStatusDualBand(1, MAX_TX_POWER, 36, MAX_TX_POWER));
 
 		return model;
 	}
@@ -198,7 +188,7 @@ public class MeasurementBasedApApTPCTest {
 	@Test
 	@Order(1)
 	void test_getManagedBSSIDs() throws Exception {
-		DataModel dataModel = createModel(true);
+		DataModel dataModel = createModel();
 		Set<String> managedBSSIDs = MeasurementBasedApApTPC.getManagedBSSIDs(dataModel);
 		assertEquals(3, managedBSSIDs.size());
 		assertTrue(managedBSSIDs.contains(BSSID_A));
@@ -215,7 +205,7 @@ public class MeasurementBasedApApTPCTest {
 		model.latestDeviceStatus.put(DEVICE_A, TestUtils.createDeviceStatusDualBand(1, 5, 36, expectedTxPower));
 
 		JsonArray radioStatuses = model.latestDeviceStatus.get(DEVICE_A).getAsJsonArray();
-		int txPower = MeasurementBasedApApTPC.getCurrentTxPower(radioStatuses, UCentralConstants.BAND_5G);
+		int txPower = MeasurementBasedApApTPC.getCurrentTxPower(radioStatuses, UCentralConstants.BAND_5G).get();
 		assertEquals(expectedTxPower, txPower);
 	}
 
@@ -304,7 +294,7 @@ public class MeasurementBasedApApTPCTest {
 	 */
 	private static void testComputeTxPowerMapSimpleInOneBand(String band) {
 		int channel = UCentralUtils.LOWER_CHANNEL_LIMIT.get(band);
-		DataModel dataModel = createModel(true);
+		DataModel dataModel = createModel();
 		dataModel.latestWifiScans = createLatestWifiScansB(channel);
 		DeviceDataManager deviceDataManager = createDeviceDataManager();
 
@@ -324,7 +314,7 @@ public class MeasurementBasedApApTPCTest {
 	 */
 	private static void testComputeTxPowerMapMissingDataInOneBand(String band) {
 		int channel = UCentralUtils.LOWER_CHANNEL_LIMIT.get(band);
-		DataModel dataModel = createModel(true);
+		DataModel dataModel = createModel();
 		dataModel.latestWifiScans = createLatestWifiScansWithMissingEntries(channel);
 		DeviceDataManager deviceDataManager = createDeviceDataManager();
 
@@ -348,7 +338,14 @@ public class MeasurementBasedApApTPCTest {
 		}
 
 		// test both bands simultaneously with different setups on each band
-		DataModel dataModel = createModel(false);
+		DataModel dataModel = createModel();
+		// make device C not operate in the 5G band instead of dual band
+		dataModel.latestDeviceStatus.put(
+			DEVICE_C,
+			TestUtils.createDeviceStatus(
+				UCentralConstants.BAND_2G, 1, MAX_TX_POWER
+			)
+		);
 		DeviceDataManager deviceDataManager = createDeviceDataManager();
 		// 2G setup
 		final int channel2G = UCentralUtils.LOWER_CHANNEL_LIMIT.get(UCentralConstants.BAND_2G);
