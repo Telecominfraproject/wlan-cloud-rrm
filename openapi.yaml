@@ -325,25 +325,6 @@ paths:
           description: Success
         "400":
           description: Bad Request
-  /api/v1/setTopology:
-    post:
-      tags:
-      - Config
-      summary: Set device topology
-      description: Set the device topology.
-      operationId: setTopology
-      requestBody:
-        description: The device topology
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/DeviceTopology'
-        required: true
-      responses:
-        "200":
-          description: Success
-        "400":
-          description: Bad Request
   /api/v1/system:
     get:
       tags:
@@ -367,6 +348,47 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SystemInfoResults'
+        "400":
+          description: Bad Request
+    post:
+      tags:
+      - SDK
+      summary: Run system commands
+      description: Perform some system-wide commands.
+      operationId: setSystem
+      requestBody:
+        description: Command details
+        content:
+          application/json:
+            schema:
+              type: object
+        required: true
+      responses:
+        "200":
+          description: Successful command execution
+          content:
+            application/json:
+              schema:
+                type: object
+        "400":
+          description: Bad Request
+  /api/v1/setTopology:
+    post:
+      tags:
+      - Config
+      summary: Set device topology
+      description: Set the device topology.
+      operationId: setTopology
+      requestBody:
+        description: The device topology
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeviceTopology'
+        required: true
+      responses:
+        "200":
+          description: Success
         "400":
           description: Bad Request
 components:

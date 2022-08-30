@@ -507,9 +507,28 @@ public class ApiServerTest {
 	@Test
 	@Order(2000)
 	void test_system() throws Exception {
-		HttpResponse<JsonNode> resp = Unirest.get(endpoint("/api/v1/system?command=info")).asJson();
-		assertEquals(200, resp.getStatus());
-		assertEquals(VersionProvider.get(), resp.getBody().getObject().getString("version"));
+		// Test on GET api
+		HttpResponse<JsonNode> get_resp = Unirest.get(endpoint("/api/v1/system?command=info")).asJson();
+		assertEquals(200, get_resp.getStatus());
+		assertEquals(VersionProvider.get(), get_resp.getBody().getObject().getString("version"));
+
+		// Test on POST api
+		String url = endpoint("/api/v1/system");
+		// Valid command
+		HttpResponse<String> post_resp = Unirest
+				.post(url)
+				.body("{\"command\": \"reload\"}")
+				.asString();
+		assertEquals(200, post_resp.getStatus());
+
+		// Missing/wrong parameters
+		assertEquals(
+			400, 
+			Unirest.post(url).body("{\"command\": \"xxx\"}").asString().getStatus());
+		assertEquals(
+			400,
+			Unirest.post(url).body("{\"invalid command\": \"xxx\"}").asString().getStatus()
+		);
 	}
 
 	@Test
