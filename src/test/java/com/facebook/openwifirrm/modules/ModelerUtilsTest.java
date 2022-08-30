@@ -156,7 +156,7 @@ public class ModelerUtilsTest {
 			dataModel, obsoletionPeriodMs, new MeanAggregator(), currentUnixTimeMs
 		);
 		expectedAggregatedEntryAToB = new WifiScanEntry(entryAToB3);
-		expectedAggregatedEntryAToB.signal = -62; // average of -60, -62, and -64 3;
+		expectedAggregatedEntryAToB.signal = -62; // average of -60, -62, and -64;
 		assertEquals(expectedAggregatedEntryAToB, aggregateMap.get(apB).get(bssidA));
 		// test moving the boundary by 1 ms and excluding the earliest entry
 		aggregateMap = ModelerUtils.getAggregatedWifiScans(
@@ -183,7 +183,7 @@ public class ModelerUtilsTest {
 		);
 		WifiScanEntry expectedAggregatedEntryCToB = new WifiScanEntry(entryCToB1);
 		assertEquals(expectedAggregatedEntryCToB, aggregateMap.get(apB).get(bssidC));
-		assertFalse(aggregateMap.containsKey(apA));
+		assertFalse(aggregateMap.get(apB).containsKey(bssidA));
 
 		// test multiple entries in one scan and scans from multiple APs
 		WifiScanEntry entryAToB4 = TestUtils.createWifiScanEntryWithBssid(1, bssidA);
