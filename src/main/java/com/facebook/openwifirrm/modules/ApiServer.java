@@ -30,6 +30,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import org.json.JSONObject;
 import org.reflections.Reflections;
 import org.reflections.util.ConfigurationBuilder;
 import org.slf4j.Logger;
@@ -212,6 +213,7 @@ public class ApiServer implements Runnable {
 		Spark.after(this::afterFilter);
 		Spark.options("/*", this::options);
 		Spark.get("/api/v1/system", new SystemEndpoint());
+		Spark.post("/api/v1/setSystem", new SetSystemEndpoint());
 		Spark.get("/api/v1/provider", new ProviderEndpoint());
 		Spark.get("/api/v1/algorithms", new AlgorithmsEndpoint());
 		Spark.put("/api/v1/runRRM", new RunRRMEndpoint());
@@ -518,6 +520,51 @@ public class ApiServer implements Runnable {
 
 			response.type(MediaType.APPLICATION_JSON);
 			return gson.toJson(result);
+		}
+	}
+	
+	@Path("/api/v1/setSystem")
+	public class SetSystemEndpoint implements Route {
+		@POST
+		@Produces({ MediaType.APPLICATION_JSON })
+		@Operation(
+			summary = "System commands details", 
+			description = "Perform some system wide commands.", 
+			operationId = "systemCommand", 
+			tags = {"SDK" }, 
+			requestBody = @RequestBody(
+				description = "Command details", 
+				content = {
+					@Content(
+						mediaType = "application/json", 
+						schema = @Schema(implementation = JSONObject.class))
+				}, 
+				required = true
+			), 
+			responses = {
+				@ApiResponse(
+					responseCode = "200", 
+					description = "Successful command execution", 
+					content = @Content(
+						// TODO: Provide a specific class as value of Schema.implementation
+						schema = @Schema(implementation = Object.class)
+					)
+				),
+				@ApiResponse(responseCode = "400", description = "Bad Request")
+			}
+		)
+		@Override
+		public String handle(
+				@Parameter(hidden = true) Request request,
+				@Parameter(hidden = true) Response response
+		) {
+			try {
+				JSONObject obj = gson.fromJson(request.body(), JSONObject.class);
+			} catch (Exception e) {
+				response.status(400);
+				return e.getMessage();
+			}
+			return "";
 		}
 	}
 

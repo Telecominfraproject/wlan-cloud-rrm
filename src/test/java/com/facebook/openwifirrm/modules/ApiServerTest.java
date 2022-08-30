@@ -559,4 +559,25 @@ public class ApiServerTest {
 		assertEquals(400, Unirest.put(url + "?mode=test123&venue=" + zone).asString().getStatus());
 		assertEquals(400, Unirest.put(url + "?venue=asdf&algorithm=" + algorithms.get(0)).asString().getStatus());
 	}
+
+
+	@Test
+	@Order(2004)
+	void test_setSystem() throws Exception {
+		String url = endpoint("/api/v1/setSystem");
+
+		// Create JSONObject
+		JSONObject json_obj = new JSONObject();
+		json_obj.put("aa", 'a');
+		json_obj.put("bb", 'b');
+		
+		HttpResponse<String> resp = Unirest
+			.post(url)
+			.body(gson.toJson(json_obj))
+			.asString();
+		assertEquals(200, resp.getStatus());
+
+		// Missing/wrong parameters
+		assertEquals(400, Unirest.post(url).body("not json").asString().getStatus());
+	}
 }

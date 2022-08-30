@@ -325,6 +325,29 @@ paths:
           description: Success
         "400":
           description: Bad Request
+  /api/v1/setSystem:
+    post:
+      tags:
+      - SDK
+      summary: System commands details
+      description: Perform some system wide commands.
+      operationId: systemCommand
+      requestBody:
+        description: Command details
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JSONObject'
+        required: true
+      responses:
+        "200":
+          description: Successful command execution
+          content:
+            application/json:
+              schema:
+                type: object
+        "400":
+          description: Bad Request
   /api/v1/setTopology:
     post:
       tags:
@@ -527,6 +550,11 @@ components:
             additionalProperties:
               type: integer
               format: int32
+    JSONObject:
+      type: object
+      properties:
+        empty:
+          type: boolean
     Certificate:
       type: object
       properties:
