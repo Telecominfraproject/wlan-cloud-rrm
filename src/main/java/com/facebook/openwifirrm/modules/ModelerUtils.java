@@ -345,7 +345,6 @@ public class ModelerUtils {
 						.computeIfAbsent(serialNumber, k -> new HashMap<>())
 						.put(bssid, mostRecentEntry);
 				}
-
 			}
 		}
 		return aggregatedWifiScans;
