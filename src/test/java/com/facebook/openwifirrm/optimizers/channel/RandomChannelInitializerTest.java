@@ -47,20 +47,26 @@ public class RandomChannelInitializerTest {
 		// A and B will be assigned to the same channel
 		DataModel dataModel = new DataModel();
 		dataModel.latestState.put(
-			deviceA, TestUtils.createState(6, channelWidth, deviceABssid)
+			deviceA,
+			TestUtils.createState(6, channelWidth, deviceABssid)
 		);
 		dataModel.latestState.put(
-			deviceB, TestUtils.createState(11, channelWidth, deviceBBssid)
+			deviceB,
+			TestUtils.createState(11, channelWidth, deviceBBssid)
 		);
 		dataModel.latestDeviceStatus.put(
-			deviceA, TestUtils.createDeviceStatus(band, 7)
+			deviceA,
+			TestUtils.createDeviceStatus(band, 7)
 		);
 		dataModel.latestDeviceStatus.put(
-			deviceB, TestUtils.createDeviceStatus(band, 8)
+			deviceB,
+			TestUtils.createDeviceStatus(band, 8)
 		);
 
 		ChannelOptimizer optimizer = new RandomChannelInitializer(
-			dataModel, TEST_ZONE, deviceDataManager
+			dataModel,
+			TEST_ZONE,
+			deviceDataManager
 		);
 		Map<String, Map<String, Integer>> channelMap =
 			optimizer.computeChannelMap();
@@ -86,20 +92,28 @@ public class RandomChannelInitializerTest {
 		// A and B will be assigned to the same channel
 		DataModel dataModel = new DataModel();
 		dataModel.latestState.put(
-			deviceA, TestUtils.createState(6, channelWidth, deviceABssid)
+			deviceA,
+			TestUtils.createState(6, channelWidth, deviceABssid)
 		);
 		dataModel.latestState.put(
-			deviceB, TestUtils.createState(11, channelWidth, deviceBBssid)
+			deviceB,
+			TestUtils.createState(11, channelWidth, deviceBBssid)
 		);
 		dataModel.latestDeviceStatus.put(
-			deviceA, TestUtils.createDeviceStatus(band, 7)
+			deviceA,
+			TestUtils.createDeviceStatus(band, 7)
 		);
 		dataModel.latestDeviceStatus.put(
-			deviceB, TestUtils.createDeviceStatus(band, 8)
+			deviceB,
+			TestUtils.createDeviceStatus(band, 8)
 		);
 
 		ChannelOptimizer optimizer = new RandomChannelInitializer(
-			dataModel, TEST_ZONE, deviceDataManager, true, new Random(10)
+			dataModel,
+			TEST_ZONE,
+			deviceDataManager,
+			true,
+			new Random(10)
 		);
 		Map<String, Map<String, Integer>> channelMap =
 			optimizer.computeChannelMap();
