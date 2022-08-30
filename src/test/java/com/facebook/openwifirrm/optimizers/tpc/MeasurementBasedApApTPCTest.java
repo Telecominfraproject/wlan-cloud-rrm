@@ -88,9 +88,8 @@ public class MeasurementBasedApApTPCTest {
 			MAX_TX_POWER, BSSID_A, 36, DEFAULT_CHANNEL_WIDTH, MAX_TX_POWER, BSSID_A);
 		State stateB = TestUtils.createState(1, DEFAULT_CHANNEL_WIDTH,
 			MAX_TX_POWER, BSSID_B, 36, DEFAULT_CHANNEL_WIDTH, MAX_TX_POWER, BSSID_B);
-		State stateC = TestUtils.createState(
-			1, DEFAULT_CHANNEL_WIDTH, MAX_TX_POWER, BSSID_C
-		);
+		State stateC = TestUtils.createState(1, DEFAULT_CHANNEL_WIDTH,
+			MAX_TX_POWER, BSSID_C, 36, DEFAULT_CHANNEL_WIDTH, MAX_TX_POWER, BSSID_C);
 
 		model.latestState.put(DEVICE_A, stateA);
 		model.latestState.put(DEVICE_B, stateB);
@@ -330,13 +329,16 @@ public class MeasurementBasedApApTPCTest {
 
 	@Test
 	@Order(5)
-	void test_computeTxPowerMap() throws Exception {
-		// test each band separately
+	void test_computeTxPowerMapOnOneBand() throws Exception {
 		for (String band : UCentralConstants.BANDS) {
 			testComputeTxPowerMapSimpleInOneBand(band);
 			testComputeTxPowerMapMissingDataInOneBand(band);
 		}
+	}
 
+	@Test
+	@Order(6)
+	void test_computeTxPowerMapMultiBand() {
 		// test both bands simultaneously with different setups on each band
 		DataModel dataModel = createModel();
 		// make device C not operate in the 5G band instead of dual band
@@ -375,7 +377,6 @@ public class MeasurementBasedApApTPCTest {
 		assertEquals(10, txPowerMap.get(DEVICE_C).get(UCentralConstants.BAND_2G));
 
 		// test 5G band
-		assertEquals(3, txPowerMap.size());
 		assertEquals(0, txPowerMap.get(DEVICE_A).get(UCentralConstants.BAND_5G));
 		assertEquals(0, txPowerMap.get(DEVICE_B).get(UCentralConstants.BAND_5G));
 		// device C is not in the 5G band
