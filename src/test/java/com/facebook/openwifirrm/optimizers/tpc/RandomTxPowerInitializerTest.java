@@ -19,14 +19,13 @@ import com.facebook.openwifirrm.optimizers.TestUtils;
 import com.facebook.openwifirrm.ucentral.UCentralConstants;
 import com.facebook.openwifirrm.ucentral.models.State;
 
-import java.util.Arrays;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 import java.util.TreeSet;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
 
 @TestMethodOrder(OrderAnnotation.class)
 public class RandomTxPowerInitializerTest {
@@ -65,18 +64,23 @@ public class RandomTxPowerInitializerTest {
 
 	@Test
 	@Order(1)
-	void testProvidedTxPower() throws Exception {
-		for (int txPower : Arrays.asList(-1, 16, 27)) {
-			TPC optimizer = new RandomTxPowerInitializer(
-				createModel(), TEST_ZONE, createDeviceDataManager(), txPower
-			);
-			Map<String, Map<String, Integer>> txPowerMap =
-				optimizer.computeTxPowerMap();
+	void testSeededTxPower() throws Exception {
+		TPC optimizer = new RandomTxPowerInitializer(
+			createModel(),
+			TEST_ZONE,
+			createDeviceDataManager(),
+			false,
+			new Random(0)
+		);
 
-			for (String band : UCentralConstants.BANDS) {
-				assertEquals(txPower, txPowerMap.get(DEVICE_A).get(band));
-				assertEquals(txPower, txPowerMap.get(DEVICE_B).get(band));
-			}
+		Map<String, Map<String, Integer>> txPowerMap =
+			optimizer.computeTxPowerMap();
+
+		// first generated random number for seed of 0
+		int txPower = 2;
+		for (String band : UCentralConstants.BANDS) {
+			assertEquals(txPower, txPowerMap.get(DEVICE_A).get(band));
+			assertEquals(txPower, txPowerMap.get(DEVICE_B).get(band));
 		}
 	}
 
@@ -84,7 +88,9 @@ public class RandomTxPowerInitializerTest {
 	@Order(2)
 	void testRandomTxPower() throws Exception {
 		TPC optimizer = new RandomTxPowerInitializer(
-			createModel(), TEST_ZONE, createDeviceDataManager()
+			createModel(),
+			TEST_ZONE,
+			createDeviceDataManager()
 		);
 		Map<String, Map<String, Integer>> txPowerMap =
 			optimizer.computeTxPowerMap();
@@ -95,7 +101,35 @@ public class RandomTxPowerInitializerTest {
 		// One unique tx power for all devices and bands
 		assertEquals(1, txPowerSet.size());
 		for (int txPower : txPowerSet) {
-			assertTrue(txPower >= TPC.MIN_TX_POWER && txPower <= TPC.MAX_TX_POWER);
+			assertTrue(
+				txPower >= TPC.MIN_TX_POWER && txPower <= TPC.MAX_TX_POWER
+			);
+		}
+	}
+
+	@Test
+	@Order(3)
+	void testRandomTxPowerPerAp() throws Exception {
+		TPC optimizer = new RandomTxPowerInitializer(
+			createModel(),
+			TEST_ZONE,
+			createDeviceDataManager(),
+			true,
+			new Random(0)
+		);
+		Map<String, Map<String, Integer>> txPowerMap =
+			optimizer.computeTxPowerMap();
+		Set<Integer> txPowerSet = new TreeSet<>();
+		for (String serialNumber : txPowerMap.keySet()) {
+			txPowerSet.addAll(txPowerMap.get(serialNumber).values());
+		}
+
+		// different values per AP
+		assertTrue(txPowerSet.size() > 1);
+		for (int txPower : txPowerSet) {
+			assertTrue(
+				txPower >= TPC.MIN_TX_POWER && txPower <= TPC.MAX_TX_POWER
+			);
 		}
 	}
 }

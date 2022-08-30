@@ -28,22 +28,61 @@ import com.facebook.openwifirrm.ucentral.models.State;
 /**
  * Random channel initializer.
  * <p>
- * Randomly assign APs to the same channel.
+ * Randomly assign APs to the same channel unless otherwise specified.
+ * If specified, all APs will be assigned a random channel.
  */
 public class RandomChannelInitializer extends ChannelOptimizer {
-	private static final Logger logger = LoggerFactory.getLogger(RandomChannelInitializer.class);
+	private static final Logger logger =
+		LoggerFactory.getLogger(RandomChannelInitializer.class);
 
 	/** The RRM algorithm ID. */
 	public static final String ALGORITHM_ID = "random";
 
 	/** The PRNG instance. */
-	private final Random rng = new Random();
+	private final Random rng;
+
+	/** Whether to set a different value per AP or use a single value for all APs */
+	private final boolean setDifferentChannelsPerAp;
+
+	/**
+	 * Constructor (allows setting different channel per AP and passing
+	 * in a custom Random class to allow seeding)
+	 */
+	public RandomChannelInitializer(
+		DataModel model,
+		String zone,
+		DeviceDataManager deviceDataManager,
+		boolean setDifferentChannelsPerAp,
+		Random rng
+	) {
+		super(model, zone, deviceDataManager);
+		this.setDifferentChannelsPerAp = setDifferentChannelsPerAp;
+		this.rng = rng;
+	}
+
+	/** Constructor (allows setting different channel per AP) */
+	public RandomChannelInitializer(
+		DataModel model,
+		String zone,
+		DeviceDataManager deviceDataManager,
+		boolean setDifferentChannelsPerAp
+	) {
+		this(
+			model,
+			zone,
+			deviceDataManager,
+			setDifferentChannelsPerAp,
+			new Random()
+		);
+	}
 
 	/** Constructor. */
 	public RandomChannelInitializer(
-		DataModel model, String zone, DeviceDataManager deviceDataManager
+		DataModel model,
+		String zone,
+		DeviceDataManager deviceDataManager
 	) {
-		super(model, zone, deviceDataManager);
+		this(model, zone, deviceDataManager, false);
 	}
 
 	@Override
@@ -59,7 +98,8 @@ public class RandomChannelInitializer extends ChannelOptimizer {
 				AVAILABLE_CHANNELS_BAND
 			);
 
-		Map<String, String> bssidsMap = UCentralUtils.getBssidsMap(model.latestState);
+		Map<String, String> bssidsMap =
+			UCentralUtils.getBssidsMap(model.latestState);
 
 		for (Map.Entry<String, List<String>> entry : bandsMap.entrySet()) {
 			// Performance metrics
@@ -68,9 +108,12 @@ public class RandomChannelInitializer extends ChannelOptimizer {
 
 			// Use last wifi scan result for the performance metrics calculation
 			String band = entry.getKey();
-			Map<String, List<WifiScanEntry>> deviceToWifiScans = getDeviceToWiFiScans(
-				band, model.latestWifiScans, bandsMap
-			);
+			Map<String, List<WifiScanEntry>> deviceToWifiScans =
+				getDeviceToWiFiScans(
+					band,
+					model.latestWifiScans,
+					bandsMap
+				);
 
 			// Get the common available channels for all the devices
 			// to get the valid result for single channel assignment
@@ -80,25 +123,36 @@ public class RandomChannelInitializer extends ChannelOptimizer {
 			);
 			for (String serialNumber : entry.getValue()) {
 				List<Integer> deviceChannelsList = deviceAvailableChannels
-					.get(band).get(serialNumber);
-				if (deviceChannelsList == null || deviceChannelsList.isEmpty()) {
+					.get(band)
+					.get(serialNumber);
+				if (
+					deviceChannelsList == null || deviceChannelsList.isEmpty()
+				) {
 					deviceChannelsList = AVAILABLE_CHANNELS_BAND.get(band);
 				}
 				availableChannelsList.retainAll(deviceChannelsList);
 			}
-			if (availableChannelsList == null || availableChannelsList.isEmpty()) {
+			if (
+				availableChannelsList == null || availableChannelsList.isEmpty()
+			) {
 				availableChannelsList = AVAILABLE_CHANNELS_BAND.get(band);
 				logger.debug(
 					"The intersection of the device channels lists is empty!!! " +
-					"Fall back to the default channels list"
+						"Fall back to the default channels list"
 				);
 			}
 
-			// Randomly assign all the devices to the same channel
-			int channelIndex = rng.nextInt(availableChannelsList.size());
-			int newChannel = availableChannelsList.get(channelIndex);
+			// Randomly assign all the devices to the same channel if
+			// setDifferentChannelsPerAp is false otherwise, assigns
+			// each device to a random channel
+			int defaultChannelIndex = rng.nextInt(availableChannelsList.size());
 
 			for (String serialNumber : entry.getValue()) {
+				int newChannel = availableChannelsList.get(
+					this.setDifferentChannelsPerAp
+						? rng.nextInt(availableChannelsList.size()) : defaultChannelIndex
+				);
+
 				State state = model.latestState.get(serialNumber);
 				if (state == null) {
 					logger.debug(
@@ -114,7 +168,8 @@ public class RandomChannelInitializer extends ChannelOptimizer {
 					);
 					continue;
 				}
-				int[] currentChannelInfo = getCurrentChannel(band, serialNumber, state);
+				int[] currentChannelInfo =
+					getCurrentChannel(band, serialNumber, state);
 				int currentChannel = currentChannelInfo[0];
 				int currentChannelWidth = currentChannelInfo[1];
 				if (currentChannel == 0) {
@@ -129,9 +184,13 @@ public class RandomChannelInitializer extends ChannelOptimizer {
 				}
 
 				// Log the notice when the updated one and the original one are not equal
-				List<Integer> newAvailableChannelsList = updateAvailableChannelsList(
-					band, serialNumber, currentChannelWidth, availableChannelsList
-				);
+				List<Integer> newAvailableChannelsList =
+					updateAvailableChannelsList(
+						band,
+						serialNumber,
+						currentChannelWidth,
+						availableChannelsList
+					);
 				Set<Integer> availableChannelsSet = new TreeSet<>(
 					availableChannelsList
 				);
@@ -141,18 +200,19 @@ public class RandomChannelInitializer extends ChannelOptimizer {
 				if (!availableChannelsSet.equals(newAvailableChannelsSet)) {
 					logger.info(
 						"Device {}: userChannels/allowedChannels are disabled in " +
-						"single channel assignment.",
+							"single channel assignment.",
 						serialNumber
 					);
 				}
 
 				channelMap.computeIfAbsent(
-					serialNumber, k -> new TreeMap<>()
+					serialNumber,
+					k -> new TreeMap<>()
 				)
-				.put(band, newChannel);
+					.put(band, newChannel);
 				logger.info(
 					"Device {}: Assigning to random free channel {} (from " +
-					"available list: {})",
+						"available list: {})",
 					serialNumber,
 					newChannel,
 					availableChannelsList.toString()
@@ -163,7 +223,12 @@ public class RandomChannelInitializer extends ChannelOptimizer {
 				newChannelMap.put(serialNumber, newChannel);
 			}
 			// Get and log the performance metrics
-			logPerfMetrics(oldChannelMap, newChannelMap, deviceToWifiScans, bssidsMap);
+			logPerfMetrics(
+				oldChannelMap,
+				newChannelMap,
+				deviceToWifiScans,
+				bssidsMap
+			);
 		}
 
 		return channelMap;
