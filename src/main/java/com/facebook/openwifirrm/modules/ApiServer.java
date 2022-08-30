@@ -213,7 +213,7 @@ public class ApiServer implements Runnable {
 		Spark.after(this::afterFilter);
 		Spark.options("/*", this::options);
 		Spark.get("/api/v1/system", new SystemEndpoint());
-		Spark.post("/api/v1/setSystem", new SetSystemEndpoint());
+		Spark.post("/api/v1/system", new SetSystemEndpoint());
 		Spark.get("/api/v1/provider", new ProviderEndpoint());
 		Spark.get("/api/v1/algorithms", new AlgorithmsEndpoint());
 		Spark.put("/api/v1/runRRM", new RunRRMEndpoint());
@@ -522,22 +522,22 @@ public class ApiServer implements Runnable {
 			return gson.toJson(result);
 		}
 	}
-	
-	@Path("/api/v1/setSystem")
+	@Path("/api/v1/system")
 	public class SetSystemEndpoint implements Route {
 		@POST
 		@Produces({ MediaType.APPLICATION_JSON })
 		@Operation(
-			summary = "System commands details", 
-			description = "Perform some system wide commands.", 
-			operationId = "systemCommand", 
+			summary = "Run system commands", 
+			description = "Perform some system-wide commands.", 
+			operationId = "setSystem", 
 			tags = {"SDK" }, 
 			requestBody = @RequestBody(
 				description = "Command details", 
 				content = {
 					@Content(
 						mediaType = "application/json", 
-						schema = @Schema(implementation = JSONObject.class))
+						schema = @Schema(implementation = Object.class)
+					)
 				}, 
 				required = true
 			), 
@@ -559,12 +559,27 @@ public class ApiServer implements Runnable {
 				@Parameter(hidden = true) Response response
 		) {
 			try {
-				JSONObject obj = gson.fromJson(request.body(), JSONObject.class);
+				JSONObject json_obj = new JSONObject(request.body());
+				String command = json_obj.get("command").toString();
+				switch (command) {
+					case "setloglevel":
+						return "[]";
+					case "reload":
+						return "[]";
+					case "getloglevels":
+						return "[]";
+					case "getloglevelnames":
+						return "[]";
+					case "getsubsystemnames":
+						return "[]";
+					default:
+						response.status(400);
+						return "Invalid command";
+				}
 			} catch (Exception e) {
 				response.status(400);
 				return e.getMessage();
 			}
-			return "";
 		}
 	}
 

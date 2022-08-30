@@ -507,9 +507,29 @@ public class ApiServerTest {
 	@Test
 	@Order(2000)
 	void test_system() throws Exception {
-		HttpResponse<JsonNode> resp = Unirest.get(endpoint("/api/v1/system?command=info")).asJson();
-		assertEquals(200, resp.getStatus());
-		assertEquals(VersionProvider.get(), resp.getBody().getObject().getString("version"));
+		// Test on GET api
+		HttpResponse<JsonNode> get_resp = Unirest.get(endpoint("/api/v1/system?command=info")).asJson();
+		assertEquals(200, get_resp.getStatus());
+		assertEquals(VersionProvider.get(), get_resp.getBody().getObject().getString("version"));
+
+		// Test on POST api
+		String url = endpoint("/api/v1/system");
+		// Valid command
+		JSONObject json_obj = new JSONObject("{\"command\": \"reload\"}");
+		HttpResponse<String> post_resp = Unirest
+				.post(url)
+				.body(json_obj)
+				.asString();
+		assertEquals(200, post_resp.getStatus());
+
+		// Missing/wrong parameters
+		assertEquals(
+			400, 
+			Unirest.post(url).body(new JSONObject("{\"command\": \"xxx\"}")).asString().getStatus());
+		assertEquals(
+			400,
+			Unirest.post(url).body(new JSONObject("{\"invalid command\": \"xxx\"}")).asString().getStatus()
+		);
 	}
 
 	@Test
@@ -558,26 +578,5 @@ public class ApiServerTest {
 		assertEquals(400, Unirest.put(url).asString().getStatus());
 		assertEquals(400, Unirest.put(url + "?mode=test123&venue=" + zone).asString().getStatus());
 		assertEquals(400, Unirest.put(url + "?venue=asdf&algorithm=" + algorithms.get(0)).asString().getStatus());
-	}
-
-
-	@Test
-	@Order(2004)
-	void test_setSystem() throws Exception {
-		String url = endpoint("/api/v1/setSystem");
-
-		// Create JSONObject
-		JSONObject json_obj = new JSONObject();
-		json_obj.put("aa", 'a');
-		json_obj.put("bb", 'b');
-		
-		HttpResponse<String> resp = Unirest
-			.post(url)
-			.body(gson.toJson(json_obj))
-			.asString();
-		assertEquals(200, resp.getStatus());
-
-		// Missing/wrong parameters
-		assertEquals(400, Unirest.post(url).body("not json").asString().getStatus());
 	}
 }

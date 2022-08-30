@@ -325,19 +325,43 @@ paths:
           description: Success
         "400":
           description: Bad Request
-  /api/v1/setSystem:
+  /api/v1/system:
+    get:
+      tags:
+      - SDK
+      summary: Get system info
+      description: Returns the system info from the running service.
+      operationId: system
+      parameters:
+      - name: command
+        in: query
+        description: Get a value
+        required: true
+        schema:
+          type: string
+          enum:
+          - info
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SystemInfoResults'
+        "400":
+          description: Bad Request
     post:
       tags:
       - SDK
-      summary: System commands details
-      description: Perform some system wide commands.
-      operationId: systemCommand
+      summary: Run system commands
+      description: Perform some system-wide commands.
+      operationId: setSystem
       requestBody:
         description: Command details
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/JSONObject'
+              type: object
         required: true
       responses:
         "200":
@@ -365,31 +389,6 @@ paths:
       responses:
         "200":
           description: Success
-        "400":
-          description: Bad Request
-  /api/v1/system:
-    get:
-      tags:
-      - SDK
-      summary: Get system info
-      description: Returns the system info from the running service.
-      operationId: system
-      parameters:
-      - name: command
-        in: query
-        description: Get a value
-        required: true
-        schema:
-          type: string
-          enum:
-          - info
-      responses:
-        "200":
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SystemInfoResults'
         "400":
           description: Bad Request
 components:
@@ -550,11 +549,6 @@ components:
             additionalProperties:
               type: integer
               format: int32
-    JSONObject:
-      type: object
-      properties:
-        empty:
-          type: boolean
     Certificate:
       type: object
       properties:
