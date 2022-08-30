@@ -19,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.facebook.openwifirrm.aggregators.Aggregator;
+import com.facebook.openwifirrm.aggregators.MeanAggregator;
 import com.facebook.openwifirrm.ucentral.UCentralUtils.WifiScanEntry;
 import com.facebook.openwifirrm.ucentral.operationelement.HTOperationElement;
 import com.facebook.openwifirrm.ucentral.operationelement.VHTOperationElement;
@@ -259,9 +260,30 @@ public class ModelerUtils {
 	 *         serial number, BSSID) tuple. The returned map will only contain APs
 	 *         which received at least one non-obsolete wifiscan entry from a BSS.
 	 */
-	public static Map<String, Map<String, WifiScanEntry>> getAggregatedWifiScans(Modeler.DataModel dataModel,
-			long obsoletionPeriodMs,
-			Aggregator<Double> agg) {
+	public static Map<String, Map<String, WifiScanEntry>> getAggregatedWifiScans(
+		Modeler.DataModel dataModel,
+		long obsoletionPeriodMs,
+		Aggregator<Double> agg
+	) {
+		return getAggregatedWifiScans(
+			dataModel,
+			obsoletionPeriodMs,
+			new MeanAggregator(),
+			System.currentTimeMillis()
+		);
+	}
+
+	/**
+	 * @see #getAggregatedWifiScans(com.facebook.openwifirrm.modules.Modeler.DataModel, long, Aggregator)
+	 * <p>
+	 * These two methods were separated to make testing easier, since it relies on current time.
+	 */
+	public static Map<String, Map<String, WifiScanEntry>> getAggregatedWifiScans(
+		Modeler.DataModel dataModel,
+		long obsoletionPeriodMs,
+		Aggregator<Double> agg,
+		long currentUnixTimeMs
+	) {
 		if (obsoletionPeriodMs < 0) {
 			throw new IllegalArgumentException("obsoletionPeriodMs must be non-negative.");
 		}
@@ -299,7 +321,7 @@ public class ModelerUtils {
 				WifiScanEntry mostRecentEntry = entries.get(0);
 				agg.reset();
 				for (WifiScanEntry entry : entries) {
-					if (mostRecentEntry.unixTimeMs - entry.unixTimeMs > obsoletionPeriodMs) {
+					if (currentUnixTimeMs - entry.unixTimeMs > obsoletionPeriodMs) {
 						// discard obsolete entries
 						break;
 					}
