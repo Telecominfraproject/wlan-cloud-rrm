@@ -391,7 +391,6 @@ public class UCentralUtils {
 				&& channel <= UPPER_CHANNEL_LIMIT.get(band);
 	}
 
-	// TODO: Remove this method if band can be directly got from config
 	/**
 	 * Given the channel, gets the band by checking lower bound and upper bound
 	 * of each band

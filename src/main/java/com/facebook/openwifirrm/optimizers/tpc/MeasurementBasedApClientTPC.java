@@ -250,7 +250,6 @@ public class MeasurementBasedApClientTPC extends TPC {
 					continue;
 				}
 
-				// TODO: check if band can be directly got from config rather than mapped from channel
 				String band = UCentralUtils.getBandFromChannel(currentChannel);
 				if (band == null) {
 					continue;
