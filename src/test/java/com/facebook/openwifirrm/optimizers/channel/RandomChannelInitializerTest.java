@@ -35,6 +35,8 @@ public class RandomChannelInitializerTest {
 		final String band = UCentralConstants.BAND_2G;
 		final String deviceA = "aaaaaaaaaaaa";
 		final String deviceB = "bbbbbbbbbbbb";
+		final String deviceABssid = "aa:aa:aa:aa:aa:aa";
+		final String deviceBBssid = "bb:bb:bb:bb:bb:bb";
 		final int channelWidth = 20;
 
 		DeviceDataManager deviceDataManager = new DeviceDataManager();
@@ -45,10 +47,10 @@ public class RandomChannelInitializerTest {
 		// A and B will be assigned to the same channel
 		DataModel dataModel = new DataModel();
 		dataModel.latestState.put(
-			deviceA, TestUtils.createState(6, channelWidth, "ddd")
+			deviceA, TestUtils.createState(6, channelWidth, deviceABssid)
 		);
 		dataModel.latestState.put(
-			deviceB, TestUtils.createState(11, channelWidth, "eee")
+			deviceB, TestUtils.createState(11, channelWidth, deviceBBssid)
 		);
 		dataModel.latestDeviceStatus.put(
 			deviceA, TestUtils.createDeviceStatus(band, 7)
@@ -72,6 +74,8 @@ public class RandomChannelInitializerTest {
 		final String band = UCentralConstants.BAND_2G;
 		final String deviceA = "aaaaaaaaaaaa";
 		final String deviceB = "bbbbbbbbbbbb";
+		final String deviceABssid = "aa:aa:aa:aa:aa:aa";
+		final String deviceBBssid = "bb:bb:bb:bb:bb:bb";
 		final int channelWidth = 20;
 
 		DeviceDataManager deviceDataManager = new DeviceDataManager();
@@ -82,10 +86,10 @@ public class RandomChannelInitializerTest {
 		// A and B will be assigned to the same channel
 		DataModel dataModel = new DataModel();
 		dataModel.latestState.put(
-			deviceA, TestUtils.createState(6, channelWidth, "ddd")
+			deviceA, TestUtils.createState(6, channelWidth, deviceABssid)
 		);
 		dataModel.latestState.put(
-			deviceB, TestUtils.createState(11, channelWidth, "eee")
+			deviceB, TestUtils.createState(11, channelWidth, deviceBBssid)
 		);
 		dataModel.latestDeviceStatus.put(
 			deviceA, TestUtils.createDeviceStatus(band, 7)

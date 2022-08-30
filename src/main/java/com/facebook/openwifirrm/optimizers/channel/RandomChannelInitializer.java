@@ -38,28 +38,29 @@ public class RandomChannelInitializer extends ChannelOptimizer {
 	public static final String ALGORITHM_ID = "random";
 
 	/** The PRNG instance. */
-	private Random rng = new Random();
+	private final Random rng;
 
 	/** Whether to set a different value per AP or use a single value for all APs */
-	private boolean setDifferentChannelsPerAp = false;
+	private final boolean setDifferentChannelsPerAp;
 
 	/** Constructor. */
 	public RandomChannelInitializer(
 		DataModel model, String zone, DeviceDataManager deviceDataManager
 	) {
-		super(model, zone, deviceDataManager);
+		this(model, zone, deviceDataManager, false, new Random());
 	}
 
 	/** Constructor (allows setting different channel per AP) */
 	public RandomChannelInitializer(
 		DataModel model, String zone, DeviceDataManager deviceDataManager, boolean setDifferentChannelsPerAp
 	) {
-		this(model, zone, deviceDataManager);
-		this.setDifferentChannelsPerAp = setDifferentChannelsPerAp;
+		this(model, zone, deviceDataManager, setDifferentChannelsPerAp, new Random());
 	}
 
-	/** Constructor (allows setting different channel per AP and passing
-	 * in a custom Random class to allow seeding) */
+	/**
+	 * Constructor (allows setting different channel per AP and passing
+	 * in a custom Random class to allow seeding)
+	 */
 	public RandomChannelInitializer(
 		DataModel model,
 		String zone,
@@ -67,7 +68,8 @@ public class RandomChannelInitializer extends ChannelOptimizer {
 		boolean setDifferentChannelsPerAp,
 		Random rng
 	) {
-		this(model, zone, deviceDataManager, setDifferentChannelsPerAp);
+		super(model, zone, deviceDataManager);
+		this.setDifferentChannelsPerAp = setDifferentChannelsPerAp;
 		this.rng = rng;
 	}
 
@@ -119,7 +121,9 @@ public class RandomChannelInitializer extends ChannelOptimizer {
 				);
 			}
 
-			// Randomly assign all the devices to the same channel
+			// Randomly assign all the devices to the same channel if
+			// setDifferentChannelsPerAp is false otherwise, assigns
+			// each device to a random channel
 			int defaultChannelIndex = rng.nextInt(availableChannelsList.size());
 
 			for (String serialNumber : entry.getValue()) {

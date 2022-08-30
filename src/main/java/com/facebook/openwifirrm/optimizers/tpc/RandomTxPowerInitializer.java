@@ -11,7 +11,6 @@ package com.facebook.openwifirrm.optimizers.tpc;
 import java.util.Map;
 import java.util.Random;
 import java.util.TreeMap;
-import java.util.LinkedList;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,12 +31,15 @@ public class RandomTxPowerInitializer extends TPC {
 	public static final String ALGORITHM_ID = "random";
 
 	/** The PRNG instance. */
-	private Random rng = new Random();
+	private final Random rng;
 
 	/** Whether to set a different value per AP or use a single value for all APs */
-	private boolean setDifferentTxPowerPerAp = false;
+	private final boolean setDifferentTxPowerPerAp;
 
-	/** Constructor (uses random tx power per AP and allows passing in a custom Random class to allow seeding). */
+	/**
+	 * Constructor (uses random tx power per AP and allows passing in a custom
+	 * Random class to allow seeding).
+	 */
 	public RandomTxPowerInitializer(
 		DataModel model,
 		String zone,
@@ -45,7 +47,8 @@ public class RandomTxPowerInitializer extends TPC {
 		boolean setDifferentTxPowerPerAp,
 		Random rng
 	) {
-		this(model, zone, deviceDataManager, setDifferentTxPowerPerAp);
+		super(model, zone, deviceDataManager);
+		this.setDifferentTxPowerPerAp = setDifferentTxPowerPerAp;
 		this.rng = rng;
 	}
 
@@ -53,15 +56,14 @@ public class RandomTxPowerInitializer extends TPC {
 	public RandomTxPowerInitializer(
 		DataModel model, String zone, DeviceDataManager deviceDataManager, boolean setDifferentTxPowerPerAp
 	) {
-		this(model, zone, deviceDataManager);
-		this.setDifferentTxPowerPerAp = setDifferentTxPowerPerAp;
+		this(model, zone, deviceDataManager, setDifferentTxPowerPerAp, new Random());
 	}
 
 	/** Constructor (uses random tx power). */
 	public RandomTxPowerInitializer(
 		DataModel model, String zone, DeviceDataManager deviceDataManager
 	) {
-		super(model, zone, deviceDataManager);
+		this(model, zone, deviceDataManager, false, new Random());
 	}
 
 	/** Get a random tx power in [MIN_TX_POWER, MAX_TX_POWER], both inclusive */
