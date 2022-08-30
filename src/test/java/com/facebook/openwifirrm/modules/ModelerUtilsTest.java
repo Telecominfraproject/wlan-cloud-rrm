@@ -129,6 +129,8 @@ public class ModelerUtilsTest {
 		assertFalse(aggregateMap.containsKey(apA));
 		assertFalse(aggregateMap.containsKey(apC));
 		assertEquals(entryAToB1, aggregateMap.get(apB).get(bssidA));
+		assertFalse(aggregateMap.get(apB).containsKey(bssidB));
+		assertFalse(aggregateMap.get(apB).containsKey(bssidC));
 
 		// add another scan with one entry from apA to apB and check the aggregation
 		WifiScanEntry entryAToB2 = TestUtils.createWifiScanEntryWithBssid(1, bssidA);
@@ -144,6 +146,8 @@ public class ModelerUtilsTest {
 		assertFalse(aggregateMap.containsKey(apA));
 		assertFalse(aggregateMap.containsKey(apC));
 		assertEquals(expectedAggregatedEntryAToB, aggregateMap.get(apB).get(bssidA));
+		assertFalse(aggregateMap.get(apB).containsKey(bssidB));
+		assertFalse(aggregateMap.get(apB).containsKey(bssidC));
 
 		// test the obsoletion period boundaries
 		// test the inclusive non-obsolete boundary
@@ -157,7 +161,11 @@ public class ModelerUtilsTest {
 		);
 		expectedAggregatedEntryAToB = new WifiScanEntry(entryAToB3);
 		expectedAggregatedEntryAToB.signal = -62; // average of -60, -62, and -64;
+		assertFalse(aggregateMap.containsKey(apA));
+		assertFalse(aggregateMap.containsKey(apC));
 		assertEquals(expectedAggregatedEntryAToB, aggregateMap.get(apB).get(bssidA));
+		assertFalse(aggregateMap.get(apB).containsKey(bssidB));
+		assertFalse(aggregateMap.get(apB).containsKey(bssidC));
 		// test moving the boundary by 1 ms and excluding the earliest entry
 		aggregateMap = ModelerUtils.getAggregatedWifiScans(
 			dataModel, obsoletionPeriodMs - 1, new MeanAggregator(), currentUnixTimeMs
@@ -170,8 +178,11 @@ public class ModelerUtilsTest {
 		);
 		expectedAggregatedEntryAToB.signal = -64; // latest rssid
 		assertEquals(expectedAggregatedEntryAToB, aggregateMap.get(apB).get(bssidA));
-		// Test that the obsoletion period starts counting backwards from the time of
-		// the most recent entry for each (ap, bssid) tuple.
+		/*
+		 * Test that the obsoletion period starts counting backwards from the
+		 * time of the most recent entry for each (ap, bssid) tuple. Also test
+		 * that if there is no recent entry, the latest entry is returned.
+		 */
 		WifiScanEntry entryCToB1 = TestUtils.createWifiScanEntryWithBssid(1, bssidC);
 		entryCToB1.signal = -70;
 		entryCToB1.unixTimeMs += 2 * obsoletionPeriodMs;
@@ -210,10 +221,13 @@ public class ModelerUtilsTest {
 		expectedAggregatedEntryAToB = new WifiScanEntry(entryAToB4);
 		WifiScanEntry expectedAggregatedEntryCToA = new WifiScanEntry(entryCToA1);
 		WifiScanEntry expectedAggregatedEntryBToA = new WifiScanEntry(entryBToA1);
+		assertFalse(aggregateMap.containsKey(apC));
 		assertEquals(expectedAggregatedEntryCToB, aggregateMap.get(apB).get(bssidC));
 		assertEquals(expectedAggregatedEntryAToB, aggregateMap.get(apB).get(bssidA));
+		assertFalse(aggregateMap.get(apB).containsKey(bssidB));
 		assertEquals(expectedAggregatedEntryCToA, aggregateMap.get(apA).get(bssidC));
 		assertEquals(expectedAggregatedEntryBToA, aggregateMap.get(apA).get(bssidB));
+		assertFalse(aggregateMap.get(apA).containsKey(bssidA));
 
 		// test that entries are not aggregated when channel information does not match
 		WifiScanEntry entryBToA2 = TestUtils.createWifiScanEntryWithBssid(2, bssidB); // different channel
@@ -225,7 +239,9 @@ public class ModelerUtilsTest {
 		aggregateMap = ModelerUtils.getAggregatedWifiScans(
 			dataModel, obsoletionPeriodMs, new MeanAggregator(), currentUnixTimeMs
 		);
-		assertEquals(expectedAggregatedEntryBToA, aggregateMap.get(apA).get(bssidB));
+		assertEquals(
+			expectedAggregatedEntryBToA, aggregateMap.get(apA).get(bssidB)
+		);
 
 		// test out of order wifiscans
 		WifiScanEntry entryBToA3 = TestUtils.createWifiScanEntryWithBssid(2, bssidB); // different channel

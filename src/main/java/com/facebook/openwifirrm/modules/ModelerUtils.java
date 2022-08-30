@@ -237,28 +237,34 @@ public class ModelerUtils {
 	}
 
 	/**
-	 * For each AP, for each other AP that sent a wifiscan entry to that AP, this
-	 * method calculates an aggregate wifiscan entry with an aggregated RSSI.
+	 * For each AP, for each other AP that sent a wifiscan entry to that AP,
+	 * this method calculates an aggregate wifiscan entry with an aggregated
+	 * RSSI. If no non-obsolete entry exists, the latest wifiscan entry is used
+	 * instead.
 	 *
-	 * @param dataModel          the data model which includes the latest wifiscan
-	 *                           entries
-	 * @param obsoletionPeriodMs for each (scanning AP, responding AP) tuple, the
-	 *                           maximum amount of time (in milliseconds) it is
-	 *                           worth aggregating over, starting from the most
-	 *                           recent scan entry for that tuple, and working
-	 *                           backwards in time. An entry exactly
-	 *                           {@code obsoletionPeriodMs} ms earlier than the most
-	 *                           recent entry is considered non-obsolete (i.e., the
-	 *                           "non-obsolete" window is inclusive). Must be
-	 *                           non-negative.
+	 * @param dataModel          the data model which includes the latest
+	 *                           wifiscan entries
+	 * @param obsoletionPeriodMs for each (scanning AP, responding AP) tuple,
+	 *                           the maximum amount of time (in milliseconds) it
+	 *                           is worth aggregating over, starting from the
+	 *                           most recent scan entry for that tuple, and
+	 *                           working backwards in time. An entry exactly
+	 *                           {@code obsoletionPeriodMs} ms earlier than the
+	 *                           most recent entry is considered non-obsolete
+	 *                           (i.e., the "non-obsolete" window is inclusive).
+	 *                           Must be non-negative.
 	 * @param agg                an aggregator to calculate the aggregated RSSI
 	 *                           given recent wifiscan entries' RSSIs.
-	 * @return a map from AP serial number to a map from BSSID to an "aggregated
-	 *         wifiscan entry". This aggregated entry is the most recent entry with
-	 *         its {@code signal} attribute modified to be the aggregated signal
-	 *         value instead of the value in just the most recent entry for that (AP
-	 *         serial number, BSSID) tuple. The returned map will only contain APs
-	 *         which received at least one non-obsolete wifiscan entry from a BSS.
+	 * @return a map from AP serial number to a map from BSSID to a
+	 *         {@WifiScanEntry} object. This object is an "aggregated wifiscan
+	 *         entry" unless there is no non-obsolete wifiscan entry, in which
+	 *         case the latest wifiscan entry is used. An aggregated entry is
+	 *         just the latest entry with its {@code signal} attribute modified
+	 *         to be the aggregated signal value instead of the value in just
+	 *         the most recent entry for that (AP serial number, BSSID) tuple.
+	 *         The returned map will only map an (AP, BSSID) to an entry if an
+	 *         least one entry from that BSSID to that AP exists in
+	 *         {@link Modeler.DataModel#latestWifiScans}
 	 */
 	public static Map<String, Map<String, WifiScanEntry>> getAggregatedWifiScans(
 		Modeler.DataModel dataModel,
