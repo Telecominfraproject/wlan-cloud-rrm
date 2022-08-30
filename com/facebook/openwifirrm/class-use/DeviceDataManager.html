@@ -299,6 +299,26 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </td>
 </tr>
 <tr class="rowColor">
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../optimizers/channel/RandomChannelInitializer.html#%3Cinit%3E(com.facebook.openwifirrm.modules.Modeler.DataModel,java.lang.String,com.facebook.openwifirrm.DeviceDataManager,boolean)">RandomChannelInitializer</a></span>&#8203;(<a href="../modules/Modeler.DataModel.html" title="class in com.facebook.openwifirrm.modules">Modeler.DataModel</a>&nbsp;model,
+                        <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;zone,
+                        <a href="../DeviceDataManager.html" title="class in com.facebook.openwifirrm">DeviceDataManager</a>&nbsp;deviceDataManager,
+                        boolean&nbsp;setDifferentChannelsPerAp)</code></th>
+<td class="colLast">
+<div class="block">Constructor (allows setting different channel per AP)</div>
+</td>
+</tr>
+<tr class="altColor">
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../optimizers/channel/RandomChannelInitializer.html#%3Cinit%3E(com.facebook.openwifirrm.modules.Modeler.DataModel,java.lang.String,com.facebook.openwifirrm.DeviceDataManager,boolean,java.util.Random)">RandomChannelInitializer</a></span>&#8203;(<a href="../modules/Modeler.DataModel.html" title="class in com.facebook.openwifirrm.modules">Modeler.DataModel</a>&nbsp;model,
+                        <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;zone,
+                        <a href="../DeviceDataManager.html" title="class in com.facebook.openwifirrm">DeviceDataManager</a>&nbsp;deviceDataManager,
+                        boolean&nbsp;setDifferentChannelsPerAp,
+                        <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Random.html?is-external=true" title="class or interface in java.util" class="externalLink">Random</a>&nbsp;rng)</code></th>
+<td class="colLast">
+<div class="block">Constructor (allows setting different channel per AP and passing
+ in a custom Random class to allow seeding)</div>
+</td>
+</tr>
+<tr class="rowColor">
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../optimizers/channel/UnmanagedApAwareChannelOptimizer.html#%3Cinit%3E(com.facebook.openwifirrm.modules.Modeler.DataModel,java.lang.String,com.facebook.openwifirrm.DeviceDataManager)">UnmanagedApAwareChannelOptimizer</a></span>&#8203;(<a href="../modules/Modeler.DataModel.html" title="class in com.facebook.openwifirrm.modules">Modeler.DataModel</a>&nbsp;model,
                                 <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;zone,
                                 <a href="../DeviceDataManager.html" title="class in com.facebook.openwifirrm">DeviceDataManager</a>&nbsp;deviceDataManager)</code></th>
@@ -394,15 +414,26 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </td>
 </tr>
 <tr class="altColor">
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../optimizers/tpc/RandomTxPowerInitializer.html#%3Cinit%3E(com.facebook.openwifirrm.modules.Modeler.DataModel,java.lang.String,com.facebook.openwifirrm.DeviceDataManager,int)">RandomTxPowerInitializer</a></span>&#8203;(<a href="../modules/Modeler.DataModel.html" title="class in com.facebook.openwifirrm.modules">Modeler.DataModel</a>&nbsp;model,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../optimizers/tpc/RandomTxPowerInitializer.html#%3Cinit%3E(com.facebook.openwifirrm.modules.Modeler.DataModel,java.lang.String,com.facebook.openwifirrm.DeviceDataManager,boolean)">RandomTxPowerInitializer</a></span>&#8203;(<a href="../modules/Modeler.DataModel.html" title="class in com.facebook.openwifirrm.modules">Modeler.DataModel</a>&nbsp;model,
                         <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;zone,
                         <a href="../DeviceDataManager.html" title="class in com.facebook.openwifirrm">DeviceDataManager</a>&nbsp;deviceDataManager,
-                        int&nbsp;txPower)</code></th>
+                        boolean&nbsp;setDifferentTxPowerPerAp)</code></th>
 <td class="colLast">
-<div class="block">Constructor.</div>
+<div class="block">Constructor (uses random tx power per AP).</div>
 </td>
 </tr>
 <tr class="rowColor">
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../optimizers/tpc/RandomTxPowerInitializer.html#%3Cinit%3E(com.facebook.openwifirrm.modules.Modeler.DataModel,java.lang.String,com.facebook.openwifirrm.DeviceDataManager,boolean,java.util.Random)">RandomTxPowerInitializer</a></span>&#8203;(<a href="../modules/Modeler.DataModel.html" title="class in com.facebook.openwifirrm.modules">Modeler.DataModel</a>&nbsp;model,
+                        <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;zone,
+                        <a href="../DeviceDataManager.html" title="class in com.facebook.openwifirrm">DeviceDataManager</a>&nbsp;deviceDataManager,
+                        boolean&nbsp;setDifferentTxPowerPerAp,
+                        <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Random.html?is-external=true" title="class or interface in java.util" class="externalLink">Random</a>&nbsp;rng)</code></th>
+<td class="colLast">
+<div class="block">Constructor (uses random tx power per AP and allows passing in a custom
+ Random class to allow seeding).</div>
+</td>
+</tr>
+<tr class="altColor">
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../optimizers/tpc/TPC.html#%3Cinit%3E(com.facebook.openwifirrm.modules.Modeler.DataModel,java.lang.String,com.facebook.openwifirrm.DeviceDataManager)">TPC</a></span>&#8203;(<a href="../modules/Modeler.DataModel.html" title="class in com.facebook.openwifirrm.modules">Modeler.DataModel</a>&nbsp;model,
    <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;zone,
    <a href="../DeviceDataManager.html" title="class in com.facebook.openwifirrm">DeviceDataManager</a>&nbsp;deviceDataManager)</code></th>

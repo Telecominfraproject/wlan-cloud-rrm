@@ -1152,7 +1152,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Return the number of radios, or -1 if the field is missing/malformed.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/optimizers/tpc/RandomTxPowerInitializer.html#getRandomTxPower()">getRandomTxPower()</a></span> - Static method in class com.facebook.openwifirrm.optimizers.tpc.<a href="com/facebook/openwifirrm/optimizers/tpc/RandomTxPowerInitializer.html" title="class in com.facebook.openwifirrm.optimizers.tpc">RandomTxPowerInitializer</a></dt>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/optimizers/tpc/RandomTxPowerInitializer.html#getRandomTxPower()">getRandomTxPower()</a></span> - Method in class com.facebook.openwifirrm.optimizers.tpc.<a href="com/facebook/openwifirrm/optimizers/tpc/RandomTxPowerInitializer.html" title="class in com.facebook.openwifirrm.optimizers.tpc">RandomTxPowerInitializer</a></dt>
 <dd>
 <div class="block">Get a random tx power in [MIN_TX_POWER, MAX_TX_POWER], both inclusive</div>
 </dd>
@@ -1985,6 +1985,15 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Constructor.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/optimizers/channel/RandomChannelInitializer.html#%3Cinit%3E(com.facebook.openwifirrm.modules.Modeler.DataModel,java.lang.String,com.facebook.openwifirrm.DeviceDataManager,boolean)">RandomChannelInitializer(Modeler.DataModel, String, DeviceDataManager, boolean)</a></span> - Constructor for class com.facebook.openwifirrm.optimizers.channel.<a href="com/facebook/openwifirrm/optimizers/channel/RandomChannelInitializer.html" title="class in com.facebook.openwifirrm.optimizers.channel">RandomChannelInitializer</a></dt>
+<dd>
+<div class="block">Constructor (allows setting different channel per AP)</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/optimizers/channel/RandomChannelInitializer.html#%3Cinit%3E(com.facebook.openwifirrm.modules.Modeler.DataModel,java.lang.String,com.facebook.openwifirrm.DeviceDataManager,boolean,java.util.Random)">RandomChannelInitializer(Modeler.DataModel, String, DeviceDataManager, boolean, Random)</a></span> - Constructor for class com.facebook.openwifirrm.optimizers.channel.<a href="com/facebook/openwifirrm/optimizers/channel/RandomChannelInitializer.html" title="class in com.facebook.openwifirrm.optimizers.channel">RandomChannelInitializer</a></dt>
+<dd>
+<div class="block">Constructor (allows setting different channel per AP and passing
+ in a custom Random class to allow seeding)</div>
+</dd>
 <dt><a href="com/facebook/openwifirrm/optimizers/tpc/RandomTxPowerInitializer.html" title="class in com.facebook.openwifirrm.optimizers.tpc"><span class="typeNameLink">RandomTxPowerInitializer</span></a> - Class in <a href="com/facebook/openwifirrm/optimizers/tpc/package-summary.html">com.facebook.openwifirrm.optimizers.tpc</a></dt>
 <dd>
 <div class="block">Random tx power initializer.</div>
@@ -1993,9 +2002,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Constructor (uses random tx power).</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/optimizers/tpc/RandomTxPowerInitializer.html#%3Cinit%3E(com.facebook.openwifirrm.modules.Modeler.DataModel,java.lang.String,com.facebook.openwifirrm.DeviceDataManager,int)">RandomTxPowerInitializer(Modeler.DataModel, String, DeviceDataManager, int)</a></span> - Constructor for class com.facebook.openwifirrm.optimizers.tpc.<a href="com/facebook/openwifirrm/optimizers/tpc/RandomTxPowerInitializer.html" title="class in com.facebook.openwifirrm.optimizers.tpc">RandomTxPowerInitializer</a></dt>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/optimizers/tpc/RandomTxPowerInitializer.html#%3Cinit%3E(com.facebook.openwifirrm.modules.Modeler.DataModel,java.lang.String,com.facebook.openwifirrm.DeviceDataManager,boolean)">RandomTxPowerInitializer(Modeler.DataModel, String, DeviceDataManager, boolean)</a></span> - Constructor for class com.facebook.openwifirrm.optimizers.tpc.<a href="com/facebook/openwifirrm/optimizers/tpc/RandomTxPowerInitializer.html" title="class in com.facebook.openwifirrm.optimizers.tpc">RandomTxPowerInitializer</a></dt>
 <dd>
-<div class="block">Constructor.</div>
+<div class="block">Constructor (uses random tx power per AP).</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/optimizers/tpc/RandomTxPowerInitializer.html#%3Cinit%3E(com.facebook.openwifirrm.modules.Modeler.DataModel,java.lang.String,com.facebook.openwifirrm.DeviceDataManager,boolean,java.util.Random)">RandomTxPowerInitializer(Modeler.DataModel, String, DeviceDataManager, boolean, Random)</a></span> - Constructor for class com.facebook.openwifirrm.optimizers.tpc.<a href="com/facebook/openwifirrm/optimizers/tpc/RandomTxPowerInitializer.html" title="class in com.facebook.openwifirrm.optimizers.tpc">RandomTxPowerInitializer</a></dt>
+<dd>
+<div class="block">Constructor (uses random tx power per AP and allows passing in a custom
+ Random class to allow seeding).</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/models/State.Interface.SSID.Association.Rate.html#%3Cinit%3E()">Rate()</a></span> - Constructor for class com.facebook.openwifirrm.ucentral.models.<a href="com/facebook/openwifirrm/ucentral/models/State.Interface.SSID.Association.Rate.html" title="class in com.facebook.openwifirrm.ucentral.models">State.Interface.SSID.Association.Rate</a></dt>
 <dd>&nbsp;</dd>

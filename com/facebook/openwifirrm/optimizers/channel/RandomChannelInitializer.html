@@ -140,7 +140,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 extends <a href="ChannelOptimizer.html" title="class in com.facebook.openwifirrm.optimizers.channel">ChannelOptimizer</a></pre>
 <div class="block">Random channel initializer.
  <p>
- Randomly assign APs to the same channel.</div>
+ Randomly assign APs to the same channel unless otherwise specified.
+ If specified, all APs will be assigned a random channel.</div>
 </li>
 </ul>
 </div>
@@ -198,6 +199,26 @@ extends <a href="ChannelOptimizer.html" title="class in com.facebook.openwifirrm
                         <a href="../../DeviceDataManager.html" title="class in com.facebook.openwifirrm">DeviceDataManager</a>&nbsp;deviceDataManager)</code></th>
 <td class="colLast">
 <div class="block">Constructor.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(com.facebook.openwifirrm.modules.Modeler.DataModel,java.lang.String,com.facebook.openwifirrm.DeviceDataManager,boolean)">RandomChannelInitializer</a></span>&#8203;(<a href="../../modules/Modeler.DataModel.html" title="class in com.facebook.openwifirrm.modules">Modeler.DataModel</a>&nbsp;model,
+                        <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;zone,
+                        <a href="../../DeviceDataManager.html" title="class in com.facebook.openwifirrm">DeviceDataManager</a>&nbsp;deviceDataManager,
+                        boolean&nbsp;setDifferentChannelsPerAp)</code></th>
+<td class="colLast">
+<div class="block">Constructor (allows setting different channel per AP)</div>
+</td>
+</tr>
+<tr class="altColor">
+<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(com.facebook.openwifirrm.modules.Modeler.DataModel,java.lang.String,com.facebook.openwifirrm.DeviceDataManager,boolean,java.util.Random)">RandomChannelInitializer</a></span>&#8203;(<a href="../../modules/Modeler.DataModel.html" title="class in com.facebook.openwifirrm.modules">Modeler.DataModel</a>&nbsp;model,
+                        <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;zone,
+                        <a href="../../DeviceDataManager.html" title="class in com.facebook.openwifirrm">DeviceDataManager</a>&nbsp;deviceDataManager,
+                        boolean&nbsp;setDifferentChannelsPerAp,
+                        <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Random.html?is-external=true" title="class or interface in java.util" class="externalLink">Random</a>&nbsp;rng)</code></th>
+<td class="colLast">
+<div class="block">Constructor (allows setting different channel per AP and passing
+ in a custom Random class to allow seeding)</div>
 </td>
 </tr>
 </table>
@@ -280,6 +301,34 @@ extends <a href="ChannelOptimizer.html" title="class in com.facebook.openwifirrm
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
+<a id="&lt;init&gt;(com.facebook.openwifirrm.modules.Modeler.DataModel,java.lang.String,com.facebook.openwifirrm.DeviceDataManager,boolean,java.util.Random)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>RandomChannelInitializer</h4>
+<pre>public&nbsp;RandomChannelInitializer&#8203;(<a href="../../modules/Modeler.DataModel.html" title="class in com.facebook.openwifirrm.modules">Modeler.DataModel</a>&nbsp;model,
+                                <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;zone,
+                                <a href="../../DeviceDataManager.html" title="class in com.facebook.openwifirrm">DeviceDataManager</a>&nbsp;deviceDataManager,
+                                boolean&nbsp;setDifferentChannelsPerAp,
+                                <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Random.html?is-external=true" title="class or interface in java.util" class="externalLink">Random</a>&nbsp;rng)</pre>
+<div class="block">Constructor (allows setting different channel per AP and passing
+ in a custom Random class to allow seeding)</div>
+</li>
+</ul>
+<a id="&lt;init&gt;(com.facebook.openwifirrm.modules.Modeler.DataModel,java.lang.String,com.facebook.openwifirrm.DeviceDataManager,boolean)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>RandomChannelInitializer</h4>
+<pre>public&nbsp;RandomChannelInitializer&#8203;(<a href="../../modules/Modeler.DataModel.html" title="class in com.facebook.openwifirrm.modules">Modeler.DataModel</a>&nbsp;model,
+                                <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;zone,
+                                <a href="../../DeviceDataManager.html" title="class in com.facebook.openwifirrm">DeviceDataManager</a>&nbsp;deviceDataManager,
+                                boolean&nbsp;setDifferentChannelsPerAp)</pre>
+<div class="block">Constructor (allows setting different channel per AP)</div>
+</li>
+</ul>
 <a id="&lt;init&gt;(com.facebook.openwifirrm.modules.Modeler.DataModel,java.lang.String,com.facebook.openwifirrm.DeviceDataManager)">
 <!--   -->
 </a>
