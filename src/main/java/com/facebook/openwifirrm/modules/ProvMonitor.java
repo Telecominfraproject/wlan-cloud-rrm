@@ -145,8 +145,8 @@ public class ProvMonitor implements Runnable {
 
 		try {
 			deviceDataManager.setTopology(topo);
-		} catch (IllegalArgumentException exc) {
-			logger.info("Failed validating the topology ({}), aborting sync", exc.getMessage());
+		} catch (IllegalArgumentException e) {
+			logger.error("Invalid topology received from owprov, aborting sync", e);
 			return;
 		}
 
