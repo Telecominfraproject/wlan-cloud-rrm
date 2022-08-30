@@ -334,7 +334,12 @@ public class ModelerUtils {
 				}
 				if (agg.getCount() > 0) {
 					aggregatedWifiScans.get(serialNumber).get(bssid).signal = (int) Math.round(agg.getAggregate());
+				} else {
+					aggregatedWifiScans
+						.computeIfAbsent(serialNumber, k -> new HashMap<>())
+						.put(bssid, mostRecentEntry);
 				}
+
 			}
 		}
 		return aggregatedWifiScans;

@@ -183,7 +183,7 @@ public class ModelerUtilsTest {
 		);
 		WifiScanEntry expectedAggregatedEntryCToB = new WifiScanEntry(entryCToB1);
 		assertEquals(expectedAggregatedEntryCToB, aggregateMap.get(apB).get(bssidC));
-		assertFalse(aggregateMap.get(apB).containsKey(bssidA));
+		assertEquals(entryAToB3, aggregateMap.get(apB).get(bssidA));
 
 		// test multiple entries in one scan and scans from multiple APs
 		WifiScanEntry entryAToB4 = TestUtils.createWifiScanEntryWithBssid(1, bssidA);
