@@ -453,7 +453,11 @@ public class TestUtils {
 	}
 
 	/**
+<<<<<<< HEAD
 	 * Create a device state object with one radio.
+=======
+	 * Create a device state object with one radio and client RSSIs.
+>>>>>>> 37806df (Resolve comments)
 	 *
 	 * @param channel channel number
 	 * @param channelWidth channel width in MHz
