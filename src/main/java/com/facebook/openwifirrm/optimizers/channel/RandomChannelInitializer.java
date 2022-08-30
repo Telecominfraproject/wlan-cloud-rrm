@@ -44,20 +44,13 @@ public class RandomChannelInitializer extends ChannelOptimizer {
 	/** Whether to set a different value per AP or use a single value for all APs */
 	private final boolean setDifferentChannelsPerAp;
 
-	/**
-	 * Constructor (allows setting different channel per AP and passing
-	 * in a custom Random class to allow seeding)
-	 */
+	/** Constructor. */
 	public RandomChannelInitializer(
 		DataModel model,
 		String zone,
-		DeviceDataManager deviceDataManager,
-		boolean setDifferentChannelsPerAp,
-		Random rng
+		DeviceDataManager deviceDataManager
 	) {
-		super(model, zone, deviceDataManager);
-		this.setDifferentChannelsPerAp = setDifferentChannelsPerAp;
-		this.rng = rng;
+		this(model, zone, deviceDataManager, false);
 	}
 
 	/** Constructor (allows setting different channel per AP) */
@@ -76,13 +69,20 @@ public class RandomChannelInitializer extends ChannelOptimizer {
 		);
 	}
 
-	/** Constructor. */
+	/**
+	 * Constructor (allows setting different channel per AP and passing
+	 * in a custom Random class to allow seeding)
+	 */
 	public RandomChannelInitializer(
 		DataModel model,
 		String zone,
-		DeviceDataManager deviceDataManager
+		DeviceDataManager deviceDataManager,
+		boolean setDifferentChannelsPerAp,
+		Random rng
 	) {
-		this(model, zone, deviceDataManager, false);
+		super(model, zone, deviceDataManager);
+		this.setDifferentChannelsPerAp = setDifferentChannelsPerAp;
+		this.rng = rng;
 	}
 
 	@Override

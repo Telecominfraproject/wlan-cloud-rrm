@@ -37,20 +37,13 @@ public class RandomTxPowerInitializer extends TPC {
 	/** Whether to set a different value per AP or use a single value for all APs */
 	private final boolean setDifferentTxPowerPerAp;
 
-	/**
-	 * Constructor (uses random tx power per AP and allows passing in a custom
-	 * Random class to allow seeding).
-	 */
+	/** Constructor (uses random tx power). */
 	public RandomTxPowerInitializer(
 		DataModel model,
 		String zone,
-		DeviceDataManager deviceDataManager,
-		boolean setDifferentTxPowerPerAp,
-		Random rng
+		DeviceDataManager deviceDataManager
 	) {
-		super(model, zone, deviceDataManager);
-		this.setDifferentTxPowerPerAp = setDifferentTxPowerPerAp;
-		this.rng = rng;
+		this(model, zone, deviceDataManager, false);
 	}
 
 	/** Constructor (uses random tx power per AP). */
@@ -69,13 +62,20 @@ public class RandomTxPowerInitializer extends TPC {
 		);
 	}
 
-	/** Constructor (uses random tx power). */
+	/**
+	 * Constructor (uses random tx power per AP and allows passing in a custom
+	 * Random class to allow seeding).
+	 */
 	public RandomTxPowerInitializer(
 		DataModel model,
 		String zone,
-		DeviceDataManager deviceDataManager
+		DeviceDataManager deviceDataManager,
+		boolean setDifferentTxPowerPerAp,
+		Random rng
 	) {
-		this(model, zone, deviceDataManager, false, new Random());
+		super(model, zone, deviceDataManager);
+		this.setDifferentTxPowerPerAp = setDifferentTxPowerPerAp;
+		this.rng = rng;
 	}
 
 	/** Get a random tx power in [MIN_TX_POWER, MAX_TX_POWER], both inclusive */
