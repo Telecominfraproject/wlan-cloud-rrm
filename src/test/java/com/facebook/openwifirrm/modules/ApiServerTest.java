@@ -515,20 +515,19 @@ public class ApiServerTest {
 		// Test on POST api
 		String url = endpoint("/api/v1/system");
 		// Valid command
-		JSONObject json_obj = new JSONObject("{\"command\": \"reload\"}");
 		HttpResponse<String> post_resp = Unirest
 				.post(url)
-				.body(json_obj)
+				.body("{\"command\": \"reload\"}")
 				.asString();
 		assertEquals(200, post_resp.getStatus());
 
 		// Missing/wrong parameters
 		assertEquals(
 			400, 
-			Unirest.post(url).body(new JSONObject("{\"command\": \"xxx\"}")).asString().getStatus());
+			Unirest.post(url).body("{\"command\": \"xxx\"}").asString().getStatus());
 		assertEquals(
 			400,
-			Unirest.post(url).body(new JSONObject("{\"invalid command\": \"xxx\"}")).asString().getStatus()
+			Unirest.post(url).body("{\"invalid command\": \"xxx\"}").asString().getStatus()
 		);
 	}
 

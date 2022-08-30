@@ -559,17 +559,13 @@ public class ApiServer implements Runnable {
 				@Parameter(hidden = true) Response response
 		) {
 			try {
-				JSONObject json_obj = new JSONObject(request.body());
-				String command = json_obj.get("command").toString();
+				JSONObject jsonObj = new JSONObject(request.body());
+				String command = jsonObj.get("command").toString();
 				switch (command) {
 					case "setloglevel":
-						return "[]";
 					case "reload":
-						return "[]";
 					case "getloglevels":
-						return "[]";
 					case "getloglevelnames":
-						return "[]";
 					case "getsubsystemnames":
 						return "[]";
 					default:
