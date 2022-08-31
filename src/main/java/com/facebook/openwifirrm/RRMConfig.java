@@ -333,24 +333,6 @@ public class RRMConfig {
 			public String corsDomainList = "";
 
 			/**
-			 * Enable HTTP basic auth?
-			 * ({@code APISERVERPARAMS_USEBASICAUTH})
-			 */
-			public boolean useBasicAuth = false;
-
-			/**
-			 * The HTTP basic auth username (if enabled)
-			 * ({@code APISERVERPARAMS_BASICAUTHUSER})
-			 */
-			public String basicAuthUser = "admin";
-
-			/**
-			 * The HTTP basic auth password (if enabled)
-			 * ({@code APISERVERPARAMS_BASICAUTHPASSWORD})
-			 */
-			public String basicAuthPassword = "openwifi";
-
-			/**
 			 * Enable OpenWiFi authentication via tokens (external) and API keys
 			 * (internal)
 			 * ({@code APISERVERPARAMS_USEOPENWIFIAUTH})
@@ -557,15 +539,6 @@ public class RRMConfig {
 		}
 		if ((v = env.get("APISERVERPARAMS_CORSDOMAINLIST")) != null) {
 			apiServerParams.corsDomainList = v;
-		}
-		if ((v = env.get("APISERVERPARAMS_USEBASICAUTH")) != null) {
-			apiServerParams.useBasicAuth = Boolean.parseBoolean(v);
-		}
-		if ((v = env.get("APISERVERPARAMS_BASICAUTHUSER")) != null) {
-			apiServerParams.basicAuthUser = v;
-		}
-		if ((v = env.get("APISERVERPARAMS_BASICAUTHPASSWORD")) != null) {
-			apiServerParams.basicAuthPassword = v;
 		}
 		if ((v = env.get("APISERVERPARAMS_USEOPENWIFIAUTH")) != null) {
 			apiServerParams.useOpenWifiAuth = Boolean.parseBoolean(v);
