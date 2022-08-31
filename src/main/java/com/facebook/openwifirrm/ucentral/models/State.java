@@ -20,6 +20,7 @@ public class State {
 			public String[] ports;
 			// TODO last_seen
 		}
+
 		public class SSID {
 			public class Association {
 				public class Rate {
@@ -34,6 +35,7 @@ public class State {
 					public int he_gi;
 					public int he_dcm;
 				}
+
 				public String bssid;
 				public String station;
 				public long connected;
@@ -63,6 +65,7 @@ public class State {
 			public String phy;
 			public JsonObject radio;
 		}
+
 		public class Counters {
 			public long collisions;
 			public long multicast;
@@ -90,6 +93,7 @@ public class State {
 		public JsonObject[] lldp;
 		// TODO ports ?
 	}
+
 	public Interface[] interfaces;
 
 	public class Unit {
@@ -105,6 +109,7 @@ public class State {
 		public Memory memory;
 		public long uptime;
 	}
+
 	public Unit unit;
 
 	// TODO

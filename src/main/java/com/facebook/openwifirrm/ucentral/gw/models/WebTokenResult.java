@@ -9,15 +9,15 @@
 package com.facebook.openwifirrm.ucentral.gw.models;
 
 public class WebTokenResult {
-    public String access_token;
-    public String refresh_token;
-    public String token_type;
-    public int expires_in;
-    public int idle_timeout;
-    public String username;
-    public long created;
-    public boolean userMustChangePassword;
-    public int errorCode;
-    public WebTokenAclTemplate aclTemplate;
-    public long lastRefresh;
+	public String access_token;
+	public String refresh_token;
+	public String token_type;
+	public int expires_in;
+	public int idle_timeout;
+	public String username;
+	public long created;
+	public boolean userMustChangePassword;
+	public int errorCode;
+	public WebTokenAclTemplate aclTemplate;
+	public long lastRefresh;
 }

@@ -90,7 +90,8 @@ public class ApiServerTest {
 
 		// Create scheduler
 		RRMScheduler scheduler = new RRMScheduler(
-			rrmConfig.moduleConfig.schedulerParams, deviceDataManager
+			rrmConfig.moduleConfig.schedulerParams,
+			deviceDataManager
 		);
 
 		// Instantiate dependent instances
@@ -158,7 +159,8 @@ public class ApiServerTest {
 		deviceDataManager.setTopology(topology);
 
 		// Fetch topology
-		HttpResponse<String> resp = Unirest.get(endpoint("/api/v1/getTopology")).asString();
+		HttpResponse<String> resp =
+			Unirest.get(endpoint("/api/v1/getTopology")).asString();
 		assertEquals(200, resp.getStatus());
 		assertEquals(deviceDataManager.getTopologyJson(), resp.getBody());
 	}
@@ -178,10 +180,16 @@ public class ApiServerTest {
 			.body(gson.toJson(topology))
 			.asString();
 		assertEquals(200, resp.getStatus());
-		assertEquals(gson.toJson(topology), deviceDataManager.getTopologyJson());
+		assertEquals(
+			gson.toJson(topology),
+			deviceDataManager.getTopologyJson()
+		);
 
 		// Missing/wrong parameters
-		assertEquals(400, Unirest.post(url).body("not json").asString().getStatus());
+		assertEquals(
+			400,
+			Unirest.post(url).body("not json").asString().getStatus()
+		);
 	}
 
 	@Test
@@ -204,9 +212,13 @@ public class ApiServerTest {
 		deviceDataManager.setDeviceApConfig(ap, apConfig);
 
 		// Fetch config
-		HttpResponse<String> resp = Unirest.get(endpoint("/api/v1/getDeviceLayeredConfig")).asString();
+		HttpResponse<String> resp =
+			Unirest.get(endpoint("/api/v1/getDeviceLayeredConfig")).asString();
 		assertEquals(200, resp.getStatus());
-		assertEquals(deviceDataManager.getDeviceLayeredConfigJson(), resp.getBody());
+		assertEquals(
+			deviceDataManager.getDeviceLayeredConfigJson(),
+			resp.getBody()
+		);
 	}
 
 	@Test
@@ -222,14 +234,22 @@ public class ApiServerTest {
 		deviceDataManager.setTopology(topology);
 
 		// Fetch config
-		HttpResponse<String> resp = Unirest.get(url + "?serial=" + ap).asString();
+		HttpResponse<String> resp =
+			Unirest.get(url + "?serial=" + ap).asString();
 		assertEquals(200, resp.getStatus());
-		String normalizedResp = gson.toJson(gson.fromJson(resp.getBody(), DeviceConfig.class));
-		assertEquals(gson.toJson(deviceDataManager.getDeviceConfig(ap)), normalizedResp);
+		String normalizedResp =
+			gson.toJson(gson.fromJson(resp.getBody(), DeviceConfig.class));
+		assertEquals(
+			gson.toJson(deviceDataManager.getDeviceConfig(ap)),
+			normalizedResp
+		);
 
 		// Missing/wrong parameters
 		assertEquals(400, Unirest.get(url).asString().getStatus());
-		assertEquals(400, Unirest.get(url + "?serial=asdf").asString().getStatus());
+		assertEquals(
+			400,
+			Unirest.get(url + "?serial=asdf").asString().getStatus()
+		);
 	}
 
 	@Test
@@ -278,12 +298,24 @@ public class ApiServerTest {
 		);
 		assertEquals(1, fullCfg.zoneConfig.size());
 		assertTrue(fullCfg.zoneConfig.containsKey(zone));
-		assertEquals(gson.toJson(config), gson.toJson(fullCfg.zoneConfig.get(zone)));
+		assertEquals(
+			gson.toJson(config),
+			gson.toJson(fullCfg.zoneConfig.get(zone))
+		);
 
 		// Missing/wrong parameters
-		assertEquals(400, Unirest.post(url).body(gson.toJson(config)).asString().getStatus());
-		assertEquals(400, Unirest.post(url + "?zone=asdf").body(gson.toJson(config)).asString().getStatus());
-		assertEquals(400, Unirest.post(url + "?zone=" + zone).body("not json").asString().getStatus());
+		assertEquals(
+			400,
+			Unirest.post(url).body(gson.toJson(config)).asString().getStatus()
+		);
+		assertEquals(
+			400,
+			Unirest.post(url + "?zone=asdf").body(gson.toJson(config)).asString().getStatus()
+		);
+		assertEquals(
+			400,
+			Unirest.post(url + "?zone=" + zone).body("not json").asString().getStatus()
+		);
 	}
 
 	@Test
@@ -313,12 +345,24 @@ public class ApiServerTest {
 		);
 		assertEquals(1, fullCfg.apConfig.size());
 		assertTrue(fullCfg.apConfig.containsKey(ap));
-		assertEquals(gson.toJson(config), gson.toJson(fullCfg.apConfig.get(ap)));
+		assertEquals(
+			gson.toJson(config),
+			gson.toJson(fullCfg.apConfig.get(ap))
+		);
 
 		// Missing/wrong parameters
-		assertEquals(400, Unirest.post(url).body(gson.toJson(config)).asString().getStatus());
-		assertEquals(400, Unirest.post(url + "?serial=asdf").body(gson.toJson(config)).asString().getStatus());
-		assertEquals(400, Unirest.post(url + "?serial=" + ap).body("not json").asString().getStatus());
+		assertEquals(
+			400,
+			Unirest.post(url).body(gson.toJson(config)).asString().getStatus()
+		);
+		assertEquals(
+			400,
+			Unirest.post(url + "?serial=asdf").body(gson.toJson(config)).asString().getStatus()
+		);
+		assertEquals(
+			400,
+			Unirest.post(url + "?serial=" + ap).body("not json").asString().getStatus()
+		);
 	}
 
 	@Test
@@ -362,20 +406,36 @@ public class ApiServerTest {
 			DeviceLayeredConfig.class
 		);
 		assertTrue(fullCfg.apConfig.containsKey(ap));
-		assertEquals(gson.toJson(apConfig), gson.toJson(fullCfg.apConfig.get(ap)));
+		assertEquals(
+			gson.toJson(apConfig),
+			gson.toJson(fullCfg.apConfig.get(ap))
+		);
 
 		// Missing/wrong parameters
-		assertEquals(400, Unirest.post(url).body(gson.toJson(configReq)).asString().getStatus());
-		assertEquals(400, Unirest.post(url + "?serial=asdf").body(gson.toJson(configReq)).asString().getStatus());
-		assertEquals(400, Unirest.post(url + "?serial=" + ap).body("not json").asString().getStatus());
-		assertEquals(400, Unirest.post(url + "?serial=" + ap).body("{}").asString().getStatus());
+		assertEquals(
+			400,
+			Unirest.post(url).body(gson.toJson(configReq)).asString().getStatus()
+		);
+		assertEquals(
+			400,
+			Unirest.post(url + "?serial=asdf").body(gson.toJson(configReq)).asString().getStatus()
+		);
+		assertEquals(
+			400,
+			Unirest.post(url + "?serial=" + ap).body("not json").asString().getStatus()
+		);
+		assertEquals(
+			400,
+			Unirest.post(url + "?serial=" + ap).body("{}").asString().getStatus()
+		);
 	}
 
 	@Test
 	@Order(100)
 	void test_currentModel() throws Exception {
 		// Fetch RRM model
-		HttpResponse<String> resp = Unirest.get(endpoint("/api/v1/currentModel")).asString();
+		HttpResponse<String> resp =
+			Unirest.get(endpoint("/api/v1/currentModel")).asString();
 		assertEquals(200, resp.getStatus());
 		assertEquals(gson.toJson(modeler.getDataModel()), resp.getBody());
 	}
@@ -392,9 +452,11 @@ public class ApiServerTest {
 		deviceDataManager.setTopology(topology);
 
 		// Correct requests
-		final String[] modes = new String[] { "random", "least_used", "unmanaged_aware" };
+		final String[] modes =
+			new String[] { "random", "least_used", "unmanaged_aware" };
 		for (String mode : modes) {
-			String endpoint = String.format("%s?mode=%s&zone=%s", url, mode, zone);
+			String endpoint =
+				String.format("%s?mode=%s&zone=%s", url, mode, zone);
 			HttpResponse<JsonNode> resp = Unirest.get(endpoint).asJson();
 			assertEquals(200, resp.getStatus());
 			assertNotNull(resp.getBody().getObject().getJSONObject("data"));
@@ -402,8 +464,14 @@ public class ApiServerTest {
 
 		// Missing/wrong parameters
 		assertEquals(400, Unirest.get(url).asString().getStatus());
-		assertEquals(400, Unirest.get(url + "?mode=test123&zone=" + zone).asString().getStatus());
-		assertEquals(400, Unirest.get(url + "?zone=asdf&mode=" + modes[0]).asString().getStatus());
+		assertEquals(
+			400,
+			Unirest.get(url + "?mode=test123&zone=" + zone).asString().getStatus()
+		);
+		assertEquals(
+			400,
+			Unirest.get(url + "?zone=asdf&mode=" + modes[0]).asString().getStatus()
+		);
 	}
 
 	@Test
@@ -418,9 +486,13 @@ public class ApiServerTest {
 		deviceDataManager.setTopology(topology);
 
 		// Correct requests
-		final String[] modes = new String[] { "random", "measure_ap_client", "measure_ap_ap", "location_optimal" };
+		final String[] modes = new String[] { "random",
+			"measure_ap_client",
+			"measure_ap_ap",
+			"location_optimal" };
 		for (String mode : modes) {
-			String endpoint = String.format("%s?mode=%s&zone=%s", url, mode, zone);
+			String endpoint =
+				String.format("%s?mode=%s&zone=%s", url, mode, zone);
 			HttpResponse<JsonNode> resp = Unirest.get(endpoint).asJson();
 			assertEquals(200, resp.getStatus());
 			assertNotNull(resp.getBody().getObject().getJSONObject("data"));
@@ -428,8 +500,14 @@ public class ApiServerTest {
 
 		// Missing/wrong parameters
 		assertEquals(400, Unirest.get(url).asString().getStatus());
-		assertEquals(400, Unirest.get(url + "?mode=test123&zone=" + zone).asString().getStatus());
-		assertEquals(400, Unirest.get(url + "?zone=asdf&mode=" + modes[0]).asString().getStatus());
+		assertEquals(
+			400,
+			Unirest.get(url + "?mode=test123&zone=" + zone).asString().getStatus()
+		);
+		assertEquals(
+			400,
+			Unirest.get(url + "?zone=asdf&mode=" + modes[0]).asString().getStatus()
+		);
 	}
 
 	@Test
@@ -437,26 +515,33 @@ public class ApiServerTest {
 	void testDocs() throws Exception {
 		// Index page paths
 		assertEquals(200, Unirest.get(endpoint("/")).asString().getStatus());
-		assertEquals(200, Unirest.get(endpoint("/index.html")).asString().getStatus());
+		assertEquals(
+			200,
+			Unirest.get(endpoint("/index.html")).asString().getStatus()
+		);
 
 		// OpenAPI YAML/JSON
-		HttpResponse<String> yamlResp = Unirest.get(endpoint("/openapi.yaml")).asString();
+		HttpResponse<String> yamlResp =
+			Unirest.get(endpoint("/openapi.yaml")).asString();
 		assertEquals(200, yamlResp.getStatus());
-		HttpResponse<JsonNode> jsonResp = Unirest.get(endpoint("/openapi.json")).asJson();
+		HttpResponse<JsonNode> jsonResp =
+			Unirest.get(endpoint("/openapi.json")).asJson();
 		assertEquals(200, jsonResp.getStatus());
 		// Check that we got the OpenAPI 3.x version string
 		assertTrue(
 			Arrays.stream(
 				yamlResp.getBody().split("\\R+")
-			).filter(line -> line.matches("^openapi: 3[0-9.]*$"))
-			.findFirst()
-			.isPresent()
+			)
+				.filter(line -> line.matches("^openapi: 3[0-9.]*$"))
+				.findFirst()
+				.isPresent()
 		);
 		assertTrue(
 			jsonResp.getBody().getObject().getString("openapi").matches("^3[0-9.]*$")
 		);
 		// Check that we got some endpoint paths
-		JSONObject paths = jsonResp.getBody().getObject().getJSONObject("paths");
+		JSONObject paths =
+			jsonResp.getBody().getObject().getJSONObject("paths");
 		assertFalse(paths.isEmpty());
 		assertTrue(paths.keys().next().startsWith("/api/"));
 	}
@@ -487,14 +572,17 @@ public class ApiServerTest {
 			.asString();
 		assertEquals(200, resp.getStatus());
 		assertEquals(
-			ORIGIN, resp.getHeaders().getFirst("Access-Control-Allow-Origin")
+			ORIGIN,
+			resp.getHeaders().getFirst("Access-Control-Allow-Origin")
 		);
 		assertEquals("Origin", resp.getHeaders().getFirst("Vary"));
 		assertEquals(
-			HEADERS, resp.getHeaders().getFirst("Access-Control-Allow-Headers")
+			HEADERS,
+			resp.getHeaders().getFirst("Access-Control-Allow-Headers")
 		);
 		assertEquals(
-			METHOD, resp.getHeaders().getFirst("Access-Control-Allow-Methods")
+			METHOD,
+			resp.getHeaders().getFirst("Access-Control-Allow-Methods")
 		);
 		assertEquals(
 			"true",
@@ -508,23 +596,28 @@ public class ApiServerTest {
 	@Order(2000)
 	void test_system() throws Exception {
 		// Test on GET api
-		HttpResponse<JsonNode> get_resp = Unirest.get(endpoint("/api/v1/system?command=info")).asJson();
+		HttpResponse<JsonNode> get_resp =
+			Unirest.get(endpoint("/api/v1/system?command=info")).asJson();
 		assertEquals(200, get_resp.getStatus());
-		assertEquals(VersionProvider.get(), get_resp.getBody().getObject().getString("version"));
+		assertEquals(
+			VersionProvider.get(),
+			get_resp.getBody().getObject().getString("version")
+		);
 
 		// Test on POST api
 		String url = endpoint("/api/v1/system");
 		// Valid command
 		HttpResponse<String> post_resp = Unirest
-				.post(url)
-				.body("{\"command\": \"reload\"}")
-				.asString();
+			.post(url)
+			.body("{\"command\": \"reload\"}")
+			.asString();
 		assertEquals(200, post_resp.getStatus());
 
 		// Missing/wrong parameters
 		assertEquals(
-			400, 
-			Unirest.post(url).body("{\"command\": \"xxx\"}").asString().getStatus());
+			400,
+			Unirest.post(url).body("{\"command\": \"xxx\"}").asString().getStatus()
+		);
 		assertEquals(
 			400,
 			Unirest.post(url).body("{\"invalid command\": \"xxx\"}").asString().getStatus()
@@ -534,19 +627,33 @@ public class ApiServerTest {
 	@Test
 	@Order(2001)
 	void test_provider() throws Exception {
-		HttpResponse<JsonNode> resp = Unirest.get(endpoint("/api/v1/provider")).asJson();
+		HttpResponse<JsonNode> resp =
+			Unirest.get(endpoint("/api/v1/provider")).asJson();
 		assertEquals(200, resp.getStatus());
-		assertEquals(rrmConfig.serviceConfig.vendor, resp.getBody().getObject().getString("vendor"));
-		assertEquals(rrmConfig.serviceConfig.vendorUrl, resp.getBody().getObject().getString("about"));
-		assertEquals(VersionProvider.get(), resp.getBody().getObject().getString("version"));
+		assertEquals(
+			rrmConfig.serviceConfig.vendor,
+			resp.getBody().getObject().getString("vendor")
+		);
+		assertEquals(
+			rrmConfig.serviceConfig.vendorUrl,
+			resp.getBody().getObject().getString("about")
+		);
+		assertEquals(
+			VersionProvider.get(),
+			resp.getBody().getObject().getString("version")
+		);
 	}
 
 	@Test
 	@Order(2002)
 	void test_algorithms() throws Exception {
-		HttpResponse<JsonNode> resp = Unirest.get(endpoint("/api/v1/algorithms")).asJson();
+		HttpResponse<JsonNode> resp =
+			Unirest.get(endpoint("/api/v1/algorithms")).asJson();
 		assertEquals(200, resp.getStatus());
-		assertEquals(RRMAlgorithm.AlgorithmType.values().length, resp.getBody().getArray().length());
+		assertEquals(
+			RRMAlgorithm.AlgorithmType.values().length,
+			resp.getBody().getArray().length()
+		);
 	}
 
 	@Test
@@ -566,7 +673,8 @@ public class ApiServerTest {
 			.map(RRMAlgorithm.AlgorithmType::name)
 			.collect(Collectors.toList());
 		for (String name : algorithms) {
-			String endpoint = String.format("%s?algorithm=%s&venue=%s", url, name, zone);
+			String endpoint =
+				String.format("%s?algorithm=%s&venue=%s", url, name, zone);
 			HttpResponse<JsonNode> resp = Unirest.put(endpoint).asJson();
 			assertEquals(200, resp.getStatus());
 			assertFalse(resp.getBody().getObject().has("error"));
@@ -575,7 +683,13 @@ public class ApiServerTest {
 
 		// Missing/wrong parameters
 		assertEquals(400, Unirest.put(url).asString().getStatus());
-		assertEquals(400, Unirest.put(url + "?mode=test123&venue=" + zone).asString().getStatus());
-		assertEquals(400, Unirest.put(url + "?venue=asdf&algorithm=" + algorithms.get(0)).asString().getStatus());
+		assertEquals(
+			400,
+			Unirest.put(url + "?mode=test123&venue=" + zone).asString().getStatus()
+		);
+		assertEquals(
+			400,
+			Unirest.put(url + "?venue=asdf&algorithm=" + algorithms.get(0)).asString().getStatus()
+		);
 	}
 }

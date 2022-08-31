@@ -9,6 +9,6 @@
 package com.facebook.openwifirrm.ucentral.gw.models;
 
 public class MfaAuthInfo {
-    public boolean enabled;
-    public String method;
+	public boolean enabled;
+	public String method;
 }

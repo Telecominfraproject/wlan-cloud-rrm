@@ -21,7 +21,6 @@ import org.slf4j.LoggerFactory;
 
 import com.facebook.openwifirrm.DeviceDataManager;
 import com.facebook.openwifirrm.modules.Modeler.DataModel;
-import com.facebook.openwifirrm.ucentral.UCentralConstants;
 import com.facebook.openwifirrm.ucentral.models.State;
 import com.google.gson.JsonObject;
 
@@ -31,7 +30,8 @@ import com.google.gson.JsonObject;
  * Assign tx power based on client RSSI and a fixed target MCS index.
  */
 public class MeasurementBasedApClientTPC extends TPC {
-	private static final Logger logger = LoggerFactory.getLogger(MeasurementBasedApClientTPC.class);
+	private static final Logger logger =
+		LoggerFactory.getLogger(MeasurementBasedApClientTPC.class);
 
 	/** The RRM algorithm ID. */
 	public static final String ALGORITHM_ID = "measure_ap_client";
@@ -63,7 +63,9 @@ public class MeasurementBasedApClientTPC extends TPC {
 
 	/** Constructor (uses default target MCS index). */
 	public MeasurementBasedApClientTPC(
-		DataModel model, String zone, DeviceDataManager deviceDataManager
+		DataModel model,
+		String zone,
+		DeviceDataManager deviceDataManager
 	) {
 		this(model, zone, deviceDataManager, DEFAULT_TARGET_MCS);
 	}
@@ -91,38 +93,42 @@ public class MeasurementBasedApClientTPC extends TPC {
 	 * @param bandwidth the channel bandwidth (Hz)
 	 */
 	private double computeTxPower(
-		int mcs, int currentTxPower, int clientRssi, int bandwidth
+		int mcs,
+		int currentTxPower,
+		int clientRssi,
+		int bandwidth
 	) {
 		// Tx power adjusted [dBm] =
 		// SNR_min [dB] + Tx power [dBm] - R [dBm] + NP [dBm] + NF [dB] - M [dB]
-		double SNR_min =       // Signal-to-noise ratio minimum [dB]
+		double SNR_min = // Signal-to-noise ratio minimum [dB]
 			MCS_TO_SNR.get(mcs);
-		final double k = 1.38e-23;  // Boltzmann's constant
-		final double T = 290;  // Temperature
-		double B = bandwidth;  // Bandwidth (Hz)
-		double NP =            // Noise power (dBm) => 10*log_10(K*T*B*1000)
+		final double k = 1.38e-23; // Boltzmann's constant
+		final double T = 290; // Temperature
+		double B = bandwidth; // Bandwidth (Hz)
+		double NP = // Noise power (dBm) => 10*log_10(K*T*B*1000)
 			10.0 * Math.log10(k * T * B * 1000.0);
-		final double NF = 6;  // Noise floor (6dB)
-		final double M = 2;   // Margin (2dB)
+		final double NF = 6; // Noise floor (6dB)
+		final double M = 2; // Margin (2dB)
 
 		return SNR_min + currentTxPower - clientRssi + NP + NF - M;
 	}
 
 	/** Compute new tx power (dBm) for the given radio. */
 	private int computeTxPowerForRadio(
-		String serialNumber, State state, JsonObject radio
+		String serialNumber,
+		State state,
+		JsonObject radio
 	) {
 		// Find current tx power and bandwidth
 		int currentTxPower =
 			radio.has("tx_power") && !radio.get("tx_power").isJsonNull()
 				? radio.get("tx_power").getAsInt()
 				: 0;
-		int channelWidth = 1_000_000 /* convert MHz to Hz */ * (
-			radio.has("channel_width") &&
-			!radio.get("channel_width").isJsonNull()
-				? radio.get("channel_width").getAsInt()
-				: 20
-		);
+		int channelWidth =
+			1_000_000 /* convert MHz to Hz */ * (radio.has("channel_width") &&
+				!radio.get("channel_width").isJsonNull()
+					? radio.get("channel_width").getAsInt()
+					: 20);
 
 		// Find minimum client RSSI
 		List<Integer> clientRssiList = new ArrayList<>();
@@ -136,8 +142,7 @@ public class MeasurementBasedApClientTPC extends TPC {
 						continue;
 					}
 					for (
-						State.Interface.SSID.Association client :
-						ssid.associations
+						State.Interface.SSID.Association client : ssid.associations
 					) {
 						logger.debug(
 							"Device {}: SSID '{}' => client {} with rssi {}",
@@ -159,7 +164,7 @@ public class MeasurementBasedApClientTPC extends TPC {
 				DEFAULT_TX_POWER,
 				currentTxPower
 			);
-			return DEFAULT_TX_POWER;  // no clients
+			return DEFAULT_TX_POWER; // no clients
 		}
 		int clientRssi = Collections.min(clientRssiList);
 
@@ -235,13 +240,14 @@ public class MeasurementBasedApClientTPC extends TPC {
 
 			if (state.radios == null || state.radios.length == 0) {
 				logger.debug(
-					"Device {}: No radios found, skipping...", serialNumber
+					"Device {}: No radios found, skipping...",
+					serialNumber
 				);
 				continue;
 			}
 			Map<String, Integer> radioMap = new TreeMap<>();
 
-			for (JsonObject radio: state.radios) {
+			for (JsonObject radio : state.radios) {
 				Integer currentChannel =
 					radio.has("channel") && !radio.get("channel").isJsonNull()
 						? radio.get("channel").getAsInt()

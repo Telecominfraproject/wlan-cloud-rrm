@@ -9,9 +9,9 @@
 package com.facebook.openwifirrm.ucentral.gw.models;
 
 public class AclTemplate {
-    public boolean Read;
-    public boolean ReadWrite;
-    public boolean ReadWriteCreate;
-    public boolean Delete;
-    public boolean PortalLogin;
+	public boolean Read;
+	public boolean ReadWrite;
+	public boolean ReadWriteCreate;
+	public boolean Delete;
+	public boolean PortalLogin;
 }

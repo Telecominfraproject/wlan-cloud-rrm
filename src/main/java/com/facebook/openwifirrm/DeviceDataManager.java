@@ -31,7 +31,8 @@ import com.google.gson.Gson;
  * Device topology and config manager.
  */
 public class DeviceDataManager {
-	private static final Logger logger = LoggerFactory.getLogger(DeviceDataManager.class);
+	private static final Logger logger =
+		LoggerFactory.getLogger(DeviceDataManager.class);
 
 	/** The Gson instance. */
 	private final Gson gson = new Gson();
@@ -103,7 +104,10 @@ public class DeviceDataManager {
 		}
 		if (topo == null) {
 			// Missing/empty file, write defaults to disk
-			logger.info("Creating default topology file '{}'", topologyFile.getPath());
+			logger.info(
+				"Creating default topology file '{}'",
+				topologyFile.getPath()
+			);
 			topo = new DeviceTopology();
 			Utils.writeJsonFile(topologyFile, topo);
 		}
@@ -123,13 +127,19 @@ public class DeviceDataManager {
 		DeviceLayeredConfig cfg = null;
 		if (deviceConfigFile.isFile()) {
 			// Read file
-			logger.info("Reading device config file '{}'", deviceConfigFile.getPath());
+			logger.info(
+				"Reading device config file '{}'",
+				deviceConfigFile.getPath()
+			);
 			String contents = Utils.readFile(deviceConfigFile);
 			cfg = gson.fromJson(contents, DeviceLayeredConfig.class);
 		}
 		if (cfg == null) {
 			// Missing/empty file, write defaults to disk
-			logger.info("Creating default device config file '{}'", deviceConfigFile.getPath());
+			logger.info(
+				"Creating default device config file '{}'",
+				deviceConfigFile.getPath()
+			);
 			cfg = new DeviceLayeredConfig();
 			Utils.writeJsonFile(deviceConfigFile, cfg);
 		} else {
@@ -166,7 +176,8 @@ public class DeviceDataManager {
 			l.lock();
 			try {
 				Utils.writeJsonFile(
-					deviceLayeredConfigFile, deviceLayeredConfig
+					deviceLayeredConfigFile,
+					deviceLayeredConfig
 				);
 			} catch (FileNotFoundException e) {
 				// Callers won't be able to deal with this, so just use an
@@ -203,7 +214,9 @@ public class DeviceDataManager {
 					throw new IllegalArgumentException(
 						String.format(
 							"Device '%s' in multiple zones ('%s', '%s')",
-							serialNumber, existingZone, zone
+							serialNumber,
+							existingZone,
+							zone
 						)
 					);
 				}
@@ -236,10 +249,10 @@ public class DeviceDataManager {
 			// remove if:
 			// - zone doesn't exist
 			// - config object is empty
-			modified |= cfg.zoneConfig.entrySet().removeIf(entry ->
-				!isZoneInTopology(entry.getKey()) ||
-				entry.getValue().isEmpty()
-			);
+			modified |= cfg.zoneConfig.entrySet()
+				.removeIf(entry -> !isZoneInTopology(entry.getKey()) ||
+					entry.getValue().isEmpty()
+				);
 		}
 		if (cfg.apConfig == null) {
 			cfg.apConfig = new TreeMap<>();
@@ -248,15 +261,14 @@ public class DeviceDataManager {
 			// remove if:
 			// - AP doesn't exist
 			// - config object is empty
-			modified |= cfg.apConfig.entrySet().removeIf(entry ->
-				!isDeviceInTopology(entry.getKey()) ||
-				entry.getValue().isEmpty()
-			);
+			modified |= cfg.apConfig.entrySet()
+				.removeIf(entry -> !isDeviceInTopology(entry.getKey()) ||
+					entry.getValue().isEmpty()
+				);
 		}
 
 		return modified;
 	}
-
 
 	/** Set the topology. May throw unchecked exceptions upon error. */
 	public void setTopology(DeviceTopology topo) {
@@ -418,7 +430,8 @@ public class DeviceDataManager {
 			throw new IllegalArgumentException("Null serialNumber");
 		}
 		return cachedDeviceConfigs.computeIfAbsent(
-			serialNumber, k -> computeDeviceConfig(k)
+			serialNumber,
+			k -> computeDeviceConfig(k)
 		);
 	}
 
@@ -436,7 +449,8 @@ public class DeviceDataManager {
 			throw new IllegalArgumentException("Null zone");
 		}
 		return cachedDeviceConfigs.computeIfAbsent(
-			serialNumber, k -> computeDeviceConfig(k, zone)
+			serialNumber,
+			k -> computeDeviceConfig(k, zone)
 		);
 	}
 

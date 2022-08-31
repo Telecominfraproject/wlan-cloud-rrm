@@ -30,7 +30,8 @@ import com.facebook.openwifirrm.optimizers.tpc.TPC;
  * RRM algorithm model and utility methods.
  */
 public class RRMAlgorithm {
-	private static final Logger logger = LoggerFactory.getLogger(RRMAlgorithm.class);
+	private static final Logger logger =
+		LoggerFactory.getLogger(RRMAlgorithm.class);
 
 	/** RRM algorithm type enum. */
 	public enum AlgorithmType {
@@ -107,7 +108,7 @@ public class RRMAlgorithm {
 			AlgorithmType.valueOf(name);
 		} catch (IllegalArgumentException e) {
 			logger.error("Parse error, unknown algorithm name: '{}'", name);
-			return null;  // unsupported algorithm
+			return null; // unsupported algorithm
 		}
 
 		Map<String, String> args = new HashMap<>();
@@ -118,11 +119,11 @@ public class RRMAlgorithm {
 			String[] kv = s.split("=", 2);
 			if (kv.length != 2) {
 				logger.error("Parse error, invalid key=value arg: '{}'", s);
-				return null;  // invalid key-value pair
+				return null; // invalid key-value pair
 			}
 			if (args.putIfAbsent(kv[0], kv[1]) != null) {
 				logger.error("Parse error, duplicate arg: '{}'", kv[0]);
-				return null;  // duplicate key
+				return null; // duplicate key
 			}
 		}
 
@@ -156,20 +157,24 @@ public class RRMAlgorithm {
 	) {
 		AlgorithmResult result = new AlgorithmResult();
 		if (name == null || args == null) {
-			result.error = "Null algorithm name or arguments?";  // shouldn't happen
+			result.error = "Null algorithm name or arguments?"; // shouldn't happen
 			return result;
 		}
 
 		// Get mode (i.e. specific algorithm)
 		String mode = args.getOrDefault("mode", "");
 		String modeErrorStr = String.format(
-			"Unknown mode '%s' provided for algorithm '%s'", mode, name
+			"Unknown mode '%s' provided for algorithm '%s'",
+			mode,
+			name
 		);
 
 		// Find algorithm to run
 		if (name.equals(RRMAlgorithm.AlgorithmType.OptimizeChannel.name())) {
 			logger.info(
-				"Zone '{}': Running channel optimizer (mode='{}')", zone, mode
+				"Zone '{}': Running channel optimizer (mode='{}')",
+				zone,
+				mode
 			);
 			ChannelOptimizer optimizer;
 			switch (mode) {
@@ -182,29 +187,41 @@ public class RRMAlgorithm {
 				// fall through
 			case UnmanagedApAwareChannelOptimizer.ALGORITHM_ID:
 				optimizer = new UnmanagedApAwareChannelOptimizer(
-					modeler.getDataModelCopy(), zone, deviceDataManager
+					modeler.getDataModelCopy(),
+					zone,
+					deviceDataManager
 				);
 				break;
 			case RandomChannelInitializer.ALGORITHM_ID:
 				optimizer = new RandomChannelInitializer(
-					modeler.getDataModelCopy(), zone, deviceDataManager
+					modeler.getDataModelCopy(),
+					zone,
+					deviceDataManager
 				);
 				break;
 			case LeastUsedChannelOptimizer.ALGORITHM_ID:
 				optimizer = new LeastUsedChannelOptimizer(
-					modeler.getDataModelCopy(), zone, deviceDataManager
+					modeler.getDataModelCopy(),
+					zone,
+					deviceDataManager
 				);
 				break;
 			}
 			result.channelMap = optimizer.computeChannelMap();
 			if (!dryRun) {
 				optimizer.applyConfig(
-					deviceDataManager, configManager, result.channelMap
+					deviceDataManager,
+					configManager,
+					result.channelMap
 				);
 			}
-		} else if (name.equals(RRMAlgorithm.AlgorithmType.OptimizeTxPower.name())) {
+		} else if (
+			name.equals(RRMAlgorithm.AlgorithmType.OptimizeTxPower.name())
+		) {
 			logger.info(
-				"Zone '{}': Running tx power optimizer (mode='{}')", zone, mode
+				"Zone '{}': Running tx power optimizer (mode='{}')",
+				zone,
+				mode
 			);
 			TPC optimizer;
 			switch (mode) {
@@ -217,29 +234,39 @@ public class RRMAlgorithm {
 				// fall through
 			case MeasurementBasedApApTPC.ALGORITHM_ID:
 				optimizer = new MeasurementBasedApApTPC(
-					modeler.getDataModelCopy(), zone, deviceDataManager
+					modeler.getDataModelCopy(),
+					zone,
+					deviceDataManager
 				);
 				break;
 			case RandomTxPowerInitializer.ALGORITHM_ID:
 				optimizer = new RandomTxPowerInitializer(
-					modeler.getDataModelCopy(), zone, deviceDataManager
+					modeler.getDataModelCopy(),
+					zone,
+					deviceDataManager
 				);
 				break;
 			case MeasurementBasedApClientTPC.ALGORITHM_ID:
 				optimizer = new MeasurementBasedApClientTPC(
-					modeler.getDataModelCopy(), zone, deviceDataManager
+					modeler.getDataModelCopy(),
+					zone,
+					deviceDataManager
 				);
 				break;
 			case LocationBasedOptimalTPC.ALGORITHM_ID:
 				optimizer = new LocationBasedOptimalTPC(
-					modeler.getDataModelCopy(), zone, deviceDataManager
+					modeler.getDataModelCopy(),
+					zone,
+					deviceDataManager
 				);
 				break;
 			}
 			result.txPowerMap = optimizer.computeTxPowerMap();
 			if (!dryRun) {
 				optimizer.applyConfig(
-					deviceDataManager, configManager, result.txPowerMap
+					deviceDataManager,
+					configManager,
+					result.txPowerMap
 				);
 			}
 		} else {

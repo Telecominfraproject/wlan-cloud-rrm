@@ -31,7 +31,8 @@ public class TestUtils {
 	private static final Gson gson = new Gson();
 
 	/** Default value for {@link WifiScanEntry#unixTimeMs} for testing. */
-	public static final Instant DEFAULT_WIFISCANENTRY_TIME = Instant.parse("2022-01-01T00:00:00Z");
+	public static final Instant DEFAULT_WIFISCANENTRY_TIME =
+		Instant.parse("2022-01-01T00:00:00Z");
 
 	/** Default channel width in MHz */
 	public static final int DEFAULT_CHANNEL_WIDTH = 20;
@@ -39,7 +40,10 @@ public class TestUtils {
 	public static final int DEFAULT_TX_POWER = 20;
 
 	/** Create a topology from the given devices in a single zone. */
-	public static DeviceTopology createTopology(String zone, String... devices) {
+	public static DeviceTopology createTopology(
+		String zone,
+		String... devices
+	) {
 		DeviceTopology topology = new DeviceTopology();
 		topology.put(zone, new TreeSet<>(Arrays.asList(devices)));
 		return topology;
@@ -55,12 +59,15 @@ public class TestUtils {
 	 * @return a radio info object as a {@code JsonObject}
 	 */
 	private static JsonObject createDeviceStatusRadioObject(
-		String band, int channel, int channelWidth, int txPower
+		String band,
+		int channel,
+		int channelWidth,
+		int txPower
 	) {
 		return gson.fromJson(
 			String.format(
-				"{\"band\": %s,\"channel\": %d,\"channel-mode\":\"HE\","
-					+ "\"channel-width\":%d,\"country\":\"CA\",\"tx-power\":%d}",
+				"{\"band\": %s,\"channel\": %d,\"channel-mode\":\"HE\"," +
+					"\"channel-width\":%d,\"country\":\"CA\",\"tx-power\":%d}",
 				band,
 				channel,
 				channelWidth,
@@ -76,9 +83,14 @@ public class TestUtils {
 	 */
 	public static JsonArray createDeviceStatus(String band, int channel) {
 		JsonArray jsonList = new JsonArray();
-		jsonList.add(createDeviceStatusRadioObject(
-			band, channel, DEFAULT_CHANNEL_WIDTH, DEFAULT_TX_POWER
-		));
+		jsonList.add(
+			createDeviceStatusRadioObject(
+				band,
+				channel,
+				DEFAULT_CHANNEL_WIDTH,
+				DEFAULT_TX_POWER
+			)
+		);
 		return jsonList;
 	}
 
@@ -92,12 +104,19 @@ public class TestUtils {
 	 *         and tx power
 	 */
 	public static JsonArray createDeviceStatus(
-		String band, int channel, int txPower
+		String band,
+		int channel,
+		int txPower
 	) {
 		JsonArray jsonList = new JsonArray();
-		jsonList.add(createDeviceStatusRadioObject(
-			band, channel, DEFAULT_CHANNEL_WIDTH, txPower
-		));
+		jsonList.add(
+			createDeviceStatusRadioObject(
+				band,
+				channel,
+				DEFAULT_CHANNEL_WIDTH,
+				txPower
+			)
+		);
 		return jsonList;
 	}
 
@@ -109,9 +128,14 @@ public class TestUtils {
 		JsonArray jsonList = new JsonArray();
 		for (String band : bands) {
 			int channel = UCentralUtils.LOWER_CHANNEL_LIMIT.get(band);
-			jsonList.add(createDeviceStatusRadioObject(
-				band, channel, DEFAULT_CHANNEL_WIDTH, DEFAULT_TX_POWER
-			));
+			jsonList.add(
+				createDeviceStatusRadioObject(
+					band,
+					channel,
+					DEFAULT_CHANNEL_WIDTH,
+					DEFAULT_TX_POWER
+				)
+			);
 		}
 		return jsonList;
 	}
@@ -120,14 +144,29 @@ public class TestUtils {
 	 * Create an array with two radio info entries (2G and 5G), with the given
 	 * tx powers and channels.
 	 */
-	public static JsonArray createDeviceStatusDualBand(int channel2G, int txPower2G, int channel5G, int txPower5G) {
+	public static JsonArray createDeviceStatusDualBand(
+		int channel2G,
+		int txPower2G,
+		int channel5G,
+		int txPower5G
+	) {
 		JsonArray jsonList = new JsonArray();
-		jsonList.add(createDeviceStatusRadioObject(
-			UCentralConstants.BAND_2G, channel2G, DEFAULT_CHANNEL_WIDTH, txPower2G
-		));
-		jsonList.add(createDeviceStatusRadioObject(
-			UCentralConstants.BAND_5G, channel5G, DEFAULT_CHANNEL_WIDTH, txPower5G
-		));
+		jsonList.add(
+			createDeviceStatusRadioObject(
+				UCentralConstants.BAND_2G,
+				channel2G,
+				DEFAULT_CHANNEL_WIDTH,
+				txPower2G
+			)
+		);
+		jsonList.add(
+			createDeviceStatusRadioObject(
+				UCentralConstants.BAND_5G,
+				channel5G,
+				DEFAULT_CHANNEL_WIDTH,
+				txPower5G
+			)
+		);
 		return jsonList;
 	}
 
@@ -142,7 +181,9 @@ public class TestUtils {
 	}
 
 	/** Create a list of wifi scan entries with the given channels. */
-	public static List<WifiScanEntry> createWifiScanList(List<Integer> channels) {
+	public static List<WifiScanEntry> createWifiScanList(
+		List<Integer> channels
+	) {
 		return channels
 			.stream()
 			.map(c -> createWifiScanEntry(c))
@@ -150,7 +191,11 @@ public class TestUtils {
 	}
 
 	/** Create a wifi scan entry with the given BSSID, RSSI, and channel. */
-	public static WifiScanEntry createWifiScanEntryWithBssid(String bssid, Integer rssi, int channel) {
+	public static WifiScanEntry createWifiScanEntryWithBssid(
+		String bssid,
+		Integer rssi,
+		int channel
+	) {
 		WifiScanEntry entry = createWifiScanEntry(channel);
 		entry.bssid = bssid;
 		entry.signal = rssi; // overwrite
@@ -158,11 +203,20 @@ public class TestUtils {
 	}
 
 	/** Create a list of wifi scan entries with the BSSIDs, RSSIs, and channel. */
-	public static List<WifiScanEntry> createWifiScanListWithBssid(Map<String, Integer> bssidToRssi, int channel) {
+	public static List<WifiScanEntry> createWifiScanListWithBssid(
+		Map<String, Integer> bssidToRssi,
+		int channel
+	) {
 		Set<String> bssidSet = bssidToRssi.keySet();
 		return bssidSet
-			.stream().map(bssid -> createWifiScanEntryWithBssid(bssid,
-				bssidToRssi.get(bssid), channel))
+			.stream()
+			.map(
+				bssid -> createWifiScanEntryWithBssid(
+					bssid,
+					bssidToRssi.get(bssid),
+					channel
+				)
+			)
 			.collect(Collectors.toList());
 	}
 
@@ -172,7 +226,12 @@ public class TestUtils {
 	 * responsibility to make sure {@code channel}, {@code htOper}, and
 	 * {@code vhtOper} are consistent.
 	 */
-	public static WifiScanEntry createWifiScanEntryWithWidth(String bssid, int channel, String htOper, String vhtOper) {
+	public static WifiScanEntry createWifiScanEntryWithWidth(
+		String bssid,
+		int channel,
+		String htOper,
+		String vhtOper
+	) {
 		WifiScanEntry entry = new WifiScanEntry();
 		entry.bssid = bssid;
 		entry.channel = channel;
@@ -190,15 +249,19 @@ public class TestUtils {
 	 * responsibility to make sure {@code channels}, {@code htOper}, and
 	 * {@code vhtOper} are consistent.
 	 */
-	public static List<WifiScanEntry> createWifiScanListWithWidth(String bssid, List<Integer> channels,
-			List<String> htOper, List<String> vhtOper) {
+	public static List<WifiScanEntry> createWifiScanListWithWidth(
+		String bssid,
+		List<Integer> channels,
+		List<String> htOper,
+		List<String> vhtOper
+	) {
 		List<WifiScanEntry> wifiScanResults = new ArrayList<>();
 		for (int i = 0; i < channels.size(); i++) {
 			WifiScanEntry wifiScanResult = createWifiScanEntryWithWidth(
-					bssid,
-					channels.get(i),
-					((i >= htOper.size()) ? null : htOper.get(i)),
-					((i >= vhtOper.size()) ? null : vhtOper.get(i))
+				bssid,
+				channels.get(i),
+				((i >= htOper.size()) ? null : htOper.get(i)),
+				((i >= vhtOper.size()) ? null : vhtOper.get(i))
 			);
 			wifiScanResults.add(wifiScanResult);
 		}
@@ -207,7 +270,8 @@ public class TestUtils {
 
 	/** Create a wifi scan entry with the given channel and bssid. */
 	public static WifiScanEntry createWifiScanEntryWithBssid(
-		int channel, String bssid
+		int channel,
+		String bssid
 	) {
 		WifiScanEntry entry = createWifiScanEntry(channel);
 		entry.bssid = bssid;
@@ -216,16 +280,20 @@ public class TestUtils {
 
 	/** Create a list of wifi scan entries with the given channels and bssids. */
 	public static List<WifiScanEntry> createWifiScanList(
-		List<Integer> channels, List<String> bssids
+		List<Integer> channels,
+		List<String> bssids
 	) {
 		List<WifiScanEntry> wifiScanList = new ArrayList<>();
 		for (
 			int chnIndex = 0;
 			chnIndex < channels.size();
-			chnIndex ++
+			chnIndex++
 		) {
-			wifiScanList.add(createWifiScanEntryWithBssid(
-				channels.get(chnIndex), bssids.get(chnIndex))
+			wifiScanList.add(
+				createWifiScanEntryWithBssid(
+					channels.get(chnIndex),
+					bssids.get(chnIndex)
+				)
 			);
 		}
 		return wifiScanList;
@@ -393,9 +461,10 @@ public class TestUtils {
 		String[] bssids,
 		int[][] clientRssis
 	) {
-		if (!(channels.length == channelWidths.length
-			&& channelWidths.length == txPowers.length
-			&& txPowers.length == bssids.length)
+		if (
+			!(channels.length == channelWidths.length &&
+				channelWidths.length == txPowers.length &&
+				txPowers.length == bssids.length)
 		) {
 			throw new IllegalArgumentException(
 				"All arguments must have the same length."
@@ -420,7 +489,8 @@ public class TestUtils {
 			for (int j = 0; j < clientRssis[i].length; j++) {
 				state.interfaces[i].ssids[0].associations[j] =
 					state.interfaces[i].ssids[0].new Association();
-				state.interfaces[i].ssids[0].associations[j].rssi = clientRssis[i][j];
+				state.interfaces[i].ssids[0].associations[j].rssi =
+					clientRssis[i][j];
 			}
 		}
 		state.unit = createStateUnit();
@@ -435,7 +505,11 @@ public class TestUtils {
 	 * @param bssid bssid
 	 * @return the state of an AP with one radio
 	 */
-	public static State createState(int channel, int channelWidth, String bssid) {
+	public static State createState(
+		int channel,
+		int channelWidth,
+		String bssid
+	) {
 		return createState(channel, channelWidth, DEFAULT_TX_POWER, bssid);
 	}
 
@@ -448,9 +522,18 @@ public class TestUtils {
 	 * @param bssid bssid
 	 * @return the state of an AP with one radio
 	 */
-	public static State createState(int channel, int channelWidth, int txPower, String bssid) {
+	public static State createState(
+		int channel,
+		int channelWidth,
+		int txPower,
+		String bssid
+	) {
 		return createState(
-			channel, channelWidth, txPower, bssid, new int[] {}
+			channel,
+			channelWidth,
+			txPower,
+			bssid,
+			new int[] {}
 		);
 	}
 

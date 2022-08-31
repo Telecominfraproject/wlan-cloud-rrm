@@ -36,20 +36,23 @@ import com.google.gson.JsonObject;
  * uCentral utility methods/structures.
  */
 public class UCentralUtils {
-	private static final Logger logger = LoggerFactory.getLogger(UCentralUtils.class);
+	private static final Logger logger =
+		LoggerFactory.getLogger(UCentralUtils.class);
 
 	/** The Gson instance. */
 	private static final Gson gson = new Gson();
 
 	/** Map of band to the band-specific lowest available channel*/
-	public static final Map<String, Integer> LOWER_CHANNEL_LIMIT = new HashMap<>();
+	public static final Map<String, Integer> LOWER_CHANNEL_LIMIT =
+		new HashMap<>();
 	static {
 		UCentralUtils.LOWER_CHANNEL_LIMIT.put(UCentralConstants.BAND_2G, 1);
 		UCentralUtils.LOWER_CHANNEL_LIMIT.put(UCentralConstants.BAND_5G, 36);
 	}
 
 	/** Map of band to the band-specific highest available channel*/
-	public static final Map<String, Integer> UPPER_CHANNEL_LIMIT = new HashMap<>();
+	public static final Map<String, Integer> UPPER_CHANNEL_LIMIT =
+		new HashMap<>();
 	static {
 		UCentralUtils.UPPER_CHANNEL_LIMIT.put(UCentralConstants.BAND_2G, 11);
 		UCentralUtils.UPPER_CHANNEL_LIMIT.put(UCentralConstants.BAND_5G, 165);
@@ -103,7 +106,12 @@ public class UCentralUtils {
 
 		@Override
 		public String toString() {
-			return String.format("WifiScanEntry[signal=%d, bssid=%s, unixTimeMs=%d]", signal, bssid, unixTimeMs);
+			return String.format(
+				"WifiScanEntry[signal=%d, bssid=%s, unixTimeMs=%d]",
+				signal,
+				bssid,
+				unixTimeMs
+			);
 		}
 	}
 
@@ -115,7 +123,10 @@ public class UCentralUtils {
 	 * @return list of wifiscan entries, or null if any parsing/deserialization
 	 *         error occurred.
 	 */
-	public static List<WifiScanEntry> parseWifiScanEntries(JsonObject result, long timestampMs) {
+	public static List<WifiScanEntry> parseWifiScanEntries(
+		JsonObject result,
+		long timestampMs
+	) {
 		List<WifiScanEntry> entries = new ArrayList<>();
 		try {
 			JsonArray scanInfo = result
@@ -216,8 +227,11 @@ public class UCentralUtils {
 		Map<String, List<String>> bandsMap = new HashMap<>();
 
 		for (String serialNumber : deviceStatus.keySet()) {
-			JsonArray radioList = deviceStatus.get(serialNumber).getAsJsonArray();
-			for (int radioIndex = 0; radioIndex < radioList.size(); radioIndex++) {
+			JsonArray radioList =
+				deviceStatus.get(serialNumber).getAsJsonArray();
+			for (
+				int radioIndex = 0; radioIndex < radioList.size(); radioIndex++
+			) {
 				JsonElement e = radioList.get(radioIndex);
 				if (!e.isJsonObject()) {
 					return null;
@@ -251,8 +265,11 @@ public class UCentralUtils {
 			new HashMap<>();
 
 		for (String serialNumber : deviceStatus.keySet()) {
-			JsonArray radioList = deviceStatus.get(serialNumber).getAsJsonArray();
-			for (int radioIndex = 0; radioIndex < radioList.size(); radioIndex++) {
+			JsonArray radioList =
+				deviceStatus.get(serialNumber).getAsJsonArray();
+			for (
+				int radioIndex = 0; radioIndex < radioList.size(); radioIndex++
+			) {
 				JsonElement e = radioList.get(radioIndex);
 				if (!e.isJsonObject()) {
 					return null;
@@ -260,10 +277,12 @@ public class UCentralUtils {
 				JsonObject radioObject = e.getAsJsonObject();
 				String band = radioObject.get("band").getAsString();
 
-				JsonObject capabilitesObject = deviceCapabilities.get(serialNumber);
+				JsonObject capabilitesObject =
+					deviceCapabilities.get(serialNumber);
 				List<Integer> availableChannels = new ArrayList<>();
 				if (capabilitesObject == null) {
-					availableChannels.addAll(defaultAvailableChannels.get(band));
+					availableChannels
+						.addAll(defaultAvailableChannels.get(band));
 				} else {
 					Set<Entry<String, JsonElement>> entrySet = capabilitesObject
 						.entrySet();
@@ -306,10 +325,13 @@ public class UCentralUtils {
 				}
 
 				deviceAvailableChannels.computeIfAbsent(
-					band, k -> new HashMap<>()
-				).put(
-					serialNumber, availableChannels
-				);
+					band,
+					k -> new HashMap<>()
+				)
+					.put(
+						serialNumber,
+						availableChannels
+					);
 			}
 		}
 		return deviceAvailableChannels;
@@ -321,35 +343,39 @@ public class UCentralUtils {
 	 *
 	 * Returns the results map
 	 */
-	public static Map<String, String> getBssidsMap(Map<String, State> latestState) {
+	public static Map<String, String> getBssidsMap(
+		Map<String, State> latestState
+	) {
 		Map<String, String> bssidMap = new HashMap<>();
-		for (Map.Entry<String, State> e: latestState.entrySet()) {
-		    State state = e.getValue();
-		    for (
-		    	int interfaceIndex = 0;
-		    	interfaceIndex < state.interfaces.length;
-		    	interfaceIndex++
+		for (Map.Entry<String, State> e : latestState.entrySet()) {
+			State state = e.getValue();
+			for (
+				int interfaceIndex = 0;
+				interfaceIndex < state.interfaces.length;
+				interfaceIndex++
 			) {
-		    	if (state.interfaces[interfaceIndex].ssids == null) {
-		    		continue;
-		    	}
-		    	for (
-		    		int ssidIndex = 0;
-		    		ssidIndex < state.interfaces[interfaceIndex].ssids.length;
-		    		ssidIndex++
-		    	) {
-		    		bssidMap.put(
-		    			state.interfaces[interfaceIndex].ssids[ssidIndex].bssid,
-		    			e.getKey()
-		    		);
-		    	}
-		    }
+				if (state.interfaces[interfaceIndex].ssids == null) {
+					continue;
+				}
+				for (
+					int ssidIndex = 0;
+					ssidIndex < state.interfaces[interfaceIndex].ssids.length;
+					ssidIndex++
+				) {
+					bssidMap.put(
+						state.interfaces[interfaceIndex].ssids[ssidIndex].bssid,
+						e.getKey()
+					);
+				}
+			}
 		}
 		return bssidMap;
 	}
 
 	/** Generate the RRM service key. */
-	public static String generateServiceKey(RRMConfig.ServiceConfig serviceConfig) {
+	public static String generateServiceKey(
+		RRMConfig.ServiceConfig serviceConfig
+	) {
 		try {
 			MessageDigest sha256 = MessageDigest.getInstance("SHA-256");
 			sha256.update(serviceConfig.publicEndpoint.getBytes());
@@ -370,9 +396,17 @@ public class UCentralUtils {
 	 * @return the center frequency of the given channel in MHz
 	 */
 	public static int channelToFrequencyMHz(int channel) {
-		if (ChannelOptimizer.AVAILABLE_CHANNELS_BAND.get(UCentralConstants.BAND_2G).contains(channel)) {
+		if (
+			ChannelOptimizer.AVAILABLE_CHANNELS_BAND
+				.get(UCentralConstants.BAND_2G)
+				.contains(channel)
+		) {
 			return 2407 + 5 * channel;
-		} else if (ChannelOptimizer.AVAILABLE_CHANNELS_BAND.get(UCentralConstants.BAND_5G).contains(channel)) {
+		} else if (
+			ChannelOptimizer.AVAILABLE_CHANNELS_BAND
+				.get(UCentralConstants.BAND_5G)
+				.contains(channel)
+		) {
 			return 5000 + channel;
 		} else {
 			throw new IllegalArgumentException("Must provide a valid channel.");
@@ -387,8 +421,8 @@ public class UCentralUtils {
 	 * @return true if the given channel is in the given band; false otherwise
 	 */
 	public static boolean isChannelInBand(int channel, String band) {
-		return LOWER_CHANNEL_LIMIT.get(band) <= channel
-				&& channel <= UPPER_CHANNEL_LIMIT.get(band);
+		return LOWER_CHANNEL_LIMIT.get(band) <= channel &&
+			channel <= UPPER_CHANNEL_LIMIT.get(band);
 	}
 
 	/**
@@ -399,7 +433,7 @@ public class UCentralUtils {
 	 * @return band if the channel can be mapped to a valid band; null otherwise
 	 */
 	public static String getBandFromChannel(int channel) {
-		for (String band: UCentralConstants.BANDS) {
+		for (String band : UCentralConstants.BANDS) {
 			if (isChannelInBand(channel, band)) {
 				return band;
 			}

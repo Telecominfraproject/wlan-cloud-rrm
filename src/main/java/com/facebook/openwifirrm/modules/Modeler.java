@@ -97,7 +97,8 @@ public class Modeler implements Runnable {
 		public Map<String, State> latestState = new ConcurrentHashMap<>();
 
 		/** List of radio info per device. */
-		public Map<String, JsonArray> latestDeviceStatus = new ConcurrentHashMap<>();
+		public Map<String, JsonArray> latestDeviceStatus =
+			new ConcurrentHashMap<>();
 
 		/** List of capabilities per device. */
 		public Map<String, JsonObject> latestDeviceCapabilities =
@@ -129,7 +130,8 @@ public class Modeler implements Runnable {
 			new DataCollector.DataListener() {
 				@Override
 				public void processDeviceCapabilities(
-					String serialNumber, DeviceCapabilities capabilities
+					String serialNumber,
+					DeviceCapabilities capabilities
 				) {
 					updateDeviceCapabilities(serialNumber, capabilities);
 				}
@@ -142,14 +144,16 @@ public class Modeler implements Runnable {
 			new ConfigManager.ConfigListener() {
 				@Override
 				public void receiveDeviceConfig(
-					String serialNumber, UCentralApConfiguration config
+					String serialNumber,
+					UCentralApConfiguration config
 				) {
 					updateDeviceConfig(serialNumber, config);
 				}
 
 				@Override
 				public boolean processDeviceConfig(
-					String serialNumber, UCentralApConfiguration config
+					String serialNumber,
+					UCentralApConfiguration config
 				) {
 					return false;
 				}
@@ -180,7 +184,9 @@ public class Modeler implements Runnable {
 					}
 
 					@Override
-					public void handleServiceEventRecords(List<ServiceEvent> serviceEventRecords) {
+					public void handleServiceEventRecords(
+						List<ServiceEvent> serviceEventRecords
+					) {
 						// ignored
 					}
 				}
@@ -201,9 +207,11 @@ public class Modeler implements Runnable {
 
 				// Drop records here if RRM is disabled for a device
 				int recordCount = inputData.records.size();
-				if (inputData.records.removeIf(
-					record -> !isRRMEnabled(record.serialNumber)
-				)) {
+				if (
+					inputData.records.removeIf(
+						record -> !isRRMEnabled(record.serialNumber)
+					)
+				) {
 					logger.debug(
 						"Dropping {} Kafka record(s) for non-RRM-enabled devices",
 						recordCount - inputData.records.size()
@@ -291,7 +299,8 @@ public class Modeler implements Runnable {
 				if (state != null) {
 					try {
 						State stateModel = gson.fromJson(state, State.class);
-						dataModel.latestState.put(record.serialNumber, stateModel);
+						dataModel.latestState
+							.put(record.serialNumber, stateModel);
 						stateUpdates.add(record.serialNumber);
 					} catch (JsonSyntaxException e) {
 						logger.error(
@@ -315,7 +324,8 @@ public class Modeler implements Runnable {
 					);
 
 				// Parse and validate this record
-				List<WifiScanEntry> scanEntries = UCentralUtils.parseWifiScanEntries(record.payload, record.timestampMs);
+				List<WifiScanEntry> scanEntries = UCentralUtils
+					.parseWifiScanEntries(record.payload, record.timestampMs);
 				if (scanEntries == null) {
 					continue;
 				}
@@ -350,10 +360,12 @@ public class Modeler implements Runnable {
 	 * Update device capabilities into DataModel whenever there are new changes.
 	 */
 	private void updateDeviceCapabilities(
-		String serialNumber, DeviceCapabilities capabilities
+		String serialNumber,
+		DeviceCapabilities capabilities
 	) {
 		dataModel.latestDeviceCapabilities.put(
-			serialNumber, capabilities.capabilities.getAsJsonObject("wifi")
+			serialNumber,
+			capabilities.capabilities.getAsJsonObject("wifi")
 		);
 	}
 
@@ -361,7 +373,8 @@ public class Modeler implements Runnable {
 	 * Update device config into DataModel whenever there are new changes.
 	 */
 	private void updateDeviceConfig(
-		String serialNumber, UCentralApConfiguration config
+		String serialNumber,
+		UCentralApConfiguration config
 	) {
 		// Get old vs new radios info and store the new radios info
 		JsonArray newRadioList = config.getRadioConfigList();

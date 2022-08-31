@@ -12,10 +12,10 @@ import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
 
 public class DeviceCapabilities {
-	  public String compatible;
-	  public String model;
-	  public String platform;
-	  public JsonObject network;
-	  @SerializedName("switch") public JsonObject switch_;
-	  public JsonObject wifi;
+	public String compatible;
+	public String model;
+	public String platform;
+	public JsonObject network;
+	@SerializedName("switch") public JsonObject switch_;
+	public JsonObject wifi;
 }

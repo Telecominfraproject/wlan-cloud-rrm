@@ -25,7 +25,8 @@ import com.google.gson.Gson;
  * Kafka producer for uCentral.
  */
 public class UCentralKafkaProducer {
-	private static final Logger logger = LoggerFactory.getLogger(UCentralKafkaProducer.class);
+	private static final Logger logger =
+		LoggerFactory.getLogger(UCentralKafkaProducer.class);
 
 	/** The producer instance. */
 	private final Producer<String, String> producer;
@@ -111,11 +112,13 @@ public class UCentralKafkaProducer {
 			event,
 			serviceEventsTopic
 		);
-		producer.send(new ProducerRecord<String, String>(
-			serviceEventsTopic,
-			serviceEvent.privateEndPoint,
-			gson.toJson(serviceEvent)
-		));
+		producer.send(
+			new ProducerRecord<String, String>(
+				serviceEventsTopic,
+				serviceEvent.privateEndPoint,
+				gson.toJson(serviceEvent)
+			)
+		);
 		producer.flush();
 	}
 

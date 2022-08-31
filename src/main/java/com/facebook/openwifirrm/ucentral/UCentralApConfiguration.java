@@ -65,7 +65,10 @@ public class UCentralApConfiguration {
 		if (radioConfigList == null) {
 			return radioBandsSet;
 		}
-		for (int radioIndex = 0; radioIndex < radioConfigList.size(); radioIndex++) {
+		for (
+			int radioIndex = 0; radioIndex < radioConfigList.size();
+			radioIndex++
+		) {
 			JsonElement e = radioConfigList.get(radioIndex);
 			if (!e.isJsonObject()) {
 				continue;
@@ -134,7 +137,7 @@ public class UCentralApConfiguration {
 		JsonObject metrics = config.getAsJsonObject("metrics");
 		if (
 			!metrics.has("statistics") ||
-			!metrics.get("statistics").isJsonObject()
+				!metrics.get("statistics").isJsonObject()
 		) {
 			metrics.add("statistics", new JsonObject());
 		}

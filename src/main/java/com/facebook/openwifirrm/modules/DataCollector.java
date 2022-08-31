@@ -48,17 +48,30 @@ import com.google.gson.JsonObject;
  * Data collector module.
  */
 public class DataCollector implements Runnable {
-	private static final Logger logger = LoggerFactory.getLogger(DataCollector.class);
+	private static final Logger logger =
+		LoggerFactory.getLogger(DataCollector.class);
 
 	/** Radio keys from state records to store. */
 	private static final String[] RADIO_KEYS = new String[] {
-		"channel", "channel_width", "noise", "tx_power"
+		"channel",
+		"channel_width",
+		"noise",
+		"tx_power"
 	};
 
 	/** AP client keys from state records to store. */
 	private static final String[] CLIENT_KEYS = new String[] {
-		"connected", "inactive", "rssi", "rx_bytes", "rx_packets", "tx_bytes",
-		"tx_duration", "tx_failed", "tx_offset", "tx_packets", "tx_retries"
+		"connected",
+		"inactive",
+		"rssi",
+		"rx_bytes",
+		"rx_packets",
+		"tx_bytes",
+		"tx_duration",
+		"tx_failed",
+		"tx_offset",
+		"tx_packets",
+		"tx_retries"
 	};
 	/** AP client rate keys from state records to store. */
 	private static final String[] CLIENT_RATE_KEYS =
@@ -95,7 +108,8 @@ public class DataCollector implements Runnable {
 	public interface DataListener {
 		/** Process a received device capabilities object. */
 		void processDeviceCapabilities(
-			String serialNumber, DeviceCapabilities capabilities
+			String serialNumber,
+			DeviceCapabilities capabilities
 		);
 	}
 
@@ -129,14 +143,16 @@ public class DataCollector implements Runnable {
 			new ConfigManager.ConfigListener() {
 				@Override
 				public void receiveDeviceConfig(
-					String serialNumber, UCentralApConfiguration config
+					String serialNumber,
+					UCentralApConfiguration config
 				) {
 					// do nothing
 				}
 
 				@Override
 				public boolean processDeviceConfig(
-					String serialNumber, UCentralApConfiguration config
+					String serialNumber,
+					UCentralApConfiguration config
 				) {
 					return sanitizeDeviceConfig(serialNumber, config);
 				}
@@ -161,7 +177,9 @@ public class DataCollector implements Runnable {
 					}
 
 					@Override
-					public void handleServiceEventRecords(List<ServiceEvent> serviceEventRecords) {
+					public void handleServiceEventRecords(
+						List<ServiceEvent> serviceEventRecords
+					) {
 						// ignored here, handled directly from UCentralKafkaConsumer
 					}
 				}
@@ -209,17 +227,22 @@ public class DataCollector implements Runnable {
 		}
 		int fetchSize = devices.size();
 		logger.debug("Received device list of size = {}", fetchSize);
-		if (devices.removeIf(
-			device -> !deviceDataManager.isDeviceInTopology(device.serialNumber)
-		)) {
+		if (
+			devices.removeIf(
+				device -> !deviceDataManager
+					.isDeviceInTopology(device.serialNumber)
+			)
+		) {
 			int removedSize = fetchSize - devices.size();
 			logger.debug(
-				"Ignoring {} device(s) not in topology", removedSize
+				"Ignoring {} device(s) not in topology",
+				removedSize
 			);
 		}
 		for (DeviceWithStatus device : devices) {
 			deviceDataMap.computeIfAbsent(
-				device.serialNumber, k -> new DeviceData()
+				device.serialNumber,
+				k -> new DeviceData()
 			);
 		}
 
@@ -237,20 +260,23 @@ public class DataCollector implements Runnable {
 	 * Otherwise, return false.
 	 */
 	private boolean sanitizeDeviceConfig(
-		String serialNumber, UCentralApConfiguration config
+		String serialNumber,
+		UCentralApConfiguration config
 	) {
 		boolean modified = false;
 
 		// Check stats interval
 		final int STATS_INTERVAL_S = params.deviceStatsIntervalSec;
 		if (STATS_INTERVAL_S < 1) {
-			return false;  // unmanaged
+			return false; // unmanaged
 		}
 		int currentStatsInterval = config.getStatisticsInterval();
 		if (currentStatsInterval != STATS_INTERVAL_S) {
 			logger.info(
 				"Device {}: setting stats interval to {} (was {})",
-				serialNumber, STATS_INTERVAL_S, currentStatsInterval
+				serialNumber,
+				STATS_INTERVAL_S,
+				currentStatsInterval
 			);
 			config.setStatisticsInterval(STATS_INTERVAL_S);
 			modified = true;
@@ -279,7 +305,7 @@ public class DataCollector implements Runnable {
 			DeviceData data = deviceDataMap.get(device.serialNumber);
 			if (
 				data.lastCapabilitiesTimeNs != null &&
-				now - data.lastCapabilitiesTimeNs < CAPABILITIES_INTERVAL_NS
+					now - data.lastCapabilitiesTimeNs < CAPABILITIES_INTERVAL_NS
 			) {
 				logger.trace(
 					"Skipping capabilities for {} (last requested {}s ago)",
@@ -291,7 +317,10 @@ public class DataCollector implements Runnable {
 
 			// Issue capabilities request (via executor, will run async eventually)
 			// Set "lastCapabilitiesTimeNs" now and again when the request actually runs
-			logger.info("Device {}: queued capabilities request", device.serialNumber);
+			logger.info(
+				"Device {}: queued capabilities request",
+				device.serialNumber
+			);
 			data.lastCapabilitiesTimeNs = now;
 			executor.submit(() -> {
 				data.lastCapabilitiesTimeNs = System.nanoTime();
@@ -343,7 +372,7 @@ public class DataCollector implements Runnable {
 			DeviceData data = deviceDataMap.get(device.serialNumber);
 			if (
 				data.lastWifiScanTimeNs != null &&
-				now - data.lastWifiScanTimeNs < WIFI_SCAN_INTERVAL_NS
+					now - data.lastWifiScanTimeNs < WIFI_SCAN_INTERVAL_NS
 			) {
 				logger.trace(
 					"Skipping wifi scan for {} (last scanned {}s ago)",
@@ -373,7 +402,8 @@ public class DataCollector implements Runnable {
 		logger.info("Device {}: requesting capabilities...", serialNumber);
 		DeviceCapabilities capabilities = client.getCapabilities(serialNumber);
 		if (capabilities == null) {
-			logger.error("Device {}: capabilities request failed", serialNumber);
+			logger
+				.error("Device {}: capabilities request failed", serialNumber);
 			return false;
 		}
 		logger.debug(
@@ -411,21 +441,27 @@ public class DataCollector implements Runnable {
 		if (wifiScanResult.errorCode != 0) {
 			logger.error(
 				"Device {}: wifi scan returned error code {}",
-				serialNumber, wifiScanResult.errorCode
+				serialNumber,
+				wifiScanResult.errorCode
 			);
 			return false;
 		}
 		if (wifiScanResult.results.entrySet().isEmpty()) {
 			logger.error(
-				"Device {}: wifi scan returned empty result set", serialNumber
+				"Device {}: wifi scan returned empty result set",
+				serialNumber
 			);
 			return false;
 		}
 		// wifiScanResult.executed is in seconds
-		List<WifiScanEntry> scanEntries = UCentralUtils.parseWifiScanEntries(wifiScanResult.results, 1000 * wifiScanResult.executed);
+		List<WifiScanEntry> scanEntries = UCentralUtils.parseWifiScanEntries(
+			wifiScanResult.results,
+			1000 * wifiScanResult.executed
+		);
 		if (scanEntries == null) {
 			logger.error(
-				"Device {}: wifi scan returned unexpected result", serialNumber
+				"Device {}: wifi scan returned unexpected result",
+				serialNumber
 			);
 			return false;
 		}
@@ -445,7 +481,9 @@ public class DataCollector implements Runnable {
 
 		// Save to database
 		insertWifiScanResultsToDatabase(
-			serialNumber, wifiScanResult.executed, scanEntries
+			serialNumber,
+			wifiScanResult.executed,
+			scanEntries
 		);
 
 		return true;
@@ -453,7 +491,9 @@ public class DataCollector implements Runnable {
 
 	/** Insert wifi scan results into database. */
 	private void insertWifiScanResultsToDatabase(
-		String serialNumber, long timestampSeconds, List<WifiScanEntry> entries
+		String serialNumber,
+		long timestampSeconds,
+		List<WifiScanEntry> entries
 	) {
 		if (dbManager == null) {
 			return;
@@ -476,7 +516,9 @@ public class DataCollector implements Runnable {
 
 	/** Parse a single state record into individual metrics. */
 	protected static void parseStateRecord(
-		String serialNumber, JsonObject payload, List<StateRecord> results
+		String serialNumber,
+		JsonObject payload,
+		List<StateRecord> results
 	) {
 		JsonObject state = payload.getAsJsonObject("state");
 		JsonArray interfaces = state.getAsJsonArray("interfaces");
@@ -495,14 +537,23 @@ public class DataCollector implements Runnable {
 
 			JsonObject counters = iface.getAsJsonObject("counters");
 			if (counters != null) {
-				for (Map.Entry<String, JsonElement> entry : counters.entrySet()) {
+				for (
+					Map.Entry<String, JsonElement> entry : counters.entrySet()
+				) {
 					String metric = String.format(
-						"interface.%s.%s", ifname, entry.getKey()
+						"interface.%s.%s",
+						ifname,
+						entry.getKey()
 					);
 					long value = entry.getValue().getAsLong();
-					results.add(new StateRecord(
-						localtime, metric, value, serialNumber
-					));
+					results.add(
+						new StateRecord(
+							localtime,
+							metric,
+							value,
+							serialNumber
+						)
+					);
 				}
 			}
 			JsonArray ssids = iface.getAsJsonArray("ssids");
@@ -513,51 +564,83 @@ public class DataCollector implements Runnable {
 						continue;
 					}
 					String bssid = ssid.get("bssid").getAsString();
-					JsonArray associations = ssid.getAsJsonArray("associations");
+					JsonArray associations =
+						ssid.getAsJsonArray("associations");
 					if (associations != null) {
 						for (JsonElement o3 : associations) {
 							JsonObject client = o3.getAsJsonObject();
 							if (!client.has("bssid")) {
 								continue;
 							}
-							String clientBssid = client.get("bssid").getAsString();
+							String clientBssid =
+								client.get("bssid").getAsString();
 							for (String s : CLIENT_KEYS) {
-								if (!client.has(s) || !client.get(s).isJsonPrimitive()) {
+								if (
+									!client.has(s) ||
+										!client.get(s).isJsonPrimitive()
+								) {
 									continue;
 								}
 								String metric = String.format(
 									"interface.%s.bssid.%s.client.%s.%s",
-									ifname, bssid, clientBssid, s
+									ifname,
+									bssid,
+									clientBssid,
+									s
 								);
 								long value = client.get(s).getAsLong();
-								results.add(new StateRecord(
-									localtime, metric, value, serialNumber
-								));
+								results.add(
+									new StateRecord(
+										localtime,
+										metric,
+										value,
+										serialNumber
+									)
+								);
 							}
 							for (String s : CLIENT_RATE_KEYS) {
-								if (!client.has(s) || !client.get(s).isJsonObject()) {
+								if (
+									!client.has(s) ||
+										!client.get(s).isJsonObject()
+								) {
 									continue;
 								}
 								String metricBase = String.format(
 									"interface.%s.bssid.%s.client.%s.%s",
-									ifname, bssid, clientBssid, s
+									ifname,
+									bssid,
+									clientBssid,
+									s
 								);
 								for (
-									Map.Entry<String, JsonElement> entry :
-									client.getAsJsonObject(s).entrySet()
+									Map.Entry<String, JsonElement> entry : client
+										.getAsJsonObject(s)
+										.entrySet()
 								) {
 									String metric = String.format(
-										"%s.%s", metricBase, entry.getKey()
+										"%s.%s",
+										metricBase,
+										entry.getKey()
 									);
 									long value;
-									if (entry.getValue().getAsJsonPrimitive().isBoolean()) {
-										value = entry.getValue().getAsBoolean() ? 1 : 0;
+									if (
+										entry.getValue()
+											.getAsJsonPrimitive()
+											.isBoolean()
+									) {
+										value = entry.getValue().getAsBoolean()
+											? 1 : 0;
 									} else {
 										value = entry.getValue().getAsLong();
 									}
-									results.add(new StateRecord(
-										localtime, metric, value, serialNumber
-									));
+									results.add(
+										new StateRecord(
+											localtime,
+											metric,
+											value,
+											serialNumber
+										)
+									);
 								}
 							}
 						}
@@ -604,7 +687,9 @@ public class DataCollector implements Runnable {
 	}
 
 	/** Parse state records into individual metrics. */
-	private static List<StateRecord> parseStateRecords(List<KafkaRecord> records) {
+	private static List<StateRecord> parseStateRecords(
+		List<KafkaRecord> records
+	) {
 		List<StateRecord> results = new ArrayList<>();
 		for (KafkaRecord record : records) {
 			try {

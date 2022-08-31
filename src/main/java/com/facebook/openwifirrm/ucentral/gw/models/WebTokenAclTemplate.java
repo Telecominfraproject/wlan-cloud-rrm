@@ -9,5 +9,5 @@
 package com.facebook.openwifirrm.ucentral.gw.models;
 
 public class WebTokenAclTemplate {
-    public AclTemplate aclTemplate;
+	public AclTemplate aclTemplate;
 }

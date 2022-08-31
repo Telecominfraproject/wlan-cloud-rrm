@@ -34,7 +34,8 @@ import com.facebook.openwifirrm.ucentral.prov.models.VenueList;
  * Also handles periodic optimization, based on owprov configuration.
  */
 public class ProvMonitor implements Runnable {
-	private static final Logger logger = LoggerFactory.getLogger(ProvMonitor.class);
+	private static final Logger logger =
+		LoggerFactory.getLogger(ProvMonitor.class);
 
 	/** Unknown (i.e. empty/unset) venue name. */
 	public static final String UNKNOWN_VENUE = "%OWPROV_UNKNOWN_VENUE%";
@@ -146,7 +147,10 @@ public class ProvMonitor implements Runnable {
 		try {
 			deviceDataManager.setTopology(topo);
 		} catch (IllegalArgumentException e) {
-			logger.error("Invalid topology received from owprov, aborting sync", e);
+			logger.error(
+				"Invalid topology received from owprov, aborting sync",
+				e
+			);
 			return;
 		}
 
@@ -158,22 +162,28 @@ public class ProvMonitor implements Runnable {
 
 		// Sync device configs
 		// NOTE: this only sets the device layer, NOT the zone(venue) layer
-		deviceDataManager.updateDeviceApConfig(configMap -> {
-			// Pass 1: disable RRM on all devices
-			for (InventoryTag tag : inventory.taglist) {
-				DeviceConfig cfg = configMap.computeIfAbsent(
-					tag.serialNumber, k -> new DeviceConfig()
-				);
-				cfg.enableRRM = cfg.enableConfig = cfg.enableWifiScan = false;
+		deviceDataManager.updateDeviceApConfig(
+			configMap -> {
+				// Pass 1: disable RRM on all devices
+				for (InventoryTag tag : inventory.taglist) {
+					DeviceConfig cfg = configMap.computeIfAbsent(
+						tag.serialNumber,
+						k -> new DeviceConfig()
+					);
+					cfg.enableRRM =
+						cfg.enableConfig = cfg.enableWifiScan = false;
+				}
+				// Pass 2: re-enable RRM on specific devices
+				for (String serialNumber : inventoryForRRM.serialNumbers) {
+					DeviceConfig cfg = configMap.computeIfAbsent(
+						serialNumber,
+						k -> new DeviceConfig()
+					);
+					cfg.enableRRM =
+						cfg.enableConfig = cfg.enableWifiScan = true;
+				}
 			}
-			// Pass 2: re-enable RRM on specific devices
-			for (String serialNumber : inventoryForRRM.serialNumbers) {
-				DeviceConfig cfg = configMap.computeIfAbsent(
-					serialNumber, k -> new DeviceConfig()
-				);
-				cfg.enableRRM = cfg.enableConfig = cfg.enableWifiScan = true;
-			}
-		});
+		);
 		logger.info(
 			"Synced device configs with owprov: RRM enabled on {}/{} device(s)",
 			inventoryForRRM.serialNumbers.size(),

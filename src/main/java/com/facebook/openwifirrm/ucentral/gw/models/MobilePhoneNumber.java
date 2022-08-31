@@ -9,7 +9,7 @@
 package com.facebook.openwifirrm.ucentral.gw.models;
 
 public class MobilePhoneNumber {
-    public String number;
-    public boolean verified;
-    public boolean primary;
+	public String number;
+	public boolean verified;
+	public boolean primary;
 }

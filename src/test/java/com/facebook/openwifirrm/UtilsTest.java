@@ -69,7 +69,8 @@ public class UtilsTest {
 		assertEquals(0x123456789abcL, Utils.macToLong("1234.5678.9abc"));
 
 		assertThrows(
-			IllegalArgumentException.class, () -> Utils.macToLong("blah")
+			IllegalArgumentException.class,
+			() -> Utils.macToLong("blah")
 		);
 	}
 

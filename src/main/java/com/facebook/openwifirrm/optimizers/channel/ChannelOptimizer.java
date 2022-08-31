@@ -33,7 +33,8 @@ import com.facebook.openwifirrm.ucentral.operationelement.VHTOperationElement;
  * Channel optimizer base class.
  */
 public abstract class ChannelOptimizer {
-	private static final Logger logger = LoggerFactory.getLogger(ChannelOptimizer.class);
+	private static final Logger logger =
+		LoggerFactory.getLogger(ChannelOptimizer.class);
 
 	/** Minimum supported channel width (MHz), inclusive. */
 	public static final int MIN_CHANNEL_WIDTH = 20;
@@ -45,12 +46,14 @@ public abstract class ChannelOptimizer {
 		AVAILABLE_CHANNELS_BAND.put(
 			UCentralConstants.BAND_5G,
 			Collections.unmodifiableList(
-				Arrays.asList(36, 40, 44, 48, 149, 153, 157, 161, 165))
+				Arrays.asList(36, 40, 44, 48, 149, 153, 157, 161, 165)
+			)
 		);
 		AVAILABLE_CHANNELS_BAND.put(
 			UCentralConstants.BAND_2G,
 			Collections.unmodifiableList(
-				Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11))
+				Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11)
+			)
 		);
 	}
 
@@ -61,17 +64,33 @@ public abstract class ChannelOptimizer {
 		AVAILABLE_CHANNELS_WIDTH.put(
 			40,
 			Collections.unmodifiableList(
-				Arrays.asList(36, 44, 52, 60, 100, 108, 116, 124, 132, 140, 149, 157))
+				Arrays.asList(
+					36,
+					44,
+					52,
+					60,
+					100,
+					108,
+					116,
+					124,
+					132,
+					140,
+					149,
+					157
+				)
+			)
 		);
 		AVAILABLE_CHANNELS_WIDTH.put(
 			80,
 			Collections.unmodifiableList(
-				Arrays.asList(36, 52, 100, 116, 132, 149))
+				Arrays.asList(36, 52, 100, 116, 132, 149)
+			)
 		);
 		AVAILABLE_CHANNELS_WIDTH.put(
 			160,
 			Collections.unmodifiableList(
-				Arrays.asList(36, 100))
+				Arrays.asList(36, 100)
+			)
 		);
 	}
 
@@ -124,7 +143,9 @@ public abstract class ChannelOptimizer {
 
 	/** Constructor. */
 	public ChannelOptimizer(
-		DataModel model, String zone, DeviceDataManager deviceDataManager
+		DataModel model,
+		String zone,
+		DeviceDataManager deviceDataManager
 	) {
 		this.model = model;
 		this.zone = zone;
@@ -155,7 +176,7 @@ public abstract class ChannelOptimizer {
 			return 0;
 		}
 
-		int index = (int) (Math.log(channelWidth/20) / Math.log(2));
+		int index = (int) (Math.log(channelWidth / 20) / Math.log(2));
 		if (CHANNELS_WIDTH_TO_PRIMARY.get(channel).size() > index) {
 			return CHANNELS_WIDTH_TO_PRIMARY.get(channel).get(index);
 		} else {
@@ -175,7 +196,10 @@ public abstract class ChannelOptimizer {
 		String htOper,
 		String vhtOper
 	) {
-		if (AVAILABLE_CHANNELS_BAND.get(UCentralConstants.BAND_2G).contains(channel)) {
+		if (
+			AVAILABLE_CHANNELS_BAND.get(UCentralConstants.BAND_2G)
+				.contains(channel)
+		) {
 			// 2.4G, it only supports 20 MHz
 			return 20;
 		}
@@ -193,18 +217,23 @@ public abstract class ChannelOptimizer {
 			VHTOperationElement vhtOperObj = new VHTOperationElement(vhtOper);
 			if (!htOperObj.staChannelWidth && vhtOperObj.channelWidth == 0) {
 				return 20;
-			} else if (htOperObj.staChannelWidth && vhtOperObj.channelWidth == 0) {
+			} else if (
+				htOperObj.staChannelWidth && vhtOperObj.channelWidth == 0
+			) {
 				return 40;
-			} else if (htOperObj.staChannelWidth && vhtOperObj.channelWidth == 1 && vhtOperObj.channel2 == 0) {
+			} else if (
+				htOperObj.staChannelWidth && vhtOperObj.channelWidth == 1 &&
+					vhtOperObj.channel2 == 0
+			) {
 				return 80;
 			} else if (
-					htOperObj.staChannelWidth
-					&& vhtOperObj.channelWidth == 1
-					&& vhtOperObj.channel2 != 0
+				htOperObj.staChannelWidth && vhtOperObj.channelWidth == 1 &&
+					vhtOperObj.channel2 != 0
 			) {
 				// if it is 160 MHz, it use two consecutive 80 MHz bands
 				// the difference of 8 means it is consecutive
-				int channelDiff = Math.abs(vhtOperObj.channel1 - vhtOperObj.channel2);
+				int channelDiff =
+					Math.abs(vhtOperObj.channel1 - vhtOperObj.channel2);
 				// the "8080" below does not mean 8080 MHz wide, it refers to 80+80 MHz channel
 				return channelDiff == 8 ? 160 : 8080;
 			} else {
@@ -230,7 +259,7 @@ public abstract class ChannelOptimizer {
 			// if it is 2.4 GHz or the AP doesn't support this feature
 			return Arrays.asList(channel);
 		}
-		int numOfChannels = channelWidth/20;
+		int numOfChannels = channelWidth / 20;
 		List<Integer> coveredChannels = new ArrayList<>(numOfChannels);
 		for (int index = 0; index < numOfChannels; index++) {
 			coveredChannels.add(primaryChannel + index * 4);
@@ -253,8 +282,8 @@ public abstract class ChannelOptimizer {
 		Map<String, List<WifiScanEntry>> deviceToWifiScans = new HashMap<>();
 
 		for (
-			Map.Entry<String, List<List<WifiScanEntry>>> e :
-			latestWifiScans.entrySet()
+			Map.Entry<String, List<List<WifiScanEntry>>> e : latestWifiScans
+				.entrySet()
 		) {
 			String serialNumber = e.getKey();
 
@@ -281,8 +310,10 @@ public abstract class ChannelOptimizer {
 			// 1. Remove the wifi scan results on different bands
 			// 2. Duplicate the wifi scan result from a channel to multiple channels
 			//    if the neighboring AP is using a wider bandwidth (> 20 MHz)
-			List<WifiScanEntry> scanResps = wifiScanList.get(wifiScanList.size() - 1);
-			List<WifiScanEntry> scanRespsFiltered = new ArrayList<WifiScanEntry>();
+			List<WifiScanEntry> scanResps =
+				wifiScanList.get(wifiScanList.size() - 1);
+			List<WifiScanEntry> scanRespsFiltered =
+				new ArrayList<WifiScanEntry>();
 			for (WifiScanEntry entry : scanResps) {
 				if (UCentralUtils.isChannelInBand(entry.channel, band)) {
 					int channelWidth = getChannelWidthFromWiFiScan(
@@ -290,9 +321,14 @@ public abstract class ChannelOptimizer {
 						entry.ht_oper,
 						entry.vht_oper
 					);
-					int primaryChannel = getPrimaryChannel(entry.channel, channelWidth);
+					int primaryChannel =
+						getPrimaryChannel(entry.channel, channelWidth);
 					List<Integer> coveredChannels =
-						getCoveredChannels(entry.channel, primaryChannel, channelWidth);
+						getCoveredChannels(
+							entry.channel,
+							primaryChannel,
+							channelWidth
+						);
 					for (Integer newChannel : coveredChannels) {
 						WifiScanEntry newEntry = new WifiScanEntry(entry);
 						newEntry.channel = newChannel;
@@ -312,7 +348,8 @@ public abstract class ChannelOptimizer {
 			}
 
 			deviceToWifiScans.put(
-				serialNumber, scanRespsFiltered
+				serialNumber,
+				scanRespsFiltered
 			);
 		}
 		return deviceToWifiScans;
@@ -349,7 +386,7 @@ public abstract class ChannelOptimizer {
 				break;
 			}
 		}
-		return new int[] {currentChannel, currentChannelWidth};
+		return new int[] { currentChannel, currentChannelWidth };
 	}
 
 	/**
@@ -367,12 +404,14 @@ public abstract class ChannelOptimizer {
 		int channelWidth,
 		List<Integer> availableChannelsList
 	) {
-		List<Integer> newAvailableChannelsList = new ArrayList<>(availableChannelsList);
+		List<Integer> newAvailableChannelsList =
+			new ArrayList<>(availableChannelsList);
 
 		// Update the available channels if the bandwidth info is taken into account
 		if (band.equals(UCentralConstants.BAND_5G) && channelWidth > 20) {
 			newAvailableChannelsList.retainAll(
-				AVAILABLE_CHANNELS_WIDTH.getOrDefault(channelWidth, availableChannelsList)
+				AVAILABLE_CHANNELS_WIDTH
+					.getOrDefault(channelWidth, availableChannelsList)
 			);
 		}
 
@@ -383,7 +422,7 @@ public abstract class ChannelOptimizer {
 		}
 		if (
 			deviceCfg.userChannels != null &&
-			deviceCfg.userChannels.get(band) != null
+				deviceCfg.userChannels.get(band) != null
 		) {
 			newAvailableChannelsList = Arrays.asList(
 				deviceCfg.userChannels.get(band)
@@ -395,7 +434,7 @@ public abstract class ChannelOptimizer {
 			);
 		} else if (
 			deviceCfg.allowedChannels != null &&
-			deviceCfg.allowedChannels.get(band) != null
+				deviceCfg.allowedChannels.get(band) != null
 		) {
 			List<Integer> allowedChannels = deviceCfg.allowedChannels.get(band);
 			logger.debug(
@@ -411,13 +450,15 @@ public abstract class ChannelOptimizer {
 		if (newAvailableChannelsList.isEmpty()) {
 			logger.debug(
 				"Device {}: the updated availableChannelsList is empty!!! " +
-				"userChannels or allowedChannels might be invalid " +
-				"Fall back to the default available channels list"
+					"userChannels or allowedChannels might be invalid " +
+					"Fall back to the default available channels list"
 			);
 			if (band.equals(UCentralConstants.BAND_5G) && channelWidth > 20) {
-				newAvailableChannelsList = new ArrayList<>(availableChannelsList);
+				newAvailableChannelsList =
+					new ArrayList<>(availableChannelsList);
 				newAvailableChannelsList.retainAll(
-					AVAILABLE_CHANNELS_WIDTH.getOrDefault(channelWidth, availableChannelsList)
+					AVAILABLE_CHANNELS_WIDTH
+						.getOrDefault(channelWidth, availableChannelsList)
 				);
 			} else {
 				newAvailableChannelsList = availableChannelsList;
@@ -444,7 +485,7 @@ public abstract class ChannelOptimizer {
 		Map<String, String> bssidsMap,
 		boolean mode
 	) {
-		for (Map.Entry<String, Integer> e: tempChannelMap.entrySet()) {
+		for (Map.Entry<String, Integer> e : tempChannelMap.entrySet()) {
 			String serialNumber = e.getKey();
 			int channel = e.getValue();
 			double avgInterferenceDB = 0.0;
@@ -465,12 +506,13 @@ public abstract class ChannelOptimizer {
 						continue;
 					}
 					channelOccupancy.compute(
-						entry.channel, (k, v) -> (v == null) ? 1 : v + 1
+						entry.channel,
+						(k, v) -> (v == null) ? 1 : v + 1
 					);
 					if (entry.channel == channel) {
 						double signal = entry.signal;
 						avgInterferenceDB += signal;
-						sumInterference += Math.pow(10.0, signal/10.0);
+						sumInterference += Math.pow(10.0, signal / 10.0);
 						maxInterferenceDB = Math.max(maxInterferenceDB, signal);
 						numEntries += 1.0;
 					}
@@ -480,26 +522,27 @@ public abstract class ChannelOptimizer {
 			// Calculate the co-channel interference and channel occupancy
 			// based on the new assignment of the OWF APs
 			if (mode) {
-				for (Map.Entry<String, Integer> f: tempChannelMap.entrySet()) {
+				for (Map.Entry<String, Integer> f : tempChannelMap.entrySet()) {
 					String nSerialNumber = f.getKey();
 					int nChannel = f.getValue();
 					if (
 						serialNumber == nSerialNumber ||
-						owfSignal.get(nSerialNumber) == null
+							owfSignal.get(nSerialNumber) == null
 					) {
 						continue;
 					}
 					// If the nearby OWF AP is able to be detected by this AP,
 					// it should be part of the channel occupancy calculation.
 					channelOccupancy.compute(
-						nChannel, (k, v) -> (v == null) ? 1 : v + 1
+						nChannel,
+						(k, v) -> (v == null) ? 1 : v + 1
 					);
 					// Only if the nearby OWF AP is on the same channel of this AP,
 					// it contributes to the "co-channel" interference.
 					if (channel == nChannel) {
 						double signal = owfSignal.get(nSerialNumber);
 						avgInterferenceDB += signal;
-						sumInterference += Math.pow(10.0, signal/10.0);
+						sumInterference += Math.pow(10.0, signal / 10.0);
 						maxInterferenceDB = Math.max(maxInterferenceDB, signal);
 						numEntries += 1.0;
 					}
@@ -508,17 +551,18 @@ public abstract class ChannelOptimizer {
 
 			// Add self into the channel occupancy calculation
 			channelOccupancy.compute(
-				channel, (k, v) -> (v == null) ? 1 : v + 1
+				channel,
+				(k, v) -> (v == null) ? 1 : v + 1
 			);
 
 			// Log the interference info
 			logger.info(
 				"Device {} on channel {} with average interference: {}, " +
-				"sum interference: {}, max interference: {}, number of nearby APs: {}",
+					"sum interference: {}, max interference: {}, number of nearby APs: {}",
 				serialNumber,
 				channel,
-				avgInterferenceDB/numEntries,
-				10*Math.log10(sumInterference),
+				avgInterferenceDB / numEntries,
+				10 * Math.log10(sumInterference),
 				maxInterferenceDB,
 				numEntries
 			);
@@ -546,7 +590,12 @@ public abstract class ChannelOptimizer {
 		Map<String, String> bssidsMap
 	) {
 		// Calculate the old performance
-		calculatePerfMetrics(oldChannelMap, deviceToWifiScans, bssidsMap, false);
+		calculatePerfMetrics(
+			oldChannelMap,
+			deviceToWifiScans,
+			bssidsMap,
+			false
+		);
 
 		// Calculate the new performance
 		calculatePerfMetrics(newChannelMap, deviceToWifiScans, bssidsMap, true);
@@ -590,11 +639,12 @@ public abstract class ChannelOptimizer {
 		// Update device AP config layer
 		deviceDataManager.updateDeviceApConfig(apConfig -> {
 			for (
-				Map.Entry<String, Map<String, Integer>> entry :
-				channelMap.entrySet()
+				Map.Entry<String, Map<String, Integer>> entry : channelMap
+					.entrySet()
 			) {
 				DeviceConfig deviceConfig = apConfig.computeIfAbsent(
-					entry.getKey(), k -> new DeviceConfig()
+					entry.getKey(),
+					k -> new DeviceConfig()
 				);
 				deviceConfig.autoChannels = entry.getValue();
 			}

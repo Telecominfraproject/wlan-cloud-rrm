@@ -158,23 +158,23 @@ public class Utils {
 	 */
 	public static String longToMac(long addr) {
 		char[] c = new char[17];
-		c[0] = HEX_VALUES[(byte)((addr >> 44) & 0xf)];
-		c[1] = HEX_VALUES[(byte)((addr >> 40) & 0xf)];
+		c[0] = HEX_VALUES[(byte) ((addr >> 44) & 0xf)];
+		c[1] = HEX_VALUES[(byte) ((addr >> 40) & 0xf)];
 		c[2] = ':';
-		c[3] = HEX_VALUES[(byte)((addr >> 36) & 0xf)];
-		c[4] = HEX_VALUES[(byte)((addr >> 32) & 0xf)];
+		c[3] = HEX_VALUES[(byte) ((addr >> 36) & 0xf)];
+		c[4] = HEX_VALUES[(byte) ((addr >> 32) & 0xf)];
 		c[5] = ':';
-		c[6] = HEX_VALUES[(byte)((addr >> 28) & 0xf)];
-		c[7] = HEX_VALUES[(byte)((addr >> 24) & 0xf)];
+		c[6] = HEX_VALUES[(byte) ((addr >> 28) & 0xf)];
+		c[7] = HEX_VALUES[(byte) ((addr >> 24) & 0xf)];
 		c[8] = ':';
-		c[9] = HEX_VALUES[(byte)((addr >> 20) & 0xf)];
-		c[10] = HEX_VALUES[(byte)((addr >> 16) & 0xf)];
+		c[9] = HEX_VALUES[(byte) ((addr >> 20) & 0xf)];
+		c[10] = HEX_VALUES[(byte) ((addr >> 16) & 0xf)];
 		c[11] = ':';
-		c[12] = HEX_VALUES[(byte)((addr >> 12) & 0xf)];
-		c[13] = HEX_VALUES[(byte)((addr >> 8) & 0xf)];
+		c[12] = HEX_VALUES[(byte) ((addr >> 12) & 0xf)];
+		c[13] = HEX_VALUES[(byte) ((addr >> 8) & 0xf)];
 		c[14] = ':';
-		c[15] = HEX_VALUES[(byte)((addr >> 4) & 0xf)];
-		c[16] = HEX_VALUES[(byte)(addr & 0xf)];
+		c[15] = HEX_VALUES[(byte) ((addr >> 4) & 0xf)];
+		c[16] = HEX_VALUES[(byte) (addr & 0xf)];
 		return new String(c);
 	}
 
@@ -183,8 +183,8 @@ public class Utils {
 		char[] c = new char[b.length * 2];
 		for (int i = 0; i < b.length; i++) {
 			int v = b[i] & 0xff;
-			c[i*2] = HEX_VALUES[(v >> 4) & 0xf];
-			c[i*2 + 1] = HEX_VALUES[v & 0xf];
+			c[i * 2] = HEX_VALUES[(v >> 4) & 0xf];
+			c[i * 2 + 1] = HEX_VALUES[v & 0xf];
 		}
 		return new String(c);
 	}

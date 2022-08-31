@@ -29,7 +29,8 @@ import com.facebook.openwifirrm.ucentral.operationelement.VHTOperationElement;
  * Modeler utilities.
  */
 public class ModelerUtils {
-	private static final Logger logger = LoggerFactory.getLogger(ModelerUtils.class);
+	private static final Logger logger =
+		LoggerFactory.getLogger(ModelerUtils.class);
 
 	/** The pathloss exponent for mapping the distance (in meters) to prop loss (in dB).*/
 	private static final double PATHLOSS_EXPONENT = 2;
@@ -70,11 +71,11 @@ public class ModelerUtils {
 	) {
 		if (
 			apLocX == null ||
-			apLocX.size() != numOfAPs ||
-			apLocY == null ||
-			apLocY.size() != numOfAPs ||
-			txPower == null ||
-			txPower.size() != numOfAPs
+				apLocX.size() != numOfAPs ||
+				apLocY == null ||
+				apLocY.size() != numOfAPs ||
+				txPower == null ||
+				txPower.size() != numOfAPs
 		) {
 			throw new IllegalArgumentException("Invalid input data");
 		}
@@ -85,7 +86,7 @@ public class ModelerUtils {
 				for (int apIndex = 0; apIndex < numOfAPs; apIndex++) {
 					if (
 						apLocX.get(apIndex) > sampleSpace ||
-						apLocY.get(apIndex) > sampleSpace
+							apLocY.get(apIndex) > sampleSpace
 					) {
 						logger.error(
 							"The location of the AP is out of range."
@@ -94,12 +95,13 @@ public class ModelerUtils {
 					}
 					double distance = Math.sqrt(
 						Math.pow((apLocX.get(apIndex) - xIndex), 2) +
-						Math.pow((apLocY.get(apIndex) - yIndex), 2)
+							Math.pow((apLocY.get(apIndex) - yIndex), 2)
 					);
-					double rxPowerTmp = txPower.get(apIndex)
-						- LINKBUDGET_FACTOR
-						- 20*PATHLOSS_EXPONENT*Math.log10(distance + 0.01);
-					rxPower[xIndex][yIndex][apIndex] = Math.min(rxPowerTmp, -30);
+					double rxPowerTmp = txPower.get(apIndex) -
+						LINKBUDGET_FACTOR -
+						20 * PATHLOSS_EXPONENT * Math.log10(distance + 0.01);
+					rxPower[xIndex][yIndex][apIndex] =
+						Math.min(rxPowerTmp, -30);
 				}
 			}
 		}
@@ -166,15 +168,15 @@ public class ModelerUtils {
 						}
 						denominator += Math.pow(
 							10,
-							rxPower[xIndex][yIndex][apIndex2]/10.0
+							rxPower[xIndex][yIndex][apIndex2] / 10.0
 						);
 					}
-					denominator += Math.pow(10, NOISE_POWER/10.0);
+					denominator += Math.pow(10, NOISE_POWER / 10.0);
 					double sinrLinear = Math.pow(
 						10,
-						rxPower[xIndex][yIndex][apIndex]/10.0
-					)/denominator;
-					maxSinr = Math.max(maxSinr, 10.0*Math.log10(sinrLinear));
+						rxPower[xIndex][yIndex][apIndex] / 10.0
+					) / denominator;
+					maxSinr = Math.max(maxSinr, 10.0 * Math.log10(sinrLinear));
 				}
 				sinrDB[xIndex][yIndex] = maxSinr;
 			}
@@ -206,9 +208,9 @@ public class ModelerUtils {
 				}
 			}
 		}
-		double rxPowerPercentage = rxPowerCount/Math.pow(sampleSpace, 2);
-		double sinrPercentage = sinrCount/Math.pow(sampleSpace, 2);
-		if (rxPowerPercentage*100.0 < 100.0 - COVERAGE_THRESHOLD) {
+		double rxPowerPercentage = rxPowerCount / Math.pow(sampleSpace, 2);
+		double sinrPercentage = sinrCount / Math.pow(sampleSpace, 2);
+		if (rxPowerPercentage * 100.0 < 100.0 - COVERAGE_THRESHOLD) {
 			return sinrPercentage;
 		} else {
 			return Double.POSITIVE_INFINITY;
@@ -227,14 +229,20 @@ public class ModelerUtils {
 	 *
 	 * @return true if the entries should be aggregated
 	 */
-	private static boolean matchesForAggregation(WifiScanEntry entry1, WifiScanEntry entry2) {
+	private static boolean matchesForAggregation(
+		WifiScanEntry entry1,
+		WifiScanEntry entry2
+	) {
 		// TODO test on real pre-802.11n APs (which do not have ht_oper and vht_oper)
 		// do not check SSID (other SSIDs can contribute to interference, and SSIDs can
 		// change any time)
-		return Objects.equals(entry1.bssid, entry2.bssid) && entry1.frequency == entry2.frequency
-				&& entry1.channel == entry2.channel
-				&& HTOperationElement.matchesHtForAggregation(entry1.ht_oper, entry2.ht_oper)
-				&& VHTOperationElement.matchesVhtForAggregation(entry1.vht_oper, entry2.vht_oper);
+		return Objects.equals(entry1.bssid, entry2.bssid) &&
+			entry1.frequency == entry2.frequency &&
+			entry1.channel == entry2.channel &&
+			HTOperationElement
+				.matchesHtForAggregation(entry1.ht_oper, entry2.ht_oper) &&
+			VHTOperationElement
+				.matchesVhtForAggregation(entry1.vht_oper, entry2.vht_oper);
 	}
 
 	/**
@@ -295,10 +303,16 @@ public class ModelerUtils {
 		// this method and the getAggregatedWifiScans() which does not take in
 		// the ref time were separated to make testing easier
 		if (obsoletionPeriodMs < 0) {
-			throw new IllegalArgumentException("obsoletionPeriodMs must be non-negative.");
+			throw new IllegalArgumentException(
+				"obsoletionPeriodMs must be non-negative."
+			);
 		}
-		Map<String, Map<String, WifiScanEntry>> aggregatedWifiScans = new HashMap<>();
-		for (Map.Entry<String, List<List<WifiScanEntry>>> apToScansMapEntry : dataModel.latestWifiScans.entrySet()) {
+		Map<String, Map<String, WifiScanEntry>> aggregatedWifiScans =
+			new HashMap<>();
+		for (
+			Map.Entry<String, List<List<WifiScanEntry>>> apToScansMapEntry : dataModel.latestWifiScans
+				.entrySet()
+		) {
 			String serialNumber = apToScansMapEntry.getKey();
 			List<List<WifiScanEntry>> scans = apToScansMapEntry.getValue();
 			if (scans.isEmpty()) {
@@ -310,24 +324,34 @@ public class ModelerUtils {
 			 * already - although they are inserted chronologically, perhaps latency,
 			 * synchronization, etc. could cause the actual unixTimeMs to be out-of-order.
 			 */
-			List<WifiScanEntry> mostRecentToOldestEntries = scans.stream().flatMap(List::stream)
+			List<WifiScanEntry> mostRecentToOldestEntries =
+				scans.stream().flatMap(List::stream)
 					.sorted((entry1, entry2) -> {
-						return -Long.compare(entry1.unixTimeMs, entry2.unixTimeMs);
-					}).collect(Collectors.toUnmodifiableList());
+						return -Long
+							.compare(entry1.unixTimeMs, entry2.unixTimeMs);
+					})
+					.collect(Collectors.toUnmodifiableList());
 			// Split mostRecentToOldest into separate lists for each BSSID
 			// These lists will be in reverse chronological order also
-			Map<String, List<WifiScanEntry>> bssidToEntriesMap = new HashMap<>();
+			Map<String, List<WifiScanEntry>> bssidToEntriesMap =
+				new HashMap<>();
 			for (WifiScanEntry entry : mostRecentToOldestEntries) {
 				if (entry.bssid == null) {
 					continue;
 				}
-				bssidToEntriesMap.computeIfAbsent(entry.bssid, bssid -> new ArrayList<>()).add(entry);
+				bssidToEntriesMap
+					.computeIfAbsent(entry.bssid, bssid -> new ArrayList<>())
+					.add(entry);
 			}
 
 			// calculate the aggregate for each bssid for this AP
-			for (Map.Entry<String, List<WifiScanEntry>> bssidToWifiScanEntriesMapEntry : bssidToEntriesMap.entrySet()) {
+			for (
+				Map.Entry<String, List<WifiScanEntry>> bssidToWifiScanEntriesMapEntry : bssidToEntriesMap
+					.entrySet()
+			) {
 				String bssid = bssidToWifiScanEntriesMapEntry.getKey();
-				List<WifiScanEntry> entries = bssidToWifiScanEntriesMapEntry.getValue();
+				List<WifiScanEntry> entries =
+					bssidToWifiScanEntriesMapEntry.getValue();
 				WifiScanEntry mostRecentEntry = entries.get(0);
 				agg.reset();
 				for (WifiScanEntry entry : entries) {
@@ -335,15 +359,19 @@ public class ModelerUtils {
 						// discard obsolete entries
 						break;
 					}
-					if (mostRecentEntry == entry || matchesForAggregation(mostRecentEntry, entry)) {
+					if (
+						mostRecentEntry == entry ||
+							matchesForAggregation(mostRecentEntry, entry)
+					) {
 						aggregatedWifiScans
-								.computeIfAbsent(serialNumber, k -> new HashMap<>())
-								.computeIfAbsent(bssid, k -> new WifiScanEntry(entry));
+							.computeIfAbsent(serialNumber, k -> new HashMap<>())
+							.computeIfAbsent(bssid, k -> new WifiScanEntry(entry));
 						agg.addValue((double) entry.signal);
 					}
 				}
 				if (agg.getCount() > 0) {
-					aggregatedWifiScans.get(serialNumber).get(bssid).signal = (int) Math.round(agg.getAggregate());
+					aggregatedWifiScans.get(serialNumber).get(bssid).signal =
+						(int) Math.round(agg.getAggregate());
 				} else {
 					aggregatedWifiScans
 						.computeIfAbsent(serialNumber, k -> new HashMap<>())

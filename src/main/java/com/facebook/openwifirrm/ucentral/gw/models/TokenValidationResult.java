@@ -9,6 +9,6 @@
 package com.facebook.openwifirrm.ucentral.gw.models;
 
 public class TokenValidationResult {
-    public UserInfo userInfo;
-    public WebTokenResult tokenInfo;
+	public UserInfo userInfo;
+	public WebTokenResult tokenInfo;
 }

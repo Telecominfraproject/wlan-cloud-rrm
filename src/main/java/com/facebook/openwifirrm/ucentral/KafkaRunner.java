@@ -29,7 +29,8 @@ public class KafkaRunner implements Runnable {
 
 	/** Run with the given consumer/producer instances. */
 	public KafkaRunner(
-		UCentralKafkaConsumer consumer, UCentralKafkaProducer producer
+		UCentralKafkaConsumer consumer,
+		UCentralKafkaProducer producer
 	) {
 		this.consumer = consumer;
 		this.producer = producer;
@@ -61,7 +62,8 @@ public class KafkaRunner implements Runnable {
 				if (producer != null) {
 					long now = System.nanoTime();
 					if (now - lastKeepAliveTs >= KEEPALIVE_INTERVAL_NS) {
-						producer.publishSystemEvent(ServiceEvent.EVENT_KEEPALIVE);
+						producer
+							.publishSystemEvent(ServiceEvent.EVENT_KEEPALIVE);
 						lastKeepAliveTs = now;
 					}
 				}

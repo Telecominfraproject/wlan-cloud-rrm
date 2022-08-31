@@ -28,8 +28,10 @@ import com.facebook.openwifirrm.ucentral.UCentralUtils.WifiScanEntry;
  * Randomly assign APs to the channel with the least channel weight,
  * where channel weight = DEFAULT_WEIGHT * (number of unmanaged APs) + (number of managed APs).
  */
-public class UnmanagedApAwareChannelOptimizer extends LeastUsedChannelOptimizer {
-	private static final Logger logger = LoggerFactory.getLogger(UnmanagedApAwareChannelOptimizer.class);
+public class UnmanagedApAwareChannelOptimizer
+	extends LeastUsedChannelOptimizer {
+	private static final Logger logger =
+		LoggerFactory.getLogger(UnmanagedApAwareChannelOptimizer.class);
 
 	/** The RRM algorithm ID. */
 	public static final String ALGORITHM_ID = "unmanaged_aware";
@@ -39,7 +41,9 @@ public class UnmanagedApAwareChannelOptimizer extends LeastUsedChannelOptimizer 
 
 	/** Constructor. */
 	public UnmanagedApAwareChannelOptimizer(
-		DataModel model, String zone, DeviceDataManager deviceDataManager
+		DataModel model,
+		String zone,
+		DeviceDataManager deviceDataManager
 	) {
 		super(model, zone, deviceDataManager);
 	}
@@ -78,14 +82,14 @@ public class UnmanagedApAwareChannelOptimizer extends LeastUsedChannelOptimizer 
 		}
 		logger.debug(
 			"Device {}: Occupied channels for nonOWF APs: {} " +
-			"with total weight: {}",
+				"with total weight: {}",
 			serialNumber,
 			occupiedChannels.keySet().toString(),
 			occupiedChannels.values().stream().mapToInt(i -> i).sum()
 		);
 
 		// Find occupied channels by OWF APs (and # associated OWF APs)
-		for (WifiScanEntry entry: scanRespsOWF) {
+		for (WifiScanEntry entry : scanRespsOWF) {
 			String nSerialNumber = bssidsMap.get(entry.bssid);
 			int assignedChannel = channelMap
 				.getOrDefault(nSerialNumber, new HashMap<>())
@@ -101,12 +105,13 @@ public class UnmanagedApAwareChannelOptimizer extends LeastUsedChannelOptimizer 
 				assignedChannel
 			);
 			occupiedChannels.compute(
-				assignedChannel, (k, v) -> (v == null) ? 1 : v + 1
+				assignedChannel,
+				(k, v) -> (v == null) ? 1 : v + 1
 			);
 		}
 		logger.debug(
 			"Device {}: Occupied channels for all APs: {} " +
-			"with total weight: {}",
+				"with total weight: {}",
 			serialNumber,
 			occupiedChannels.keySet().toString(),
 			occupiedChannels.values().stream().mapToInt(i -> i).sum()
@@ -120,7 +125,7 @@ public class UnmanagedApAwareChannelOptimizer extends LeastUsedChannelOptimizer 
 			occupiedChannels = new TreeMap<>(occupiedOverlapChannels);
 			logger.debug(
 				"Device {}: Occupied channels for 2G APs: {} " +
-				"with total weight: {}",
+					"with total weight: {}",
 				serialNumber,
 				occupiedChannels.keySet().toString(),
 				occupiedChannels.values().stream().mapToInt(i -> i).sum()

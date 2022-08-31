@@ -81,7 +81,12 @@ public class VHTOperationElement {
 	 * For details about the parameters, see the javadocs for the corresponding
 	 * member variables.
 	 */
-	public VHTOperationElement(byte channelWidth, byte channel1, byte channel2, byte[] vhtMcsForNss) {
+	public VHTOperationElement(
+		byte channelWidth,
+		byte channel1,
+		byte channel2,
+		byte[] vhtMcsForNss
+	) {
 		/*
 		 * XXX some combinations of channelWidth, channel, channel2, and vhtMcsAtNss are
 		 * invalid, but this is not checked here. If fidelity to 802.11 is required, the
@@ -103,8 +108,8 @@ public class VHTOperationElement {
 	 */
 	public boolean matchesForAggregation(VHTOperationElement other) {
 		// check everything except vhtMcsForNss
-		return other != null && channel1 == other.channel1 && channel2 == other.channel2
-				&& channelWidth == other.channelWidth;
+		return other != null && channel1 == other.channel1 &&
+			channel2 == other.channel2 && channelWidth == other.channelWidth;
 	}
 
 	/**
@@ -119,7 +124,10 @@ public class VHTOperationElement {
 	 * @return true if the two inputs should have their statistics aggregated; false
 	 *         otherwise.
 	 */
-	public static boolean matchesVhtForAggregation(String vhtOper1, String vhtOper2) {
+	public static boolean matchesVhtForAggregation(
+		String vhtOper1,
+		String vhtOper2
+	) {
 		if (Objects.equals(vhtOper1, vhtOper2)) {
 			return true; // true if both are null or they are equal
 		}
@@ -136,7 +144,8 @@ public class VHTOperationElement {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + Arrays.hashCode(vhtMcsForNss);
-		result = prime * result + Objects.hash(channel1, channel2, channelWidth);
+		result =
+			prime * result + Objects.hash(channel1, channel2, channelWidth);
 		return result;
 	}
 
@@ -152,8 +161,8 @@ public class VHTOperationElement {
 			return false;
 		}
 		VHTOperationElement other = (VHTOperationElement) obj;
-		return channel1 == other.channel1 && channel2 == other.channel2
-				&& channelWidth == other.channelWidth
-				&& Arrays.equals(vhtMcsForNss, other.vhtMcsForNss);
+		return channel1 == other.channel1 && channel2 == other.channel2 &&
+			channelWidth == other.channelWidth &&
+			Arrays.equals(vhtMcsForNss, other.vhtMcsForNss);
 	}
 }
