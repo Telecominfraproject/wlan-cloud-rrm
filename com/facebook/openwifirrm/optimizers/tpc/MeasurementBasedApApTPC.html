@@ -279,12 +279,12 @@ extends <a href="TPC.html" title="class in com.facebook.openwifirrm.optimizers.t
 </td>
 </tr>
 <tr id="i4" class="altColor">
-<td class="colFirst"><code>protected static int</code></td>
+<td class="colFirst"><code>protected static <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Integer.html?is-external=true" title="class or interface in java.lang" class="externalLink">Integer</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getCurrentTxPower(com.google.gson.JsonArray,java.lang.String)">getCurrentTxPower</a></span>&#8203;(com.google.gson.JsonArray&nbsp;latestDeviceStatus,
                  <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;band)</code></th>
 <td class="colLast">
-<div class="block">Get the current band radio tx power (the first one found) for an AP using the
- latest device status.</div>
+<div class="block">Get the current band radio tx power (the first one found) for an AP using
+ the latest device status.</div>
 </td>
 </tr>
 <tr id="i5" class="rowColor">
@@ -434,16 +434,17 @@ extends <a href="TPC.html" title="class in com.facebook.openwifirrm.optimizers.t
 <ul class="blockList">
 <li class="blockList">
 <h4>getCurrentTxPower</h4>
-<pre class="methodSignature">protected static&nbsp;int&nbsp;getCurrentTxPower&#8203;(com.google.gson.JsonArray&nbsp;latestDeviceStatus,
-                                       <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;band)</pre>
-<div class="block">Get the current band radio tx power (the first one found) for an AP using the
- latest device status.</div>
+<pre class="methodSignature">protected static&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Integer.html?is-external=true" title="class or interface in java.lang" class="externalLink">Integer</a>&gt;&nbsp;getCurrentTxPower&#8203;(com.google.gson.JsonArray&nbsp;latestDeviceStatus,
+                                                     <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;band)</pre>
+<div class="block">Get the current band radio tx power (the first one found) for an AP using
+ the latest device status.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>latestDeviceStatus</code> - JsonArray containing radio config for the AP</dd>
-<dd><code>band</code> - "2G" or "5G"</dd>
+<dd><code>band</code> - band (e.g., "2G")</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>the tx power, or 0 if none found</dd>
+<dd>an Optional containing the tx power if one exists, or else an
+         empty Optional</dd>
 </dl>
 </li>
 </ul>
