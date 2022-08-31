@@ -37,7 +37,8 @@ import com.google.gson.JsonObject;
  * TODO: implement the channel-specific TPC operation
  */
 public class MeasurementBasedApApTPC extends TPC {
-	private static final Logger logger = LoggerFactory.getLogger(MeasurementBasedApApTPC.class);
+	private static final Logger logger =
+		LoggerFactory.getLogger(MeasurementBasedApApTPC.class);
 
 	/** The RRM algorithm ID. */
 	public static final String ALGORITHM_ID = "measure_ap_ap";
@@ -65,9 +66,17 @@ public class MeasurementBasedApApTPC extends TPC {
 
 	/** Constructor. */
 	public MeasurementBasedApApTPC(
-		DataModel model, String zone, DeviceDataManager deviceDataManager
+		DataModel model,
+		String zone,
+		DeviceDataManager deviceDataManager
 	) {
-		this(model, zone, deviceDataManager, DEFAULT_COVERAGE_THRESHOLD, DEFAULT_NTH_SMALLEST_RSSI);
+		this(
+			model,
+			zone,
+			deviceDataManager,
+			DEFAULT_COVERAGE_THRESHOLD,
+			DEFAULT_NTH_SMALLEST_RSSI
+		);
 	}
 
 	/** Constructor. */
@@ -81,7 +90,9 @@ public class MeasurementBasedApApTPC extends TPC {
 		super(model, zone, deviceDataManager);
 
 		if (coverageThreshold > MAX_TX_POWER) {
-			throw new RuntimeException("Invalid coverage threshold " + coverageThreshold);
+			throw new RuntimeException(
+				"Invalid coverage threshold " + coverageThreshold
+			);
 		}
 		this.coverageThreshold = coverageThreshold;
 		this.nthSmallestRssi = nthSmallestRssi;
@@ -122,7 +133,8 @@ public class MeasurementBasedApApTPC extends TPC {
 	 *         empty Optional
 	 */
 	protected static Optional<Integer> getCurrentTxPower(
-		JsonArray latestDeviceStatus, String band
+		JsonArray latestDeviceStatus,
+		String band
 	) {
 		for (JsonElement e : latestDeviceStatus) {
 			if (!e.isJsonObject()) {
@@ -161,27 +173,33 @@ public class MeasurementBasedApApTPC extends TPC {
 	 *         neighboring APs.
 	 */
 	protected static Map<String, List<Integer>> buildRssiMap(
-			Set<String> managedBSSIDs,
-			Map<String, List<List<WifiScanEntry>>> latestWifiScans,
-			String band
+		Set<String> managedBSSIDs,
+		Map<String, List<List<WifiScanEntry>>> latestWifiScans,
+		String band
 	) {
 		Map<String, List<Integer>> bssidToRssiValues = new HashMap<>();
 		managedBSSIDs.stream()
 			.forEach(bssid -> bssidToRssiValues.put(bssid, new ArrayList<>()));
 
-		for (Map.Entry<String, List<List<WifiScanEntry>>> e : latestWifiScans.entrySet()) {
+		for (
+			Map.Entry<String, List<List<WifiScanEntry>>> e : latestWifiScans
+				.entrySet()
+		) {
 			List<List<WifiScanEntry>> bufferedScans = e.getValue();
-			List<WifiScanEntry> latestScan = bufferedScans.get(bufferedScans.size() - 1);
+			List<WifiScanEntry> latestScan =
+				bufferedScans.get(bufferedScans.size() - 1);
 
 			// At a given AP, if we receive a signal from ap_2, then it gets added to the rssi list for ap_2
 			latestScan.stream()
-				.filter(entry -> (managedBSSIDs.contains(entry.bssid)
-					&& UCentralUtils.isChannelInBand(entry.channel, band)))
-				.forEach(entry -> {
-					bssidToRssiValues.get(entry.bssid).add(entry.signal);
-				});
+				.filter(entry -> (managedBSSIDs.contains(entry.bssid) && UCentralUtils.isChannelInBand(entry.channel, band)))
+				.forEach(
+					entry -> {
+						bssidToRssiValues.get(entry.bssid).add(entry.signal);
+					}
+				);
 		}
-		bssidToRssiValues.values().stream()
+		bssidToRssiValues.values()
+			.stream()
 			.forEach(rssiList -> Collections.sort(rssiList));
 		return bssidToRssiValues;
 	}
@@ -210,7 +228,8 @@ public class MeasurementBasedApApTPC extends TPC {
 		}
 
 		// We may not optimize for the closest AP, but the Nth closest
-		int targetRSSI = rssiValues.get(Math.min(rssiValues.size() - 1, nthSmallestRssi));
+		int targetRSSI =
+			rssiValues.get(Math.min(rssiValues.size() - 1, nthSmallestRssi));
 		int txDelta = MAX_TX_POWER - currentTxPower;
 		// Represents the highest possible RSSI to be received by that neighboring AP
 		int estimatedRSSI = targetRSSI + txDelta;
@@ -244,34 +263,49 @@ public class MeasurementBasedApApTPC extends TPC {
 	 *                   must be passed in empty, and it is filled in by this method
 	 *                   with the new tx powers.
 	 */
-	protected void buildTxPowerMapForBand(String band, Map<String, Map<String, Integer>> txPowerMap) {
+	protected void buildTxPowerMapForBand(
+		String band,
+		Map<String, Map<String, Integer>> txPowerMap
+	) {
 		Set<String> managedBSSIDs = getManagedBSSIDs(model);
-		Map<String, List<Integer>> bssidToRssiValues = buildRssiMap(managedBSSIDs, model.latestWifiScans, band);
+		Map<String, List<Integer>> bssidToRssiValues =
+			buildRssiMap(managedBSSIDs, model.latestWifiScans, band);
 		logger.debug("Starting TPC for the {} band", band);
 		Map<String, JsonArray> allStatuses = model.latestDeviceStatus;
 		for (String serialNumber : allStatuses.keySet()) {
 			State state = model.latestState.get(serialNumber);
-			if (state == null || state.radios == null || state.radios.length == 0) {
+			if (
+				state == null || state.radios == null ||
+					state.radios.length == 0
+			) {
 				logger.debug(
-					"Device {}: No radios found, skipping...", serialNumber
+					"Device {}: No radios found, skipping...",
+					serialNumber
 				);
 				continue;
 			}
 			if (state.interfaces == null || state.interfaces.length == 0) {
 				logger.debug(
-					"Device {}: No interfaces found, skipping...", serialNumber
+					"Device {}: No interfaces found, skipping...",
+					serialNumber
 				);
 				continue;
 			}
-			if (state.interfaces[0].ssids == null || state.interfaces[0].ssids.length == 0) {
+			if (
+				state.interfaces[0].ssids == null ||
+					state.interfaces[0].ssids.length == 0
+			) {
 				logger.debug(
-					"Device {}: No SSIDs found, skipping...", serialNumber
+					"Device {}: No SSIDs found, skipping...",
+					serialNumber
 				);
 				continue;
 			}
-			JsonArray radioStatuses = allStatuses.get(serialNumber).getAsJsonArray();
+			JsonArray radioStatuses =
+				allStatuses.get(serialNumber).getAsJsonArray();
 			Optional<Integer> possibleCurrentTxPower = getCurrentTxPower(
-				radioStatuses, band
+				radioStatuses,
+				band
 			);
 			if (possibleCurrentTxPower.isEmpty()) {
 				// this AP is not on the band of interest
@@ -293,7 +327,8 @@ public class MeasurementBasedApApTPC extends TPC {
 			);
 			logger.debug("  Old tx_power: {}", currentTxPower);
 			logger.debug("  New tx_power: {}", newTxPower);
-			txPowerMap.computeIfAbsent(serialNumber, k -> new TreeMap<>()).put(band, newTxPower);
+			txPowerMap.computeIfAbsent(serialNumber, k -> new TreeMap<>())
+				.put(band, newTxPower);
 		}
 	}
 

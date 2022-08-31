@@ -28,11 +28,19 @@ public class HTOperationElementTest {
 		boolean expectedDualBeacon = false;
 		boolean expectedDualCtsProtection = false;
 		boolean expectedStbcBeacon = false;
-		HTOperationElement expectedHtOperObj = new HTOperationElement(expectedPrimaryChannel,
-				expectedSecondaryChannelOffset,
-				expectedStaChannelWidth, expectedRifsMode, expectedHtProtection, expectedNongreenfieldHtStasPresent,
-				expectedObssNonHtStasPresent, expectedChannelCenterFrequencySegment2, expectedDualBeacon,
-				expectedDualCtsProtection, expectedStbcBeacon);
+		HTOperationElement expectedHtOperObj = new HTOperationElement(
+			expectedPrimaryChannel,
+			expectedSecondaryChannelOffset,
+			expectedStaChannelWidth,
+			expectedRifsMode,
+			expectedHtProtection,
+			expectedNongreenfieldHtStasPresent,
+			expectedObssNonHtStasPresent,
+			expectedChannelCenterFrequencySegment2,
+			expectedDualBeacon,
+			expectedDualCtsProtection,
+			expectedStbcBeacon
+		);
 		assertEquals(expectedHtOperObj, htOperObj);
 
 		htOper = "JAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==";
@@ -40,10 +48,19 @@ public class HTOperationElementTest {
 		// all fields except the primary channel and nongreenfield field are the same
 		expectedPrimaryChannel = 36;
 		expectedNongreenfieldHtStasPresent = false;
-		expectedHtOperObj = new HTOperationElement(expectedPrimaryChannel, expectedSecondaryChannelOffset,
-				expectedStaChannelWidth, expectedRifsMode, expectedHtProtection, expectedNongreenfieldHtStasPresent,
-				expectedObssNonHtStasPresent, expectedChannelCenterFrequencySegment2, expectedDualBeacon,
-				expectedDualCtsProtection, expectedStbcBeacon);
+		expectedHtOperObj = new HTOperationElement(
+			expectedPrimaryChannel,
+			expectedSecondaryChannelOffset,
+			expectedStaChannelWidth,
+			expectedRifsMode,
+			expectedHtProtection,
+			expectedNongreenfieldHtStasPresent,
+			expectedObssNonHtStasPresent,
+			expectedChannelCenterFrequencySegment2,
+			expectedDualBeacon,
+			expectedDualCtsProtection,
+			expectedStbcBeacon
+		);
 		assertEquals(expectedHtOperObj, htOperObj);
 	}
 }

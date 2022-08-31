@@ -95,32 +95,44 @@ public class DeviceDataManagerTest {
 		DeviceDataManager deviceDataManager = new DeviceDataManager();
 
 		// Null topology
-		assertThrows(NullPointerException.class, () -> {
-			deviceDataManager.setTopology(null);
-		});
+		assertThrows(
+			NullPointerException.class,
+			() -> {
+				deviceDataManager.setTopology(null);
+			}
+		);
 
 		// Empty zone name
 		final DeviceTopology topologyEmptyZone = new DeviceTopology();
 		topologyEmptyZone.put("", new TreeSet<>(Arrays.asList(deviceA)));
-		assertThrows(IllegalArgumentException.class, () -> {
-			deviceDataManager.setTopology(topologyEmptyZone);
-		});
+		assertThrows(
+			IllegalArgumentException.class,
+			() -> {
+				deviceDataManager.setTopology(topologyEmptyZone);
+			}
+		);
 
 		// Empty serial number
 		final DeviceTopology topologyEmptySerial = new DeviceTopology();
 		topologyEmptySerial.put(zone, new TreeSet<>(Arrays.asList("")));
-		assertThrows(IllegalArgumentException.class, () -> {
-			deviceDataManager.setTopology(topologyEmptySerial);
-		});
+		assertThrows(
+			IllegalArgumentException.class,
+			() -> {
+				deviceDataManager.setTopology(topologyEmptySerial);
+			}
+		);
 
 		// Same device in multiple zones
 		final DeviceTopology topologyDupSerial = new DeviceTopology();
 		final String zone2 = zone + "-copy";
 		topologyDupSerial.put(zone, new TreeSet<>(Arrays.asList(deviceA)));
 		topologyDupSerial.put(zone2, new TreeSet<>(Arrays.asList(deviceA)));
-		assertThrows(IllegalArgumentException.class, () -> {
-			deviceDataManager.setTopology(topologyDupSerial);
-		});
+		assertThrows(
+			IllegalArgumentException.class,
+			() -> {
+				deviceDataManager.setTopology(topologyDupSerial);
+			}
+		);
 	}
 
 	@Test
@@ -154,9 +166,11 @@ public class DeviceDataManagerTest {
 		final DeviceConfig apCfgA = new DeviceConfig();
 		final DeviceConfig apCfgB = new DeviceConfig();
 		apCfgA.allowedChannels = new HashMap<>();
-		apCfgA.allowedChannels.put(UCentralConstants.BAND_2G, Arrays.asList(6, 7));
+		apCfgA.allowedChannels
+			.put(UCentralConstants.BAND_2G, Arrays.asList(6, 7));
 		apCfgB.allowedChannels = new HashMap<>();
-		apCfgB.allowedChannels.put(UCentralConstants.BAND_2G, Arrays.asList(1, 2, 3));
+		apCfgB.allowedChannels
+			.put(UCentralConstants.BAND_2G, Arrays.asList(1, 2, 3));
 		// - use setter
 		deviceDataManager.setDeviceApConfig(deviceA, apCfgA);
 		// - use update function
@@ -173,8 +187,14 @@ public class DeviceDataManagerTest {
 		assertNotNull(actualApCfgB);
 		assertTrue(actualApCfgA.enableRRM);
 		assertFalse(actualApCfgB.enableRRM);
-		assertEquals(2, actualApCfgA.allowedChannels.get(UCentralConstants.BAND_2G).size());
-		assertEquals(3, actualApCfgB.allowedChannels.get(UCentralConstants.BAND_2G).size());
+		assertEquals(
+			2,
+			actualApCfgA.allowedChannels.get(UCentralConstants.BAND_2G).size()
+		);
+		assertEquals(
+			3,
+			actualApCfgB.allowedChannels.get(UCentralConstants.BAND_2G).size()
+		);
 		DeviceConfig actualZoneCfgA = deviceDataManager.getZoneConfig(zoneA);
 		assertNotNull(actualZoneCfgA);
 		assertTrue(actualZoneCfgA.enableRRM);
@@ -219,40 +239,70 @@ public class DeviceDataManagerTest {
 		DeviceDataManager deviceDataManager = new DeviceDataManager();
 
 		// Null config
-		assertThrows(NullPointerException.class, () -> {
-			deviceDataManager.setDeviceLayeredConfig(null);
-		});
+		assertThrows(
+			NullPointerException.class,
+			() -> {
+				deviceDataManager.setDeviceLayeredConfig(null);
+			}
+		);
 
 		// Null/empty arguments
-		assertThrows(IllegalArgumentException.class, () -> {
-			deviceDataManager.getDeviceConfig(null);
-		});
-		assertThrows(IllegalArgumentException.class, () -> {
-			deviceDataManager.getDeviceConfig(null, zoneUnknown);
-		});
-		assertThrows(IllegalArgumentException.class, () -> {
-			deviceDataManager.getDeviceConfig(deviceUnknown, null);
-		});
-		assertThrows(IllegalArgumentException.class, () -> {
-			deviceDataManager.setDeviceZoneConfig(null, null);
-		});
-		assertThrows(IllegalArgumentException.class, () -> {
-			deviceDataManager.setDeviceZoneConfig("", null);
-		});
-		assertThrows(IllegalArgumentException.class, () -> {
-			deviceDataManager.setDeviceApConfig(null, null);
-		});
-		Assertions.assertThrows(IllegalArgumentException.class, () -> {
-			deviceDataManager.setDeviceApConfig("", null);
-		});
+		assertThrows(
+			IllegalArgumentException.class,
+			() -> {
+				deviceDataManager.getDeviceConfig(null);
+			}
+		);
+		assertThrows(
+			IllegalArgumentException.class,
+			() -> {
+				deviceDataManager.getDeviceConfig(null, zoneUnknown);
+			}
+		);
+		assertThrows(
+			IllegalArgumentException.class,
+			() -> {
+				deviceDataManager.getDeviceConfig(deviceUnknown, null);
+			}
+		);
+		assertThrows(
+			IllegalArgumentException.class,
+			() -> {
+				deviceDataManager.setDeviceZoneConfig(null, null);
+			}
+		);
+		assertThrows(
+			IllegalArgumentException.class,
+			() -> {
+				deviceDataManager.setDeviceZoneConfig("", null);
+			}
+		);
+		assertThrows(
+			IllegalArgumentException.class,
+			() -> {
+				deviceDataManager.setDeviceApConfig(null, null);
+			}
+		);
+		Assertions.assertThrows(
+			IllegalArgumentException.class,
+			() -> {
+				deviceDataManager.setDeviceApConfig("", null);
+			}
+		);
 
 		// Unknown devices/zones (setters)
 		final DeviceConfig cfg = new DeviceConfig();
-		assertThrows(IllegalArgumentException.class, () -> {
-			deviceDataManager.setDeviceZoneConfig(zoneUnknown, cfg);
-		});
-		assertThrows(IllegalArgumentException.class, () -> {
-			deviceDataManager.setDeviceApConfig(deviceUnknown, cfg);
-		});
+		assertThrows(
+			IllegalArgumentException.class,
+			() -> {
+				deviceDataManager.setDeviceZoneConfig(zoneUnknown, cfg);
+			}
+		);
+		assertThrows(
+			IllegalArgumentException.class,
+			() -> {
+				deviceDataManager.setDeviceApConfig(deviceUnknown, cfg);
+			}
+		);
 	}
 }

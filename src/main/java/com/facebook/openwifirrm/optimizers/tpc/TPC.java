@@ -36,7 +36,9 @@ public abstract class TPC {
 
 	/** Constructor. */
 	public TPC(
-		DataModel model, String zone, DeviceDataManager deviceDataManager
+		DataModel model,
+		String zone,
+		DeviceDataManager deviceDataManager
 	) {
 		this.model = model;
 		this.zone = zone;
@@ -45,18 +47,18 @@ public abstract class TPC {
 		// TODO!! Actually use device configs (allowedTxPowers, userTxPowers)
 
 		// Remove model entries not in the given zone
-		this.model.latestWifiScans.keySet().removeIf(serialNumber ->
-			!deviceConfigs.containsKey(serialNumber)
-		);
-		this.model.latestState.keySet().removeIf(serialNumber ->
-			!deviceConfigs.containsKey(serialNumber)
-		);
-		this.model.latestDeviceStatus.keySet().removeIf(serialNumber ->
-			!deviceConfigs.containsKey(serialNumber)
-		);
-		this.model.latestDeviceCapabilities.keySet().removeIf(serialNumber ->
-			!deviceConfigs.containsKey(serialNumber)
-		);
+		this.model.latestWifiScans.keySet()
+			.removeIf(serialNumber -> !deviceConfigs.containsKey(serialNumber)
+			);
+		this.model.latestState.keySet()
+			.removeIf(serialNumber -> !deviceConfigs.containsKey(serialNumber)
+			);
+		this.model.latestDeviceStatus.keySet()
+			.removeIf(serialNumber -> !deviceConfigs.containsKey(serialNumber)
+			);
+		this.model.latestDeviceCapabilities.keySet()
+			.removeIf(serialNumber -> !deviceConfigs.containsKey(serialNumber)
+			);
 	}
 
 	/**
@@ -82,11 +84,12 @@ public abstract class TPC {
 		// Update device AP config layer
 		deviceDataManager.updateDeviceApConfig(apConfig -> {
 			for (
-				Map.Entry<String, Map<String, Integer>> entry :
-				txPowerMap.entrySet()
+				Map.Entry<String, Map<String, Integer>> entry : txPowerMap
+					.entrySet()
 			) {
 				DeviceConfig deviceConfig = apConfig.computeIfAbsent(
-					entry.getKey(), k -> new DeviceConfig()
+					entry.getKey(),
+					k -> new DeviceConfig()
 				);
 				deviceConfig.autoTxPowers = entry.getValue();
 			}

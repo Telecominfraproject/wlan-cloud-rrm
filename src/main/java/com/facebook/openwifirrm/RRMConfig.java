@@ -34,7 +34,7 @@ public class RRMConfig {
 		 * Private endpoint for the RRM service
 		 * ({@code SERVICECONFIG_PRIVATEENDPOINT})
 		 */
-		public String privateEndpoint = "http://owrrm.wlan.local:16789";  // see ApiServerParams.httpPort
+		public String privateEndpoint = "http://owrrm.wlan.local:16789"; // see ApiServerParams.httpPort
 
 		/**
 		 * Public endpoint for the RRM service
@@ -52,13 +52,15 @@ public class RRMConfig {
 		 * RRM vendor URL
 		 * ({@code SERVICECONFIG_VENDORURL})
 		 */
-		public String vendorUrl = "https://github.com/Telecominfraproject/wlan-cloud-rrm";
+		public String vendorUrl =
+			"https://github.com/Telecominfraproject/wlan-cloud-rrm";
 
 		/**
 		 * RRM reference URL
 		 * ({@code SERVICECONFIG_VENDORREFERENCEURL})
 		 */
-		public String vendorReferenceUrl = "https://github.com/Telecominfraproject/wlan-cloud-rrm/blob/main/ALGORITHMS.md";
+		public String vendorReferenceUrl =
+			"https://github.com/Telecominfraproject/wlan-cloud-rrm/blob/main/ALGORITHMS.md";
 	}
 
 	/** Service configuration. */

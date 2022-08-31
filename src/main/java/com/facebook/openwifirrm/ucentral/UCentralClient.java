@@ -72,7 +72,8 @@ import kong.unirest.UnirestException;
  * </ul>
  */
 public class UCentralClient {
-	private static final Logger logger = LoggerFactory.getLogger(UCentralClient.class);
+	private static final Logger logger =
+		LoggerFactory.getLogger(UCentralClient.class);
 
 	// Service names ("type" field)
 	private static final String OWGW_SERVICE = "owgw";
@@ -97,8 +98,8 @@ public class UCentralClient {
 						request.getUrl()
 					);
 					logger.error(errMsg, e);
-			        return new FailedResponse(e);
-			    }
+					return new FailedResponse(e);
+				}
 			});
 	}
 
@@ -248,7 +249,9 @@ public class UCentralClient {
 			}
 		}
 		if (!isInitialized()) {
-			logger.error("/systemEndpoints failed: missing some required endpoints");
+			logger.error(
+				"/systemEndpoints failed: missing some required endpoints"
+			);
 			logger.debug("Response body: {}", respBody.toString());
 			return false;
 		}
@@ -262,7 +265,7 @@ public class UCentralClient {
 	public boolean isInitialized() {
 		if (
 			!serviceEndpoints.containsKey(OWGW_SERVICE) ||
-			!serviceEndpoints.containsKey(OWSEC_SERVICE)
+				!serviceEndpoints.containsKey(OWSEC_SERVICE)
 		) {
 			return false;
 		}
@@ -384,7 +387,8 @@ public class UCentralClient {
 	public SystemInfoResults getSystemInfo() {
 		Map<String, Object> parameters =
 			Collections.singletonMap("command", "info");
-		HttpResponse<String> response = httpGet("system", OWGW_SERVICE, parameters);
+		HttpResponse<String> response =
+			httpGet("system", OWGW_SERVICE, parameters);
 		if (!response.isSuccess()) {
 			logger.error("Error: {}", response.getBody());
 			return null;
@@ -405,14 +409,16 @@ public class UCentralClient {
 	public List<DeviceWithStatus> getDevices() {
 		Map<String, Object> parameters =
 			Collections.singletonMap("deviceWithStatus", true);
-		HttpResponse<String> response = httpGet("devices", OWGW_SERVICE, parameters);
+		HttpResponse<String> response =
+			httpGet("devices", OWGW_SERVICE, parameters);
 		if (!response.isSuccess()) {
 			logger.error("Error: {}", response.getBody());
 			return null;
 		}
 		try {
 			return gson.fromJson(
-				response.getBody(), DeviceListWithStatus.class
+				response.getBody(),
+				DeviceListWithStatus.class
 			).devicesWithStatus;
 		} catch (JsonSyntaxException e) {
 			String errMsg = String.format(
@@ -458,7 +464,8 @@ public class UCentralClient {
 			return gson.fromJson(response.getBody(), CommandInfo.class);
 		} catch (JsonSyntaxException e) {
 			String errMsg = String.format(
-				"Failed to deserialize to CommandInfo: %s", response.getBody()
+				"Failed to deserialize to CommandInfo: %s",
+				response.getBody()
 			);
 			logger.error(errMsg, e);
 			return null;
@@ -472,7 +479,9 @@ public class UCentralClient {
 		req.UUID = ThreadLocalRandom.current().nextLong();
 		req.configuration = configuration;
 		HttpResponse<String> response = httpPost(
-			String.format("device/%s/configure", serialNumber), OWGW_SERVICE, req
+			String.format("device/%s/configure", serialNumber),
+			OWGW_SERVICE,
+			req
 		);
 		if (!response.isSuccess()) {
 			logger.error("Error: {}", response.getBody());
@@ -482,7 +491,8 @@ public class UCentralClient {
 			return gson.fromJson(response.getBody(), CommandInfo.class);
 		} catch (JsonSyntaxException e) {
 			String errMsg = String.format(
-				"Failed to deserialize to CommandInfo: %s", response.getBody()
+				"Failed to deserialize to CommandInfo: %s",
+				response.getBody()
 			);
 			logger.error(errMsg, e);
 			return null;
@@ -498,7 +508,9 @@ public class UCentralClient {
 		parameters.put("newest", true);
 		parameters.put("limit", limit);
 		HttpResponse<String> response = httpGet(
-			String.format("device/%s/statistics", serialNumber), OWGW_SERVICE, parameters
+			String.format("device/%s/statistics", serialNumber),
+			OWGW_SERVICE,
+			parameters
 		);
 		if (!response.isSuccess()) {
 			logger.error("Error: {}", response.getBody());
@@ -519,7 +531,8 @@ public class UCentralClient {
 	/** Launch a get capabilities command for a device (by serial number). */
 	public DeviceCapabilities getCapabilities(String serialNumber) {
 		HttpResponse<String> response = httpGet(
-			String.format("device/%s/capabilities", serialNumber), OWGW_SERVICE
+			String.format("device/%s/capabilities", serialNumber),
+			OWGW_SERVICE
 		);
 		if (!response.isSuccess()) {
 			logger.error("Error: {}", response.getBody());
@@ -529,7 +542,8 @@ public class UCentralClient {
 			return gson.fromJson(response.getBody(), DeviceCapabilities.class);
 		} catch (JsonSyntaxException e) {
 			String errMsg = String.format(
-				"Failed to deserialize to DeviceCapabilities: %s", response.getBody()
+				"Failed to deserialize to DeviceCapabilities: %s",
+				response.getBody()
 			);
 			logger.error(errMsg, e);
 			return null;
@@ -588,7 +602,8 @@ public class UCentralClient {
 			return gson.fromJson(response.getBody(), VenueList.class);
 		} catch (JsonSyntaxException e) {
 			String errMsg = String.format(
-				"Failed to deserialize to VenueList: %s", response.getBody()
+				"Failed to deserialize to VenueList: %s",
+				response.getBody()
 			);
 			logger.error(errMsg, e);
 			return null;
@@ -606,7 +621,8 @@ public class UCentralClient {
 			return gson.fromJson(response.getBody(), EntityList.class);
 		} catch (JsonSyntaxException e) {
 			String errMsg = String.format(
-				"Failed to deserialize to EntityList: %s", response.getBody()
+				"Failed to deserialize to EntityList: %s",
+				response.getBody()
 			);
 			logger.error(errMsg, e);
 			return null;
@@ -648,7 +664,8 @@ public class UCentralClient {
 		}
 		try {
 			return gson.fromJson(
-				response.getBody(), TokenValidationResult.class
+				response.getBody(),
+				TokenValidationResult.class
 			);
 		} catch (JsonSyntaxException e) {
 			String errMsg = String.format(

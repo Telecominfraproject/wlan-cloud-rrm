@@ -41,7 +41,12 @@ public class MeasurementBasedApClientTPCTest {
 		DeviceDataManager deviceDataManager = new DeviceDataManager();
 		deviceDataManager.setTopology(
 			TestUtils.createTopology(
-				TEST_ZONE, deviceA, deviceB, deviceC, deviceD, deviceE
+				TEST_ZONE,
+				deviceA,
+				deviceB,
+				deviceC,
+				deviceD,
+				deviceE
 			)
 		);
 
@@ -52,39 +57,58 @@ public class MeasurementBasedApClientTPCTest {
 		);
 		dataModel.latestState.put(
 			deviceB,
-			TestUtils.createState(36, 20, 20, "", new int[] {-65})
+			TestUtils.createState(36, 20, 20, "", new int[] { -65 })
 		);
 		dataModel.latestState.put(
 			deviceC,
-			TestUtils.createState(36,40, 21, null, new int[] {-65, -73, -58})
+			TestUtils.createState(36, 40, 21, null, new int[] { -65, -73, -58 })
 		);
 		dataModel.latestState.put(
 			deviceD,
-			TestUtils.createState(36, 20, 22, null, new int[] {-80})
+			TestUtils.createState(36, 20, 22, null, new int[] { -80 })
 		);
 		dataModel.latestState.put(
 			deviceE,
-			TestUtils.createState(36, 20, 23, null, new int[] {-45})
+			TestUtils.createState(36, 20, 23, null, new int[] { -45 })
 		);
 
-		TPC optimizer = new MeasurementBasedApClientTPC(dataModel, TEST_ZONE, deviceDataManager);
+		TPC optimizer = new MeasurementBasedApClientTPC(
+			dataModel,
+			TEST_ZONE,
+			deviceDataManager
+		);
 		Map<String, Map<String, Integer>> txPowerMap =
 			optimizer.computeTxPowerMap();
 
 		// Device A: no clients
-		assertEquals(10, txPowerMap.get(deviceA).get(UCentralConstants.BAND_5G));
+		assertEquals(
+			10,
+			txPowerMap.get(deviceA).get(UCentralConstants.BAND_5G)
+		);
 
 		// Device B: 1 client with RSSI -65
-		assertEquals(14, txPowerMap.get(deviceB).get(UCentralConstants.BAND_5G));
+		assertEquals(
+			14,
+			txPowerMap.get(deviceB).get(UCentralConstants.BAND_5G)
+		);
 
 		// Device C: 3 clients with min. RSSI -73
-		assertEquals(26, txPowerMap.get(deviceC).get(UCentralConstants.BAND_5G));
+		assertEquals(
+			26,
+			txPowerMap.get(deviceC).get(UCentralConstants.BAND_5G)
+		);
 
 		// Device D: 1 client with RSSI -80 => set to max txPower for MCS 7
-		assertEquals(28, txPowerMap.get(deviceD).get(UCentralConstants.BAND_5G));
+		assertEquals(
+			28,
+			txPowerMap.get(deviceD).get(UCentralConstants.BAND_5G)
+		);
 
 		// Device E: 1 client with RSSI -45 => set to min txPower
-		assertEquals(TPC.MIN_TX_POWER, txPowerMap.get(deviceE).get(UCentralConstants.BAND_5G));
+		assertEquals(
+			TPC.MIN_TX_POWER,
+			txPowerMap.get(deviceE).get(UCentralConstants.BAND_5G)
+		);
 	}
 
 	@Test
@@ -98,7 +122,11 @@ public class MeasurementBasedApClientTPCTest {
 		DeviceDataManager deviceDataManager = new DeviceDataManager();
 		deviceDataManager.setTopology(
 			TestUtils.createTopology(
-				TEST_ZONE, deviceA, deviceB, deviceC, deviceD
+				TEST_ZONE,
+				deviceA,
+				deviceB,
+				deviceC,
+				deviceD
 			)
 		);
 
@@ -116,7 +144,18 @@ public class MeasurementBasedApClientTPCTest {
 		// 2G and 5G
 		dataModel.latestState.put(
 			deviceC,
-			TestUtils.createState(1, 20, 20, null, new int[] {}, 36, 20, 20, null, new int[] {})
+			TestUtils.createState(
+				1,
+				20,
+				20,
+				null,
+				new int[] {},
+				36,
+				20,
+				20,
+				null,
+				new int[] {}
+			)
 		);
 		// No valid bands in 2G or 5G
 		dataModel.latestState.put(
@@ -124,7 +163,11 @@ public class MeasurementBasedApClientTPCTest {
 			TestUtils.createState(25, 20, 20, null, new int[] {})
 		);
 
-		TPC optimizer = new MeasurementBasedApClientTPC(dataModel, TEST_ZONE, deviceDataManager);
+		TPC optimizer = new MeasurementBasedApClientTPC(
+			dataModel,
+			TEST_ZONE,
+			deviceDataManager
+		);
 		Map<String, Map<String, Integer>> txPowerMap =
 			optimizer.computeTxPowerMap();
 

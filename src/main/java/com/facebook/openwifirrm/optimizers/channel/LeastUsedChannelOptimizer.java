@@ -33,7 +33,8 @@ import com.facebook.openwifirrm.ucentral.models.State;
  * Randomly assign APs to the least loaded channels.
  */
 public class LeastUsedChannelOptimizer extends ChannelOptimizer {
-	private static final Logger logger = LoggerFactory.getLogger(LeastUsedChannelOptimizer.class);
+	private static final Logger logger =
+		LoggerFactory.getLogger(LeastUsedChannelOptimizer.class);
 
 	/** The RRM algorithm ID. */
 	public static final String ALGORITHM_ID = "least_used";
@@ -46,7 +47,9 @@ public class LeastUsedChannelOptimizer extends ChannelOptimizer {
 
 	/** Constructor. */
 	public LeastUsedChannelOptimizer(
-		DataModel model, String zone, DeviceDataManager deviceDataManager
+		DataModel model,
+		String zone,
+		DeviceDataManager deviceDataManager
 	) {
 		super(model, zone, deviceDataManager);
 	}
@@ -62,8 +65,7 @@ public class LeastUsedChannelOptimizer extends ChannelOptimizer {
 		return deviceToWifiScans.entrySet()
 			.stream()
 			.sorted(
-				(e1, e2) ->
-				Integer.compare(e2.getValue().size(), e1.getValue().size())
+				(e1, e2) -> Integer.compare(e2.getValue().size(), e1.getValue().size())
 			)
 			.map(e -> e.getKey())
 			.collect(Collectors.toList());
@@ -77,10 +79,15 @@ public class LeastUsedChannelOptimizer extends ChannelOptimizer {
 	protected static Map<Integer, Integer> getOccupiedOverlapChannels(
 		Map<Integer, Integer> occupiedChannels
 	) {
-		int maxChannel = UCentralUtils.UPPER_CHANNEL_LIMIT.get(UCentralConstants.BAND_2G);
-		int minChannel = UCentralUtils.LOWER_CHANNEL_LIMIT.get(UCentralConstants.BAND_2G);
+		int maxChannel =
+			UCentralUtils.UPPER_CHANNEL_LIMIT.get(UCentralConstants.BAND_2G);
+		int minChannel =
+			UCentralUtils.LOWER_CHANNEL_LIMIT.get(UCentralConstants.BAND_2G);
 		Map<Integer, Integer> occupiedOverlapChannels = new TreeMap<>();
-		for (int overlapChannel : AVAILABLE_CHANNELS_BAND.get(UCentralConstants.BAND_2G)) {
+		for (
+			int overlapChannel : AVAILABLE_CHANNELS_BAND
+				.get(UCentralConstants.BAND_2G)
+		) {
 			int occupancy = 0;
 			int windowStart = Math.max(
 				minChannel,
@@ -173,7 +180,8 @@ public class LeastUsedChannelOptimizer extends ChannelOptimizer {
 		// Get the occupied channels information
 		for (WifiScanEntry entry : scanResps) {
 			occupiedChannels.compute(
-				entry.channel, (k, v) -> (v == null) ? 1 : v + 1
+				entry.channel,
+				(k, v) -> (v == null) ? 1 : v + 1
 			);
 		}
 
@@ -225,7 +233,7 @@ public class LeastUsedChannelOptimizer extends ChannelOptimizer {
 		// If no APs on the same channel, keep this channel
 		if (
 			!occupiedChannels.containsKey(currentChannel) &&
-			availableChannelsList.contains(currentChannel)
+				availableChannelsList.contains(currentChannel)
 		) {
 			logger.info(
 				"Device {}: No APs on current channel {}, assigning to {}",
@@ -243,7 +251,9 @@ public class LeastUsedChannelOptimizer extends ChannelOptimizer {
 				// No free channels: assign AP to least occupied channel
 				// Need to update the occupied channels based on the available channels
 				Map<Integer, Integer> newOccupiedChannels = new TreeMap<>();
-				for (Map.Entry<Integer,Integer> e : occupiedChannels.entrySet()) {
+				for (
+					Map.Entry<Integer, Integer> e : occupiedChannels.entrySet()
+				) {
 					if (availableChannelsList.contains(e.getKey())) {
 						newOccupiedChannels.put(e.getKey(), e.getValue());
 					}
@@ -252,12 +262,12 @@ public class LeastUsedChannelOptimizer extends ChannelOptimizer {
 					newOccupiedChannels.entrySet()
 						.stream()
 						.min(
-							(a, b) ->
-							Integer.compare(a.getValue(), b.getValue()))
+							(a, b) -> Integer.compare(a.getValue(), b.getValue())
+						)
 						.get();
 				logger.info(
 					"Device {}: No free channels, assigning to least " +
-					"weighted/occupied channel {} (weight: {}), {}",
+						"weighted/occupied channel {} (weight: {}), {}",
 					serialNumber,
 					entry.getKey(),
 					entry.getValue(),
@@ -297,7 +307,7 @@ public class LeastUsedChannelOptimizer extends ChannelOptimizer {
 				newChannel = candidateChannels.get(channelIndex);
 				logger.info(
 					"Device {}: Assigning to random free channel {} (from " +
-					"available list: {})",
+						"available list: {})",
 					serialNumber,
 					newChannel,
 					candidateChannels.toString()
@@ -320,7 +330,8 @@ public class LeastUsedChannelOptimizer extends ChannelOptimizer {
 				AVAILABLE_CHANNELS_BAND
 			);
 
-		Map<String, String> bssidsMap = UCentralUtils.getBssidsMap(model.latestState);
+		Map<String, String> bssidsMap =
+			UCentralUtils.getBssidsMap(model.latestState);
 
 		for (String band : bandsMap.keySet()) {
 			// Performance metrics
@@ -328,9 +339,12 @@ public class LeastUsedChannelOptimizer extends ChannelOptimizer {
 			Map<String, Integer> newChannelMap = new TreeMap<>();
 
 			// Only use last wifi scan result for APs (TODO)
-			Map<String, List<WifiScanEntry>> deviceToWifiScans = getDeviceToWiFiScans(
-				band, model.latestWifiScans, bandsMap
-			);
+			Map<String, List<WifiScanEntry>> deviceToWifiScans =
+				getDeviceToWiFiScans(
+					band,
+					model.latestWifiScans,
+					bandsMap
+				);
 
 			// Order by number of nearby APs detected in wifi scan (descending)
 			List<String> sortedAPs = getSortedAPs(deviceToWifiScans);
@@ -339,8 +353,12 @@ public class LeastUsedChannelOptimizer extends ChannelOptimizer {
 			for (String serialNumber : sortedAPs) {
 				// Get available channels of the device
 				List<Integer> availableChannelsList = deviceAvailableChannels
-					.get(band).get(serialNumber);
-				if (availableChannelsList == null || availableChannelsList.isEmpty()) {
+					.get(band)
+					.get(serialNumber);
+				if (
+					availableChannelsList == null ||
+						availableChannelsList.isEmpty()
+				) {
 					availableChannelsList = AVAILABLE_CHANNELS_BAND.get(band);
 				}
 
@@ -360,7 +378,8 @@ public class LeastUsedChannelOptimizer extends ChannelOptimizer {
 					);
 					continue;
 				}
-				int[] currentChannelInfo = getCurrentChannel(band, serialNumber, state);
+				int[] currentChannelInfo =
+					getCurrentChannel(band, serialNumber, state);
 				int currentChannel = currentChannelInfo[0];
 				int currentChannelWidth = currentChannelInfo[1];
 				// Filter out APs if the number of radios in the state and config mismatches
@@ -376,32 +395,49 @@ public class LeastUsedChannelOptimizer extends ChannelOptimizer {
 
 				// Get the occupied channels info of the device
 				Map<Integer, Integer> occupiedChannels = getOccupiedChannels(
-					band, serialNumber, currentChannelWidth, availableChannelsList,
-					deviceToWifiScans, channelMap, bssidsMap
+					band,
+					serialNumber,
+					currentChannelWidth,
+					availableChannelsList,
+					deviceToWifiScans,
+					channelMap,
+					bssidsMap
 				);
 
 				// Update the availableChannelsList by usersChannels and allowedChannels
 				availableChannelsList = updateAvailableChannelsList(
-					band, serialNumber, currentChannelWidth, availableChannelsList
+					band,
+					serialNumber,
+					currentChannelWidth,
+					availableChannelsList
 				);
 
 				// Get a (new) channel of the device
 				int newChannel = getNewChannel(
-					band, serialNumber, availableChannelsList,
-					currentChannel, occupiedChannels
+					band,
+					serialNumber,
+					availableChannelsList,
+					currentChannel,
+					occupiedChannels
 				);
 
 				channelMap.computeIfAbsent(
-					serialNumber, k -> new TreeMap<>()
+					serialNumber,
+					k -> new TreeMap<>()
 				)
-				.put(band, newChannel);
+					.put(band, newChannel);
 
 				// Gather the info for the performance metrics
 				oldChannelMap.put(serialNumber, currentChannel);
 				newChannelMap.put(serialNumber, newChannel);
 			}
 			// Get and log the performance metrics
-			logPerfMetrics(oldChannelMap, newChannelMap, deviceToWifiScans, bssidsMap);
+			logPerfMetrics(
+				oldChannelMap,
+				newChannelMap,
+				deviceToWifiScans,
+				bssidsMap
+			);
 		}
 
 		return channelMap;

@@ -8,6 +8,4 @@
 
 package com.facebook.openwifirrm.ucentral.gw.models;
 
-public enum DeviceType {
-	AP, SWITCH, IOT, MESH
-}
+public enum DeviceType { AP, SWITCH, IOT, MESH }

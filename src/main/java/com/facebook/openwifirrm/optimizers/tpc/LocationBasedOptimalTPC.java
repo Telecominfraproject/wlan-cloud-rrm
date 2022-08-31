@@ -32,14 +32,17 @@ import com.facebook.openwifirrm.ucentral.models.State;
  * Assign tx power based on an exhaustive search algorithm given the AP location.
  */
 public class LocationBasedOptimalTPC extends TPC {
-	private static final Logger logger = LoggerFactory.getLogger(LocationBasedOptimalTPC.class);
+	private static final Logger logger =
+		LoggerFactory.getLogger(LocationBasedOptimalTPC.class);
 
 	/** The RRM algorithm ID. */
 	public static final String ALGORITHM_ID = "location_optimal";
 
 	/** Constructor. */
 	public LocationBasedOptimalTPC(
-		DataModel model, String zone, DeviceDataManager deviceDataManager
+		DataModel model,
+		String zone,
+		DeviceDataManager deviceDataManager
 	) {
 		super(model, zone, deviceDataManager);
 	}
@@ -60,7 +63,8 @@ public class LocationBasedOptimalTPC extends TPC {
 		List<List<Integer>> permutations = new ArrayList<>(permutationsSize);
 		for (int index = 0; index < n; index++) {
 			int choiceIndex = 0;
-			int switchIndex = permutationsSize / (int) Math.pow(choicesSize, index + 1);
+			int switchIndex =
+				permutationsSize / (int) Math.pow(choicesSize, index + 1);
 			for (int pIndex = 0; pIndex < permutationsSize; pIndex++) {
 				if (index == 0) {
 					permutations.add(new ArrayList<>(n));
@@ -107,11 +111,17 @@ public class LocationBasedOptimalTPC extends TPC {
 			List<Double> txPowerTemp = permutations
 				.get(pIndex)
 				.stream()
-				.mapToDouble(i->i)
+				.mapToDouble(i -> i)
 				.boxed()
 				.collect(Collectors.toList());
 			double[][][] rxPower = ModelerUtils
-				.generateRxPower(sampleSpace, numOfAPs, apLocX, apLocY, txPowerTemp);
+				.generateRxPower(
+					sampleSpace,
+					numOfAPs,
+					apLocX,
+					apLocY,
+					txPowerTemp
+				);
 			double[][] heatMap = ModelerUtils
 				.generateHeatMap(sampleSpace, numOfAPs, rxPower);
 			double[][] sinr = ModelerUtils
@@ -139,7 +149,8 @@ public class LocationBasedOptimalTPC extends TPC {
 	 *                   this method with the new tx powers.
 	 */
 	private void buildTxPowerMapForBand(
-		String band, Map<String, Map<String, Integer>> txPowerMap
+		String band,
+		Map<String, Map<String, Integer>> txPowerMap
 	) {
 		int numOfAPs = 0;
 		int boundary = 100;
@@ -160,7 +171,8 @@ public class LocationBasedOptimalTPC extends TPC {
 			// Ignore the device if its radio is not active
 			if (state.radios == null || state.radios.length == 0) {
 				logger.debug(
-					"Device {}: No radios found, skipping...", serialNumber
+					"Device {}: No radios found, skipping...",
+					serialNumber
 				);
 				continue;
 			}
@@ -168,7 +180,8 @@ public class LocationBasedOptimalTPC extends TPC {
 			DeviceConfig deviceCfg = deviceConfigs.get(serialNumber);
 			if (deviceCfg == null || deviceCfg.location == null) {
 				logger.debug(
-					"Device {}: No location data, skipping...", serialNumber
+					"Device {}: No location data, skipping...",
+					serialNumber
 				);
 				continue;
 			}
@@ -176,8 +189,8 @@ public class LocationBasedOptimalTPC extends TPC {
 			// Generate the required location data for the optimization
 			if (
 				deviceCfg.location.size() == 2 &&
-				deviceCfg.location.get(0) >= 0 &&
-				deviceCfg.location.get(1) >= 0
+					deviceCfg.location.get(0) >= 0 &&
+					deviceCfg.location.get(1) >= 0
 			) {
 				apLocX.add(deviceCfg.location.get(0).doubleValue());
 				apLocY.add(deviceCfg.location.get(1).doubleValue());
@@ -192,7 +205,8 @@ public class LocationBasedOptimalTPC extends TPC {
 			}
 
 			// Update the txPowerChoices for the optimization
-			Map<String, List<Integer>> allowedTxPowers = deviceCfg.allowedTxPowers;
+			Map<String, List<Integer>> allowedTxPowers =
+				deviceCfg.allowedTxPowers;
 			if (allowedTxPowers != null && allowedTxPowers.get(band) != null) {
 				txPowerChoices.retainAll(allowedTxPowers.get(band));
 			}
@@ -205,14 +219,15 @@ public class LocationBasedOptimalTPC extends TPC {
 
 		// Report error if none of the APs has the location data or active
 		if (apLocX.isEmpty()) {
-			logger.error("No valid APs, missing location data or inactive APs!");
+			logger
+				.error("No valid APs, missing location data or inactive APs!");
 			return;
 		}
 
 		// Report error if the boundary is smaller than the given location
 		if (
 			Collections.max(apLocX).intValue() > boundary ||
-			Collections.max(apLocY).intValue() > boundary
+				Collections.max(apLocY).intValue() > boundary
 		) {
 			logger.error("Invalid boundary: {}!", boundary);
 			return;
@@ -234,13 +249,14 @@ public class LocationBasedOptimalTPC extends TPC {
 		}
 
 		// Run the optimal TPC algorithm
-		List<Integer> txPowerList = LocationBasedOptimalTPC.runLocationBasedOptimalTPC(
-			boundary,
-			numOfAPs,
-			apLocX,
-			apLocY,
-			txPowerChoices
-		);
+		List<Integer> txPowerList =
+			LocationBasedOptimalTPC.runLocationBasedOptimalTPC(
+				boundary,
+				numOfAPs,
+				apLocX,
+				apLocY,
+				txPowerChoices
+			);
 
 		// Apply the results from the optimal TPC algorithm to the config
 		for (Map.Entry<String, Integer> e : validAPs.entrySet()) {

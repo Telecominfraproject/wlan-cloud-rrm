@@ -78,9 +78,19 @@ public class HTOperationElement {
 	 * For details about the parameters, see the javadocs for the corresponding
 	 * member variables.
 	 */
-	public HTOperationElement(byte primaryChannel, byte secondaryChannelOffset, boolean staChannelWidth,
-			boolean rifsMode, byte htProtection, boolean nongreenfieldHtStasPresent, boolean obssNonHtStasPresent,
-			byte channelCenterFrequencySegment2, boolean dualBeacon, boolean dualCtsProtection, boolean stbcBeacon) {
+	public HTOperationElement(
+		byte primaryChannel,
+		byte secondaryChannelOffset,
+		boolean staChannelWidth,
+		boolean rifsMode,
+		byte htProtection,
+		boolean nongreenfieldHtStasPresent,
+		boolean obssNonHtStasPresent,
+		byte channelCenterFrequencySegment2,
+		boolean dualBeacon,
+		boolean dualCtsProtection,
+		boolean stbcBeacon
+	) {
 		/*
 		 * XXX some combinations of these parameters may be invalid as defined by
 		 * 802.11-2020, but this is not checked here. If fidelity to 802.11 is required,
@@ -104,10 +114,25 @@ public class HTOperationElement {
 	}
 
 	/** Constructor with the most used parameters. */
-	public HTOperationElement(byte primaryChannel, byte secondaryChannelOffset, boolean staChannelWidth,
-			byte channelCenterFrequencySegment2) {
-		this(primaryChannel, secondaryChannelOffset, staChannelWidth, false, (byte) 0, true, false,
-				channelCenterFrequencySegment2, false, false, false);
+	public HTOperationElement(
+		byte primaryChannel,
+		byte secondaryChannelOffset,
+		boolean staChannelWidth,
+		byte channelCenterFrequencySegment2
+	) {
+		this(
+			primaryChannel,
+			secondaryChannelOffset,
+			staChannelWidth,
+			false,
+			(byte) 0,
+			true,
+			false,
+			channelCenterFrequencySegment2,
+			false,
+			false,
+			false
+		);
 	}
 
 	/**
@@ -129,13 +154,16 @@ public class HTOperationElement {
 		this.rifsMode = ((bytes[1] & 0b00001000) >>> 3) == 1;
 		this.staChannelWidth = ((bytes[1] & 0b00000100) >>> 2) == 1;
 		this.secondaryChannelOffset = (byte) (bytes[1] & 0b00000011);
-		byte channelCenterFrequencySegment2LastThreeBits = (byte) ((bytes[2] & 0b11100000) >>> 5);
+		byte channelCenterFrequencySegment2LastThreeBits =
+			(byte) ((bytes[2] & 0b11100000) >>> 5);
 		this.obssNonHtStasPresent = ((bytes[2] & 0b00010000) >>> 4) == 1;
 		this.nongreenfieldHtStasPresent = ((bytes[2] & 0b00000100) >>> 2) == 1;
 		this.htProtection = (byte) (bytes[2] & 0b00000011);
-		byte channelCenterFrequencySegment2FirstFiveBits = (byte) (bytes[3] & 0b00011111);
-		this.channelCenterFrequencySegment2 = (byte) (((byte) (channelCenterFrequencySegment2FirstFiveBits << 3))
-				| channelCenterFrequencySegment2LastThreeBits);
+		byte channelCenterFrequencySegment2FirstFiveBits =
+			(byte) (bytes[3] & 0b00011111);
+		this.channelCenterFrequencySegment2 =
+			(byte) (((byte) (channelCenterFrequencySegment2FirstFiveBits <<
+				3)) | channelCenterFrequencySegment2LastThreeBits);
 		this.dualCtsProtection = ((bytes[4] & 0b10000000) >>> 7) == 1;
 		this.dualBeacon = ((bytes[4] & 0b01000000) >>> 6) == 1;
 		this.stbcBeacon = (bytes[5] & 0b00000001) == 1;
@@ -155,9 +183,11 @@ public class HTOperationElement {
 	 *         aggregating statistics; false otherwise.
 	 */
 	public boolean matchesForAggregation(HTOperationElement other) {
-		return other != null && primaryChannel == other.primaryChannel
-				&& secondaryChannelOffset == other.secondaryChannelOffset && staChannelWidth == other.staChannelWidth
-				&& channelCenterFrequencySegment2 == other.channelCenterFrequencySegment2;
+		return other != null && primaryChannel == other.primaryChannel &&
+			secondaryChannelOffset == other.secondaryChannelOffset &&
+			staChannelWidth == other.staChannelWidth &&
+			channelCenterFrequencySegment2 ==
+				other.channelCenterFrequencySegment2;
 	}
 
 	/**
@@ -171,7 +201,10 @@ public class HTOperationElement {
 	 * @return true if the two inputs should have their statistics aggregated; false
 	 *         otherwise.
 	 */
-	public static boolean matchesHtForAggregation(String htOper1, String htOper2) {
+	public static boolean matchesHtForAggregation(
+		String htOper1,
+		String htOper2
+	) {
 		if (Objects.equals(htOper1, htOper2)) {
 			return true; // true if both are null or they are equal
 		}
@@ -188,9 +221,19 @@ public class HTOperationElement {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + Arrays.hashCode(basicHtMcsSet);
-		result = prime * result + Objects.hash(channelCenterFrequencySegment2, dualBeacon, dualCtsProtection,
-				htProtection, nongreenfieldHtStasPresent, obssNonHtStasPresent, primaryChannel, rifsMode,
-				secondaryChannelOffset, staChannelWidth, stbcBeacon);
+		result = prime * result + Objects.hash(
+			channelCenterFrequencySegment2,
+			dualBeacon,
+			dualCtsProtection,
+			htProtection,
+			nongreenfieldHtStasPresent,
+			obssNonHtStasPresent,
+			primaryChannel,
+			rifsMode,
+			secondaryChannelOffset,
+			staChannelWidth,
+			stbcBeacon
+		);
 		return result;
 	}
 
@@ -206,13 +249,18 @@ public class HTOperationElement {
 			return false;
 		}
 		HTOperationElement other = (HTOperationElement) obj;
-		return Arrays.equals(basicHtMcsSet, other.basicHtMcsSet)
-				&& channelCenterFrequencySegment2 == other.channelCenterFrequencySegment2
-				&& dualBeacon == other.dualBeacon && dualCtsProtection == other.dualCtsProtection
-				&& htProtection == other.htProtection
-				&& nongreenfieldHtStasPresent == other.nongreenfieldHtStasPresent
-				&& obssNonHtStasPresent == other.obssNonHtStasPresent && primaryChannel == other.primaryChannel
-				&& rifsMode == other.rifsMode && secondaryChannelOffset == other.secondaryChannelOffset
-				&& staChannelWidth == other.staChannelWidth && stbcBeacon == other.stbcBeacon;
+		return Arrays.equals(basicHtMcsSet, other.basicHtMcsSet) &&
+			channelCenterFrequencySegment2 ==
+				other.channelCenterFrequencySegment2 &&
+			dualBeacon == other.dualBeacon &&
+			dualCtsProtection == other.dualCtsProtection &&
+			htProtection == other.htProtection &&
+			nongreenfieldHtStasPresent == other.nongreenfieldHtStasPresent &&
+			obssNonHtStasPresent == other.obssNonHtStasPresent &&
+			primaryChannel == other.primaryChannel &&
+			rifsMode == other.rifsMode &&
+			secondaryChannelOffset == other.secondaryChannelOffset &&
+			staChannelWidth == other.staChannelWidth &&
+			stbcBeacon == other.stbcBeacon;
 	}
 }

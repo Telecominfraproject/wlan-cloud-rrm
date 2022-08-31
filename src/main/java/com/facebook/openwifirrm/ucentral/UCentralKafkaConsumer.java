@@ -37,7 +37,8 @@ import com.google.gson.JsonObject;
  * Kafka consumer for uCentral.
  */
 public class UCentralKafkaConsumer {
-	private static final Logger logger = LoggerFactory.getLogger(UCentralKafkaConsumer.class);
+	private static final Logger logger =
+		LoggerFactory.getLogger(UCentralKafkaConsumer.class);
 
 	/** The consumer instance. */
 	private final KafkaConsumer<String, String> consumer;
@@ -72,7 +73,11 @@ public class UCentralKafkaConsumer {
 		public final long timestampMs;
 
 		/** Constructor. */
-		public KafkaRecord(String serialNumber, JsonObject payload, long timestampMs) {
+		public KafkaRecord(
+			String serialNumber,
+			JsonObject payload,
+			long timestampMs
+		) {
 			this.serialNumber = serialNumber;
 			this.payload = payload;
 			this.timestampMs = timestampMs;
@@ -147,11 +152,13 @@ public class UCentralKafkaConsumer {
 
 	/** Subscribe to topic(s). */
 	public void subscribe() {
-		List<String> subscribeTopics = Arrays.asList(stateTopic, wifiScanTopic, serviceEventsTopic)
-			.stream()
-			.filter(t -> t != null && !t.isEmpty())
-			.collect(Collectors.toList());
-		Map<String, List<PartitionInfo>> topics = consumer.listTopics(pollTimeout);
+		List<String> subscribeTopics =
+			Arrays.asList(stateTopic, wifiScanTopic, serviceEventsTopic)
+				.stream()
+				.filter(t -> t != null && !t.isEmpty())
+				.collect(Collectors.toList());
+		Map<String, List<PartitionInfo>> topics =
+			consumer.listTopics(pollTimeout);
 		logger.info("Found topics: {}", String.join(", ", topics.keySet()));
 		while (!topics.keySet().containsAll(subscribeTopics)) {
 			logger.info(
@@ -162,25 +169,31 @@ public class UCentralKafkaConsumer {
 			try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
-				throw new RuntimeException("Interrupted while waiting for Kafka topics", e);
+				throw new RuntimeException(
+					"Interrupted while waiting for Kafka topics",
+					e
+				);
 			}
 			topics = consumer.listTopics(pollTimeout);
 		}
 		consumer.subscribe(subscribeTopics, new ConsumerRebalanceListener() {
 			@Override
-			public void onPartitionsRevoked(Collection<TopicPartition> partitions) {
+			public void onPartitionsRevoked(
+				Collection<TopicPartition> partitions
+			) {
 				// ignore
 			}
 
 			@Override
-			public void onPartitionsAssigned(Collection<TopicPartition> partitions) {
+			public void onPartitionsAssigned(
+				Collection<TopicPartition> partitions
+			) {
 				logger.info(
 					"Received {} partition assignment(s): {}",
 					partitions.size(),
 					partitions.stream()
 						.map(
-							p ->
-							String.format("%s=%d", p.topic(), p.partition())
+							p -> String.format("%s=%d", p.topic(), p.partition())
 						)
 						.collect(Collectors.joining(", "))
 				);
@@ -192,7 +205,7 @@ public class UCentralKafkaConsumer {
 					// TODO a better solution?
 					logger.error(
 						"Missing topics in partition assignment! " +
-						"Resubscribing..."
+							"Resubscribing..."
 					);
 					consumer.unsubscribe();
 					subscribe();
@@ -217,7 +230,8 @@ public class UCentralKafkaConsumer {
 					serviceEventRecords.add(event);
 				} catch (Exception e) {
 					logger.trace(
-						"Offset {}: Invalid payload JSON", record.offset()
+						"Offset {}: Invalid payload JSON",
+						record.offset()
 					);
 					continue;
 				}
@@ -231,7 +245,8 @@ public class UCentralKafkaConsumer {
 				} catch (Exception e) {
 					// uCentralGw pushes invalid JSON for empty messages
 					logger.trace(
-						"Offset {}: Invalid payload JSON", record.offset()
+						"Offset {}: Invalid payload JSON",
+						record.offset()
 					);
 					continue;
 				}
@@ -241,7 +256,8 @@ public class UCentralKafkaConsumer {
 				}
 				if (!payload.isJsonObject()) {
 					logger.trace(
-						"Offset {}: Payload not an object", record.offset()
+						"Offset {}: Payload not an object",
+						record.offset()
 					);
 					continue;
 				}
@@ -250,10 +266,13 @@ public class UCentralKafkaConsumer {
 				String serialNumber = record.key();
 				logger.trace(
 					"Offset {}: {} => {}",
-					record.offset(), serialNumber, payload.toString()
+					record.offset(),
+					serialNumber,
+					payload.toString()
 				);
 				// record.timestamp() is empirically confirmed to be Unix time (ms)
-				KafkaRecord kafkaRecord = new KafkaRecord(serialNumber, payload, record.timestamp());
+				KafkaRecord kafkaRecord =
+					new KafkaRecord(serialNumber, payload, record.timestamp());
 				if (record.topic().equals(stateTopic)) {
 					stateRecords.add(kafkaRecord);
 				} else if (record.topic().equals(wifiScanTopic)) {
@@ -314,28 +333,37 @@ public class UCentralKafkaConsumer {
 
 	/** Subscribe to service events. */
 	private void subscribeApiKeyListener() {
-		this.addKafkaListener("APIKey", new UCentralKafkaConsumer.KafkaListener() {
-			@Override
-			public void handleStateRecords(List<UCentralKafkaConsumer.KafkaRecord> records) {
-				//ignored
-			}
+		this.addKafkaListener(
+			"APIKey",
+			new UCentralKafkaConsumer.KafkaListener() {
+				@Override
+				public void handleStateRecords(
+					List<UCentralKafkaConsumer.KafkaRecord> records
+				) {
+					//ignored
+				}
 
-			@Override
-			public void handleWifiScanRecords(List<UCentralKafkaConsumer.KafkaRecord> records) {
-				//ignored
-			}
+				@Override
+				public void handleWifiScanRecords(
+					List<UCentralKafkaConsumer.KafkaRecord> records
+				) {
+					//ignored
+				}
 
-			@Override
-			public void handleServiceEventRecords(List<ServiceEvent> serviceEventRecords) {
-				for (ServiceEvent record : serviceEventRecords) {
-					if (
-						record.event.equals(ServiceEvent.EVENT_KEEPALIVE) ||
-						record.event.equals(ServiceEvent.EVENT_JOIN)
-					) {
-						client.setServiceEndpoint(record.type, record);
+				@Override
+				public void handleServiceEventRecords(
+					List<ServiceEvent> serviceEventRecords
+				) {
+					for (ServiceEvent record : serviceEventRecords) {
+						if (
+							record.event.equals(ServiceEvent.EVENT_KEEPALIVE) ||
+								record.event.equals(ServiceEvent.EVENT_JOIN)
+						) {
+							client.setServiceEndpoint(record.type, record);
+						}
 					}
 				}
 			}
-		});
+		);
 	}
 }

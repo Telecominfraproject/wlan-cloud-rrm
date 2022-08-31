@@ -90,10 +90,13 @@ public class RRM {
 
 		// Instantiate modules
 		RRMScheduler scheduler = new RRMScheduler(
-			config.moduleConfig.schedulerParams, deviceDataManager
+			config.moduleConfig.schedulerParams,
+			deviceDataManager
 		);
 		ConfigManager configManager = new ConfigManager(
-			config.moduleConfig.configManagerParams, deviceDataManager, client
+			config.moduleConfig.configManagerParams,
+			deviceDataManager,
+			client
 		);
 		DataCollector dataCollector = new DataCollector(
 			config.moduleConfig.dataCollectorParams,

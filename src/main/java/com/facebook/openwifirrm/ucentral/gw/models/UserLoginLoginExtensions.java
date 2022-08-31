@@ -11,7 +11,7 @@ package com.facebook.openwifirrm.ucentral.gw.models;
 import java.util.List;
 
 public class UserLoginLoginExtensions {
-    public List<MobilePhoneNumber> mobiles;
-    public String authenticatorSecret;
-    public MfaAuthInfo mfa;
+	public List<MobilePhoneNumber> mobiles;
+	public String authenticatorSecret;
+	public MfaAuthInfo mfa;
 }

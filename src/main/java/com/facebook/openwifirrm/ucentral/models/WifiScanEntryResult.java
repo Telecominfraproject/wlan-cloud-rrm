@@ -73,8 +73,19 @@ public class WifiScanEntryResult {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(bssid, capability, channel, frequency, ht_oper, ies, last_seen, signal, ssid, tsf,
-				vht_oper);
+		return Objects.hash(
+			bssid,
+			capability,
+			channel,
+			frequency,
+			ht_oper,
+			ies,
+			last_seen,
+			signal,
+			ssid,
+			tsf,
+			vht_oper
+		);
 	}
 
 	@Override
@@ -89,14 +100,16 @@ public class WifiScanEntryResult {
 			return false;
 		}
 		WifiScanEntryResult other = (WifiScanEntryResult) obj;
-		return Objects.equals(bssid, other.bssid) && capability == other.capability && channel == other.channel
-				&& frequency == other.frequency && Objects.equals(ht_oper, other.ht_oper)
-				&& Objects.equals(ies, other.ies) && last_seen == other.last_seen && signal == other.signal
-				&& Objects.equals(ssid, other.ssid) && tsf == other.tsf && Objects.equals(vht_oper, other.vht_oper);
+		return Objects.equals(bssid, other.bssid) &&
+			capability == other.capability && channel == other.channel &&
+			frequency == other.frequency && Objects
+				.equals(ht_oper, other.ht_oper) &&
+			Objects.equals(ies, other.ies) && last_seen == other.last_seen && signal == other.signal && Objects.equals(ssid, other.ssid) && tsf == other.tsf && Objects.equals(vht_oper, other.vht_oper);
 	}
 
 	@Override
 	public String toString() {
-		return String.format("WifiScanEntryResult[signal=%d, bssid=%s]", signal, bssid);
+		return String
+			.format("WifiScanEntryResult[signal=%d, bssid=%s]", signal, bssid);
 	}
 }

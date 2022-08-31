@@ -53,10 +53,12 @@ public class UnmanagedApAwareChannelOptimizerTest {
 		// A -> No APs on current channel, so stay on it (48)
 		int aExpectedChannel = 48;
 		dataModel.latestDeviceStatus.put(
-			deviceA, TestUtils.createDeviceStatus(band, aExpectedChannel)
+			deviceA,
+			TestUtils.createDeviceStatus(band, aExpectedChannel)
 		);
 		dataModel.latestState.put(
-			deviceA, TestUtils.createState(aExpectedChannel, channelWidth, bssidA)
+			deviceA,
+			TestUtils.createState(aExpectedChannel, channelWidth, bssidA)
 		);
 		dataModel.latestWifiScans.put(
 			deviceA,
@@ -75,13 +77,16 @@ public class UnmanagedApAwareChannelOptimizerTest {
 		channelsB.addAll(ChannelOptimizer.AVAILABLE_CHANNELS_BAND.get(band));
 		int bExpectedChannel = channelsB.removeLast();
 		dataModel.latestDeviceStatus.put(
-			deviceB, TestUtils.createDeviceStatus(band, 40)
+			deviceB,
+			TestUtils.createDeviceStatus(band, 40)
 		);
 		dataModel.latestState.put(
-			deviceB, TestUtils.createState(40, channelWidth, bssidB)
+			deviceB,
+			TestUtils.createState(40, channelWidth, bssidB)
 		);
 		dataModel.latestWifiScans.put(
-			deviceB, Arrays.asList(TestUtils.createWifiScanList(channelsB))
+			deviceB,
+			Arrays.asList(TestUtils.createWifiScanList(channelsB))
 		);
 		Map<String, Integer> radioMapB = new HashMap<>();
 		radioMapB.put(band, bExpectedChannel);
@@ -93,27 +98,38 @@ public class UnmanagedApAwareChannelOptimizerTest {
 		channelsC.addAll(ChannelOptimizer.AVAILABLE_CHANNELS_BAND.get(band));
 		LinkedList<String> bssidsC = new LinkedList<>(
 			Arrays.asList(
-				"dd:dd:dd:dd:dd:dd", "ee:ee:ee:ee:ee:ee", "ff:ff:ff:ff:ff:ff",
-				bssidA, "gg:gg:gg:gg:gg:gg", "hh:hh:hh:hh:hh:hh",
-				"ii:ii:ii:ii:ii:ii", "jj:jj:jj:jj:jj:jj", "kk:kk:kk:kk:kk:kk"
+				"dd:dd:dd:dd:dd:dd",
+				"ee:ee:ee:ee:ee:ee",
+				"ff:ff:ff:ff:ff:ff",
+				bssidA,
+				"gg:gg:gg:gg:gg:gg",
+				"hh:hh:hh:hh:hh:hh",
+				"ii:ii:ii:ii:ii:ii",
+				"jj:jj:jj:jj:jj:jj",
+				"kk:kk:kk:kk:kk:kk"
 			)
 		);
 		int cExpectedChannel = 48;
 		dataModel.latestDeviceStatus.put(
-			deviceC, TestUtils.createDeviceStatus(band, 149)
+			deviceC,
+			TestUtils.createDeviceStatus(band, 149)
 		);
 		dataModel.latestState.put(
-			deviceC, TestUtils.createState(149, channelWidth, bssidC)
+			deviceC,
+			TestUtils.createState(149, channelWidth, bssidC)
 		);
 		dataModel.latestWifiScans.put(
-			deviceC, Arrays.asList(TestUtils.createWifiScanList(channelsC, bssidsC))
+			deviceC,
+			Arrays.asList(TestUtils.createWifiScanList(channelsC, bssidsC))
 		);
 		Map<String, Integer> radioMapC = new HashMap<>();
 		radioMapC.put(band, cExpectedChannel);
 		expected.put(deviceC, radioMapC);
 
 		ChannelOptimizer optimizer = new UnmanagedApAwareChannelOptimizer(
-			dataModel, TEST_ZONE, deviceDataManager
+			dataModel,
+			TEST_ZONE,
+			deviceDataManager
 		);
 		assertEquals(expected, optimizer.computeChannelMap());
 	}
@@ -141,10 +157,12 @@ public class UnmanagedApAwareChannelOptimizerTest {
 		// A -> No APs on current channel, so stay on it (1)
 		int aExpectedChannel = 1;
 		dataModel.latestDeviceStatus.put(
-			deviceA, TestUtils.createDeviceStatus(band, aExpectedChannel)
+			deviceA,
+			TestUtils.createDeviceStatus(band, aExpectedChannel)
 		);
 		dataModel.latestState.put(
-			deviceA, TestUtils.createState(aExpectedChannel, channelWidth, bssidA)
+			deviceA,
+			TestUtils.createState(aExpectedChannel, channelWidth, bssidA)
 		);
 		dataModel.latestWifiScans.put(
 			deviceA,
@@ -161,13 +179,16 @@ public class UnmanagedApAwareChannelOptimizerTest {
 		channelsB.addAll(ChannelOptimizer.AVAILABLE_CHANNELS_BAND.get(band));
 		int bExpectedChannel = channelsB.removeLast();
 		dataModel.latestDeviceStatus.put(
-			deviceB, TestUtils.createDeviceStatus(band, 6)
+			deviceB,
+			TestUtils.createDeviceStatus(band, 6)
 		);
 		dataModel.latestState.put(
-			deviceB, TestUtils.createState(6, channelWidth, bssidB)
+			deviceB,
+			TestUtils.createState(6, channelWidth, bssidB)
 		);
 		dataModel.latestWifiScans.put(
-			deviceB, Arrays.asList(TestUtils.createWifiScanList(channelsB))
+			deviceB,
+			Arrays.asList(TestUtils.createWifiScanList(channelsB))
 		);
 		Map<String, Integer> radioMapB = new HashMap<>();
 		radioMapB.put(band, bExpectedChannel);
@@ -176,10 +197,12 @@ public class UnmanagedApAwareChannelOptimizerTest {
 		// C -> Assigned to only free prioritized channel (1)
 		int cExpectedChannel = 1;
 		dataModel.latestDeviceStatus.put(
-			deviceC, TestUtils.createDeviceStatus(band, 6)
+			deviceC,
+			TestUtils.createDeviceStatus(band, 6)
 		);
 		dataModel.latestState.put(
-			deviceC, TestUtils.createState(6, channelWidth, bssidC)
+			deviceC,
+			TestUtils.createState(6, channelWidth, bssidC)
 		);
 		dataModel.latestWifiScans.put(
 			deviceC,
@@ -192,7 +215,9 @@ public class UnmanagedApAwareChannelOptimizerTest {
 		expected.put(deviceC, radioMapC);
 
 		ChannelOptimizer optimizer = new UnmanagedApAwareChannelOptimizer(
-			dataModel, TEST_ZONE, deviceDataManager
+			dataModel,
+			TEST_ZONE,
+			deviceDataManager
 		);
 		assertEquals(expected, optimizer.computeChannelMap());
 	}

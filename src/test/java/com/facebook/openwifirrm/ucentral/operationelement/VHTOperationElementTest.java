@@ -22,7 +22,12 @@ public class VHTOperationElementTest {
 		byte expectedChannel1 = 36;
 		byte expectedChannel2 = 0;
 		byte[] expectedVhtMcsForNss = new byte[] { 0, 0, 0, 0, 0, 0, 0, 0 };
-		VHTOperationElement expectedVhtOperObj = new VHTOperationElement(expectedChannelWidthIndicator, expectedChannel1, expectedChannel2, expectedVhtMcsForNss);
+		VHTOperationElement expectedVhtOperObj = new VHTOperationElement(
+			expectedChannelWidthIndicator,
+			expectedChannel1,
+			expectedChannel2,
+			expectedVhtMcsForNss
+		);
 		assertEquals(expectedVhtOperObj, vhtOperObj);
 
 		vhtOper = "AToAUAE=";
@@ -31,8 +36,12 @@ public class VHTOperationElementTest {
 		expectedChannel1 = 58;
 		// same channel2
 		expectedVhtMcsForNss = new byte[] { 1, 1, 0, 0, 0, 0, 0, 1 };
-		expectedVhtOperObj = new VHTOperationElement(expectedChannelWidthIndicator, expectedChannel1, expectedChannel2,
-				expectedVhtMcsForNss);
+		expectedVhtOperObj = new VHTOperationElement(
+			expectedChannelWidthIndicator,
+			expectedChannel1,
+			expectedChannel2,
+			expectedVhtMcsForNss
+		);
 		assertEquals(expectedVhtOperObj, vhtOperObj);
 
 		vhtOper = "ASoyUAE=";
@@ -41,8 +50,12 @@ public class VHTOperationElementTest {
 		expectedChannel1 = 42;
 		expectedChannel2 = 50;
 		// same vhtMcsForNss
-		expectedVhtOperObj = new VHTOperationElement(expectedChannelWidthIndicator, expectedChannel1, expectedChannel2,
-				expectedVhtMcsForNss);
+		expectedVhtOperObj = new VHTOperationElement(
+			expectedChannelWidthIndicator,
+			expectedChannel1,
+			expectedChannel2,
+			expectedVhtMcsForNss
+		);
 		assertEquals(expectedVhtOperObj, vhtOperObj);
 	}
 }

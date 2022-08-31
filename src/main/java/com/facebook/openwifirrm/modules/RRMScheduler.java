@@ -41,10 +41,12 @@ import com.google.gson.GsonBuilder;
  * RRM scheduler, implemented using Quartz.
  */
 public class RRMScheduler {
-	private static final Logger logger = LoggerFactory.getLogger(RRMScheduler.class);
+	private static final Logger logger =
+		LoggerFactory.getLogger(RRMScheduler.class);
 
 	/** The gson instance. */
-	private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
+	private static final Gson gson =
+		new GsonBuilder().setPrettyPrinting().create();
 
 	/** SchedulerContext key holding the RRMScheduler instance. */
 	private static final String SCHEDULER_CONTEXT_RRMSCHEDULER = "RRMScheduler";
@@ -76,13 +78,16 @@ public class RRMScheduler {
 	/** RRM job. */
 	public static class RRMJob implements Job {
 		@Override
-		public void execute(JobExecutionContext context) throws JobExecutionException {
+		public void execute(JobExecutionContext context)
+			throws JobExecutionException {
 			String zone = context.getTrigger().getKey().getName();
 			logger.debug("Executing job for zone: {}", zone);
 			try {
-				SchedulerContext schedulerContext = context.getScheduler().getContext();
+				SchedulerContext schedulerContext =
+					context.getScheduler().getContext();
 				RRMScheduler instance =
-					(RRMScheduler) schedulerContext.get(SCHEDULER_CONTEXT_RRMSCHEDULER);
+					(RRMScheduler) schedulerContext
+						.get(SCHEDULER_CONTEXT_RRMSCHEDULER);
 				instance.performRRM(zone);
 			} catch (SchedulerException e) {
 				throw new JobExecutionException(e);
@@ -92,7 +97,8 @@ public class RRMScheduler {
 
 	/** Constructor. */
 	public RRMScheduler(
-		RRMSchedulerParams params, DeviceDataManager deviceDataManager
+		RRMSchedulerParams params,
+		DeviceDataManager deviceDataManager
 	) {
 		this.params = params;
 		this.deviceDataManager = deviceDataManager;
@@ -166,10 +172,10 @@ public class RRMScheduler {
 			DeviceConfig config = deviceDataManager.getZoneConfig(zone);
 			if (
 				config.schedule == null ||
-				config.schedule.cron == null ||
-				config.schedule.cron.isEmpty()
+					config.schedule.cron == null ||
+					config.schedule.cron.isEmpty()
 			) {
-				continue;  // RRM not scheduled
+				continue; // RRM not scheduled
 			}
 
 			// Create trigger
@@ -178,7 +184,8 @@ public class RRMScheduler {
 				.forJob(job)
 				.withSchedule(
 					CronScheduleBuilder.cronSchedule(config.schedule.cron)
-				).build();
+				)
+				.build();
 			try {
 				if (!prevScheduled.contains(zone)) {
 					scheduler.scheduleJob(trigger);
@@ -187,14 +194,16 @@ public class RRMScheduler {
 				}
 			} catch (SchedulerException e) {
 				logger.error(
-					"Failed to schedule RRM trigger for zone: " + zone, e
+					"Failed to schedule RRM trigger for zone: " + zone,
+					e
 				);
 				continue;
 			}
 			scheduled.add(zone);
 			logger.debug(
 				"Scheduled/updated RRM for zone '{}' at: < {} >",
-				zone, config.schedule.cron
+				zone,
+				config.schedule.cron
 			);
 		}
 
@@ -205,7 +214,8 @@ public class RRMScheduler {
 				scheduler.unscheduleJob(TriggerKey.triggerKey(zone));
 			} catch (SchedulerException e) {
 				logger.error(
-					"Failed to remove RRM trigger for zone: " + zone, e
+					"Failed to remove RRM trigger for zone: " + zone,
+					e
 				);
 				continue;
 			}
@@ -227,12 +237,16 @@ public class RRMScheduler {
 		}
 		if (
 			config.schedule.algorithms == null ||
-			config.schedule.algorithms.isEmpty()
+				config.schedule.algorithms.isEmpty()
 		) {
 			logger.debug("Using default RRM algorithms for zone '{}'", zone);
 			config.schedule.algorithms = Arrays.asList(
-				new RRMAlgorithm(RRMAlgorithm.AlgorithmType.OptimizeChannel.name()),
-				new RRMAlgorithm(RRMAlgorithm.AlgorithmType.OptimizeTxPower.name())
+				new RRMAlgorithm(
+					RRMAlgorithm.AlgorithmType.OptimizeChannel.name()
+				),
+				new RRMAlgorithm(
+					RRMAlgorithm.AlgorithmType.OptimizeTxPower.name()
+				)
 			);
 		}
 
@@ -248,7 +262,9 @@ public class RRMScheduler {
 			);
 			logger.info(
 				"'{}' result for zone '{}': {}",
-				algo.getName(), zone, gson.toJson(result)
+				algo.getName(),
+				zone,
+				gson.toJson(result)
 			);
 		}
 	}

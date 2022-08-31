@@ -39,7 +39,8 @@ import com.zaxxer.hikari.HikariDataSource;
  * Database connection manager.
  */
 public class DatabaseManager {
-	private static final Logger logger = LoggerFactory.getLogger(DatabaseManager.class);
+	private static final Logger logger =
+		LoggerFactory.getLogger(DatabaseManager.class);
 
 	/** The database host:port. */
 	private final String server;
@@ -68,7 +69,11 @@ public class DatabaseManager {
 	 * @param dataRetentionIntervalDays the data retention interval in days (0 to disable)
 	 */
 	public DatabaseManager(
-		String server, String user, String password, String dbName, int dataRetentionIntervalDays
+		String server,
+		String user,
+		String password,
+		String dbName,
+		int dataRetentionIntervalDays
 	) {
 		this.server = server;
 		this.user = user;
@@ -78,8 +83,7 @@ public class DatabaseManager {
 	}
 
 	/** Run database initialization. */
-	public void init() throws
-		InstantiationException,
+	public void init() throws InstantiationException,
 		IllegalAccessException,
 		ClassNotFoundException,
 		SQLException {
@@ -89,12 +93,15 @@ public class DatabaseManager {
 		// Create database (only place using non-pooled connection)
 		try (
 			Connection conn = DriverManager.getConnection(
-				getConnectionUrl(""), user, password
+				getConnectionUrl(""),
+				user,
+				password
 			);
 			Statement stmt = conn.createStatement()
 		) {
 			String sql = String.format(
-				"CREATE DATABASE IF NOT EXISTS `%s`", dbName
+				"CREATE DATABASE IF NOT EXISTS `%s`",
+				dbName
 			);
 			stmt.executeUpdate(sql);
 		}
@@ -289,7 +296,7 @@ public class DatabaseManager {
 			}
 
 			if (deviceToTs.isEmpty()) {
-				return ret;  // empty database
+				return ret; // empty database
 			}
 
 			// For each device, query all records at latest timestamp
@@ -308,7 +315,13 @@ public class DatabaseManager {
 						String metric = rs.getString(1);
 						long value = rs.getLong(2);
 						records.add(
-							new StateRecord(0 /*unused*/, time.getTime(), metric, value, serial)
+							new StateRecord(
+								0 /*unused*/,
+								time.getTime(),
+								metric,
+								value,
+								serial
+							)
 						);
 					}
 				}
@@ -324,7 +337,9 @@ public class DatabaseManager {
 	 * not found.
 	 */
 	private JsonObject getOrAddObjectFromArray(
-		JsonArray a, String key, String value
+		JsonArray a,
+		String key,
+		String value
 	) {
 		JsonObject ret = null;
 		for (int i = 0, n = a.size(); i < n; i++) {
@@ -356,7 +371,8 @@ public class DatabaseManager {
 			switch (tokens[0]) {
 			case "interface":
 				JsonObject iface = interfaces.computeIfAbsent(
-					tokens[1], k -> {
+					tokens[1],
+					k -> {
 						JsonObject o = new JsonObject();
 						o.addProperty("name", k);
 						return o;
@@ -382,9 +398,14 @@ public class DatabaseManager {
 					if (!ssid.has("associations")) {
 						ssid.add("associations", new JsonArray());
 					}
-					JsonArray associations = ssid.getAsJsonArray("associations");
+					JsonArray associations =
+						ssid.getAsJsonArray("associations");
 					JsonObject association =
-						getOrAddObjectFromArray(associations, "bssid", clientBssid);
+						getOrAddObjectFromArray(
+							associations,
+							"bssid",
+							clientBssid
+						);
 					String associationKey = tokens[6];
 					if (tokens.length == 7) {
 						// primitive field
@@ -397,7 +418,7 @@ public class DatabaseManager {
 						String rateKey = tokens[7];
 						if (
 							rateKey.equals("sgi") || rateKey.equals("ht") ||
-							rateKey.equals("vht") || rateKey.equals("he")
+								rateKey.equals("vht") || rateKey.equals("he")
 						) {
 							// boolean field
 							association.getAsJsonObject(associationKey)
@@ -412,7 +433,8 @@ public class DatabaseManager {
 				break;
 			case "radio":
 				JsonObject radio = radios.computeIfAbsent(
-					Integer.parseInt(tokens[1]), k -> new JsonObject()
+					Integer.parseInt(tokens[1]),
+					k -> new JsonObject()
 				);
 				radio.addProperty(tokens[2], record.value);
 				break;
@@ -427,7 +449,8 @@ public class DatabaseManager {
 		}
 
 		Gson gson = new Gson();
-		state.interfaces = interfaces.values().stream()
+		state.interfaces = interfaces.values()
+			.stream()
 			.map(o -> gson.fromJson(o, State.Interface.class))
 			.collect(Collectors.toList())
 			.toArray(new State.Interface[0]);
@@ -446,7 +469,9 @@ public class DatabaseManager {
 	 * @param entries          list of wifiscan entries
 	 */
 	public void addWifiScan(
-		String serialNumber, long timestampSeconds, List<WifiScanEntry> entries
+		String serialNumber,
+		long timestampSeconds,
+		List<WifiScanEntry> entries
 	) throws SQLException {
 		if (ds == null) {
 			return;
@@ -517,7 +542,8 @@ public class DatabaseManager {
 	 * of timestamp to scan results.
 	 */
 	public Map<Long, List<WifiScanEntry>> getLatestWifiScans(
-		String serialNumber, int count
+		String serialNumber,
+		int count
 	) throws SQLException {
 		if (serialNumber == null || serialNumber.isEmpty()) {
 			throw new IllegalArgumentException("Invalid serialNumber");
@@ -550,12 +576,13 @@ public class DatabaseManager {
 			}
 			stmt1.close();
 			if (scanIdToTs.isEmpty()) {
-				return ret;  // no results
+				return ret; // no results
 			}
 
 			// Query all scan results
 			try (Statement stmt2 = conn.createStatement()) {
-				List<String> scanIds = scanIdToTs.keySet().stream()
+				List<String> scanIds = scanIdToTs.keySet()
+					.stream()
 					.map(i -> Long.toString(i))
 					.collect(Collectors.toList());
 				String sql = String.format(

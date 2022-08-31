@@ -20,14 +20,21 @@ public class StateRecord {
 
 	/** Constructor (with empty "id"). */
 	public StateRecord(
-		long timestamp, String metric, long value, String serial
+		long timestamp,
+		String metric,
+		long value,
+		String serial
 	) {
 		this(0, timestamp, metric, value, serial);
 	}
 
 	/** Constructor. */
 	public StateRecord(
-		long id, long timestamp, String metric, long value, String serial
+		long id,
+		long timestamp,
+		String metric,
+		long value,
+		String serial
 	) {
 		this.id = id;
 		this.timestamp = timestamp;
@@ -39,7 +46,11 @@ public class StateRecord {
 	@Override
 	public String toString() {
 		return String.format(
-			"%s = %d [serial=%s, ts=%d]", metric, value, serial, timestamp
+			"%s = %d [serial=%s, ts=%d]",
+			metric,
+			value,
+			serial,
+			timestamp
 		);
 	}
 }

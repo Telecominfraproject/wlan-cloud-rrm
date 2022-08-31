@@ -44,7 +44,8 @@ import picocli.CommandLine.Option;
 	showDefaultValues = true
 )
 public class Launcher implements Callable<Integer> {
-	private static final Logger logger = LoggerFactory.getLogger(Launcher.class);
+	private static final Logger logger =
+		LoggerFactory.getLogger(Launcher.class);
 
 	/** Default config file location. */
 	private static final File DEFAULT_CONFIG_FILE = new File("settings.json");
@@ -81,13 +82,17 @@ public class Launcher implements Callable<Integer> {
 		}
 		if (userConfig == null) {
 			// Missing/empty file, write defaults to disk
-			logger.info("Creating default config file '{}'", configFile.getPath());
+			logger.info(
+				"Creating default config file '{}'",
+				configFile.getPath()
+			);
 			config = new RRMConfig();
 			Utils.writeJsonFile(configFile, config);
 		} else {
 			// In case of any added/missing values, we want to build off the
 			// defaults in RRMConfig, so this code gets more complex...
-			JSONObject fullConfig = new JSONObject(gson.toJson(new RRMConfig()));
+			JSONObject fullConfig =
+				new JSONObject(gson.toJson(new RRMConfig()));
 			Utils.jsonMerge(fullConfig, userConfig);
 			config = gson.fromJson(fullConfig.toString(), RRMConfig.class);
 
@@ -113,28 +118,24 @@ public class Launcher implements Callable<Integer> {
 			names = { "-c", "--config-file" },
 			paramLabel = "<FILE>",
 			description = "RRM config file"
-		)
-		File configFile,
+		) File configFile,
 
 		@Option(
 			names = { "--config-env" },
 			description = "Read RRM config from environment variables (overrides --config-file)"
-		)
-		boolean configEnv,
+		) boolean configEnv,
 
 		@Option(
 			names = { "-t", "--topology-file" },
 			paramLabel = "<FILE>",
 			description = "Device topology file"
-		)
-		File topologyFile,
+		) File topologyFile,
 
 		@Option(
 			names = { "-d", "--device-config-file" },
 			paramLabel = "<FILE>",
 			description = "Device layered config file"
-		)
-		File deviceLayeredConfigFile
+		) File deviceLayeredConfigFile
 	) throws Exception {
 		// Read local files
 		RRMConfig config;
@@ -213,7 +214,12 @@ public class Launcher implements Callable<Integer> {
 		// Start RRM service
 		RRM rrm = new RRM();
 		boolean success = rrm.start(
-			config, deviceDataManager, client, consumer, producer, dbManager
+			config,
+			deviceDataManager,
+			client,
+			consumer,
+			producer,
+			dbManager
 		);
 		if (dbManager != null) {
 			dbManager.close();
@@ -231,8 +237,7 @@ public class Launcher implements Callable<Integer> {
 			names = { "-c", "--config-file" },
 			paramLabel = "<FILE>",
 			description = "RRM config file"
-		)
-		File configFile
+		) File configFile
 	) throws Exception {
 		if (configFile == null) {
 			configFile = DEFAULT_CONFIG_FILE;
@@ -258,7 +263,7 @@ public class Launcher implements Callable<Integer> {
 	public Integer showDefaultDeviceConfig() throws Exception {
 		Gson gson = new GsonBuilder()
 			.setPrettyPrinting()
-			.serializeNulls()  // for here only!!
+			.serializeNulls() // for here only!!
 			.create();
 		logger.info(gson.toJson(DeviceConfig.createDefault()));
 		return 0;
@@ -272,7 +277,7 @@ public class Launcher implements Callable<Integer> {
 
 	/** Main method. */
 	public static void main(String[] args) throws Exception {
-        int exitCode = new CommandLine(new Launcher()).execute(args);
-        System.exit(exitCode);
+		int exitCode = new CommandLine(new Launcher()).execute(args);
+		System.exit(exitCode);
 	}
 }

@@ -30,7 +30,8 @@ import com.facebook.openwifirrm.ucentral.gw.models.DeviceWithStatus;
  * Device configuration manager module.
  */
 public class ConfigManager implements Runnable {
-	private static final Logger logger = LoggerFactory.getLogger(ConfigManager.class);
+	private static final Logger logger =
+		LoggerFactory.getLogger(ConfigManager.class);
 
 	/** The module parameters. */
 	private final ConfigManagerParams params;
@@ -73,7 +74,8 @@ public class ConfigManager implements Runnable {
 		 * The listener should NOT modify the "config" parameter.
 		 */
 		void receiveDeviceConfig(
-			String serialNumber, UCentralApConfiguration config
+			String serialNumber,
+			UCentralApConfiguration config
 		);
 
 		/**
@@ -83,7 +85,8 @@ public class ConfigManager implements Runnable {
 		 * return true if any changes were made, otherwise return false.
 		 */
 		boolean processDeviceConfig(
-			String serialNumber, UCentralApConfiguration config
+			String serialNumber,
+			UCentralApConfiguration config
 		);
 	}
 
@@ -106,14 +109,16 @@ public class ConfigManager implements Runnable {
 			new ConfigListener() {
 				@Override
 				public void receiveDeviceConfig(
-					String serialNumber, UCentralApConfiguration config
+					String serialNumber,
+					UCentralApConfiguration config
 				) {
 					// do nothing
 				}
 
 				@Override
 				public boolean processDeviceConfig(
-					String serialNumber, UCentralApConfiguration config
+					String serialNumber,
+					UCentralApConfiguration config
 				) {
 					return applyRRMConfig(serialNumber, config);
 				}
@@ -179,7 +184,8 @@ public class ConfigManager implements Runnable {
 		for (DeviceWithStatus device : devices) {
 			// Update config structure
 			DeviceData data = deviceDataMap.computeIfAbsent(
-				device.serialNumber, k -> new DeviceData()
+				device.serialNumber,
+				k -> new DeviceData()
 			);
 			// Update the device only when it is still connected
 			if (!device.connected) {
@@ -218,7 +224,8 @@ public class ConfigManager implements Runnable {
 			boolean modified = false;
 			for (ConfigListener listener : configListeners.values()) {
 				boolean wasModified = listener.processDeviceConfig(
-					device.serialNumber, data.config
+					device.serialNumber,
+					data.config
 				);
 				if (wasModified) {
 					modified = true;
@@ -229,7 +236,8 @@ public class ConfigManager implements Runnable {
 			if (modified) {
 				if (
 					data.lastConfigTimeNs != null &&
-					now - data.lastConfigTimeNs < CONFIG_DEBOUNCE_INTERVAL_NS
+						now - data.lastConfigTimeNs <
+							CONFIG_DEBOUNCE_INTERVAL_NS
 				) {
 					logger.debug(
 						"Skipping config for {} (last configured {}s ago)",
@@ -263,7 +271,8 @@ public class ConfigManager implements Runnable {
 			for (String serialNumber : devicesNeedingUpdate) {
 				DeviceData data = deviceDataMap.get(serialNumber);
 				logger.info(
-					"Device {}: sending new configuration...", serialNumber
+					"Device {}: sending new configuration...",
+					serialNumber
 				);
 				data.lastConfigTimeNs = System.nanoTime();
 				client.configure(serialNumber, data.config.toString());
@@ -288,7 +297,8 @@ public class ConfigManager implements Runnable {
 	 * Otherwise, return false.
 	 */
 	private boolean applyRRMConfig(
-		String serialNumber, UCentralApConfiguration config
+		String serialNumber,
+		UCentralApConfiguration config
 	) {
 		DeviceConfig deviceConfig =
 			deviceDataManager.getDeviceConfig(serialNumber);
@@ -308,7 +318,10 @@ public class ConfigManager implements Runnable {
 		}
 		if (!channelList.isEmpty()) {
 			modified |= UCentralUtils.setRadioConfigField(
-				serialNumber, config, "channel", channelList
+				serialNumber,
+				config,
+				"channel",
+				channelList
 			);
 		}
 
@@ -322,7 +335,10 @@ public class ConfigManager implements Runnable {
 		}
 		if (!txPowerList.isEmpty()) {
 			modified |= UCentralUtils.setRadioConfigField(
-				serialNumber, config, "tx-power", txPowerList
+				serialNumber,
+				config,
+				"tx-power",
+				txPowerList
 			);
 		}
 

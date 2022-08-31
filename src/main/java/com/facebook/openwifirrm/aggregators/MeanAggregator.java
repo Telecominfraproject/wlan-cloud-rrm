@@ -23,14 +23,10 @@ public class MeanAggregator implements Aggregator<Double> {
 	}
 
 	@Override
-	public Double getAggregate() {
-		return mean;
-	}
+	public Double getAggregate() { return mean; }
 
 	@Override
-	public long getCount() {
-		return count;
-	}
+	public long getCount() { return count; }
 
 	@Override
 	public void reset() {

@@ -90,7 +90,7 @@ import spark.Spark;
 @OpenAPIDefinition(
 	info = @Info(
 		title = "OpenWiFi 2.0 RRM OpenAPI",
-		version = "2.7.0",  // NOTE: needs manual update!
+		version = "2.7.0", // NOTE: needs manual update!
 		description = "This document describes the API for the Radio Resource Management service."
 	),
 	tags = {
@@ -103,10 +103,13 @@ import spark.Spark;
 	}
 )
 @SecurityScheme(
-	name = "bearerAuth", type = SecuritySchemeType.HTTP, scheme = "bearer"
+	name = "bearerAuth",
+	type = SecuritySchemeType.HTTP,
+	scheme = "bearer"
 )
 public class ApiServer implements Runnable {
-	private static final Logger logger = LoggerFactory.getLogger(ApiServer.class);
+	private static final Logger logger =
+		LoggerFactory.getLogger(ApiServer.class);
 
 	/** The module parameters. */
 	private final ApiServerParams params;
@@ -229,13 +232,16 @@ public class ApiServer implements Runnable {
 			new SetDeviceNetworkConfigEndpoint()
 		);
 		Spark.post(
-			"/api/v1/setDeviceZoneConfig", new SetDeviceZoneConfigEndpoint()
+			"/api/v1/setDeviceZoneConfig",
+			new SetDeviceZoneConfigEndpoint()
 		);
 		Spark.post(
-			"/api/v1/setDeviceApConfig", new SetDeviceApConfigEndpoint()
+			"/api/v1/setDeviceApConfig",
+			new SetDeviceApConfigEndpoint()
 		);
 		Spark.post(
-			"/api/v1/modifyDeviceApConfig", new ModifyDeviceApConfigEndpoint()
+			"/api/v1/modifyDeviceApConfig",
+			new ModifyDeviceApConfigEndpoint()
 		);
 		Spark.get("/api/v1/currentModel", new GetCurrentModelEndpoint());
 		Spark.get("/api/v1/optimizeChannel", new OptimizeChannelEndpoint());
@@ -266,7 +272,10 @@ public class ApiServer implements Runnable {
 	 * HTTP 401 response with a "WWW-Authenticate" header and return false.
 	 */
 	private boolean performHttpBasicAuth(
-		Request request, Response response, String user, String password
+		Request request,
+		Response response,
+		String user,
+		String password
 	) {
 		// Extract header:
 		//   Authorization: Basic <base64(<user>:<password>)>
@@ -439,7 +448,8 @@ public class ApiServer implements Runnable {
 		if (openApi == null) {
 			// Find all annotated classes
 			Reflections reflections = new Reflections(
-				new ConfigurationBuilder().forPackages(this.getClass().getPackageName())
+				new ConfigurationBuilder()
+					.forPackages(this.getClass().getPackageName())
 			);
 			Set<Class<?>> apiClasses =
 				reflections.getTypesAnnotatedWith(Path.class);
@@ -472,13 +482,16 @@ public class ApiServer implements Runnable {
 			summary = "Get system info",
 			description = "Returns the system info from the running service.",
 			operationId = "system",
-			tags = {"SDK"},
+			tags = { "SDK" },
 			parameters = {
 				@Parameter(
 					name = "command",
 					description = "Get a value",
 					in = ParameterIn.QUERY,
-					schema = @Schema(type = "string", allowableValues = {"info"}),
+					schema = @Schema(
+						type = "string",
+						allowableValues = { "info" }
+					),
 					required = true
 				)
 			},
@@ -487,7 +500,9 @@ public class ApiServer implements Runnable {
 					responseCode = "200",
 					description = "Success",
 					content = @Content(
-						schema = @Schema(implementation = SystemInfoResults.class)
+						schema = @Schema(
+							implementation = SystemInfoResults.class
+						)
 					)
 				),
 				@ApiResponse(responseCode = "400", description = "Bad Request")
@@ -522,29 +537,30 @@ public class ApiServer implements Runnable {
 			return gson.toJson(result);
 		}
 	}
+
 	@Path("/api/v1/system")
 	public class SetSystemEndpoint implements Route {
 		@POST
 		@Produces({ MediaType.APPLICATION_JSON })
 		@Operation(
-			summary = "Run system commands", 
-			description = "Perform some system-wide commands.", 
-			operationId = "setSystem", 
-			tags = {"SDK" }, 
+			summary = "Run system commands",
+			description = "Perform some system-wide commands.",
+			operationId = "setSystem",
+			tags = { "SDK" },
 			requestBody = @RequestBody(
-				description = "Command details", 
+				description = "Command details",
 				content = {
 					@Content(
-						mediaType = "application/json", 
+						mediaType = "application/json",
 						schema = @Schema(implementation = Object.class)
 					)
-				}, 
+				},
 				required = true
-			), 
+			),
 			responses = {
 				@ApiResponse(
-					responseCode = "200", 
-					description = "Successful command execution", 
+					responseCode = "200",
+					description = "Successful command execution",
 					content = @Content(
 						// TODO: Provide a specific class as value of Schema.implementation
 						schema = @Schema(implementation = Object.class)
@@ -555,22 +571,22 @@ public class ApiServer implements Runnable {
 		)
 		@Override
 		public String handle(
-				@Parameter(hidden = true) Request request,
-				@Parameter(hidden = true) Response response
+			@Parameter(hidden = true) Request request,
+			@Parameter(hidden = true) Response response
 		) {
 			try {
 				JSONObject jsonObj = new JSONObject(request.body());
 				String command = jsonObj.get("command").toString();
 				switch (command) {
-					case "setloglevel":
-					case "reload":
-					case "getloglevels":
-					case "getloglevelnames":
-					case "getsubsystemnames":
-						return "[]";
-					default:
-						response.status(400);
-						return "Invalid command";
+				case "setloglevel":
+				case "reload":
+				case "getloglevels":
+				case "getloglevelnames":
+				case "getsubsystemnames":
+					return "[]";
+				default:
+					response.status(400);
+					return "Invalid command";
 				}
 			} catch (Exception e) {
 				response.status(400);
@@ -587,7 +603,7 @@ public class ApiServer implements Runnable {
 			summary = "Get RRM provider info",
 			description = "Returns the RRM provider info.",
 			operationId = "provider",
-			tags = {"SDK"},
+			tags = { "SDK" },
 			responses = {
 				@ApiResponse(
 					responseCode = "200",
@@ -623,7 +639,7 @@ public class ApiServer implements Runnable {
 			summary = "Get RRM algorithms",
 			description = "Returns the RRM algorithm list.",
 			operationId = "algorithms",
-			tags = {"SDK"},
+			tags = { "SDK" },
 			responses = {
 				@ApiResponse(
 					responseCode = "200",
@@ -655,7 +671,8 @@ public class ApiServer implements Runnable {
 						Arrays.asList("mode=random", "key1=val1,key2=val2");
 					a.helper = serviceConfig.vendorReferenceUrl;
 					return a;
-				}).collect(Collectors.toList());
+				})
+				.collect(Collectors.toList());
 
 			response.type(MediaType.APPLICATION_JSON);
 			return gson.toJson(algorithms);
@@ -670,7 +687,7 @@ public class ApiServer implements Runnable {
 			summary = "Run RRM algorithm",
 			description = "Run a specific RRM algorithm now.",
 			operationId = "runRRM",
-			tags = {"SDK"},
+			tags = { "SDK" },
 			parameters = {
 				@Parameter(
 					name = "algorithm",
@@ -704,7 +721,9 @@ public class ApiServer implements Runnable {
 					responseCode = "200",
 					description = "Success",
 					content = @Content(
-						schema = @Schema(implementation = RRMAlgorithm.AlgorithmResult.class)
+						schema = @Schema(
+							implementation = RRMAlgorithm.AlgorithmResult.class
+						)
 					)
 				),
 				@ApiResponse(responseCode = "400", description = "Bad Request")
@@ -761,7 +780,7 @@ public class ApiServer implements Runnable {
 			summary = "Get device topology",
 			description = "Returns the device topology.",
 			operationId = "getTopology",
-			tags = {"Config"},
+			tags = { "Config" },
 			responses = {
 				@ApiResponse(
 					responseCode = "200",
@@ -790,7 +809,7 @@ public class ApiServer implements Runnable {
 			summary = "Set device topology",
 			description = "Set the device topology.",
 			operationId = "setTopology",
-			tags = {"Config"},
+			tags = { "Config" },
 			requestBody = @RequestBody(
 				description = "The device topology",
 				content = {
@@ -838,13 +857,15 @@ public class ApiServer implements Runnable {
 			summary = "Get device layered configuration",
 			description = "Returns the device layered configuration.",
 			operationId = "getDeviceLayeredConfig",
-			tags = {"Config"},
+			tags = { "Config" },
 			responses = {
 				@ApiResponse(
 					responseCode = "200",
 					description = "Device layered configuration",
 					content = @Content(
-						schema = @Schema(implementation = DeviceLayeredConfig.class)
+						schema = @Schema(
+							implementation = DeviceLayeredConfig.class
+						)
 					)
 				)
 			}
@@ -867,7 +888,7 @@ public class ApiServer implements Runnable {
 			summary = "Get device configuration",
 			description = "Returns the device configuration by applying all configuration layers.",
 			operationId = "getDeviceConfig",
-			tags = {"Config"},
+			tags = { "Config" },
 			parameters = {
 				@Parameter(
 					name = "serial",
@@ -920,7 +941,7 @@ public class ApiServer implements Runnable {
 			summary = "Set device network configuration",
 			description = "Set the network layer of the device configuration.",
 			operationId = "setDeviceNetworkConfig",
-			tags = {"Config"},
+			tags = { "Config" },
 			requestBody = @RequestBody(
 				description = "The device network configuration",
 				content = {
@@ -968,7 +989,7 @@ public class ApiServer implements Runnable {
 			summary = "Set device zone configuration",
 			description = "Set the zone layer of the network configuration for the given zone.",
 			operationId = "setDeviceZoneConfig",
-			tags = {"Config"},
+			tags = { "Config" },
 			parameters = {
 				@Parameter(
 					name = "zone",
@@ -1031,7 +1052,7 @@ public class ApiServer implements Runnable {
 			summary = "Set device AP configuration",
 			description = "Set the AP layer of the network configuration for the given AP.",
 			operationId = "setDeviceApConfig",
-			tags = {"Config"},
+			tags = { "Config" },
 			parameters = {
 				@Parameter(
 					name = "serial",
@@ -1089,11 +1110,10 @@ public class ApiServer implements Runnable {
 		@Produces({ MediaType.APPLICATION_JSON })
 		@Operation(
 			summary = "Modify device AP configuration",
-			description =
-				"Modify the AP layer of the network configuration for the given AP. " +
+			description = "Modify the AP layer of the network configuration for the given AP. " +
 				"Any existing fields absent from the request body will be preserved.",
 			operationId = "modifyDeviceApConfig",
-			tags = {"Config"},
+			tags = { "Config" },
 			parameters = {
 				@Parameter(
 					name = "serial",
@@ -1165,7 +1185,7 @@ public class ApiServer implements Runnable {
 			summary = "Get current RRM model",
 			description = "Returns the current RRM data model.",
 			operationId = "getCurrentModel",
-			tags = {"Optimization"},
+			tags = { "Optimization" },
 			responses = {
 				@ApiResponse(
 					responseCode = "200",
@@ -1196,7 +1216,10 @@ public class ApiServer implements Runnable {
 		@SuppressWarnings("unused")
 		private class ChannelAllocation {
 			public Map<String, Map<String, Integer>> data;
-			public ChannelAllocation(Map<String, Map<String, Integer>> channelMap) {
+
+			public ChannelAllocation(
+				Map<String, Map<String, Integer>> channelMap
+			) {
 				this.data = channelMap;
 			}
 		}
@@ -1207,7 +1230,7 @@ public class ApiServer implements Runnable {
 			summary = "Optimize channel configuration",
 			description = "Run channel optimizer and return the new channel allocation.",
 			operationId = "optimizeChannel",
-			tags = {"Optimization"},
+			tags = { "Optimization" },
 			parameters = {
 				@Parameter(
 					name = "mode",
@@ -1276,7 +1299,8 @@ public class ApiServer implements Runnable {
 			Map<String, String> args = new HashMap<>();
 			args.put("mode", mode);
 			RRMAlgorithm algo = new RRMAlgorithm(
-				RRMAlgorithm.AlgorithmType.OptimizeChannel.name(), args
+				RRMAlgorithm.AlgorithmType.OptimizeChannel.name(),
+				args
 			);
 			RRMAlgorithm.AlgorithmResult result = algo.run(
 				deviceDataManager,
@@ -1301,7 +1325,10 @@ public class ApiServer implements Runnable {
 		@SuppressWarnings("unused")
 		private class TxPowerAllocation {
 			public Map<String, Map<String, Integer>> data;
-			public TxPowerAllocation(Map<String, Map<String, Integer>> txPowerMap) {
+
+			public TxPowerAllocation(
+				Map<String, Map<String, Integer>> txPowerMap
+			) {
 				this.data = txPowerMap;
 			}
 		}
@@ -1312,7 +1339,7 @@ public class ApiServer implements Runnable {
 			summary = "Optimize tx power configuration",
 			description = "Run tx power optimizer and return the new tx power allocation.",
 			operationId = "optimizeTxPower",
-			tags = {"Optimization"},
+			tags = { "Optimization" },
 			parameters = {
 				@Parameter(
 					name = "mode",
@@ -1383,7 +1410,8 @@ public class ApiServer implements Runnable {
 			Map<String, String> args = new HashMap<>();
 			args.put("mode", mode);
 			RRMAlgorithm algo = new RRMAlgorithm(
-				RRMAlgorithm.AlgorithmType.OptimizeTxPower.name(), args
+				RRMAlgorithm.AlgorithmType.OptimizeTxPower.name(),
+				args
 			);
 			RRMAlgorithm.AlgorithmResult result = algo.run(
 				deviceDataManager,
