@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -167,7 +166,8 @@ public class LocationBasedOptimalTPC extends TPC {
 		Map<String, Integer> validAPs = new TreeMap<>();
 		List<Double> apLocX = new ArrayList<>();
 		List<Double> apLocY = new ArrayList<>();
-		List<Integer> txPowerChoices = new ArrayList<>(DEFAULT_TX_POWER_CHOICES);
+		List<Integer> txPowerChoices =
+			new ArrayList<>(DEFAULT_TX_POWER_CHOICES);
 		// Filter out the invalid APs (e.g., no radio, no location data)
 		// Update txPowerChoices, boundary, apLocX, apLocY for the optimization
 		for (Map.Entry<String, State> e : model.latestState.entrySet()) {
@@ -211,7 +211,8 @@ public class LocationBasedOptimalTPC extends TPC {
 			}
 
 			// Update the txPowerChoices for the optimization
-			txPowerChoices = updateTxPowerChoices(band, serialNumber, txPowerChoices);
+			txPowerChoices =
+				updateTxPowerChoices(band, serialNumber, txPowerChoices);
 
 			// Update the boundary for the optimization
 			if (deviceCfg.boundary != null) {

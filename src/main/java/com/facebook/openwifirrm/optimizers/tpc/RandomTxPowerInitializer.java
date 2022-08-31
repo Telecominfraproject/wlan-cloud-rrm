@@ -89,7 +89,11 @@ public class RandomTxPowerInitializer extends TPC {
 			Map<String, Integer> radioMap = new TreeMap<>();
 			for (String band : UCentralConstants.BANDS) {
 				List<Integer> availableTxPowersList =
-					updateTxPowerChoices(band, serialNumber, DEFAULT_TX_POWER_CHOICES);
+					updateTxPowerChoices(
+						band,
+						serialNumber,
+						DEFAULT_TX_POWER_CHOICES
+					);
 				Integer txPower = availableTxPowersList
 					.get(rng.nextInt(availableTxPowersList.size()));
 				radioMap.put(band, txPower);
