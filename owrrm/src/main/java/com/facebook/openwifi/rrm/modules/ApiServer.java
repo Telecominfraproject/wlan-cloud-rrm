@@ -40,6 +40,7 @@ import com.facebook.openwifi.cloudsdk.models.gw.SystemInfoResults;
 import com.facebook.openwifi.cloudsdk.models.gw.TokenValidationResult;
 import com.facebook.openwifi.cloudsdk.models.prov.rrm.Algorithm;
 import com.facebook.openwifi.cloudsdk.models.prov.rrm.Provider;
+import com.facebook.openwifi.rrm.CustomJettyServerFactory;
 import com.facebook.openwifi.rrm.DeviceConfig;
 import com.facebook.openwifi.rrm.DeviceDataManager;
 import com.facebook.openwifi.rrm.DeviceLayeredConfig;
@@ -82,6 +83,8 @@ import spark.Request;
 import spark.Response;
 import spark.Route;
 import spark.Spark;
+import spark.embeddedserver.EmbeddedServers;
+import spark.embeddedserver.jetty.EmbeddedJettyFactory;
 
 /**
  * HTTP API server.
@@ -203,7 +206,12 @@ public class ApiServer implements Runnable {
 			return;
 		}
 
-		Spark.port(params.httpPort);
+		EmbeddedServers.add(
+			EmbeddedServers.defaultIdentifier(),
+			new EmbeddedJettyFactory(new CustomJettyServerFactory(16789, 16790))
+		);
+
+		Spark.port(0);
 
 		// Configure API docs hosting
 		Spark.staticFiles.location("/public");
@@ -325,10 +333,11 @@ public class ApiServer implements Runnable {
 	private void beforeFilter(Request request, Response response) {
 		// Log requests
 		logger.debug(
-			"[{}] {} {}",
+			"[{}] {} {} on port {}",
 			request.ip(),
 			request.requestMethod(),
-			getFullUrl(request.pathInfo(), request.queryString())
+			getFullUrl(request.pathInfo(), request.queryString()),
+			request.port()
 		);
 
 		// Remove "Server: Jetty" header
