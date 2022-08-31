@@ -161,8 +161,19 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
                       long&nbsp;obsoletionPeriodMs,
                       <a href="../Aggregator.html" title="interface in com.facebook.openwifirrm.aggregators">Aggregator</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Double.html?is-external=true" title="class or interface in java.lang" class="externalLink">Double</a>&gt;&nbsp;agg)</code></th>
 <td class="colLast">
-<div class="block">For each AP, for each other AP that sent a wifiscan entry to that AP, this
- method calculates an aggregate wifiscan entry with an aggregated RSSI.</div>
+<div class="block">For each AP, for each other AP that sent a wifiscan entry to that AP,
+ this method calculates an aggregate wifiscan entry with an aggregated
+ RSSI.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>static <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html?is-external=true" title="class or interface in java.util" class="externalLink">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>,&#8203;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html?is-external=true" title="class or interface in java.util" class="externalLink">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>,&#8203;<a href="../../ucentral/UCentralUtils.WifiScanEntry.html" title="class in com.facebook.openwifirrm.ucentral">UCentralUtils.WifiScanEntry</a>&gt;&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">ModelerUtils.</span><code><span class="memberNameLink"><a href="../../modules/ModelerUtils.html#getAggregatedWifiScans(com.facebook.openwifirrm.modules.Modeler.DataModel,long,com.facebook.openwifirrm.aggregators.Aggregator,long)">getAggregatedWifiScans</a></span>&#8203;(<a href="../../modules/Modeler.DataModel.html" title="class in com.facebook.openwifirrm.modules">Modeler.DataModel</a>&nbsp;dataModel,
+                      long&nbsp;obsoletionPeriodMs,
+                      <a href="../Aggregator.html" title="interface in com.facebook.openwifirrm.aggregators">Aggregator</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Double.html?is-external=true" title="class or interface in java.lang" class="externalLink">Double</a>&gt;&nbsp;agg,
+                      long&nbsp;refTimeMs)</code></th>
+<td class="colLast">
+<div class="block">Compute aggregated wifiscans using a given reference time.</div>
 </td>
 </tr>
 </tbody>

@@ -26,7 +26,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9};
+var data = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9,"i5":9};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -198,8 +198,19 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
                       long&nbsp;obsoletionPeriodMs,
                       <a href="../aggregators/Aggregator.html" title="interface in com.facebook.openwifirrm.aggregators">Aggregator</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Double.html?is-external=true" title="class or interface in java.lang" class="externalLink">Double</a>&gt;&nbsp;agg)</code></th>
 <td class="colLast">
-<div class="block">For each AP, for each other AP that sent a wifiscan entry to that AP, this
- method calculates an aggregate wifiscan entry with an aggregated RSSI.</div>
+<div class="block">For each AP, for each other AP that sent a wifiscan entry to that AP,
+ this method calculates an aggregate wifiscan entry with an aggregated
+ RSSI.</div>
+</td>
+</tr>
+<tr id="i5" class="rowColor">
+<td class="colFirst"><code>static <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html?is-external=true" title="class or interface in java.util" class="externalLink">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>,&#8203;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html?is-external=true" title="class or interface in java.util" class="externalLink">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>,&#8203;<a href="../ucentral/UCentralUtils.WifiScanEntry.html" title="class in com.facebook.openwifirrm.ucentral">UCentralUtils.WifiScanEntry</a>&gt;&gt;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getAggregatedWifiScans(com.facebook.openwifirrm.modules.Modeler.DataModel,long,com.facebook.openwifirrm.aggregators.Aggregator,long)">getAggregatedWifiScans</a></span>&#8203;(<a href="Modeler.DataModel.html" title="class in com.facebook.openwifirrm.modules">Modeler.DataModel</a>&nbsp;dataModel,
+                      long&nbsp;obsoletionPeriodMs,
+                      <a href="../aggregators/Aggregator.html" title="interface in com.facebook.openwifirrm.aggregators">Aggregator</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Double.html?is-external=true" title="class or interface in java.lang" class="externalLink">Double</a>&gt;&nbsp;agg,
+                      long&nbsp;refTimeMs)</code></th>
+<td class="colLast">
+<div class="block">Compute aggregated wifiscans using a given reference time.</div>
 </td>
 </tr>
 </table>
@@ -313,36 +324,60 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <a id="getAggregatedWifiScans(com.facebook.openwifirrm.modules.Modeler.DataModel,long,com.facebook.openwifirrm.aggregators.Aggregator)">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>getAggregatedWifiScans</h4>
 <pre class="methodSignature">public static&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html?is-external=true" title="class or interface in java.util" class="externalLink">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>,&#8203;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html?is-external=true" title="class or interface in java.util" class="externalLink">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>,&#8203;<a href="../ucentral/UCentralUtils.WifiScanEntry.html" title="class in com.facebook.openwifirrm.ucentral">UCentralUtils.WifiScanEntry</a>&gt;&gt;&nbsp;getAggregatedWifiScans&#8203;(<a href="Modeler.DataModel.html" title="class in com.facebook.openwifirrm.modules">Modeler.DataModel</a>&nbsp;dataModel,
                                                                                                      long&nbsp;obsoletionPeriodMs,
                                                                                                      <a href="../aggregators/Aggregator.html" title="interface in com.facebook.openwifirrm.aggregators">Aggregator</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Double.html?is-external=true" title="class or interface in java.lang" class="externalLink">Double</a>&gt;&nbsp;agg)</pre>
-<div class="block">For each AP, for each other AP that sent a wifiscan entry to that AP, this
- method calculates an aggregate wifiscan entry with an aggregated RSSI.</div>
+<div class="block">For each AP, for each other AP that sent a wifiscan entry to that AP,
+ this method calculates an aggregate wifiscan entry with an aggregated
+ RSSI. If no non-obsolete entry exists, the latest wifiscan entry is used
+ instead.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>dataModel</code> - the data model which includes the latest wifiscan
-                           entries</dd>
-<dd><code>obsoletionPeriodMs</code> - for each (scanning AP, responding AP) tuple, the
-                           maximum amount of time (in milliseconds) it is
-                           worth aggregating over, starting from the most
-                           recent scan entry for that tuple, and working
-                           backwards in time. An entry exactly
-                           <code>obsoletionPeriodMs</code> ms earlier than the most
-                           recent entry is considered non-obsolete (i.e., the
-                           "non-obsolete" window is inclusive). Must be
-                           non-negative.</dd>
+<dd><code>dataModel</code> - the data model which includes the latest
+                           wifiscan entries</dd>
+<dd><code>obsoletionPeriodMs</code> - for each (scanning AP, responding AP) tuple,
+                           the maximum amount of time (in milliseconds) it
+                           is worth aggregating over, starting from the
+                           most recent scan entry for that tuple, and
+                           working backwards in time. An entry exactly
+                           <code>obsoletionPeriodMs</code> ms earlier than the
+                           most recent entry is considered non-obsolete
+                           (i.e., the "non-obsolete" window is inclusive).
+                           Must be non-negative.</dd>
 <dd><code>agg</code> - an aggregator to calculate the aggregated RSSI
                            given recent wifiscan entries' RSSIs.</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>a map from AP serial number to a map from BSSID to an "aggregated
-         wifiscan entry". This aggregated entry is the most recent entry with
-         its <code>signal</code> attribute modified to be the aggregated signal
-         value instead of the value in just the most recent entry for that (AP
-         serial number, BSSID) tuple. The returned map will only contain APs
-         which received at least one non-obsolete wifiscan entry from a BSS.</dd>
+<dd>a map from AP serial number to a map from BSSID to a
+         <code>WifiScanEntry</code> object. This object is an "aggregated
+         wifiscan entry" unless there is no non-obsolete wifiscan entry,
+         in which case the latest wifiscan entry is used. An aggregated
+         entry is just the latest entry with its <code>signal</code> attribute
+         modified to be the aggregated signal value instead of the value
+         in just the most recent entry for that (AP serial number, BSSID)
+         tuple. The returned map will only map an (AP, BSSID) to an entry
+         if an least one entry from that BSSID to that AP exists in
+         <a href="Modeler.DataModel.html#latestWifiScans"><code>Modeler.DataModel.latestWifiScans</code></a></dd>
+</dl>
+</li>
+</ul>
+<a id="getAggregatedWifiScans(com.facebook.openwifirrm.modules.Modeler.DataModel,long,com.facebook.openwifirrm.aggregators.Aggregator,long)">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>getAggregatedWifiScans</h4>
+<pre class="methodSignature">public static&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html?is-external=true" title="class or interface in java.util" class="externalLink">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>,&#8203;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html?is-external=true" title="class or interface in java.util" class="externalLink">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>,&#8203;<a href="../ucentral/UCentralUtils.WifiScanEntry.html" title="class in com.facebook.openwifirrm.ucentral">UCentralUtils.WifiScanEntry</a>&gt;&gt;&nbsp;getAggregatedWifiScans&#8203;(<a href="Modeler.DataModel.html" title="class in com.facebook.openwifirrm.modules">Modeler.DataModel</a>&nbsp;dataModel,
+                                                                                                     long&nbsp;obsoletionPeriodMs,
+                                                                                                     <a href="../aggregators/Aggregator.html" title="interface in com.facebook.openwifirrm.aggregators">Aggregator</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Double.html?is-external=true" title="class or interface in java.lang" class="externalLink">Double</a>&gt;&nbsp;agg,
+                                                                                                     long&nbsp;refTimeMs)</pre>
+<div class="block">Compute aggregated wifiscans using a given reference time.</div>
+<dl>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="#getAggregatedWifiScans(com.facebook.openwifirrm.modules.Modeler.DataModel,long,com.facebook.openwifirrm.aggregators.Aggregator)"><code>getAggregatedWifiScans(com.facebook.openwifirrm.modules.Modeler.DataModel,
+      long, Aggregator)</code></a></dd>
 </dl>
 </li>
 </ul>
