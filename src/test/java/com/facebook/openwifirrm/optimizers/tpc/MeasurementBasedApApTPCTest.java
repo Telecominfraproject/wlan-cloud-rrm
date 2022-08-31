@@ -174,6 +174,7 @@ public class MeasurementBasedApApTPCTest {
 		return latestWifiScans;
 	}
 
+	/** Sets up the tx powers as in the example in Po-Han's design doc */
 	private static Map<String, List<List<WifiScanEntry>>> createLatestWifiScansB(
 		int channel
 	) {
@@ -194,6 +195,50 @@ public class MeasurementBasedApApTPCTest {
 		Map<String, Integer> rssiFromC = Map.ofEntries(
 			Map.entry(BSSID_A, -20),
 			Map.entry(BSSID_B, -63)
+		);
+		List<WifiScanEntry> wifiScanC =
+			TestUtils.createWifiScanListWithBssid(rssiFromC, channel);
+
+		Map<String, List<List<WifiScanEntry>>> latestWifiScans =
+			new HashMap<>();
+		latestWifiScans.put(DEVICE_A, List.of(wifiScanA));
+		latestWifiScans.put(DEVICE_B, List.of(wifiScanB));
+		latestWifiScans.put(DEVICE_C, List.of(wifiScanC));
+
+		return latestWifiScans;
+	}
+
+	/**
+	 * Sets up the tx powers to test non-zero values of nthSmallestRssi.
+	 * Similar to {@link #createLatestWifiScansB(int)} except the higher RSSIs
+	 * are now lower, so that what used to be the 0th smallest RSSI is now the
+	 * 1st smallest RSSI (so if nthSmallestRssi = 1 is used with this setup,
+	 * the end result should be the same as if nthSmallestRssi = 0 were used
+	 * with {@link #createLatestWifiScansB(int)}.
+	 *
+	 * @param channel channel number
+	 * @return latest wifiscan map
+	 */
+	private static Map<String, List<List<WifiScanEntry>>> createLatestWifiScansC(
+		int channel
+	) {
+		Map<String, Integer> rssiFromA = Map.ofEntries(
+			Map.entry(BSSID_B, -65),
+			Map.entry(BSSID_C, -61)
+		);
+		List<WifiScanEntry> wifiScanA =
+			TestUtils.createWifiScanListWithBssid(rssiFromA, channel);
+
+		Map<String, Integer> rssiFromB = Map.ofEntries(
+			Map.entry(BSSID_A, -52),
+			Map.entry(BSSID_C, -60)
+		);
+		List<WifiScanEntry> wifiScanB =
+			TestUtils.createWifiScanListWithBssid(rssiFromB, channel);
+
+		Map<String, Integer> rssiFromC = Map.ofEntries(
+			Map.entry(BSSID_A, -53),
+			Map.entry(BSSID_B, -66)
 		);
 		List<WifiScanEntry> wifiScanC =
 			TestUtils.createWifiScanListWithBssid(rssiFromC, channel);
@@ -380,6 +425,31 @@ public class MeasurementBasedApApTPCTest {
 		assertEquals(10, txPowerMap.get(DEVICE_C).get(band));
 	}
 
+	/** Tests non-zero nthSmallestRssi (specifically, nthSmallestRssi = 1) */
+	private static void testComputeTxPowerMapNonzeroNthSmallestRssi(
+		String band
+	) {
+		int channel = UCentralUtils.LOWER_CHANNEL_LIMIT.get(band);
+		DataModel dataModel = createModel();
+		dataModel.latestWifiScans = createLatestWifiScansC(channel);
+		DeviceDataManager deviceDataManager = createDeviceDataManager();
+
+		MeasurementBasedApApTPC optimizer = new MeasurementBasedApApTPC(
+			dataModel,
+			TEST_ZONE,
+			deviceDataManager,
+			-80,
+			1
+		);
+		Map<String, Map<String, Integer>> txPowerMap =
+			optimizer.computeTxPowerMap();
+
+		assertEquals(3, txPowerMap.size());
+		assertEquals(2, txPowerMap.get(DEVICE_A).get(band));
+		assertEquals(15, txPowerMap.get(DEVICE_B).get(band));
+		assertEquals(10, txPowerMap.get(DEVICE_C).get(band));
+	}
+
 	/**
 	 * Tests the tx power map calculations without a wifiscan entry from one AP.
 	 *
@@ -414,6 +484,7 @@ public class MeasurementBasedApApTPCTest {
 	void test_computeTxPowerMapOnOneBand() throws Exception {
 		for (String band : UCentralConstants.BANDS) {
 			testComputeTxPowerMapSimpleInOneBand(band);
+			testComputeTxPowerMapNonzeroNthSmallestRssi(band);
 			testComputeTxPowerMapMissingDataInOneBand(band);
 		}
 	}
