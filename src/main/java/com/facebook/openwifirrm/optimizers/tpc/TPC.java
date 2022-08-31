@@ -34,7 +34,7 @@ public abstract class TPC {
 	/** Maximum supported tx power (dBm), inclusive. */
 	public static final int MAX_TX_POWER = 30;
 
-	public static final List<Integer> DEFAULT_TX_POWERS_LIST = IntStream
+	public static final List<Integer> DEFAULT_TX_POWER_CHOICES = IntStream
 		.rangeClosed(MIN_TX_POWER, MAX_TX_POWER)
 		.boxed()
 		.collect(Collectors.toList());
@@ -74,28 +74,30 @@ public abstract class TPC {
 	}
 
 	/**
-	 * Get the available tx powers based on user and allowed channels from deviceConfig
+	 * Update the tx power choices based on user and allowed channels from deviceConfig
 	 * @param band the operational band
 	 * @param serialNumber the device
-	 * @return the available tx powers of the device
+	 * @param txPowerChoices the available tx powers of the device
+	 * @return the updated tx powers of the device
 	 */
-	protected List<Integer> getAvailableTxPowersList(
+	protected List<Integer> updateTxPowerChoices(
 		String band,
-		String serialNumber
+		String serialNumber,
+		List<Integer> txPowerChoices
 	) {
-		List<Integer> newAvailableTxPowersList =
-			new ArrayList<>(DEFAULT_TX_POWERS_LIST);
+		List<Integer> newTxPowerChoices =
+			new ArrayList<>(txPowerChoices);
 
 		// Update the available tx powers based on user tx powers or allowed tx powers
 		DeviceConfig deviceCfg = deviceConfigs.get(serialNumber);
 		if (deviceCfg == null) {
-			return newAvailableTxPowersList;
+			return newTxPowerChoices;
 		}
 		if (
 			deviceCfg.userTxPowers != null &&
 				deviceCfg.userTxPowers.get(band) != null
 		) {
-			newAvailableTxPowersList = Arrays.asList(
+			newTxPowerChoices = Arrays.asList(
 				deviceCfg.userTxPowers.get(band)
 			);
 			logger.debug(
@@ -113,25 +115,25 @@ public abstract class TPC {
 				serialNumber,
 				allowedTxPowers
 			);
-			newAvailableTxPowersList.retainAll(allowedTxPowers);
+			newTxPowerChoices.retainAll(allowedTxPowers);
 		}
 
 		// If the intersection of the above steps gives an empty list,
 		// turn back to use the default available tx powers list
-		if (newAvailableTxPowersList.isEmpty()) {
+		if (newTxPowerChoices.isEmpty()) {
 			logger.debug(
 				"Device {}: the updated availableTxPowersList is empty!!! " +
 					"userTxPowers or allowedTxPowers might be invalid " +
 					"Fall back to the default available tx powers list"
 			);
-			newAvailableTxPowersList = new ArrayList<>(DEFAULT_TX_POWERS_LIST);
+			newTxPowerChoices = new ArrayList<>(DEFAULT_TX_POWER_CHOICES);
 		}
 		logger.debug(
 			"Device {}: the updated availableTxPowersList is {}",
 			serialNumber,
-			newAvailableTxPowersList
+			newTxPowerChoices
 		);
-		return newAvailableTxPowersList;
+		return newTxPowerChoices;
 	}
 
 	/**
