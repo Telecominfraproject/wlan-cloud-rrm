@@ -280,16 +280,19 @@ public class ModelerUtils {
 	}
 
 	/**
-	 * @see #getAggregatedWifiScans(com.facebook.openwifirrm.modules.Modeler.DataModel, long, Aggregator)
-	 * <p>
-	 * These two methods were separated to make testing easier, since it relies on current time.
+	 * Compute aggregated wifiscans using a given reference time.
+	 *
+	 * @see #getAggregatedWifiScans(com.facebook.openwifirrm.modules.Modeler.DataModel,
+	 *      long, Aggregator)
 	 */
 	public static Map<String, Map<String, WifiScanEntry>> getAggregatedWifiScans(
 		Modeler.DataModel dataModel,
 		long obsoletionPeriodMs,
 		Aggregator<Double> agg,
-		long currentUnixTimeMs
+		long refTimeMs
 	) {
+		// this method and the getAggregatedWifiScans() which does not take in
+		// the ref time were separated to make testing easier
 		if (obsoletionPeriodMs < 0) {
 			throw new IllegalArgumentException("obsoletionPeriodMs must be non-negative.");
 		}
@@ -327,7 +330,7 @@ public class ModelerUtils {
 				WifiScanEntry mostRecentEntry = entries.get(0);
 				agg.reset();
 				for (WifiScanEntry entry : entries) {
-					if (currentUnixTimeMs - entry.unixTimeMs > obsoletionPeriodMs) {
+					if (refTimeMs - entry.unixTimeMs > obsoletionPeriodMs) {
 						// discard obsolete entries
 						break;
 					}
