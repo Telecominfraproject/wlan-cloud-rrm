@@ -418,6 +418,8 @@ public class TestUtils {
 			state.interfaces[i].ssids[0].associations =
 				new State.Interface.SSID.Association[clientRssis[i].length];
 			for (int j = 0; j < clientRssis[i].length; j++) {
+				state.interfaces[i].ssids[0].associations[j] =
+					state.interfaces[i].ssids[0].new Association();
 				state.interfaces[i].ssids[0].associations[j].rssi = clientRssis[i][j];
 			}
 		}
@@ -453,11 +455,7 @@ public class TestUtils {
 	}
 
 	/**
-<<<<<<< HEAD
 	 * Create a device state object with one radio.
-=======
-	 * Create a device state object with one radio and client RSSIs.
->>>>>>> 37806df (Resolve comments)
 	 *
 	 * @param channel channel number
 	 * @param channelWidth channel width in MHz
@@ -471,7 +469,7 @@ public class TestUtils {
 		int channelWidth,
 		int txPower,
 		String bssid,
-		int[] clientRssis,
+		int[] clientRssis
 	) {
 		return createState(
 			new int[] { channel },
