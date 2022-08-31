@@ -38,11 +38,38 @@ public class RandomChannelInitializer extends ChannelOptimizer {
 	/** The RRM algorithm ID. */
 	public static final String ALGORITHM_ID = "random";
 
+	/**
+	 * Args key for setting different channel per AP
+	 */
+	public static final String ARG_SET_DIFFERENT_CHANNEL_PER_AP =
+		"setDifferentChannelPerAp";
+
 	/** The PRNG instance. */
 	private final Random rng;
 
 	/** Whether to set a different value per AP or use a single value for all APs */
-	private final boolean setDifferentChannelsPerAp;
+	private final boolean setDifferentChannelPerAp;
+
+	/** Factory method to parse generic args map into the proper constructor */
+	public static RandomChannelInitializer makeWithArgs(
+		DataModel model,
+		String zone,
+		DeviceDataManager deviceDataManager,
+		Map<String, String> args
+	) {
+		if (args.containsKey(ARG_SET_DIFFERENT_CHANNEL_PER_AP)) {
+			boolean setDifferentChannelPerAp =
+				args.get(ARG_SET_DIFFERENT_CHANNEL_PER_AP) == "true";
+			return new RandomChannelInitializer(
+				model,
+				zone,
+				deviceDataManager,
+				setDifferentChannelPerAp
+			);
+		} else {
+			return new RandomChannelInitializer(model, zone, deviceDataManager);
+		}
+	}
 
 	/** Constructor. */
 	public RandomChannelInitializer(
@@ -58,13 +85,13 @@ public class RandomChannelInitializer extends ChannelOptimizer {
 		DataModel model,
 		String zone,
 		DeviceDataManager deviceDataManager,
-		boolean setDifferentChannelsPerAp
+		boolean setDifferentChannelPerAp
 	) {
 		this(
 			model,
 			zone,
 			deviceDataManager,
-			setDifferentChannelsPerAp,
+			setDifferentChannelPerAp,
 			new Random()
 		);
 	}
@@ -77,11 +104,11 @@ public class RandomChannelInitializer extends ChannelOptimizer {
 		DataModel model,
 		String zone,
 		DeviceDataManager deviceDataManager,
-		boolean setDifferentChannelsPerAp,
+		boolean setDifferentChannelPerAp,
 		Random rng
 	) {
 		super(model, zone, deviceDataManager);
-		this.setDifferentChannelsPerAp = setDifferentChannelsPerAp;
+		this.setDifferentChannelPerAp = setDifferentChannelPerAp;
 		this.rng = rng;
 	}
 
@@ -143,13 +170,13 @@ public class RandomChannelInitializer extends ChannelOptimizer {
 			}
 
 			// Randomly assign all the devices to the same channel if
-			// setDifferentChannelsPerAp is false otherwise, assigns
+			// setDifferentChannelPerAp is false otherwise, assigns
 			// each device to a random channel
 			int defaultChannelIndex = rng.nextInt(availableChannelsList.size());
 
 			for (String serialNumber : entry.getValue()) {
 				int newChannel = availableChannelsList.get(
-					this.setDifferentChannelsPerAp
+					this.setDifferentChannelPerAp
 						? rng.nextInt(availableChannelsList.size()) : defaultChannelIndex
 				);
 

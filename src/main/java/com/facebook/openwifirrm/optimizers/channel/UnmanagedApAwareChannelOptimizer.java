@@ -39,6 +39,20 @@ public class UnmanagedApAwareChannelOptimizer
 	/** The default weight for nonOWF APs. */
 	private static final int DEFAULT_WEIGHT = 2;
 
+	/** Factory method to parse generic args map into the proper constructor */
+	public static UnmanagedApAwareChannelOptimizer makeWithArgs(
+		DataModel model,
+		String zone,
+		DeviceDataManager deviceDataManager,
+		Map<String, String> args
+	) {
+		return new UnmanagedApAwareChannelOptimizer(
+			model,
+			zone,
+			deviceDataManager
+		);
+	}
+
 	/** Constructor. */
 	public UnmanagedApAwareChannelOptimizer(
 		DataModel model,

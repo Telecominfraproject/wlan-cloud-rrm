@@ -45,6 +45,16 @@ public class LeastUsedChannelOptimizer extends ChannelOptimizer {
 	/** The PRNG instance. */
 	protected final Random rng = new Random();
 
+	/** Factory method to parse generic args map into the proper constructor */
+	public static LeastUsedChannelOptimizer makeWithArgs(
+		DataModel model,
+		String zone,
+		DeviceDataManager deviceDataManager,
+		Map<String, String> args
+	) {
+		return new LeastUsedChannelOptimizer(model, zone, deviceDataManager);
+	}
+
 	/** Constructor. */
 	public LeastUsedChannelOptimizer(
 		DataModel model,

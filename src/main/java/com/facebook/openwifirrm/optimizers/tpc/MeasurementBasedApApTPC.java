@@ -58,11 +58,50 @@ public class MeasurementBasedApApTPC extends TPC {
 	 */
 	public static final int DEFAULT_NTH_SMALLEST_RSSI = 0;
 
+	/**
+	 * Args key for coverage threshold
+	 */
+	public static final String ARG_COVERAGE_THRESHOLD = "coverageThreshold";
+
+	/**
+	 * Args key for nth smallest RSSI
+	 */
+	public static final String ARG_NTH_SMALLEST_RSSI = "nthSmallestRssi";
+
 	/** coverage threshold between APs, in dB */
 	private final int coverageThreshold;
 
 	/** Nth smallest RSSI (zero-indexed) is used for Tx power calculation */
 	private final int nthSmallestRssi; // TODO non-zero values untested
+
+	/** Factory method to parse generic args map into the proper constructor */
+	public static MeasurementBasedApApTPC makeWithArgs(
+		DataModel model,
+		String zone,
+		DeviceDataManager deviceDataManager,
+		Map<String, String> args
+	) {
+
+		if (
+			args.containsKey(ARG_COVERAGE_THRESHOLD) &&
+				args.containsKey(ARG_NTH_SMALLEST_RSSI)
+		) {
+			int coverageThreshold =
+				Integer.parseInt(args.get(ARG_COVERAGE_THRESHOLD));
+			int nthSmallestRssi =
+				Integer.parseInt(args.get(ARG_NTH_SMALLEST_RSSI));
+			return new MeasurementBasedApApTPC(
+				model,
+				zone,
+				deviceDataManager,
+				coverageThreshold,
+				nthSmallestRssi
+			);
+		} else {
+
+			return new MeasurementBasedApApTPC(model, zone, deviceDataManager);
+		}
+	}
 
 	/** Constructor. */
 	public MeasurementBasedApApTPC(

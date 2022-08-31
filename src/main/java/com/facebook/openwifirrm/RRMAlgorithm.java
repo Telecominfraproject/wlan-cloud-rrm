@@ -186,24 +186,27 @@ public class RRMAlgorithm {
 				logger.info("Using default algorithm mode...");
 				// fall through
 			case UnmanagedApAwareChannelOptimizer.ALGORITHM_ID:
-				optimizer = new UnmanagedApAwareChannelOptimizer(
+				optimizer = UnmanagedApAwareChannelOptimizer.makeWithArgs(
 					modeler.getDataModelCopy(),
 					zone,
-					deviceDataManager
+					deviceDataManager,
+					args
 				);
 				break;
 			case RandomChannelInitializer.ALGORITHM_ID:
-				optimizer = new RandomChannelInitializer(
+				optimizer = RandomChannelInitializer.makeWithArgs(
 					modeler.getDataModelCopy(),
 					zone,
-					deviceDataManager
+					deviceDataManager,
+					args
 				);
 				break;
 			case LeastUsedChannelOptimizer.ALGORITHM_ID:
-				optimizer = new LeastUsedChannelOptimizer(
+				optimizer = LeastUsedChannelOptimizer.makeWithArgs(
 					modeler.getDataModelCopy(),
 					zone,
-					deviceDataManager
+					deviceDataManager,
+					args
 				);
 				break;
 			}
@@ -233,31 +236,35 @@ public class RRMAlgorithm {
 				logger.info("Using default algorithm mode...");
 				// fall through
 			case MeasurementBasedApApTPC.ALGORITHM_ID:
-				optimizer = new MeasurementBasedApApTPC(
+				optimizer = MeasurementBasedApApTPC.makeWithArgs(
 					modeler.getDataModelCopy(),
 					zone,
-					deviceDataManager
+					deviceDataManager,
+					args
 				);
 				break;
 			case RandomTxPowerInitializer.ALGORITHM_ID:
-				optimizer = new RandomTxPowerInitializer(
+				optimizer = RandomTxPowerInitializer.makeWithArgs(
 					modeler.getDataModelCopy(),
 					zone,
-					deviceDataManager
+					deviceDataManager,
+					args
 				);
 				break;
 			case MeasurementBasedApClientTPC.ALGORITHM_ID:
-				optimizer = new MeasurementBasedApClientTPC(
+				optimizer = MeasurementBasedApClientTPC.makeWithArgs(
 					modeler.getDataModelCopy(),
 					zone,
-					deviceDataManager
+					deviceDataManager,
+					args
 				);
 				break;
 			case LocationBasedOptimalTPC.ALGORITHM_ID:
-				optimizer = new LocationBasedOptimalTPC(
+				optimizer = LocationBasedOptimalTPC.makeWithArgs(
 					modeler.getDataModelCopy(),
 					zone,
-					deviceDataManager
+					deviceDataManager,
+					args
 				);
 				break;
 			}

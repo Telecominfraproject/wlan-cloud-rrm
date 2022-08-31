@@ -42,6 +42,11 @@ public class MeasurementBasedApClientTPC extends TPC {
 	/** Default tx power. */
 	public static final int DEFAULT_TX_POWER = 10;
 
+	/**
+	 * Args key for targetMcs
+	 */
+	public static final String ARG_TARGET_MCS = "targetMcs";
+
 	/** Mapping of MCS index to required SNR (dB) in 802.11ac. */
 	private static final List<Double> MCS_TO_SNR = Collections.unmodifiableList(
 		Arrays.asList(
@@ -60,6 +65,30 @@ public class MeasurementBasedApClientTPC extends TPC {
 
 	/** The target MCS index. */
 	private final int targetMcs;
+
+	/** Factory method to parse generic args map into the proper constructor */
+	public static MeasurementBasedApClientTPC makeWithArgs(
+		DataModel model,
+		String zone,
+		DeviceDataManager deviceDataManager,
+		Map<String, String> args
+	) {
+		if (args.containsKey(ARG_TARGET_MCS)) {
+			int targetMcs = Integer.parseInt(args.get(ARG_TARGET_MCS));
+			return new MeasurementBasedApClientTPC(
+				model,
+				zone,
+				deviceDataManager,
+				targetMcs
+			);
+		} else {
+			return new MeasurementBasedApClientTPC(
+				model,
+				zone,
+				deviceDataManager
+			);
+		}
+	}
 
 	/** Constructor (uses default target MCS index). */
 	public MeasurementBasedApClientTPC(
