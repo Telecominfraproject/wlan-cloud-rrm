@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.TreeMap;
 
@@ -112,14 +113,17 @@ public class MeasurementBasedApApTPC extends TPC {
 	}
 
 	/**
-	 * Get the current band radio tx power (the first one found) for an AP using the
-	 * latest device status.
+	 * Get the current band radio tx power (the first one found) for an AP using
+	 * the latest device status.
 	 *
 	 * @param latestDeviceStatus JsonArray containing radio config for the AP
-	 * @param band "2G" or "5G"
-	 * @return the tx power, or 0 if none found
+	 * @param band band (e.g., "2G")
+	 * @return an Optional containing the tx power if one exists, or else an
+	 *         empty Optional
 	 */
-	protected static int getCurrentTxPower(JsonArray latestDeviceStatus, String band) {
+	protected static Optional<Integer> getCurrentTxPower(
+		JsonArray latestDeviceStatus, String band
+	) {
 		for (JsonElement e : latestDeviceStatus) {
 			if (!e.isJsonObject()) {
 				continue;
@@ -127,10 +131,10 @@ public class MeasurementBasedApApTPC extends TPC {
 			JsonObject radioObject = e.getAsJsonObject();
 			String radioBand = radioObject.get("band").getAsString();
 			if (radioBand.equals(band) && radioObject.has("tx-power")) {
-				return radioObject.get("tx-power").getAsInt();
+				return Optional.of(radioObject.get("tx-power").getAsInt());
 			}
 		}
-		return 0;
+		return Optional.empty();
 	}
 
 	/**
@@ -266,7 +270,14 @@ public class MeasurementBasedApApTPC extends TPC {
 				continue;
 			}
 			JsonArray radioStatuses = allStatuses.get(serialNumber).getAsJsonArray();
-			int currentTxPower = getCurrentTxPower(radioStatuses, band);
+			Optional<Integer> possibleCurrentTxPower = getCurrentTxPower(
+				radioStatuses, band
+			);
+			if (possibleCurrentTxPower.isEmpty()) {
+				// this AP is not on the band of interest
+				continue;
+			}
+			int currentTxPower = possibleCurrentTxPower.get();
 			String bssid = state.interfaces[0].ssids[0].bssid;
 			List<Integer> rssiValues = bssidToRssiValues.get(bssid);
 			logger.debug("Device <{}> : BSSID <{}>", serialNumber, bssid);

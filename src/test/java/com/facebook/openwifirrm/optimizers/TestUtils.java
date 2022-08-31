@@ -18,6 +18,7 @@ import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 import com.facebook.openwifirrm.DeviceTopology;
+import com.facebook.openwifirrm.ucentral.UCentralConstants;
 import com.facebook.openwifirrm.ucentral.UCentralUtils;
 import com.facebook.openwifirrm.ucentral.UCentralUtils.WifiScanEntry;
 import com.facebook.openwifirrm.ucentral.models.State;
@@ -34,6 +35,8 @@ public class TestUtils {
 
 	/** Default channel width in MHz */
 	public static final int DEFAULT_CHANNEL_WIDTH = 20;
+	/** Default tx power in dBm */
+	public static final int DEFAULT_TX_POWER = 20;
 
 	/** Create a topology from the given devices in a single zone. */
 	public static DeviceTopology createTopology(String zone, String... devices) {
@@ -52,15 +55,16 @@ public class TestUtils {
 	 * @return a radio info object as a {@code JsonObject}
 	 */
 	private static JsonObject createDeviceStatusRadioObject(
-		String band, int channel, int channelWidth
+		String band, int channel, int channelWidth, int txPower
 	) {
 		return gson.fromJson(
 			String.format(
 				"{\"band\": %s,\"channel\": %d,\"channel-mode\":\"HE\","
-					+ "\"channel-width\":%d,\"country\":\"CA\",\"tx-power\":20}",
+					+ "\"channel-width\":%d,\"country\":\"CA\",\"tx-power\":%d}",
 				band,
 				channel,
-				channelWidth
+				channelWidth,
+				txPower
 			),
 			JsonObject.class
 		);
@@ -73,7 +77,26 @@ public class TestUtils {
 	public static JsonArray createDeviceStatus(String band, int channel) {
 		JsonArray jsonList = new JsonArray();
 		jsonList.add(createDeviceStatusRadioObject(
-			band, channel, DEFAULT_CHANNEL_WIDTH
+			band, channel, DEFAULT_CHANNEL_WIDTH, DEFAULT_TX_POWER
+		));
+		return jsonList;
+	}
+
+	/**
+	 * Create the device status array.
+	 *
+	 * @param band band (e.g., "2G")
+	 * @param channel channel number
+	 * @param txPower tx power in dBm
+	 * @return an array with one radio info entry with the given band, channel,
+	 *         and tx power
+	 */
+	public static JsonArray createDeviceStatus(
+		String band, int channel, int txPower
+	) {
+		JsonArray jsonList = new JsonArray();
+		jsonList.add(createDeviceStatusRadioObject(
+			band, channel, DEFAULT_CHANNEL_WIDTH, txPower
 		));
 		return jsonList;
 	}
@@ -87,7 +110,7 @@ public class TestUtils {
 		for (String band : bands) {
 			int channel = UCentralUtils.LOWER_CHANNEL_LIMIT.get(band);
 			jsonList.add(createDeviceStatusRadioObject(
-				band, channel, DEFAULT_CHANNEL_WIDTH
+				band, channel, DEFAULT_CHANNEL_WIDTH, DEFAULT_TX_POWER
 			));
 		}
 		return jsonList;
@@ -98,21 +121,13 @@ public class TestUtils {
 	 * tx powers and channels.
 	 */
 	public static JsonArray createDeviceStatusDualBand(int channel2G, int txPower2G, int channel5G, int txPower5G) {
-		JsonArray jsonList = gson.fromJson(
-			String.format(
-				"[{\"band\": \"2G\",\"channel\": %d,\"channel-mode\":\"HE\"," +
-				"\"channel-width\":%d,\"country\":\"CA\",\"tx-power\":%d}," +
-				"{\"band\": \"5G\",\"channel\": %d,\"channel-mode\":\"HE\"," +
-				"\"channel-width\":%d,\"country\":\"CA\",\"tx-power\":%d}]",
-				channel2G,
-				DEFAULT_CHANNEL_WIDTH,
-				txPower2G,
-				channel5G,
-				DEFAULT_CHANNEL_WIDTH,
-				txPower5G
-			),
-			JsonArray.class
-		);
+		JsonArray jsonList = new JsonArray();
+		jsonList.add(createDeviceStatusRadioObject(
+			UCentralConstants.BAND_2G, channel2G, DEFAULT_CHANNEL_WIDTH, txPower2G
+		));
+		jsonList.add(createDeviceStatusRadioObject(
+			UCentralConstants.BAND_5G, channel5G, DEFAULT_CHANNEL_WIDTH, txPower5G
+		));
 		return jsonList;
 	}
 
@@ -366,12 +381,16 @@ public class TestUtils {
 	 *
 	 * @param channels array of channel numbers
 	 * @param channelWidths array of channel widths (MHz)
+	 * @param txPowers array of tx powers (dBm)
 	 * @param bssids array of BSSIDs
 	 * @return the state of an AP with radios described by the given parameters
 	 */
-	public static State createState(int[] channels, int[] channelWidths, String[] bssids) {
+	public static State createState(
+		int[] channels, int[] channelWidths, int[] txPowers, String[] bssids
+	) {
 		if (!(channels.length == channelWidths.length
-			&& channelWidths.length == bssids.length)
+			&& channelWidths.length == txPowers.length
+			&& txPowers.length == bssids.length)
 		) {
 			throw new IllegalArgumentException(
 				"All arguments must have the same length."
@@ -389,7 +408,7 @@ public class TestUtils {
 			state.radios[i] = createStateRadio();
 			state.radios[i].addProperty("channel", channels[i]);
 			state.radios[i].addProperty("channel_width", channelWidths[i]);
-			state.radios[i].addProperty("tx_power", DEFAULT_CHANNEL_WIDTH);
+			state.radios[i].addProperty("tx_power", txPowers[i]);
 			state.interfaces[i].ssids[0].bssid = bssids[i];
 		}
 		state.unit = createStateUnit();
@@ -405,10 +424,24 @@ public class TestUtils {
 	 * @return the state of an AP with one radio
 	 */
 	public static State createState(int channel, int channelWidth, String bssid) {
+		return createState(channel, channelWidth, DEFAULT_TX_POWER, bssid);
+	}
+
+	/**
+	 * Create a device state object with one radio.
+	 *
+	 * @param channel channel number
+	 * @param channelWidth channel width in MHz
+	 * @param txPower tx power in dBm
+	 * @param bssid bssid
+	 * @return the state of an AP with one radio
+	 */
+	public static State createState(int channel, int channelWidth, int txPower, String bssid) {
 		return createState(
-			new int[] {channel},
-			new int[] {channelWidth},
-			new String[] {bssid}
+			new int[] { channel },
+			new int[] { channelWidth },
+			new int[] { txPower },
+			new String[] { bssid }
 		);
 	}
 
@@ -436,9 +469,10 @@ public class TestUtils {
 		String bssidB
 	) {
 		return createState(
-			new int[] {channelA, channelB},
-			new int[] {channelWidthA, channelWidthB},
-			new String[] {bssidA, bssidB}
+			new int[] { channelA, channelB },
+			new int[] { channelWidthA, channelWidthB },
+			new int[] { txPowerA, txPowerB },
+			new String[] { bssidA, bssidB }
 		);
 	}
 }
