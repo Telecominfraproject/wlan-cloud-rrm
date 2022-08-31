@@ -77,10 +77,17 @@ public class MeasurementBasedApApTPC extends TPC {
 		String arg;
 		if ((arg = args.get("coverageThreshold")) != null) {
 			try {
-				coverageThreshold = Integer.parseInt(arg);
+				int parsedCoverageThreshold = Integer.parseInt(arg);
+				if (parsedCoverageThreshold > 30) {
+					logger.error(
+						"Invalid value passed for coverageThreshold - must be less than 30. Using default value."
+					);
+				} else {
+					coverageThreshold = parsedCoverageThreshold;
+				}
 			} catch (NumberFormatException e) {
 				logger.error(
-					"Invalid integer passed to parameter coverageThreshold, using default value: ",
+					"Invalid integer passed to parameter coverageThreshold, using default value",
 					e
 				);
 			}
@@ -88,10 +95,17 @@ public class MeasurementBasedApApTPC extends TPC {
 
 		if ((arg = args.get("nthSmallestRssi")) != null) {
 			try {
-				nthSmallestRssi = Integer.parseInt(arg);
+				int parsedNthSmallestRssi = Integer.parseInt(arg);
+				if (parsedNthSmallestRssi < 0) {
+					logger.error(
+						"Invalid value passed for nthSmallestRssi - must be greater than 0. Using default value."
+					);
+				} else {
+					nthSmallestRssi = parsedNthSmallestRssi;
+				}
 			} catch (NumberFormatException e) {
 				logger.error(
-					"Invalid integer passed to parameter nthSmallestRssi, using default value: ",
+					"Invalid integer passed to parameter nthSmallestRssi, using default value",
 					e
 				);
 			}

@@ -74,18 +74,19 @@ public class MeasurementBasedApClientTPC extends TPC {
 		if ((arg = args.get("targetMcs")) != null) {
 
 			try {
-				targetMcs = Integer.parseInt(arg);
+				int parsedTargetMcs = Integer.parseInt(arg);
+				if (targetMcs < 0) {
+					logger.error(
+						"Invalid value passed for targetMcs - must be greater than 0. Using default value."
+					);
+				} else {
+					targetMcs = parsedTargetMcs;
+				}
 			} catch (NumberFormatException e) {
 				logger.error(
-					"Invalid integer passed to parameter targetMcs, using default value: ",
+					"Invalid integer passed to parameter targetMcs, using default value",
 					e
 				);
-			}
-			if (targetMcs < 0) {
-				logger.error(
-					"Invalid value passed for targetMcs - must be greater than 0. Using default value."
-				);
-				targetMcs = DEFAULT_TARGET_MCS;
 			}
 		}
 

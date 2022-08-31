@@ -57,7 +57,7 @@ public class RandomChannelInitializer extends ChannelOptimizer {
 		boolean setDifferentChannelPerAp = DEFAULT_SET_DIFFERENT_CHANNEL_PER_AP;
 
 		String arg;
-		if ((arg = args.get("rrm-algorithm-params")) != null) {
+		if ((arg = args.get("setDifferentChannelPerAp")) != null) {
 			setDifferentChannelPerAp = Boolean.parseBoolean(arg);
 		}
 
