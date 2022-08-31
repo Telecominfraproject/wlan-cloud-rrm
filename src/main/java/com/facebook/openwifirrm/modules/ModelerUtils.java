@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 
 import com.facebook.openwifirrm.aggregators.Aggregator;
 import com.facebook.openwifirrm.aggregators.MeanAggregator;
+import com.facebook.openwifirrm.modules.Modeler.DataModel;
 import com.facebook.openwifirrm.ucentral.UCentralUtils.WifiScanEntry;
 import com.facebook.openwifirrm.ucentral.operationelement.HTOperationElement;
 import com.facebook.openwifirrm.ucentral.operationelement.VHTOperationElement;
@@ -256,18 +257,18 @@ public class ModelerUtils {
 	 * @param agg                an aggregator to calculate the aggregated RSSI
 	 *                           given recent wifiscan entries' RSSIs.
 	 * @return a map from AP serial number to a map from BSSID to a
-	 *         {@WifiScanEntry} object. This object is an "aggregated wifiscan
-	 *         entry" unless there is no non-obsolete wifiscan entry, in which
-	 *         case the latest wifiscan entry is used. An aggregated entry is
-	 *         just the latest entry with its {@code signal} attribute modified
-	 *         to be the aggregated signal value instead of the value in just
-	 *         the most recent entry for that (AP serial number, BSSID) tuple.
-	 *         The returned map will only map an (AP, BSSID) to an entry if an
-	 *         least one entry from that BSSID to that AP exists in
-	 *         {@link Modeler.DataModel#latestWifiScans}
+	 *         {@code WifiScanEntry} object. This object is an "aggregated
+	 *         wifiscan entry" unless there is no non-obsolete wifiscan entry,
+	 *         in which case the latest wifiscan entry is used. An aggregated
+	 *         entry is just the latest entry with its {@code signal} attribute
+	 *         modified to be the aggregated signal value instead of the value
+	 *         in just the most recent entry for that (AP serial number, BSSID)
+	 *         tuple. The returned map will only map an (AP, BSSID) to an entry
+	 *         if an least one entry from that BSSID to that AP exists in
+	 *         {@link DataModel#latestWifiScans}
 	 */
 	public static Map<String, Map<String, WifiScanEntry>> getAggregatedWifiScans(
-		Modeler.DataModel dataModel,
+		DataModel dataModel,
 		long obsoletionPeriodMs,
 		Aggregator<Double> agg
 	) {
