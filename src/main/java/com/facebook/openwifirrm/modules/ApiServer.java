@@ -14,7 +14,6 @@ import java.net.URISyntaxException;
 import java.net.UnknownHostException;
 import java.time.Instant;
 import java.util.Arrays;
-import java.util.Base64;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -248,9 +247,6 @@ public class ApiServer implements Runnable {
 		Spark.get("/api/v1/optimizeTxPower", new OptimizeTxPowerEndpoint());
 
 		logger.info("API server listening on HTTP port {}", params.httpPort);
-		if (params.useBasicAuth) {
-			logger.info("HTTP basic auth is enabled.");
-		}
 	}
 
 	/** Stop the server. */
@@ -263,42 +259,6 @@ public class ApiServer implements Runnable {
 		return (queryString == null)
 			? path
 			: String.format("%s?%s", path, queryString);
-	}
-
-	/**
-	 * Perform HTTP basic authentication given an expected user/password.
-	 *
-	 * If authentication passes, do nothing and return true. Otherwise, send an
-	 * HTTP 401 response with a "WWW-Authenticate" header and return false.
-	 */
-	private boolean performHttpBasicAuth(
-		Request request,
-		Response response,
-		String user,
-		String password
-	) {
-		// Extract header:
-		//   Authorization: Basic <base64(<user>:<password>)>
-		final String AUTH_PREFIX = "Basic ";
-		String authHeader = request.headers("Authorization");
-		if (authHeader != null && authHeader.startsWith(AUTH_PREFIX)) {
-			String contents = authHeader.substring(AUTH_PREFIX.length());
-			String creds = new String(Base64.getDecoder().decode(contents));
-			int splitIdx = creds.indexOf(':');
-			if (splitIdx != -1) {
-				String u = creds.substring(0, splitIdx);
-				String p = creds.substring(splitIdx + 1);
-				if (u.equals(user) && p.equals(password)) {
-					// auth success
-					return true;
-				}
-			}
-		}
-
-		// auth failure
-		response.header("WWW-Authenticate", "Basic");
-		Spark.halt(401, "Unauthorized");
-		return false;
 	}
 
 	/**
@@ -391,16 +351,6 @@ public class ApiServer implements Runnable {
 			} else {
 				logger.debug("CORS checks failed for origin: {}", origin);
 			}
-		}
-
-		// HTTP basic auth (if enabled)
-		if (params.useBasicAuth) {
-			performHttpBasicAuth(
-				request,
-				response,
-				params.basicAuthUser,
-				params.basicAuthPassword
-			);
 		}
 
 		// OpenWifi auth (if enabled)

@@ -134,8 +134,8 @@ every service, as well as endpoints specific to RRM providers. They are both
 marked here under the "SDK" tag.
 
 Depending on RRM service configuration, the API server may also enable CORS
-selectively or globally, HTTP basic auth, and/or OpenWiFi auth (via Bearer
-tokens or internal API keys).
+selectively or globally, and OpenWiFi auth (via Bearer tokens or internal 
+API keys).
 
 ### Provisioning Monitor
 `ProvMonitor` syncs device topology ("venues") and configuration with the
