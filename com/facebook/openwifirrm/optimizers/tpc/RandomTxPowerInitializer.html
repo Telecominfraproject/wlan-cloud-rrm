@@ -307,7 +307,7 @@ extends <a href="TPC.html" title="class in com.facebook.openwifirrm.optimizers.t
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a id="&lt;init&gt;(com.facebook.openwifirrm.modules.Modeler.DataModel,java.lang.String,com.facebook.openwifirrm.DeviceDataManager,boolean,java.util.Random)">
+<a id="&lt;init&gt;(com.facebook.openwifirrm.modules.Modeler.DataModel,java.lang.String,com.facebook.openwifirrm.DeviceDataManager)">
 <!--   -->
 </a>
 <ul class="blockList">
@@ -315,11 +315,8 @@ extends <a href="TPC.html" title="class in com.facebook.openwifirrm.optimizers.t
 <h4>RandomTxPowerInitializer</h4>
 <pre>public&nbsp;RandomTxPowerInitializer&#8203;(<a href="../../modules/Modeler.DataModel.html" title="class in com.facebook.openwifirrm.modules">Modeler.DataModel</a>&nbsp;model,
                                 <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;zone,
-                                <a href="../../DeviceDataManager.html" title="class in com.facebook.openwifirrm">DeviceDataManager</a>&nbsp;deviceDataManager,
-                                boolean&nbsp;setDifferentTxPowerPerAp,
-                                <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Random.html?is-external=true" title="class or interface in java.util" class="externalLink">Random</a>&nbsp;rng)</pre>
-<div class="block">Constructor (uses random tx power per AP and allows passing in a custom
- Random class to allow seeding).</div>
+                                <a href="../../DeviceDataManager.html" title="class in com.facebook.openwifirrm">DeviceDataManager</a>&nbsp;deviceDataManager)</pre>
+<div class="block">Constructor (uses random tx power).</div>
 </li>
 </ul>
 <a id="&lt;init&gt;(com.facebook.openwifirrm.modules.Modeler.DataModel,java.lang.String,com.facebook.openwifirrm.DeviceDataManager,boolean)">
@@ -335,7 +332,7 @@ extends <a href="TPC.html" title="class in com.facebook.openwifirrm.optimizers.t
 <div class="block">Constructor (uses random tx power per AP).</div>
 </li>
 </ul>
-<a id="&lt;init&gt;(com.facebook.openwifirrm.modules.Modeler.DataModel,java.lang.String,com.facebook.openwifirrm.DeviceDataManager)">
+<a id="&lt;init&gt;(com.facebook.openwifirrm.modules.Modeler.DataModel,java.lang.String,com.facebook.openwifirrm.DeviceDataManager,boolean,java.util.Random)">
 <!--   -->
 </a>
 <ul class="blockListLast">
@@ -343,8 +340,11 @@ extends <a href="TPC.html" title="class in com.facebook.openwifirrm.optimizers.t
 <h4>RandomTxPowerInitializer</h4>
 <pre>public&nbsp;RandomTxPowerInitializer&#8203;(<a href="../../modules/Modeler.DataModel.html" title="class in com.facebook.openwifirrm.modules">Modeler.DataModel</a>&nbsp;model,
                                 <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;zone,
-                                <a href="../../DeviceDataManager.html" title="class in com.facebook.openwifirrm">DeviceDataManager</a>&nbsp;deviceDataManager)</pre>
-<div class="block">Constructor (uses random tx power).</div>
+                                <a href="../../DeviceDataManager.html" title="class in com.facebook.openwifirrm">DeviceDataManager</a>&nbsp;deviceDataManager,
+                                boolean&nbsp;setDifferentTxPowerPerAp,
+                                <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Random.html?is-external=true" title="class or interface in java.util" class="externalLink">Random</a>&nbsp;rng)</pre>
+<div class="block">Constructor (uses random tx power per AP and allows passing in a custom
+ Random class to allow seeding).</div>
 </li>
 </ul>
 </li>
