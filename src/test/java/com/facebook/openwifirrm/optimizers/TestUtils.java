@@ -383,10 +383,15 @@ public class TestUtils {
 	 * @param channelWidths array of channel widths (MHz)
 	 * @param txPowers array of tx powers (dBm)
 	 * @param bssids array of BSSIDs
+	 * @param clientRssis 2-D array of client RSSIs
 	 * @return the state of an AP with radios described by the given parameters
 	 */
 	public static State createState(
-		int[] channels, int[] channelWidths, int[] txPowers, String[] bssids
+		int[] channels,
+		int[] channelWidths,
+		int[] txPowers,
+		String[] bssids,
+		int[][] clientRssis
 	) {
 		if (!(channels.length == channelWidths.length
 			&& channelWidths.length == txPowers.length
@@ -410,6 +415,13 @@ public class TestUtils {
 			state.radios[i].addProperty("channel_width", channelWidths[i]);
 			state.radios[i].addProperty("tx_power", txPowers[i]);
 			state.interfaces[i].ssids[0].bssid = bssids[i];
+			state.interfaces[i].ssids[0].associations =
+				new State.Interface.SSID.Association[clientRssis[i].length];
+			for (int j = 0; j < clientRssis[i].length; j++) {
+				state.interfaces[i].ssids[0].associations[j] =
+					state.interfaces[i].ssids[0].new Association();
+				state.interfaces[i].ssids[0].associations[j].rssi = clientRssis[i][j];
+			}
 		}
 		state.unit = createStateUnit();
 		return state;
@@ -438,10 +450,33 @@ public class TestUtils {
 	 */
 	public static State createState(int channel, int channelWidth, int txPower, String bssid) {
 		return createState(
+			channel, channelWidth, txPower, bssid, new int[] {}
+		);
+	}
+
+	/**
+	 * Create a device state object with one radio.
+	 *
+	 * @param channel channel number
+	 * @param channelWidth channel width in MHz
+	 * @param txPower tx power in dBm
+	 * @param bssid bssid
+	 * @param clientRssis array of client RSSIs
+	 * @return the state of an AP with one radio
+	 */
+	public static State createState(
+		int channel,
+		int channelWidth,
+		int txPower,
+		String bssid,
+		int[] clientRssis
+	) {
+		return createState(
 			new int[] { channel },
 			new int[] { channelWidth },
 			new int[] { txPower },
-			new String[] { bssid }
+			new String[] { bssid },
+			new int[][] { clientRssis }
 		);
 	}
 
@@ -469,10 +504,52 @@ public class TestUtils {
 		String bssidB
 	) {
 		return createState(
+			channelA,
+			channelWidthA,
+			txPowerA,
+			bssidA,
+			new int[] {},
+			channelB,
+			channelWidthB,
+			txPowerB,
+			bssidB,
+			new int[] {}
+		);
+	}
+
+	/**
+	 * Create a device state object with two radios.
+	 *
+	 * @param channelA channel number
+	 * @param channelWidthA channel width (MHz) of channelA
+	 * @param txPowerA tx power for channelA
+	 * @param bssidA bssid for radio on channelA
+	 * @param clientRssisA array of client RSSIs for channelA
+	 * @param channelB channel number
+	 * @param channelWidthB channel width (MHz) of channelB
+	 * @param txPowerB tx power for channelB
+	 * @param bssidB bssid for radio on channelB
+	 * @param clientRssisB array of client RSSIs for channelB
+	 * @return the state of an AP with two radios
+	 */
+	public static State createState(
+		int channelA,
+		int channelWidthA,
+		int txPowerA,
+		String bssidA,
+		int[] clientRssisA,
+		int channelB,
+		int channelWidthB,
+		int txPowerB,
+		String bssidB,
+		int[] clientRssisB
+	) {
+		return createState(
 			new int[] { channelA, channelB },
 			new int[] { channelWidthA, channelWidthB },
 			new int[] { txPowerA, txPowerB },
-			new String[] { bssidA, bssidB }
+			new String[] { bssidA, bssidB },
+			new int[][] { clientRssisA, clientRssisB }
 		);
 	}
 }

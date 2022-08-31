@@ -390,4 +390,20 @@ public class UCentralUtils {
 		return LOWER_CHANNEL_LIMIT.get(band) <= channel
 				&& channel <= UPPER_CHANNEL_LIMIT.get(band);
 	}
+
+	/**
+	 * Given the channel, gets the band by checking lower bound and upper bound
+	 * of each band
+	 *
+	 * @param channel channel number
+	 * @return band if the channel can be mapped to a valid band; null otherwise
+	 */
+	public static String getBandFromChannel(int channel) {
+		for (String band: UCentralConstants.BANDS) {
+			if (isChannelInBand(channel, band)) {
+				return band;
+			}
+		}
+		return null;
+	}
 }

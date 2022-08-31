@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import com.facebook.openwifirrm.ucentral.UCentralUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -107,12 +108,11 @@ public class MeasurementBasedApClientTPC extends TPC {
 		return SNR_min + currentTxPower - clientRssi + NP + NF - M;
 	}
 
-	/** Compute adjusted tx power (dBm) for the given device. */
-	private int computeTxPowerForDevice(
-		String serialNumber, State state, int radioIndex
+	/** Compute new tx power (dBm) for the given radio. */
+	private int computeTxPowerForRadio(
+		String serialNumber, State state, JsonObject radio
 	) {
 		// Find current tx power and bandwidth
-		JsonObject radio = state.radios[radioIndex];
 		int currentTxPower =
 			radio.has("tx_power") && !radio.get("tx_power").isJsonNull()
 				? radio.get("tx_power").getAsInt()
@@ -239,13 +239,26 @@ public class MeasurementBasedApClientTPC extends TPC {
 				);
 				continue;
 			}
-			// TODO: only using first radio
-			final int radioIndex = 0;
-
-			int newTxPower =
-				computeTxPowerForDevice(serialNumber, state, radioIndex);
 			Map<String, Integer> radioMap = new TreeMap<>();
-			radioMap.put(UCentralConstants.BAND_5G, newTxPower);
+
+			for (JsonObject radio: state.radios) {
+				Integer currentChannel =
+					radio.has("channel") && !radio.get("channel").isJsonNull()
+						? radio.get("channel").getAsInt()
+						: null;
+				if (currentChannel == null) {
+					continue;
+				}
+
+				String band = UCentralUtils.getBandFromChannel(currentChannel);
+				if (band == null) {
+					continue;
+				}
+				int newTxPower =
+					computeTxPowerForRadio(serialNumber, state, radio);
+
+				radioMap.put(band, newTxPower);
+			}
 			txPowerMap.put(serialNumber, radioMap);
 		}
 
