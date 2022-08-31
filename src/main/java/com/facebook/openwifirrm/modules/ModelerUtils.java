@@ -19,6 +19,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.facebook.openwifirrm.aggregators.Aggregator;
+import com.facebook.openwifirrm.aggregators.MeanAggregator;
+import com.facebook.openwifirrm.modules.Modeler.DataModel;
 import com.facebook.openwifirrm.ucentral.UCentralUtils.WifiScanEntry;
 import com.facebook.openwifirrm.ucentral.operationelement.HTOperationElement;
 import com.facebook.openwifirrm.ucentral.operationelement.VHTOperationElement;
@@ -236,32 +238,62 @@ public class ModelerUtils {
 	}
 
 	/**
-	 * For each AP, for each other AP that sent a wifiscan entry to that AP, this
-	 * method calculates an aggregate wifiscan entry with an aggregated RSSI.
+	 * For each AP, for each other AP that sent a wifiscan entry to that AP,
+	 * this method calculates an aggregate wifiscan entry with an aggregated
+	 * RSSI. If no non-obsolete entry exists, the latest wifiscan entry is used
+	 * instead.
 	 *
-	 * @param dataModel          the data model which includes the latest wifiscan
-	 *                           entries
-	 * @param obsoletionPeriodMs for each (scanning AP, responding AP) tuple, the
-	 *                           maximum amount of time (in milliseconds) it is
-	 *                           worth aggregating over, starting from the most
-	 *                           recent scan entry for that tuple, and working
-	 *                           backwards in time. An entry exactly
-	 *                           {@code obsoletionPeriodMs} ms earlier than the most
-	 *                           recent entry is considered non-obsolete (i.e., the
-	 *                           "non-obsolete" window is inclusive). Must be
-	 *                           non-negative.
+	 * @param dataModel          the data model which includes the latest
+	 *                           wifiscan entries
+	 * @param obsoletionPeriodMs for each (scanning AP, responding AP) tuple,
+	 *                           the maximum amount of time (in milliseconds) it
+	 *                           is worth aggregating over, starting from the
+	 *                           most recent scan entry for that tuple, and
+	 *                           working backwards in time. An entry exactly
+	 *                           {@code obsoletionPeriodMs} ms earlier than the
+	 *                           most recent entry is considered non-obsolete
+	 *                           (i.e., the "non-obsolete" window is inclusive).
+	 *                           Must be non-negative.
 	 * @param agg                an aggregator to calculate the aggregated RSSI
 	 *                           given recent wifiscan entries' RSSIs.
-	 * @return a map from AP serial number to a map from BSSID to an "aggregated
-	 *         wifiscan entry". This aggregated entry is the most recent entry with
-	 *         its {@code signal} attribute modified to be the aggregated signal
-	 *         value instead of the value in just the most recent entry for that (AP
-	 *         serial number, BSSID) tuple. The returned map will only contain APs
-	 *         which received at least one non-obsolete wifiscan entry from a BSS.
+	 * @return a map from AP serial number to a map from BSSID to a
+	 *         {@code WifiScanEntry} object. This object is an "aggregated
+	 *         wifiscan entry" unless there is no non-obsolete wifiscan entry,
+	 *         in which case the latest wifiscan entry is used. An aggregated
+	 *         entry is just the latest entry with its {@code signal} attribute
+	 *         modified to be the aggregated signal value instead of the value
+	 *         in just the most recent entry for that (AP serial number, BSSID)
+	 *         tuple. The returned map will only map an (AP, BSSID) to an entry
+	 *         if an least one entry from that BSSID to that AP exists in
+	 *         {@link DataModel#latestWifiScans}
 	 */
-	public static Map<String, Map<String, WifiScanEntry>> getAggregatedWifiScans(Modeler.DataModel dataModel,
-			long obsoletionPeriodMs,
-			Aggregator<Double> agg) {
+	public static Map<String, Map<String, WifiScanEntry>> getAggregatedWifiScans(
+		DataModel dataModel,
+		long obsoletionPeriodMs,
+		Aggregator<Double> agg
+	) {
+		return getAggregatedWifiScans(
+			dataModel,
+			obsoletionPeriodMs,
+			new MeanAggregator(),
+			System.currentTimeMillis()
+		);
+	}
+
+	/**
+	 * Compute aggregated wifiscans using a given reference time.
+	 *
+	 * @see #getAggregatedWifiScans(com.facebook.openwifirrm.modules.Modeler.DataModel,
+	 *      long, Aggregator)
+	 */
+	public static Map<String, Map<String, WifiScanEntry>> getAggregatedWifiScans(
+		Modeler.DataModel dataModel,
+		long obsoletionPeriodMs,
+		Aggregator<Double> agg,
+		long refTimeMs
+	) {
+		// this method and the getAggregatedWifiScans() which does not take in
+		// the ref time were separated to make testing easier
 		if (obsoletionPeriodMs < 0) {
 			throw new IllegalArgumentException("obsoletionPeriodMs must be non-negative.");
 		}
@@ -299,7 +331,7 @@ public class ModelerUtils {
 				WifiScanEntry mostRecentEntry = entries.get(0);
 				agg.reset();
 				for (WifiScanEntry entry : entries) {
-					if (mostRecentEntry.unixTimeMs - entry.unixTimeMs > obsoletionPeriodMs) {
+					if (refTimeMs - entry.unixTimeMs > obsoletionPeriodMs) {
 						// discard obsolete entries
 						break;
 					}
@@ -312,6 +344,10 @@ public class ModelerUtils {
 				}
 				if (agg.getCount() > 0) {
 					aggregatedWifiScans.get(serialNumber).get(bssid).signal = (int) Math.round(agg.getAggregate());
+				} else {
+					aggregatedWifiScans
+						.computeIfAbsent(serialNumber, k -> new HashMap<>())
+						.put(bssid, mostRecentEntry);
 				}
 			}
 		}
