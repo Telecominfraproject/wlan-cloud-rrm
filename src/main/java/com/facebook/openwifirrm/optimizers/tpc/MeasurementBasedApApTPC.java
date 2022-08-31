@@ -58,16 +58,6 @@ public class MeasurementBasedApApTPC extends TPC {
 	 */
 	public static final int DEFAULT_NTH_SMALLEST_RSSI = 0;
 
-	/**
-	 * Args key for coverage threshold
-	 */
-	public static final String ARG_COVERAGE_THRESHOLD = "coverageThreshold";
-
-	/**
-	 * Args key for nth smallest RSSI
-	 */
-	public static final String ARG_NTH_SMALLEST_RSSI = "nthSmallestRssi";
-
 	/** coverage threshold between APs, in dB */
 	private final int coverageThreshold;
 
@@ -81,26 +71,39 @@ public class MeasurementBasedApApTPC extends TPC {
 		DeviceDataManager deviceDataManager,
 		Map<String, String> args
 	) {
+		int coverageThreshold = DEFAULT_COVERAGE_THRESHOLD;
+		int nthSmallestRssi = DEFAULT_NTH_SMALLEST_RSSI;
 
-		if (
-			args.containsKey(ARG_COVERAGE_THRESHOLD) &&
-				args.containsKey(ARG_NTH_SMALLEST_RSSI)
-		) {
-			int coverageThreshold =
-				Integer.parseInt(args.get(ARG_COVERAGE_THRESHOLD));
-			int nthSmallestRssi =
-				Integer.parseInt(args.get(ARG_NTH_SMALLEST_RSSI));
-			return new MeasurementBasedApApTPC(
-				model,
-				zone,
-				deviceDataManager,
-				coverageThreshold,
-				nthSmallestRssi
-			);
-		} else {
-
-			return new MeasurementBasedApApTPC(model, zone, deviceDataManager);
+		String arg;
+		if ((arg = args.get("coverageThreshold")) != null) {
+			try {
+				coverageThreshold = Integer.parseInt(arg);
+			} catch (NumberFormatException e) {
+				logger.error(
+					"Invalid integer passed to parameter coverageThreshold, using default value: ",
+					e
+				);
+			}
 		}
+
+		if ((arg = args.get("nthSmallestRssi")) != null) {
+			try {
+				nthSmallestRssi = Integer.parseInt(arg);
+			} catch (NumberFormatException e) {
+				logger.error(
+					"Invalid integer passed to parameter nthSmallestRssi, using default value: ",
+					e
+				);
+			}
+		}
+
+		return new MeasurementBasedApApTPC(
+			model,
+			zone,
+			deviceDataManager,
+			coverageThreshold,
+			nthSmallestRssi
+		);
 	}
 
 	/** Constructor. */

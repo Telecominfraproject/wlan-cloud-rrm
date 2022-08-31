@@ -38,11 +38,8 @@ public class RandomChannelInitializer extends ChannelOptimizer {
 	/** The RRM algorithm ID. */
 	public static final String ALGORITHM_ID = "random";
 
-	/**
-	 * Args key for setting different channel per AP
-	 */
-	public static final String ARG_SET_DIFFERENT_CHANNEL_PER_AP =
-		"setDifferentChannelPerAp";
+	/** Default value for setDifferentChannelPerAp */
+	public static final boolean DEFAULT_SET_DIFFERENT_CHANNEL_PER_AP = false;
 
 	/** The PRNG instance. */
 	private final Random rng;
@@ -57,18 +54,19 @@ public class RandomChannelInitializer extends ChannelOptimizer {
 		DeviceDataManager deviceDataManager,
 		Map<String, String> args
 	) {
-		if (args.containsKey(ARG_SET_DIFFERENT_CHANNEL_PER_AP)) {
-			boolean setDifferentChannelPerAp =
-				args.get(ARG_SET_DIFFERENT_CHANNEL_PER_AP) == "true";
-			return new RandomChannelInitializer(
-				model,
-				zone,
-				deviceDataManager,
-				setDifferentChannelPerAp
-			);
-		} else {
-			return new RandomChannelInitializer(model, zone, deviceDataManager);
+		boolean setDifferentChannelPerAp = DEFAULT_SET_DIFFERENT_CHANNEL_PER_AP;
+
+		String arg;
+		if ((arg = args.get("rrm-algorithm-params")) != null) {
+			setDifferentChannelPerAp = Boolean.parseBoolean(arg);
 		}
+
+		return new RandomChannelInitializer(
+			model,
+			zone,
+			deviceDataManager,
+			setDifferentChannelPerAp
+		);
 	}
 
 	/** Constructor. */
@@ -77,7 +75,12 @@ public class RandomChannelInitializer extends ChannelOptimizer {
 		String zone,
 		DeviceDataManager deviceDataManager
 	) {
-		this(model, zone, deviceDataManager, false);
+		this(
+			model,
+			zone,
+			deviceDataManager,
+			DEFAULT_SET_DIFFERENT_CHANNEL_PER_AP
+		);
 	}
 
 	/** Constructor (allows setting different channel per AP) */

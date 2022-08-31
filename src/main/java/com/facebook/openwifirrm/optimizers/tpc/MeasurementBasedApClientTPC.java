@@ -42,11 +42,6 @@ public class MeasurementBasedApClientTPC extends TPC {
 	/** Default tx power. */
 	public static final int DEFAULT_TX_POWER = 10;
 
-	/**
-	 * Args key for targetMcs
-	 */
-	public static final String ARG_TARGET_MCS = "targetMcs";
-
 	/** Mapping of MCS index to required SNR (dB) in 802.11ac. */
 	private static final List<Double> MCS_TO_SNR = Collections.unmodifiableList(
 		Arrays.asList(
@@ -73,21 +68,33 @@ public class MeasurementBasedApClientTPC extends TPC {
 		DeviceDataManager deviceDataManager,
 		Map<String, String> args
 	) {
-		if (args.containsKey(ARG_TARGET_MCS)) {
-			int targetMcs = Integer.parseInt(args.get(ARG_TARGET_MCS));
-			return new MeasurementBasedApClientTPC(
-				model,
-				zone,
-				deviceDataManager,
-				targetMcs
-			);
-		} else {
-			return new MeasurementBasedApClientTPC(
-				model,
-				zone,
-				deviceDataManager
-			);
+		int targetMcs = DEFAULT_TARGET_MCS;
+
+		String arg;
+		if ((arg = args.get("targetMcs")) != null) {
+
+			try {
+				targetMcs = Integer.parseInt(arg);
+			} catch (NumberFormatException e) {
+				logger.error(
+					"Invalid integer passed to parameter targetMcs, using default value: ",
+					e
+				);
+			}
+			if (targetMcs < 0) {
+				logger.error(
+					"Invalid value passed for targetMcs - must be greater than 0. Using default value."
+				);
+				targetMcs = DEFAULT_TARGET_MCS;
+			}
 		}
+
+		return new MeasurementBasedApClientTPC(
+			model,
+			zone,
+			deviceDataManager,
+			targetMcs
+		);
 	}
 
 	/** Constructor (uses default target MCS index). */

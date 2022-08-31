@@ -11,9 +11,8 @@ selected channel. This is only for testing and re-initialization.
 
 Parameters:
 * `mode`: "random"
-* `args`:
-  * `setDifferentChannelPerAp`: If true, will set a different random channel per AP. If false, it will set the same random channel for all APs.
-    * values: true | false (default: false)
+* `setDifferentChannelPerAp`: If true, will set a different random channel per AP. If false, it will set the same random channel for all APs.
+    * values: `true`, `false` (default: `false`)
 
 ### `LeastUsedChannelOptimizer`
 This algorithm assigns the channel of the OWF APs based on the following logic:
@@ -29,7 +28,6 @@ This algorithm assigns the channel of the OWF APs based on the following logic:
 
 Parameters:
 * `mode`: "least_used"
-* `args:`
 
 ### `UnmanagedApAwareChannelOptimizer`
 Building on the least used channel assignment algorithm, this algorithm can
@@ -52,7 +50,6 @@ are based on the following logic:
 
 Parameters:
 * `mode`: "unmanaged_aware"
-* `args:`
 
 ## Transmit Power Control
 `TPC` and its subclasses implement various transmit power control algorithms,
@@ -64,9 +61,8 @@ the value. This is only for testing and re-initialization.
 
 Parameters:
 * `mode`: "random"
-* `args`:
-  * `setDifferentTxPowerPerAp`: If true, will set a different random tx power per AP. If false, it will set the same random tx power for all APs.
-    * values: true | false (default: false)
+* `setDifferentTxPowerPerAp`: If true, will set a different random tx power per AP. If false, it will set the same random tx power for all APs.
+    * values: `true`, `false` (default: `false`)
 
 ### `MeasurementBasedApClientTPC`
 This algorithm tries to assign the Tx power of the OWF APs based on the
@@ -80,8 +76,7 @@ each AP):
 
 Parameters:
 * `mode`: "measure_ap_client"
-* `args`:
-  * `targetMcs`: The target MCS index
+* `targetMcs`: The target MCS index
     * values: 0-9 (default: 8)
 
 ### `MeasurementBasedApApTPC`
@@ -98,8 +93,7 @@ levels of these APs will be determined by the following steps:
 
 Parameters:
 * `mode`: "measure_ap_ap"
-* `args`:
-  * `coverageThreshold`: Coverage threshold between APs in dBm
+* `coverageThreshold`: Coverage threshold between APs in dBm
     * values:  int < 30 (default: -70)
-  * `nthSmallestRssi`: the nth smallest RSSI that is used for tx power calculation
+* `nthSmallestRssi`: the nth smallest RSSI that is used for tx power calculation
     * values: int >= 0 (default: 0)

@@ -31,11 +31,9 @@ public class RandomTxPowerInitializer extends TPC {
 	/** The RRM algorithm ID. */
 	public static final String ALGORITHM_ID = "random";
 
-	/**
-	 * Args key for setting different tx power per AP
-	 */
-	public static final String ARG_SET_DIFFERENT_TX_POWER_PER_AP =
-		"setDifferentTxPowerPerAp";
+	/** Default value for setDifferentTxPowerPerAp */
+	public static final boolean DEFAULT_SET_DIFFERENT_TX_POWER_PER_AP =
+		false;
 
 	/** The PRNG instance. */
 	private final Random rng;
@@ -50,18 +48,20 @@ public class RandomTxPowerInitializer extends TPC {
 		DeviceDataManager deviceDataManager,
 		Map<String, String> args
 	) {
-		if (args.containsKey(ARG_SET_DIFFERENT_TX_POWER_PER_AP)) {
-			boolean setDifferentTxPowerPerAp =
-				args.get(ARG_SET_DIFFERENT_TX_POWER_PER_AP) == "true";
-			return new RandomTxPowerInitializer(
-				model,
-				zone,
-				deviceDataManager,
-				setDifferentTxPowerPerAp
-			);
-		} else {
-			return new RandomTxPowerInitializer(model, zone, deviceDataManager);
+		boolean setDifferentTxPowerPerAp =
+			DEFAULT_SET_DIFFERENT_TX_POWER_PER_AP;
+
+		String arg;
+		if ((arg = args.get("setDifferentTxPowerPerAp")) != null) {
+			setDifferentTxPowerPerAp = Boolean.parseBoolean(arg);
 		}
+
+		return new RandomTxPowerInitializer(
+			model,
+			zone,
+			deviceDataManager,
+			setDifferentTxPowerPerAp
+		);
 	}
 
 	/**
@@ -73,7 +73,12 @@ public class RandomTxPowerInitializer extends TPC {
 		String zone,
 		DeviceDataManager deviceDataManager
 	) {
-		this(model, zone, deviceDataManager, false);
+		this(
+			model,
+			zone,
+			deviceDataManager,
+			DEFAULT_SET_DIFFERENT_TX_POWER_PER_AP
+		);
 	}
 
 	/** Constructor (uses random tx power per AP). */
