@@ -79,9 +79,6 @@ public class ApiServerTest {
 		// Create config
 		this.rrmConfig = new RRMConfig();
 		rrmConfig.moduleConfig.apiServerParams.httpPort = TEST_PORT;
-		rrmConfig.moduleConfig.apiServerParams.useBasicAuth = false;
-		rrmConfig.moduleConfig.apiServerParams.basicAuthUser = "";
-		rrmConfig.moduleConfig.apiServerParams.basicAuthPassword = "";
 
 		// Create clients (null for now)
 		UCentralClient client = null;
