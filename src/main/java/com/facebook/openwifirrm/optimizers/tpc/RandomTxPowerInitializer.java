@@ -39,7 +39,6 @@ public class RandomTxPowerInitializer extends TPC {
 	/** The PRNG instance. */
 	private final Random rng;
 
-
 	/** Factory method to parse generic args map into the proper constructor */
 	public static RandomTxPowerInitializer makeWithArgs(
 		DataModel model,
@@ -53,7 +52,6 @@ public class RandomTxPowerInitializer extends TPC {
 			deviceDataManager
 		);
 	}
-
 
 	/** Constructor. */
 	public RandomTxPowerInitializer(

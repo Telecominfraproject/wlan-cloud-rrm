@@ -91,7 +91,7 @@ public class LocationBasedOptimalTPCTest {
 				new ArrayList<>(Arrays.asList(0, 1))
 			);
 		assertEquals(
-			new ArrayList<>(Arrays.asList(30, 30, 30, 30)),
+			new ArrayList<>(Arrays.asList(1, 1, 1, 1)),
 			txPowerList2
 		);
 	}

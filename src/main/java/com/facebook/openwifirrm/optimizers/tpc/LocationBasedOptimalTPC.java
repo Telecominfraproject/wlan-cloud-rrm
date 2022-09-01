@@ -143,7 +143,8 @@ public class LocationBasedOptimalTPC extends TPC {
 			}
 		}
 		if (optimalIndex == permutations.size()) {
-			return Collections.nCopies(numOfAPs, 30);
+			return Collections
+				.nCopies(numOfAPs, Collections.max(txPowerChoices));
 		} else {
 			return permutations.get(optimalIndex);
 		}
