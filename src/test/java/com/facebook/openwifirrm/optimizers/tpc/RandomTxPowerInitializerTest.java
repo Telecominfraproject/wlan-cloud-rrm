@@ -77,19 +77,19 @@ public class RandomTxPowerInitializerTest {
 			optimizer.computeTxPowerMap();
 
 		assertEquals(
-			20,
+			28,
 			txPowerMap.get(DEVICE_A).get(UCentralConstants.BAND_2G)
 		);
 		assertEquals(
-			11,
+			25,
 			txPowerMap.get(DEVICE_A).get(UCentralConstants.BAND_5G)
 		);
 		assertEquals(
-			2,
+			20,
 			txPowerMap.get(DEVICE_B).get(UCentralConstants.BAND_2G)
 		);
 		assertEquals(
-			2,
+			26,
 			txPowerMap.get(DEVICE_B).get(UCentralConstants.BAND_5G)
 		);
 	}
@@ -123,20 +123,20 @@ public class RandomTxPowerInitializerTest {
 			optimizer.computeTxPowerMap();
 
 		assertEquals(
-			txPowerMap.get(DEVICE_A).get(UCentralConstants.BAND_2G),
-			6
+			6,
+			txPowerMap.get(DEVICE_A).get(UCentralConstants.BAND_2G)
 		);
 		assertEquals(
-			txPowerMap.get(DEVICE_A).get(UCentralConstants.BAND_5G),
-			13
+			25,
+			txPowerMap.get(DEVICE_A).get(UCentralConstants.BAND_5G)
 		);
 		assertEquals(
-			txPowerMap.get(DEVICE_B).get(UCentralConstants.BAND_2G),
-			7
+			7,
+			txPowerMap.get(DEVICE_B).get(UCentralConstants.BAND_2G)
 		);
 		assertEquals(
-			txPowerMap.get(DEVICE_B).get(UCentralConstants.BAND_5G),
-			2
+			26,
+			txPowerMap.get(DEVICE_B).get(UCentralConstants.BAND_5G)
 		);
 	}
 }

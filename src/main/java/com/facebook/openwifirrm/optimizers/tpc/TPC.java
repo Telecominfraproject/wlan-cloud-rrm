@@ -35,7 +35,7 @@ public abstract class TPC {
 	public static final int MAX_TX_POWER = 30;
 
 	public static final List<Integer> DEFAULT_TX_POWER_CHOICES = IntStream
-		.rangeClosed(MIN_TX_POWER, MAX_TX_POWER)
+		.rangeClosed(20, MAX_TX_POWER)
 		.boxed()
 		.collect(Collectors.toList());
 
