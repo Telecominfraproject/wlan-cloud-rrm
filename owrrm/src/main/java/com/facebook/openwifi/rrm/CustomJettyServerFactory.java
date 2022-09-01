@@ -8,12 +8,19 @@
 
 package com.facebook.openwifi.rrm;
 
+import java.util.concurrent.TimeUnit;
+
 import org.eclipse.jetty.server.Connector;
+import org.eclipse.jetty.server.ForwardedRequestCustomizer;
+import org.eclipse.jetty.server.HttpConfiguration;
+import org.eclipse.jetty.server.HttpConnectionFactory;
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.util.thread.QueuedThreadPool;
 import org.eclipse.jetty.util.thread.ThreadPool;
 import spark.embeddedserver.jetty.JettyServerFactory;
 import spark.embeddedserver.jetty.SocketConnectorFactory;
+import spark.utils.Assert;
 
 /**
  * Creates Jetty Server instances. Majority of the logic is taken
@@ -26,6 +33,39 @@ public class CustomJettyServerFactory implements JettyServerFactory {
 	public CustomJettyServerFactory(int externalPort, int internalPort) {
 		this.externalPort = externalPort;
 		this.internalPort = internalPort;
+	}
+
+	/**
+	 * This is basically
+	 * spark.embeddedserver.jetty.SocketConnectorFactory.createSocketConnector,
+	 * the only difference being that we use a different constructor for the
+	 * Connector and that the private methods called are just inlined.
+	 *
+	 * Note: this is based on Spark 2.9.3 - seems to have changed in 2.9.4
+	 */
+	public Connector makeConnector(Server server, String host, int port) {
+		Assert.notNull(server, "'server' must not be null");
+		Assert.notNull(host, "'host' must not be null");
+
+		// spark.embeddedserver.jetty.SocketConnectorFactory.createHttpConnectionFactory
+		HttpConfiguration httpConfig = new HttpConfiguration();
+		httpConfig.setSecureScheme("https");
+		httpConfig.addCustomizer(new ForwardedRequestCustomizer());
+		HttpConnectionFactory httpConnectionFactory =
+			new HttpConnectionFactory(httpConfig);
+
+		ServerConnector connector = new ServerConnector(
+			server,
+			0, // acceptors, don't allocate separate threads for acceptor
+			0, // selectors, use default number
+			httpConnectionFactory
+		);
+		// spark.embeddedserver.jetty.SocketConnectorFactory.initializeConnector
+		connector.setIdleTimeout(TimeUnit.HOURS.toMillis(1));
+		connector.setHost(host);
+		connector.setPort(port);
+
+		return connector;
 	}
 
 	/**
@@ -54,10 +94,10 @@ public class CustomJettyServerFactory implements JettyServerFactory {
 			server = new Server();
 		}
 
-		Connector externalConnector = SocketConnectorFactory
-			.createSocketConnector(server, "localhost", externalPort);
-		Connector internalConnector = SocketConnectorFactory
-			.createSocketConnector(server, "localhost", internalPort);
+		Connector externalConnector =
+			makeConnector(server, "localhost", externalPort);
+		Connector internalConnector =
+			makeConnector(server, "localhost", internalPort);
 
 		server.setConnectors(
 			new Connector[] { externalConnector, internalConnector }
