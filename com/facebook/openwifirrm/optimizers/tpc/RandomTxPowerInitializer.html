@@ -26,8 +26,8 @@
     catch(err) {
     }
 //-->
-var data = {"i0":10,"i1":10};
-var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
+var data = {"i0":10,"i1":10,"i2":9};
+var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
 var tableTab = "tableTab";
@@ -168,6 +168,13 @@ extends <a href="TPC.html" title="class in com.facebook.openwifirrm.optimizers.t
 <div class="block">The RRM algorithm ID.</div>
 </td>
 </tr>
+<tr class="rowColor">
+<td class="colFirst"><code>static boolean</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#DEFAULT_SET_DIFFERENT_TX_POWER_PER_AP">DEFAULT_SET_DIFFERENT_TX_POWER_PER_AP</a></span></code></th>
+<td class="colLast">
+<div class="block">Default value for setDifferentTxPowerPerAp</div>
+</td>
+</tr>
 </table>
 <ul class="blockList">
 <li class="blockList"><a id="fields.inherited.from.class.com.facebook.openwifirrm.optimizers.tpc.TPC">
@@ -197,7 +204,8 @@ extends <a href="TPC.html" title="class in com.facebook.openwifirrm.optimizers.t
                         <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;zone,
                         <a href="../../DeviceDataManager.html" title="class in com.facebook.openwifirrm">DeviceDataManager</a>&nbsp;deviceDataManager)</code></th>
 <td class="colLast">
-<div class="block">Constructor (uses random tx power).</div>
+<div class="block">Constructor (uses random tx power per AP and allows passing in a custom
+ Random class to allow seeding).</div>
 </td>
 </tr>
 <tr class="rowColor">
@@ -232,7 +240,7 @@ extends <a href="TPC.html" title="class in com.facebook.openwifirrm.optimizers.t
 </a>
 <h3>Method Summary</h3>
 <table class="memberSummary">
-<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t4" class="tableTab"><span><a href="javascript:show(8);">Concrete Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
+<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t1" class="tableTab"><span><a href="javascript:show(1);">Static Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t4" class="tableTab"><span><a href="javascript:show(8);">Concrete Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
 <tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colSecond" scope="col">Method</th>
@@ -250,6 +258,16 @@ extends <a href="TPC.html" title="class in com.facebook.openwifirrm.optimizers.t
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getRandomTxPower()">getRandomTxPower</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Get a random tx power in [MIN_TX_POWER, MAX_TX_POWER], both inclusive</div>
+</td>
+</tr>
+<tr id="i2" class="altColor">
+<td class="colFirst"><code>static <a href="RandomTxPowerInitializer.html" title="class in com.facebook.openwifirrm.optimizers.tpc">RandomTxPowerInitializer</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#makeWithArgs(com.facebook.openwifirrm.modules.Modeler.DataModel,java.lang.String,com.facebook.openwifirrm.DeviceDataManager,java.util.Map)">makeWithArgs</a></span>&#8203;(<a href="../../modules/Modeler.DataModel.html" title="class in com.facebook.openwifirrm.modules">Modeler.DataModel</a>&nbsp;model,
+            <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;zone,
+            <a href="../../DeviceDataManager.html" title="class in com.facebook.openwifirrm">DeviceDataManager</a>&nbsp;deviceDataManager,
+            <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html?is-external=true" title="class or interface in java.util" class="externalLink">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>,&#8203;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&gt;&nbsp;args)</code></th>
+<td class="colLast">
+<div class="block">Factory method to parse generic args map into the proper constructor</div>
 </td>
 </tr>
 </table>
@@ -286,7 +304,7 @@ extends <a href="TPC.html" title="class in com.facebook.openwifirrm.optimizers.t
 <a id="ALGORITHM_ID">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>ALGORITHM_ID</h4>
 <pre>public static final&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> ALGORITHM_ID</pre>
@@ -294,6 +312,20 @@ extends <a href="TPC.html" title="class in com.facebook.openwifirrm.optimizers.t
 <dl>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../../../../constant-values.html#com.facebook.openwifirrm.optimizers.tpc.RandomTxPowerInitializer.ALGORITHM_ID">Constant Field Values</a></dd>
+</dl>
+</li>
+</ul>
+<a id="DEFAULT_SET_DIFFERENT_TX_POWER_PER_AP">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>DEFAULT_SET_DIFFERENT_TX_POWER_PER_AP</h4>
+<pre>public static final&nbsp;boolean DEFAULT_SET_DIFFERENT_TX_POWER_PER_AP</pre>
+<div class="block">Default value for setDifferentTxPowerPerAp</div>
+<dl>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="../../../../../constant-values.html#com.facebook.openwifirrm.optimizers.tpc.RandomTxPowerInitializer.DEFAULT_SET_DIFFERENT_TX_POWER_PER_AP">Constant Field Values</a></dd>
 </dl>
 </li>
 </ul>
@@ -316,7 +348,8 @@ extends <a href="TPC.html" title="class in com.facebook.openwifirrm.optimizers.t
 <pre>public&nbsp;RandomTxPowerInitializer&#8203;(<a href="../../modules/Modeler.DataModel.html" title="class in com.facebook.openwifirrm.modules">Modeler.DataModel</a>&nbsp;model,
                                 <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;zone,
                                 <a href="../../DeviceDataManager.html" title="class in com.facebook.openwifirrm">DeviceDataManager</a>&nbsp;deviceDataManager)</pre>
-<div class="block">Constructor (uses random tx power).</div>
+<div class="block">Constructor (uses random tx power per AP and allows passing in a custom
+ Random class to allow seeding).</div>
 </li>
 </ul>
 <a id="&lt;init&gt;(com.facebook.openwifirrm.modules.Modeler.DataModel,java.lang.String,com.facebook.openwifirrm.DeviceDataManager,boolean)">
@@ -357,6 +390,19 @@ extends <a href="TPC.html" title="class in com.facebook.openwifirrm.optimizers.t
 <!--   -->
 </a>
 <h3>Method Detail</h3>
+<a id="makeWithArgs(com.facebook.openwifirrm.modules.Modeler.DataModel,java.lang.String,com.facebook.openwifirrm.DeviceDataManager,java.util.Map)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>makeWithArgs</h4>
+<pre class="methodSignature">public static&nbsp;<a href="RandomTxPowerInitializer.html" title="class in com.facebook.openwifirrm.optimizers.tpc">RandomTxPowerInitializer</a>&nbsp;makeWithArgs&#8203;(<a href="../../modules/Modeler.DataModel.html" title="class in com.facebook.openwifirrm.modules">Modeler.DataModel</a>&nbsp;model,
+                                                    <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;zone,
+                                                    <a href="../../DeviceDataManager.html" title="class in com.facebook.openwifirrm">DeviceDataManager</a>&nbsp;deviceDataManager,
+                                                    <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html?is-external=true" title="class or interface in java.util" class="externalLink">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>,&#8203;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&gt;&nbsp;args)</pre>
+<div class="block">Factory method to parse generic args map into the proper constructor</div>
+</li>
+</ul>
 <a id="getRandomTxPower()">
 <!--   -->
 </a>

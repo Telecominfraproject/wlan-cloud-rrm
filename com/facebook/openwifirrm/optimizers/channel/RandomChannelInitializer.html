@@ -26,8 +26,8 @@
     catch(err) {
     }
 //-->
-var data = {"i0":10};
-var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
+var data = {"i0":10,"i1":9};
+var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
 var tableTab = "tableTab";
@@ -169,6 +169,13 @@ extends <a href="ChannelOptimizer.html" title="class in com.facebook.openwifirrm
 <div class="block">The RRM algorithm ID.</div>
 </td>
 </tr>
+<tr class="rowColor">
+<td class="colFirst"><code>static boolean</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#DEFAULT_SET_DIFFERENT_CHANNEL_PER_AP">DEFAULT_SET_DIFFERENT_CHANNEL_PER_AP</a></span></code></th>
+<td class="colLast">
+<div class="block">Default value for setDifferentChannelPerAp</div>
+</td>
+</tr>
 </table>
 <ul class="blockList">
 <li class="blockList"><a id="fields.inherited.from.class.com.facebook.openwifirrm.optimizers.channel.ChannelOptimizer">
@@ -205,7 +212,7 @@ extends <a href="ChannelOptimizer.html" title="class in com.facebook.openwifirrm
 <th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(com.facebook.openwifirrm.modules.Modeler.DataModel,java.lang.String,com.facebook.openwifirrm.DeviceDataManager,boolean)">RandomChannelInitializer</a></span>&#8203;(<a href="../../modules/Modeler.DataModel.html" title="class in com.facebook.openwifirrm.modules">Modeler.DataModel</a>&nbsp;model,
                         <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;zone,
                         <a href="../../DeviceDataManager.html" title="class in com.facebook.openwifirrm">DeviceDataManager</a>&nbsp;deviceDataManager,
-                        boolean&nbsp;setDifferentChannelsPerAp)</code></th>
+                        boolean&nbsp;setDifferentChannelPerAp)</code></th>
 <td class="colLast">
 <div class="block">Constructor (allows setting different channel per AP)</div>
 </td>
@@ -214,7 +221,7 @@ extends <a href="ChannelOptimizer.html" title="class in com.facebook.openwifirrm
 <th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(com.facebook.openwifirrm.modules.Modeler.DataModel,java.lang.String,com.facebook.openwifirrm.DeviceDataManager,boolean,java.util.Random)">RandomChannelInitializer</a></span>&#8203;(<a href="../../modules/Modeler.DataModel.html" title="class in com.facebook.openwifirrm.modules">Modeler.DataModel</a>&nbsp;model,
                         <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;zone,
                         <a href="../../DeviceDataManager.html" title="class in com.facebook.openwifirrm">DeviceDataManager</a>&nbsp;deviceDataManager,
-                        boolean&nbsp;setDifferentChannelsPerAp,
+                        boolean&nbsp;setDifferentChannelPerAp,
                         <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Random.html?is-external=true" title="class or interface in java.util" class="externalLink">Random</a>&nbsp;rng)</code></th>
 <td class="colLast">
 <div class="block">Constructor (allows setting different channel per AP and passing
@@ -233,7 +240,7 @@ extends <a href="ChannelOptimizer.html" title="class in com.facebook.openwifirrm
 </a>
 <h3>Method Summary</h3>
 <table class="memberSummary">
-<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t4" class="tableTab"><span><a href="javascript:show(8);">Concrete Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
+<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t1" class="tableTab"><span><a href="javascript:show(1);">Static Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t4" class="tableTab"><span><a href="javascript:show(8);">Concrete Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
 <tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colSecond" scope="col">Method</th>
@@ -244,6 +251,16 @@ extends <a href="ChannelOptimizer.html" title="class in com.facebook.openwifirrm
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#computeChannelMap()">computeChannelMap</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Compute channel assignments.</div>
+</td>
+</tr>
+<tr id="i1" class="rowColor">
+<td class="colFirst"><code>static <a href="RandomChannelInitializer.html" title="class in com.facebook.openwifirrm.optimizers.channel">RandomChannelInitializer</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#makeWithArgs(com.facebook.openwifirrm.modules.Modeler.DataModel,java.lang.String,com.facebook.openwifirrm.DeviceDataManager,java.util.Map)">makeWithArgs</a></span>&#8203;(<a href="../../modules/Modeler.DataModel.html" title="class in com.facebook.openwifirrm.modules">Modeler.DataModel</a>&nbsp;model,
+            <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;zone,
+            <a href="../../DeviceDataManager.html" title="class in com.facebook.openwifirrm">DeviceDataManager</a>&nbsp;deviceDataManager,
+            <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html?is-external=true" title="class or interface in java.util" class="externalLink">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>,&#8203;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&gt;&nbsp;args)</code></th>
+<td class="colLast">
+<div class="block">Factory method to parse generic args map into the proper constructor</div>
 </td>
 </tr>
 </table>
@@ -280,7 +297,7 @@ extends <a href="ChannelOptimizer.html" title="class in com.facebook.openwifirrm
 <a id="ALGORITHM_ID">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>ALGORITHM_ID</h4>
 <pre>public static final&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> ALGORITHM_ID</pre>
@@ -288,6 +305,20 @@ extends <a href="ChannelOptimizer.html" title="class in com.facebook.openwifirrm
 <dl>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../../../../constant-values.html#com.facebook.openwifirrm.optimizers.channel.RandomChannelInitializer.ALGORITHM_ID">Constant Field Values</a></dd>
+</dl>
+</li>
+</ul>
+<a id="DEFAULT_SET_DIFFERENT_CHANNEL_PER_AP">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>DEFAULT_SET_DIFFERENT_CHANNEL_PER_AP</h4>
+<pre>public static final&nbsp;boolean DEFAULT_SET_DIFFERENT_CHANNEL_PER_AP</pre>
+<div class="block">Default value for setDifferentChannelPerAp</div>
+<dl>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="../../../../../constant-values.html#com.facebook.openwifirrm.optimizers.channel.RandomChannelInitializer.DEFAULT_SET_DIFFERENT_CHANNEL_PER_AP">Constant Field Values</a></dd>
 </dl>
 </li>
 </ul>
@@ -322,7 +353,7 @@ extends <a href="ChannelOptimizer.html" title="class in com.facebook.openwifirrm
 <pre>public&nbsp;RandomChannelInitializer&#8203;(<a href="../../modules/Modeler.DataModel.html" title="class in com.facebook.openwifirrm.modules">Modeler.DataModel</a>&nbsp;model,
                                 <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;zone,
                                 <a href="../../DeviceDataManager.html" title="class in com.facebook.openwifirrm">DeviceDataManager</a>&nbsp;deviceDataManager,
-                                boolean&nbsp;setDifferentChannelsPerAp)</pre>
+                                boolean&nbsp;setDifferentChannelPerAp)</pre>
 <div class="block">Constructor (allows setting different channel per AP)</div>
 </li>
 </ul>
@@ -335,7 +366,7 @@ extends <a href="ChannelOptimizer.html" title="class in com.facebook.openwifirrm
 <pre>public&nbsp;RandomChannelInitializer&#8203;(<a href="../../modules/Modeler.DataModel.html" title="class in com.facebook.openwifirrm.modules">Modeler.DataModel</a>&nbsp;model,
                                 <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;zone,
                                 <a href="../../DeviceDataManager.html" title="class in com.facebook.openwifirrm">DeviceDataManager</a>&nbsp;deviceDataManager,
-                                boolean&nbsp;setDifferentChannelsPerAp,
+                                boolean&nbsp;setDifferentChannelPerAp,
                                 <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Random.html?is-external=true" title="class or interface in java.util" class="externalLink">Random</a>&nbsp;rng)</pre>
 <div class="block">Constructor (allows setting different channel per AP and passing
  in a custom Random class to allow seeding)</div>
@@ -351,6 +382,19 @@ extends <a href="ChannelOptimizer.html" title="class in com.facebook.openwifirrm
 <!--   -->
 </a>
 <h3>Method Detail</h3>
+<a id="makeWithArgs(com.facebook.openwifirrm.modules.Modeler.DataModel,java.lang.String,com.facebook.openwifirrm.DeviceDataManager,java.util.Map)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>makeWithArgs</h4>
+<pre class="methodSignature">public static&nbsp;<a href="RandomChannelInitializer.html" title="class in com.facebook.openwifirrm.optimizers.channel">RandomChannelInitializer</a>&nbsp;makeWithArgs&#8203;(<a href="../../modules/Modeler.DataModel.html" title="class in com.facebook.openwifirrm.modules">Modeler.DataModel</a>&nbsp;model,
+                                                    <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;zone,
+                                                    <a href="../../DeviceDataManager.html" title="class in com.facebook.openwifirrm">DeviceDataManager</a>&nbsp;deviceDataManager,
+                                                    <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html?is-external=true" title="class or interface in java.util" class="externalLink">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>,&#8203;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&gt;&nbsp;args)</pre>
+<div class="block">Factory method to parse generic args map into the proper constructor</div>
+</li>
+</ul>
 <a id="computeChannelMap()">
 <!--   -->
 </a>
