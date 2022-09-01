@@ -31,19 +31,54 @@ public class RandomTxPowerInitializer extends TPC {
 	/** The RRM algorithm ID. */
 	public static final String ALGORITHM_ID = "random";
 
+	/** Default value for setDifferentTxPowerPerAp */
+	public static final boolean DEFAULT_SET_DIFFERENT_TX_POWER_PER_AP =
+		false;
+
 	/** The PRNG instance. */
 	private final Random rng;
 
 	/** Whether to set a different value per AP or use a single value for all APs */
 	private final boolean setDifferentTxPowerPerAp;
 
-	/** Constructor (uses random tx power). */
+	/** Factory method to parse generic args map into the proper constructor */
+	public static RandomTxPowerInitializer makeWithArgs(
+		DataModel model,
+		String zone,
+		DeviceDataManager deviceDataManager,
+		Map<String, String> args
+	) {
+		boolean setDifferentTxPowerPerAp =
+			DEFAULT_SET_DIFFERENT_TX_POWER_PER_AP;
+
+		String arg;
+		if ((arg = args.get("setDifferentTxPowerPerAp")) != null) {
+			setDifferentTxPowerPerAp = Boolean.parseBoolean(arg);
+		}
+
+		return new RandomTxPowerInitializer(
+			model,
+			zone,
+			deviceDataManager,
+			setDifferentTxPowerPerAp
+		);
+	}
+
+	/**
+	 * Constructor (uses random tx power per AP and allows passing in a custom
+	 * Random class to allow seeding).
+	 */
 	public RandomTxPowerInitializer(
 		DataModel model,
 		String zone,
 		DeviceDataManager deviceDataManager
 	) {
-		this(model, zone, deviceDataManager, false);
+		this(
+			model,
+			zone,
+			deviceDataManager,
+			DEFAULT_SET_DIFFERENT_TX_POWER_PER_AP
+		);
 	}
 
 	/** Constructor (uses random tx power per AP). */

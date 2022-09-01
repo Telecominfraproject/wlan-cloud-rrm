@@ -64,6 +64,62 @@ public class MeasurementBasedApApTPC extends TPC {
 	/** Nth smallest RSSI (zero-indexed) is used for Tx power calculation */
 	private final int nthSmallestRssi; // TODO non-zero values untested
 
+	/** Factory method to parse generic args map into the proper constructor */
+	public static MeasurementBasedApApTPC makeWithArgs(
+		DataModel model,
+		String zone,
+		DeviceDataManager deviceDataManager,
+		Map<String, String> args
+	) {
+		int coverageThreshold = DEFAULT_COVERAGE_THRESHOLD;
+		int nthSmallestRssi = DEFAULT_NTH_SMALLEST_RSSI;
+
+		String arg;
+		if ((arg = args.get("coverageThreshold")) != null) {
+			try {
+				int parsedCoverageThreshold = Integer.parseInt(arg);
+				if (parsedCoverageThreshold > 30) {
+					logger.error(
+						"Invalid value passed for coverageThreshold - must be less than 30. Using default value."
+					);
+				} else {
+					coverageThreshold = parsedCoverageThreshold;
+				}
+			} catch (NumberFormatException e) {
+				logger.error(
+					"Invalid integer passed to parameter coverageThreshold, using default value",
+					e
+				);
+			}
+		}
+
+		if ((arg = args.get("nthSmallestRssi")) != null) {
+			try {
+				int parsedNthSmallestRssi = Integer.parseInt(arg);
+				if (parsedNthSmallestRssi < 0) {
+					logger.error(
+						"Invalid value passed for nthSmallestRssi - must be greater than 0. Using default value."
+					);
+				} else {
+					nthSmallestRssi = parsedNthSmallestRssi;
+				}
+			} catch (NumberFormatException e) {
+				logger.error(
+					"Invalid integer passed to parameter nthSmallestRssi, using default value",
+					e
+				);
+			}
+		}
+
+		return new MeasurementBasedApApTPC(
+			model,
+			zone,
+			deviceDataManager,
+			coverageThreshold,
+			nthSmallestRssi
+		);
+	}
+
 	/** Constructor. */
 	public MeasurementBasedApApTPC(
 		DataModel model,

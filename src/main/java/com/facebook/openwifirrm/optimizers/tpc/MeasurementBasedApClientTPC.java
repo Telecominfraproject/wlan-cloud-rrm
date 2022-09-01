@@ -61,6 +61,43 @@ public class MeasurementBasedApClientTPC extends TPC {
 	/** The target MCS index. */
 	private final int targetMcs;
 
+	/** Factory method to parse generic args map into the proper constructor */
+	public static MeasurementBasedApClientTPC makeWithArgs(
+		DataModel model,
+		String zone,
+		DeviceDataManager deviceDataManager,
+		Map<String, String> args
+	) {
+		int targetMcs = DEFAULT_TARGET_MCS;
+
+		String arg;
+		if ((arg = args.get("targetMcs")) != null) {
+
+			try {
+				int parsedTargetMcs = Integer.parseInt(arg);
+				if (targetMcs < 0) {
+					logger.error(
+						"Invalid value passed for targetMcs - must be greater than 0. Using default value."
+					);
+				} else {
+					targetMcs = parsedTargetMcs;
+				}
+			} catch (NumberFormatException e) {
+				logger.error(
+					"Invalid integer passed to parameter targetMcs, using default value",
+					e
+				);
+			}
+		}
+
+		return new MeasurementBasedApClientTPC(
+			model,
+			zone,
+			deviceDataManager,
+			targetMcs
+		);
+	}
+
 	/** Constructor (uses default target MCS index). */
 	public MeasurementBasedApClientTPC(
 		DataModel model,

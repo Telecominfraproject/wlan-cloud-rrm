@@ -38,6 +38,16 @@ public class LocationBasedOptimalTPC extends TPC {
 	/** The RRM algorithm ID. */
 	public static final String ALGORITHM_ID = "location_optimal";
 
+	/** Factory method to parse generic args map into the proper constructor */
+	public static LocationBasedOptimalTPC makeWithArgs(
+		DataModel model,
+		String zone,
+		DeviceDataManager deviceDataManager,
+		Map<String, String> args
+	) {
+		return new LocationBasedOptimalTPC(model, zone, deviceDataManager);
+	}
+
 	/** Constructor. */
 	public LocationBasedOptimalTPC(
 		DataModel model,
