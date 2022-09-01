@@ -15,11 +15,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import com.facebook.openwifirrm.DeviceConfig;
 import com.facebook.openwifirrm.DeviceDataManager;
 import com.facebook.openwifirrm.modules.ConfigManager;
 import com.facebook.openwifirrm.modules.Modeler.DataModel;
+import com.facebook.openwifirrm.ucentral.models.State;
+import com.google.gson.JsonObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -177,5 +182,40 @@ public abstract class TPC {
 
 		// Trigger config update now
 		configManager.wakeUp();
+	}
+
+	/**
+	 * Get AP serial numbers per channel.
+	 *
+	 * @return the map of channel to the list of serial numbers
+	 */
+	protected Map<Integer, List<String>> getApsPerChannel() {
+		Map<Integer, List<String>> apsPerChannel = new TreeMap<>();
+		for (Map.Entry<String, State> e : model.latestState.entrySet()) {
+			String serialNumber = e.getKey();
+			State state = e.getValue();
+
+			if (state.radios == null || state.radios.length == 0) {
+				logger.debug(
+					"Device {}: No radios found, skipping...",
+					serialNumber
+				);
+				continue;
+			}
+
+			for (JsonObject radio : state.radios) {
+				Integer currentChannel =
+					radio.has("channel") && !radio.get("channel").isJsonNull()
+						? radio.get("channel").getAsInt()
+						: null;
+				if (currentChannel == null) {
+					continue;
+				}
+				apsPerChannel
+					.computeIfAbsent(currentChannel, k -> new ArrayList<>())
+					.add(serialNumber);
+			}
+		}
+		return apsPerChannel;
 	}
 }

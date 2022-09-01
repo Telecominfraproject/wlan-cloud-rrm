@@ -431,6 +431,16 @@ public class MeasurementBasedApApTPCTest {
 	void testComputeTxPowerMapMultiBand() {
 		// test both bands simultaneously with different setups on each band
 		DataModel dataModel = createModel();
+		dataModel.latestState.remove(DEVICE_B);
+		dataModel.latestState.put(
+			DEVICE_B,
+			TestUtils.createState(
+				1,
+				DEFAULT_CHANNEL_WIDTH,
+				MAX_TX_POWER,
+				BSSID_B
+			)
+		);
 		// make device C not operate in the 5G band instead of dual band
 		dataModel.latestDeviceStatus.put(
 			DEVICE_C,
@@ -495,9 +505,9 @@ public class MeasurementBasedApApTPCTest {
 			0,
 			txPowerMap.get(DEVICE_A).get(UCentralConstants.BAND_5G)
 		);
-		assertEquals(
-			0,
-			txPowerMap.get(DEVICE_B).get(UCentralConstants.BAND_5G)
+		// deivce B does not have 5G radio
+		assertFalse(
+			txPowerMap.get(DEVICE_B).containsKey(UCentralConstants.BAND_5G)
 		);
 		// device C is not in the 5G band
 		assertFalse(

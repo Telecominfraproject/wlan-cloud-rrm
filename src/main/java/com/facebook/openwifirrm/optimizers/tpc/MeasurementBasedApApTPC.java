@@ -23,7 +23,6 @@ import org.slf4j.LoggerFactory;
 
 import com.facebook.openwifirrm.DeviceDataManager;
 import com.facebook.openwifirrm.modules.Modeler.DataModel;
-import com.facebook.openwifirrm.ucentral.UCentralConstants;
 import com.facebook.openwifirrm.ucentral.UCentralUtils;
 import com.facebook.openwifirrm.ucentral.UCentralUtils.WifiScanEntry;
 import com.facebook.openwifirrm.ucentral.models.State;
@@ -326,21 +325,24 @@ public class MeasurementBasedApApTPC extends TPC {
 	/**
 	 * Calculate new tx powers for the given band.
 	 *
-	 * @param band       "2G" or "5G"
+	 * @param channel channel
+	 * @param serialNumbers The serial numbers of the APs with the channel
 	 * @param txPowerMap this map from serial number to band to new tx power (dBm)
 	 *                   must be passed in empty, and it is filled in by this method
 	 *                   with the new tx powers.
 	 */
-	protected void buildTxPowerMapForBand(
-		String band,
+	protected void buildTxPowerMapForChannel(
+		int channel,
+		List<String> serialNumbers,
 		Map<String, Map<String, Integer>> txPowerMap
 	) {
+		String band = UCentralUtils.getBandFromChannel(channel);
 		Set<String> managedBSSIDs = getManagedBSSIDs(model);
 		Map<String, List<Integer>> bssidToRssiValues =
 			buildRssiMap(managedBSSIDs, model.latestWifiScans, band);
 		logger.debug("Starting TPC for the {} band", band);
 		Map<String, JsonArray> allStatuses = model.latestDeviceStatus;
-		for (String serialNumber : allStatuses.keySet()) {
+		for (String serialNumber : serialNumbers) {
 			State state = model.latestState.get(serialNumber);
 			if (
 				state == null || state.radios == null ||
@@ -409,8 +411,9 @@ public class MeasurementBasedApApTPC extends TPC {
 	@Override
 	public Map<String, Map<String, Integer>> computeTxPowerMap() {
 		Map<String, Map<String, Integer>> txPowerMap = new TreeMap<>();
-		for (String band : UCentralConstants.BANDS) {
-			buildTxPowerMapForBand(band, txPowerMap);
+		Map<Integer, List<String>> apsPerChannel = getApsPerChannel();
+		for (Map.Entry<Integer, List<String>> e : apsPerChannel.entrySet()) {
+			buildTxPowerMapForChannel(e.getKey(), e.getValue(), txPowerMap);
 		}
 		return txPowerMap;
 	}

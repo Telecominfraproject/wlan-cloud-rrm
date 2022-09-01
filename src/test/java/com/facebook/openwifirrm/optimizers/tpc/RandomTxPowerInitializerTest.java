@@ -19,7 +19,6 @@ import com.facebook.openwifirrm.DeviceDataManager;
 import com.facebook.openwifirrm.modules.Modeler.DataModel;
 import com.facebook.openwifirrm.optimizers.TestUtils;
 import com.facebook.openwifirrm.ucentral.UCentralConstants;
-import com.facebook.openwifirrm.ucentral.models.State;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -27,6 +26,7 @@ import java.util.Random;
 import java.util.TreeMap;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 @TestMethodOrder(OrderAnnotation.class)
 public class RandomTxPowerInitializerTest {
@@ -37,10 +37,15 @@ public class RandomTxPowerInitializerTest {
 	private static final String DEVICE_A = "aaaaaaaaaaaa";
 	private static final String DEVICE_B = "bbbbbbbbbbbb";
 
-	/** Create an empty device state object. */
-	private static State createState() {
-		return new State();
-	}
+	// Default channel width
+	private static final int DEFAULT_CHANNEL_WIDTH = 20;
+
+	// Default tx power
+	private static final int DEFAULT_TX_POWER = 20;
+
+	// bssids
+	private static final String BSSID_A = "aa:aa:aa:aa:aa:aa";
+	private static final String BSSID_B = "bb:bb:bb:bb:bb:bb";
 
 	/**
 	 * Creates a manager with 2 devices.
@@ -58,8 +63,28 @@ public class RandomTxPowerInitializerTest {
 	 */
 	private static DataModel createModel() {
 		DataModel dataModel = new DataModel();
-		dataModel.latestState.put(DEVICE_A, createState());
-		dataModel.latestState.put(DEVICE_B, createState());
+		dataModel.latestState.put(
+			DEVICE_A,
+			TestUtils.createState(
+				36,
+				DEFAULT_CHANNEL_WIDTH,
+				DEFAULT_TX_POWER,
+				BSSID_A,
+				2,
+				DEFAULT_CHANNEL_WIDTH,
+				DEFAULT_TX_POWER,
+				BSSID_A
+			)
+		);
+		dataModel.latestState.put(
+			DEVICE_B,
+			TestUtils.createState(
+				2,
+				DEFAULT_CHANNEL_WIDTH,
+				DEFAULT_TX_POWER,
+				BSSID_B
+			)
+		);
 		return dataModel;
 	}
 
@@ -77,11 +102,20 @@ public class RandomTxPowerInitializerTest {
 		Map<String, Map<String, Integer>> txPowerMap =
 			optimizer.computeTxPowerMap();
 
-		int txPower = 2;
-		for (String band : UCentralConstants.BANDS) {
-			assertEquals(txPower, txPowerMap.get(DEVICE_A).get(band));
-			assertEquals(txPower, txPowerMap.get(DEVICE_B).get(band));
-		}
+		int expectedTxPower = 2;
+		assertEquals(
+			expectedTxPower,
+			txPowerMap.get(DEVICE_A).get(UCentralConstants.BAND_2G)
+		);
+		assertEquals(
+			expectedTxPower,
+			txPowerMap.get(DEVICE_A).get(UCentralConstants.BAND_5G)
+		);
+		assertEquals(
+			expectedTxPower,
+			txPowerMap.get(DEVICE_B).get(UCentralConstants.BAND_2G)
+		);
+		assertNull(txPowerMap.get(DEVICE_B).get(UCentralConstants.BAND_5G));
 	}
 
 	@Test
@@ -118,16 +152,13 @@ public class RandomTxPowerInitializerTest {
 			txPowerMap.get(DEVICE_A).get(UCentralConstants.BAND_2G)
 		);
 		assertEquals(
-			13,
+			15,
 			txPowerMap.get(DEVICE_A).get(UCentralConstants.BAND_5G)
 		);
 		assertEquals(
 			7,
 			txPowerMap.get(DEVICE_B).get(UCentralConstants.BAND_2G)
 		);
-		assertEquals(
-			2,
-			txPowerMap.get(DEVICE_B).get(UCentralConstants.BAND_5G)
-		);
+		assertNull(txPowerMap.get(DEVICE_B).get(UCentralConstants.BAND_5G));
 	}
 }
