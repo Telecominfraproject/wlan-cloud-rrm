@@ -65,38 +65,28 @@ public class RandomTxPowerInitializerTest {
 
 	@Test
 	@Order(1)
-	void testSeededTxPower() throws Exception {
+	void testSeededSameTxPower() throws Exception {
 		TPC optimizer = new RandomTxPowerInitializer(
 			createModel(),
 			TEST_ZONE,
 			createDeviceDataManager(),
+			false,
 			new Random(0)
 		);
 
 		Map<String, Map<String, Integer>> txPowerMap =
 			optimizer.computeTxPowerMap();
 
-		assertEquals(
-			28,
-			txPowerMap.get(DEVICE_A).get(UCentralConstants.BAND_2G)
-		);
-		assertEquals(
-			25,
-			txPowerMap.get(DEVICE_A).get(UCentralConstants.BAND_5G)
-		);
-		assertEquals(
-			20,
-			txPowerMap.get(DEVICE_B).get(UCentralConstants.BAND_2G)
-		);
-		assertEquals(
-			26,
-			txPowerMap.get(DEVICE_B).get(UCentralConstants.BAND_5G)
-		);
+		int txPower = 20;
+		for (String band : UCentralConstants.BANDS) {
+			assertEquals(txPower, txPowerMap.get(DEVICE_A).get(band));
+			assertEquals(txPower, txPowerMap.get(DEVICE_B).get(band));
+		}
 	}
 
 	@Test
 	@Order(2)
-	void testRandomTxPowerInAvailableList() throws Exception {
+	void testSeededDifferentTxPowers() throws Exception {
 		DeviceDataManager deviceDataManager = createDeviceDataManager();
 		DeviceLayeredConfig deviceLayeredConfig = new DeviceLayeredConfig();
 		DeviceConfig deviceConfigA = new DeviceConfig();
@@ -117,6 +107,7 @@ public class RandomTxPowerInitializerTest {
 			createModel(),
 			TEST_ZONE,
 			deviceDataManager,
+			true,
 			new Random(0)
 		);
 		Map<String, Map<String, Integer>> txPowerMap =

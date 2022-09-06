@@ -10,6 +10,7 @@ package com.facebook.openwifirrm.optimizers.tpc;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -34,10 +35,14 @@ public abstract class TPC {
 	/** Maximum supported tx power (dBm), inclusive. */
 	public static final int MAX_TX_POWER = 30;
 
-	public static final List<Integer> DEFAULT_TX_POWER_CHOICES = IntStream
-		.rangeClosed(20, MAX_TX_POWER)
-		.boxed()
-		.collect(Collectors.toList());
+	/** Default tx power choices. */
+	public static final List<Integer> DEFAULT_TX_POWER_CHOICES =
+		Collections.unmodifiableList(
+			IntStream
+				.rangeClosed(20, MAX_TX_POWER)
+				.boxed()
+				.collect(Collectors.toList())
+		);
 
 	/** The input data model. */
 	protected final DataModel model;

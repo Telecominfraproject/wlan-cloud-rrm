@@ -8,6 +8,7 @@
 
 package com.facebook.openwifirrm.optimizers.tpc;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -39,6 +40,9 @@ public class RandomTxPowerInitializer extends TPC {
 	/** The PRNG instance. */
 	private final Random rng;
 
+	/** Whether to set a different value per AP or use a single value for all APs */
+	private final boolean setDifferentTxPowerPerAp;
+
 	/** Factory method to parse generic args map into the proper constructor */
 	public static RandomTxPowerInitializer makeWithArgs(
 		DataModel model,
@@ -46,14 +50,26 @@ public class RandomTxPowerInitializer extends TPC {
 		DeviceDataManager deviceDataManager,
 		Map<String, String> args
 	) {
+		boolean setDifferentTxPowerPerAp =
+			DEFAULT_SET_DIFFERENT_TX_POWER_PER_AP;
+
+		String arg;
+		if ((arg = args.get("setDifferentTxPowerPerAp")) != null) {
+			setDifferentTxPowerPerAp = Boolean.parseBoolean(arg);
+		}
+
 		return new RandomTxPowerInitializer(
 			model,
 			zone,
-			deviceDataManager
+			deviceDataManager,
+			setDifferentTxPowerPerAp
 		);
 	}
 
-	/** Constructor. */
+	/**
+	 * Constructor (uses random tx power per AP and allows passing in a custom
+	 * Random class to allow seeding).
+	 */
 	public RandomTxPowerInitializer(
 		DataModel model,
 		String zone,
@@ -63,37 +79,77 @@ public class RandomTxPowerInitializer extends TPC {
 			model,
 			zone,
 			deviceDataManager,
+			DEFAULT_SET_DIFFERENT_TX_POWER_PER_AP
+		);
+	}
+
+	/** Constructor (uses random tx power per AP). */
+	public RandomTxPowerInitializer(
+		DataModel model,
+		String zone,
+		DeviceDataManager deviceDataManager,
+		boolean setDifferentTxPowerPerAp
+	) {
+		this(
+			model,
+			zone,
+			deviceDataManager,
+			setDifferentTxPowerPerAp,
 			new Random()
 		);
 	}
 
 	/**
-	 * Constructor (allows passing in a custom Random class to allow seeding).
+	 * Constructor (uses random tx power per AP and allows passing in a custom
+	 * Random class to allow seeding).
 	 */
 	public RandomTxPowerInitializer(
 		DataModel model,
 		String zone,
 		DeviceDataManager deviceDataManager,
+		boolean setDifferentTxPowerPerAp,
 		Random rng
 	) {
 		super(model, zone, deviceDataManager);
+		this.setDifferentTxPowerPerAp = setDifferentTxPowerPerAp;
 		this.rng = rng;
 	}
 
 	@Override
 	public Map<String, Map<String, Integer>> computeTxPowerMap() {
+		Integer defaultTxPower = MAX_TX_POWER;
+		if (!setDifferentTxPowerPerAp) {
+			List<Integer> txPowerChoices =
+				new ArrayList<>(DEFAULT_TX_POWER_CHOICES);
+			for (String serialNumber : model.latestState.keySet()) {
+				for (String band : UCentralConstants.BANDS) {
+					txPowerChoices = updateTxPowerChoices(
+						band,
+						serialNumber,
+						txPowerChoices
+					);
+				}
+			}
+
+			defaultTxPower =
+				txPowerChoices.get(rng.nextInt(txPowerChoices.size()));
+			logger.info("Default power: {}", defaultTxPower);
+		}
+
 		Map<String, Map<String, Integer>> txPowerMap = new TreeMap<>();
 		for (String serialNumber : model.latestState.keySet()) {
 			Map<String, Integer> radioMap = new TreeMap<>();
 			for (String band : UCentralConstants.BANDS) {
-				List<Integer> availableTxPowersList =
-					updateTxPowerChoices(
+				Integer txPower = defaultTxPower;
+				if (setDifferentTxPowerPerAp) {
+					List<Integer> curTxPowerChoices = updateTxPowerChoices(
 						band,
 						serialNumber,
 						DEFAULT_TX_POWER_CHOICES
 					);
-				Integer txPower = availableTxPowersList
-					.get(rng.nextInt(availableTxPowersList.size()));
+					txPower = curTxPowerChoices
+						.get(rng.nextInt(curTxPowerChoices.size()));
+				}
 				radioMap.put(band, txPower);
 				logger.info(
 					"Device {} band {}: Assigning tx power = {}",
