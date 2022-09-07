@@ -241,11 +241,15 @@ public class RRMScheduler {
 		) {
 			logger.debug("Using default RRM algorithms for zone '{}'", zone);
 			config.schedule.algorithms = Arrays.asList(
-				new RRMAlgorithm(
-					RRMAlgorithm.AlgorithmType.OptimizeChannel.name()
+				RRMAlgorithm.parse(
+					RRMAlgorithm.AlgorithmType.OptimizeChannel.name(),
+					config.algorithmsParameters
+						.get(RRMAlgorithm.AlgorithmType.OptimizeChannel.name())
 				),
-				new RRMAlgorithm(
-					RRMAlgorithm.AlgorithmType.OptimizeTxPower.name()
+				RRMAlgorithm.parse(
+					RRMAlgorithm.AlgorithmType.OptimizeTxPower.name(),
+					config.algorithmsParameters
+						.get(RRMAlgorithm.AlgorithmType.OptimizeTxPower.name())
 				)
 			);
 		}
