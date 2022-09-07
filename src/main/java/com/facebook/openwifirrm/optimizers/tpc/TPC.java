@@ -39,7 +39,7 @@ public abstract class TPC {
 	public static final List<Integer> DEFAULT_TX_POWER_CHOICES =
 		Collections.unmodifiableList(
 			IntStream
-				.rangeClosed(20, MAX_TX_POWER)
+				.rangeClosed(MIN_TX_POWER, MAX_TX_POWER)
 				.boxed()
 				.collect(Collectors.toList())
 		);

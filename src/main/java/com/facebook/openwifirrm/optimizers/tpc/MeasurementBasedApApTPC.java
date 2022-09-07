@@ -277,38 +277,50 @@ public class MeasurementBasedApApTPC extends TPC {
 		int currentTxPower,
 		List<Integer> rssiValues,
 		int coverageThreshold,
-		int nthSmallestRssi
+		int nthSmallestRssi,
+		List<Integer> txPowerChoices
 	) {
+		int maxTxPower = Collections.max(txPowerChoices);
 		if (rssiValues.isEmpty()) {
-			return MAX_TX_POWER;
+			return maxTxPower;
 		}
+		int minTxPower = Collections.min(txPowerChoices);
 
 		// We may not optimize for the closest AP, but the Nth closest
 		int targetRSSI =
 			rssiValues.get(Math.min(rssiValues.size() - 1, nthSmallestRssi));
-		int txDelta = MAX_TX_POWER - currentTxPower;
+		int txDelta = maxTxPower - currentTxPower;
 		// Represents the highest possible RSSI to be received by that neighboring AP
 		int estimatedRSSI = targetRSSI + txDelta;
 		// this is the same as the following (easier to understand):
 		// newTxPower = (coverageThreshold - targetRSSI) + currentTxPower
-		int newTxPower = MAX_TX_POWER + coverageThreshold - estimatedRSSI;
+		int newTxPower = maxTxPower + coverageThreshold - estimatedRSSI;
 		// Bound tx_power by [MIN_TX_POWER, MAX_TX_POWER]
-		if (newTxPower > MAX_TX_POWER) {
+		if (newTxPower > maxTxPower) {
 			logger.info(
 				"Device {}: computed tx power > maximum {}, using maximum",
 				serialNumber,
-				MAX_TX_POWER
+				maxTxPower
 			);
-			newTxPower = MAX_TX_POWER;
-		} else if (newTxPower < MIN_TX_POWER) {
+			newTxPower = maxTxPower;
+		} else if (newTxPower < minTxPower) {
 			logger.info(
 				"Device {}: computed tx power < minimum {}, using minimum",
 				serialNumber,
-				MIN_TX_POWER
+				minTxPower
 			);
-			newTxPower = MIN_TX_POWER;
+			newTxPower = minTxPower;
 		}
-		return newTxPower;
+		int closestTxPower = txPowerChoices.get(0);
+		for (int txPowerChoice : txPowerChoices) {
+			if (
+				Math.abs(txPowerChoice - newTxPower) <
+					Math.abs(closestTxPower - newTxPower)
+			) {
+				closestTxPower = newTxPower;
+			}
+		}
+		return closestTxPower;
 	}
 
 	/**
@@ -374,12 +386,18 @@ public class MeasurementBasedApApTPC extends TPC {
 			for (int rssi : rssiValues) {
 				logger.debug("  Neighbor received RSSI: {}", rssi);
 			}
+			List<Integer> txPowerChoices = updateTxPowerChoices(
+				band,
+				serialNumber,
+				DEFAULT_TX_POWER_CHOICES
+			);
 			int newTxPower = computeTxPower(
 				serialNumber,
 				currentTxPower,
 				rssiValues,
 				coverageThreshold,
-				nthSmallestRssi
+				nthSmallestRssi,
+				txPowerChoices
 			);
 			logger.debug("  Old tx_power: {}", currentTxPower);
 			logger.debug("  New tx_power: {}", newTxPower);

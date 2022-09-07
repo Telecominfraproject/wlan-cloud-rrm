@@ -77,7 +77,7 @@ public class RandomTxPowerInitializerTest {
 		Map<String, Map<String, Integer>> txPowerMap =
 			optimizer.computeTxPowerMap();
 
-		int txPower = 20;
+		int txPower = 2;
 		for (String band : UCentralConstants.BANDS) {
 			assertEquals(txPower, txPowerMap.get(DEVICE_A).get(band));
 			assertEquals(txPower, txPowerMap.get(DEVICE_B).get(band));
@@ -118,7 +118,7 @@ public class RandomTxPowerInitializerTest {
 			txPowerMap.get(DEVICE_A).get(UCentralConstants.BAND_2G)
 		);
 		assertEquals(
-			25,
+			13,
 			txPowerMap.get(DEVICE_A).get(UCentralConstants.BAND_5G)
 		);
 		assertEquals(
@@ -126,7 +126,7 @@ public class RandomTxPowerInitializerTest {
 			txPowerMap.get(DEVICE_B).get(UCentralConstants.BAND_2G)
 		);
 		assertEquals(
-			26,
+			2,
 			txPowerMap.get(DEVICE_B).get(UCentralConstants.BAND_5G)
 		);
 	}

@@ -154,7 +154,8 @@ public class MeasurementBasedApClientTPC extends TPC {
 	private int computeTxPowerForRadio(
 		String serialNumber,
 		State state,
-		JsonObject radio
+		JsonObject radio,
+		List<Integer> txPowerChoices
 	) {
 		// Find current tx power and bandwidth
 		int currentTxPower =
@@ -166,6 +167,9 @@ public class MeasurementBasedApClientTPC extends TPC {
 				!radio.get("channel_width").isJsonNull()
 					? radio.get("channel_width").getAsInt()
 					: 20);
+		Collections.sort(txPowerChoices);
+		int minTxPower = txPowerChoices.get(0);
+		int maxTxPower = txPowerChoices.get(txPowerChoices.size() - 1);
 
 		// Find minimum client RSSI
 		List<Integer> clientRssiList = new ArrayList<>();
@@ -196,12 +200,12 @@ public class MeasurementBasedApClientTPC extends TPC {
 		// TODO: revisit this part to have a better logic
 		if (clientRssiList.isEmpty()) {
 			logger.info(
-				"Device {}: no clients, assigning default tx power {} (was {})",
+				"Device {}: no clients, assigning minimal possible tx power {} (was {})",
 				serialNumber,
-				DEFAULT_TX_POWER,
+				minTxPower,
 				currentTxPower
 			);
-			return DEFAULT_TX_POWER; // no clients
+			return minTxPower; // no clients
 		}
 		int clientRssi = Collections.min(clientRssiList);
 
@@ -226,12 +230,12 @@ public class MeasurementBasedApClientTPC extends TPC {
 				newTxPower
 			);
 
-			// If this exceeds max tx power, repeat for (MCS - 1)
-			if (newTxPower > MAX_TX_POWER) {
+			// If this exceeds max possible tx power, repeat for (MCS - 1)
+			if (newTxPower > maxTxPower) {
 				logger.info(
 					"Device {}: computed tx power > maximum {}, trying with mcs - 1",
 					serialNumber,
-					MAX_TX_POWER
+					maxTxPower
 				);
 				if (--mcs >= 0) {
 					continue;
@@ -239,25 +243,42 @@ public class MeasurementBasedApClientTPC extends TPC {
 					logger.info(
 						"Device {}: already at lowest MCS, setting to minimum tx power {}",
 						serialNumber,
-						MIN_TX_POWER
+						minTxPower
 					);
-					newTxPower = MIN_TX_POWER;
+					newTxPower = minTxPower;
 				}
 			}
 
 			// If this is below min tx power, set to min
-			else if (newTxPower < MIN_TX_POWER) {
+			else if (newTxPower < minTxPower) {
 				logger.info(
 					"Device {}: computed tx power < minimum {}, using minimum",
 					serialNumber,
-					MIN_TX_POWER
+					minTxPower
 				);
-				newTxPower = MIN_TX_POWER;
+				newTxPower = minTxPower;
 			}
 
 			break;
 		} while (true);
 
+		int txPowerIndex = 0;
+		for (
+			txPowerIndex = 0;
+			txPowerIndex < txPowerChoices.size() &&
+				txPowerChoices.get(txPowerIndex) < newTxPower;
+			txPowerIndex++
+		) {
+
+		}
+		if (
+			txPowerIndex > 0 && Math.abs(
+				txPowerChoices.get(txPowerIndex - 1) - newTxPower
+			) < Math.abs(txPowerChoices.get(txPowerIndex) - newTxPower)
+		) {
+			txPowerIndex--;
+		}
+		newTxPower = txPowerChoices.get(txPowerIndex);
 		logger.info(
 			"Device {}: assigning tx power = {} (was {})",
 			serialNumber,
@@ -297,8 +318,18 @@ public class MeasurementBasedApClientTPC extends TPC {
 				if (band == null) {
 					continue;
 				}
+				List<Integer> txPowerChoices = updateTxPowerChoices(
+					band,
+					serialNumber,
+					DEFAULT_TX_POWER_CHOICES
+				);
 				int newTxPower =
-					computeTxPowerForRadio(serialNumber, state, radio);
+					computeTxPowerForRadio(
+						serialNumber,
+						state,
+						radio,
+						txPowerChoices
+					);
 
 				radioMap.put(band, newTxPower);
 			}

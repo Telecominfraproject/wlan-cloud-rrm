@@ -10,10 +10,14 @@ package com.facebook.openwifirrm.optimizers.tpc;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.util.Arrays;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.TreeSet;
 
+import com.facebook.openwifirrm.DeviceConfig;
+import com.facebook.openwifirrm.DeviceLayeredConfig;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -82,7 +86,7 @@ public class MeasurementBasedApClientTPCTest {
 
 		// Device A: no clients
 		assertEquals(
-			10,
+			0,
 			txPowerMap.get(deviceA).get(UCentralConstants.BAND_5G)
 		);
 
@@ -180,5 +184,79 @@ public class MeasurementBasedApClientTPCTest {
 		assertEquals(expectedBands, txPowerMap.get(deviceB).keySet());
 		expectedBands.remove(UCentralConstants.BAND_5G);
 		assertEquals(expectedBands, txPowerMap.get(deviceD).keySet());
+	}
+
+	@Test
+	@Order(3)
+	void testTxPowerChoices() throws Exception {
+		final String deviceA = "aaaaaaaaaaaa";
+		final String deviceB = "bbbbbbbbbbbb";
+		final String deviceC = "cccccccccccc";
+
+		DeviceDataManager deviceDataManager = new DeviceDataManager();
+		deviceDataManager.setTopology(
+			TestUtils.createTopology(
+				TEST_ZONE,
+				deviceA,
+				deviceB,
+				deviceC
+			)
+		);
+		DeviceLayeredConfig deviceLayeredConfig = new DeviceLayeredConfig();
+		DeviceConfig deviceConfigA = new DeviceConfig();
+		deviceConfigA.allowedTxPowers = new TreeMap<>();
+		deviceConfigA.allowedTxPowers
+			.put(UCentralConstants.BAND_5G, Arrays.asList(20, 21, 22, 23, 24));
+		deviceLayeredConfig.apConfig.put(deviceA, deviceConfigA);
+		DeviceConfig deviceConfigB = new DeviceConfig();
+		deviceConfigB.allowedTxPowers = new TreeMap<>();
+		deviceConfigB.allowedTxPowers.put(
+			UCentralConstants.BAND_5G,
+			Arrays.asList(20, 21, 22, 23, 24, 25)
+		);
+		deviceConfigB.userTxPowers = new TreeMap<>();
+		deviceConfigB.userTxPowers.put(UCentralConstants.BAND_5G, 7);
+		deviceLayeredConfig.apConfig.put(deviceB, deviceConfigB);
+		deviceDataManager.setDeviceLayeredConfig(deviceLayeredConfig);
+
+		DataModel dataModel = new DataModel();
+		dataModel.latestState.put(
+			deviceA,
+			TestUtils.createState(36, 20, 20, null, new int[] {})
+		);
+		dataModel.latestState.put(
+			deviceB,
+			TestUtils.createState(36, 20, 20, "", new int[] { -65 })
+		);
+		dataModel.latestState.put(
+			deviceC,
+			TestUtils.createState(36, 40, 21, null, new int[] { -65, -73, -58 })
+		);
+
+		TPC optimizer = new MeasurementBasedApClientTPC(
+			dataModel,
+			TEST_ZONE,
+			deviceDataManager
+		);
+		Map<String, Map<String, Integer>> txPowerMap =
+			optimizer.computeTxPowerMap();
+
+		// Device A: no clients, so the min possible tx power is used
+		assertEquals(
+			20,
+			txPowerMap.get(deviceA).get(UCentralConstants.BAND_5G)
+		);
+
+		// Device B: User tx power is 7
+		assertEquals(
+			7,
+			txPowerMap.get(deviceB).get(UCentralConstants.BAND_5G)
+		);
+
+		// Device C: 3 clients with min. RSSI -73
+		assertEquals(
+			26,
+			txPowerMap.get(deviceC).get(UCentralConstants.BAND_5G)
+		);
 	}
 }

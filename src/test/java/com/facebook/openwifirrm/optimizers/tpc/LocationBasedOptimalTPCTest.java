@@ -224,7 +224,7 @@ public class LocationBasedOptimalTPCTest {
 			expected2.computeIfAbsent(deviceC, k -> new TreeMap<>())
 				.put(
 					band,
-					20
+					0
 				);
 		}
 
