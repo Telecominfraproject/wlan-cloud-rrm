@@ -35,6 +35,8 @@ import com.facebook.openwifirrm.ucentral.prov.models.EntityList;
 import com.facebook.openwifirrm.ucentral.prov.models.InventoryTagList;
 import com.facebook.openwifirrm.ucentral.prov.models.SerialNumberList;
 import com.facebook.openwifirrm.ucentral.prov.models.VenueList;
+import com.facebook.openwifirrm.ucentral.prov.models.RrmDetails;
+import com.facebook.openwifirrm.ucentral.prov.models.InventoryConfigApplyResult;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
@@ -584,6 +586,53 @@ public class UCentralClient {
 		} catch (JsonSyntaxException e) {
 			String errMsg = String.format(
 				"Failed to deserialize to SerialNumberList: %s",
+				response.getBody()
+			);
+			logger.error(errMsg, e);
+			return null;
+		}
+	}
+
+	/** Retrieve the RRM config and schedule for a specific AP */
+	public RrmDetails getProvInventoryRrmDetails(String serial) {
+		Map<String, Object> parameters = new HashMap<>();
+		parameters.put("rrmSettings", true);
+		HttpResponse<String> response =
+			httpGet(String.format("inventory/%s", serial), OWPROV_SERVICE, parameters);
+		if (!response.isSuccess()) {
+			logger.error("Error: {}", response.getBody());
+			return null;
+		}
+		try {
+			return gson.fromJson(response.getBody(), RrmDetails.class);
+		} catch (JsonSyntaxException e) {
+			String errMsg = String.format(
+				"Failed to deserialize to RrmDetails: %s",
+				response.getBody()
+			);
+			logger.error(errMsg, e);
+			return null;
+		}
+	}
+
+	/** Retrieve a resolved RRM config for a specific AP */
+	public InventoryConfigApplyResult getProvInventoryGetConfigApplyResult(
+		String serial
+	) {
+		Map<String, Object> parameters = new HashMap<>();
+		parameters.put("resolveConfig", true);
+		HttpResponse<String> response =
+			httpGet(String.format("inventory/%s", serial), OWPROV_SERVICE, parameters);
+		if (!response.isSuccess()) {
+			logger.error("Error: {}", response.getBody());
+			return null;
+		}
+		try {
+			return gson
+				.fromJson(response.getBody(), InventoryConfigApplyResult.class);
+		} catch (JsonSyntaxException e) {
+			String errMsg = String.format(
+				"Failed to deserialize to InventoryConfigApplyResult: %s",
 				response.getBody()
 			);
 			logger.error(errMsg, e);
