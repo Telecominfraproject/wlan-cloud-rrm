@@ -32,11 +32,11 @@ import com.facebook.openwifirrm.ucentral.gw.models.SystemInfoResults;
 import com.facebook.openwifirrm.ucentral.gw.models.TokenValidationResult;
 import com.facebook.openwifirrm.ucentral.gw.models.WifiScanRequest;
 import com.facebook.openwifirrm.ucentral.prov.models.EntityList;
+import com.facebook.openwifirrm.ucentral.prov.models.InventoryConfigApplyResult;
 import com.facebook.openwifirrm.ucentral.prov.models.InventoryTagList;
+import com.facebook.openwifirrm.ucentral.prov.models.RRMDetails;
 import com.facebook.openwifirrm.ucentral.prov.models.SerialNumberList;
 import com.facebook.openwifirrm.ucentral.prov.models.VenueList;
-import com.facebook.openwifirrm.ucentral.prov.models.RRMDetails;
-import com.facebook.openwifirrm.ucentral.prov.models.InventoryConfigApplyResult;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 

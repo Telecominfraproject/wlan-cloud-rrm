@@ -19,15 +19,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.facebook.openwifirrm.DeviceConfig;
-import com.facebook.openwifirrm.RRMAlgorithm;
 import com.facebook.openwifirrm.DeviceDataManager;
 import com.facebook.openwifirrm.DeviceTopology;
+import com.facebook.openwifirrm.RRMAlgorithm;
 import com.facebook.openwifirrm.RRMConfig.ModuleConfig.ProvMonitorParams;
 import com.facebook.openwifirrm.ucentral.UCentralClient;
 import com.facebook.openwifirrm.ucentral.prov.models.InventoryTag;
 import com.facebook.openwifirrm.ucentral.prov.models.InventoryTagList;
-import com.facebook.openwifirrm.ucentral.prov.models.RRMDetails;
 import com.facebook.openwifirrm.ucentral.prov.models.RRMAlgorithmDetails;
+import com.facebook.openwifirrm.ucentral.prov.models.RRMDetails;
 import com.facebook.openwifirrm.ucentral.prov.models.SerialNumberList;
 import com.facebook.openwifirrm.ucentral.prov.models.Venue;
 import com.facebook.openwifirrm.ucentral.prov.models.VenueList;
@@ -115,10 +115,6 @@ public class ProvMonitor implements Runnable {
 			logger.error("Failed to fetch inventory from owprov");
 			return;
 		}
-
-		InventoryTagList list =
-			client.getProvInventoryGetConfigApplyResult("903cb36ae30e");
-		list = client.getProvInventoryGetConfigApplyResult("903cb36ae3cc");
 
 		// fetch the RRM details for each AP that has RRM enabled
 		Map<String, RRMDetails> rrmDetails = new TreeMap<String, RRMDetails>();
