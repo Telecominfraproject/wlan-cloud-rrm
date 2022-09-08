@@ -8,7 +8,7 @@
 
 package com.facebook.openwifirrm.ucentral.prov.models;
 
-public class RrmAlgorithmDetails {
+public class RRMAlgorithmDetails {
 	public String name;
 	public String parameters;
 }

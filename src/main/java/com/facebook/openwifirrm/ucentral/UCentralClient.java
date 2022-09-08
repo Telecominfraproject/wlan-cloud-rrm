@@ -35,7 +35,7 @@ import com.facebook.openwifirrm.ucentral.prov.models.EntityList;
 import com.facebook.openwifirrm.ucentral.prov.models.InventoryTagList;
 import com.facebook.openwifirrm.ucentral.prov.models.SerialNumberList;
 import com.facebook.openwifirrm.ucentral.prov.models.VenueList;
-import com.facebook.openwifirrm.ucentral.prov.models.RrmDetails;
+import com.facebook.openwifirrm.ucentral.prov.models.RRMDetails;
 import com.facebook.openwifirrm.ucentral.prov.models.InventoryConfigApplyResult;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -594,7 +594,7 @@ public class UCentralClient {
 	}
 
 	/** Retrieve the RRM config and schedule for a specific AP */
-	public RrmDetails getProvInventoryRrmDetails(String serial) {
+	public RRMDetails getProvInventoryRrmDetails(String serial) {
 		Map<String, Object> parameters = new HashMap<>();
 		parameters.put("rrmSettings", true);
 		HttpResponse<String> response =
@@ -603,11 +603,12 @@ public class UCentralClient {
 			logger.error("Error: {}", response.getBody());
 			return null;
 		}
+
 		try {
-			return gson.fromJson(response.getBody(), RrmDetails.class);
+			return gson.fromJson(response.getBody(), RRMDetails.class);
 		} catch (JsonSyntaxException e) {
 			String errMsg = String.format(
-				"Failed to deserialize to RrmDetails: %s",
+				"Failed to deserialize to RRMDetails: %s",
 				response.getBody()
 			);
 			logger.error(errMsg, e);
@@ -615,8 +616,8 @@ public class UCentralClient {
 		}
 	}
 
-	/** Retrieve a resolved RRM config for a specific AP */
-	public InventoryConfigApplyResult getProvInventoryGetConfigApplyResult(
+	/** Retrieve resolved inventory */
+	public InventoryTagList getProvInventoryGetConfigApplyResult(
 		String serial
 	) {
 		Map<String, Object> parameters = new HashMap<>();
@@ -628,11 +629,27 @@ public class UCentralClient {
 			return null;
 		}
 		try {
-			return gson
+			InventoryConfigApplyResult result = gson
 				.fromJson(response.getBody(), InventoryConfigApplyResult.class);
+			if (result.warnings != null) {
+				logger.error(
+					"Encountered warnings fetching applied config: {}",
+					result.warnings
+				);
+			}
+
+			if (result.errors != null) {
+				logger.error(
+					"Encountered errors fetching applied config: {}",
+					result.errors
+				);
+			}
+
+			return gson
+				.fromJson(result.appliedConfiguration, InventoryTagList.class);
 		} catch (JsonSyntaxException e) {
 			String errMsg = String.format(
-				"Failed to deserialize to InventoryConfigApplyResult: %s",
+				"Failed to deserialize to InventoryConfigApplyResult or InventoryTagList: %s",
 				response.getBody()
 			);
 			logger.error(errMsg, e);

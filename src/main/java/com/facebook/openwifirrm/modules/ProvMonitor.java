@@ -8,21 +8,26 @@
 
 package com.facebook.openwifirrm.modules;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.TreeMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.facebook.openwifirrm.DeviceConfig;
+import com.facebook.openwifirrm.RRMAlgorithm;
 import com.facebook.openwifirrm.DeviceDataManager;
 import com.facebook.openwifirrm.DeviceTopology;
 import com.facebook.openwifirrm.RRMConfig.ModuleConfig.ProvMonitorParams;
 import com.facebook.openwifirrm.ucentral.UCentralClient;
 import com.facebook.openwifirrm.ucentral.prov.models.InventoryTag;
 import com.facebook.openwifirrm.ucentral.prov.models.InventoryTagList;
+import com.facebook.openwifirrm.ucentral.prov.models.RRMDetails;
+import com.facebook.openwifirrm.ucentral.prov.models.RRMAlgorithmDetails;
 import com.facebook.openwifirrm.ucentral.prov.models.SerialNumberList;
 import com.facebook.openwifirrm.ucentral.prov.models.Venue;
 import com.facebook.openwifirrm.ucentral.prov.models.VenueList;
@@ -105,25 +110,45 @@ public class ProvMonitor implements Runnable {
 		// ignoring "entity" completely
 		InventoryTagList inventory = client.getProvInventory();
 		SerialNumberList inventoryForRRM = client.getProvInventoryForRRM();
-		VenueList venueList = client.getProvVenues();
 		//EntityList entityList = client.getProvEntities();
 		if (inventory == null || inventoryForRRM == null) {
 			logger.error("Failed to fetch inventory from owprov");
 			return;
 		}
+
+		InventoryTagList list =
+			client.getProvInventoryGetConfigApplyResult("903cb36ae30e");
+		list = client.getProvInventoryGetConfigApplyResult("903cb36ae3cc");
+
+		// fetch the RRM details for each AP that has RRM enabled
+		Map<String, RRMDetails> rrmDetails = new TreeMap<String, RRMDetails>();
+		for (String serialNumber : inventoryForRRM.serialNumbers) {
+			RRMDetails details =
+				client.getProvInventoryRrmDetails(serialNumber);
+			if (details == null) {
+				logger
+					.error("Could not fetch RRM details for {}", serialNumber);
+				continue;
+			}
+
+			rrmDetails.put(serialNumber, details);
+		}
+
+		VenueList venueList = client.getProvVenues();
 		if (venueList == null) {
 			logger.error("Failed to fetch venues from owprov");
 			return;
 		}
 
 		// Sync data
-		syncDataToProv(inventory, inventoryForRRM, venueList);
+		syncDataToProv(inventory, inventoryForRRM, rrmDetails, venueList);
 	}
 
 	/** Sync RRM topology and device configs with owprov data. */
 	protected void syncDataToProv(
 		InventoryTagList inventory,
 		SerialNumberList inventoryForRRM,
+		Map<String, RRMDetails> rrmDetails,
 		VenueList venueList
 	) {
 		// TODO sync RRM schedules per venue
@@ -173,6 +198,7 @@ public class ProvMonitor implements Runnable {
 					cfg.enableRRM =
 						cfg.enableConfig = cfg.enableWifiScan = false;
 				}
+
 				// Pass 2: re-enable RRM on specific devices
 				for (String serialNumber : inventoryForRRM.serialNumbers) {
 					DeviceConfig cfg = configMap.computeIfAbsent(
@@ -181,6 +207,31 @@ public class ProvMonitor implements Runnable {
 					);
 					cfg.enableRRM =
 						cfg.enableConfig = cfg.enableWifiScan = true;
+
+					// read the details from the config
+					RRMDetails details = rrmDetails.get(serialNumber);
+					// if we couldn't fetch the information directly, it must be inherited
+					// TODO use resolved config to handle this case
+					if (details == null) {
+						logger.error(
+							"No RRM details available for {} even though it has RRM enabled",
+							serialNumber
+						);
+						continue;
+					}
+
+					cfg.schedule.cron = details.schedule;
+					cfg.schedule.algorithms = new ArrayList<RRMAlgorithm>();
+					for (
+						RRMAlgorithmDetails algorithmDetails : details.algorithms
+					) {
+						cfg.schedule.algorithms.add(
+							RRMAlgorithm.parse(
+								algorithmDetails.name,
+								algorithmDetails.parameters
+							)
+						);
+					}
 				}
 			}
 		);

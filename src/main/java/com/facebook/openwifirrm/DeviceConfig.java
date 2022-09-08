@@ -30,9 +30,6 @@ public class DeviceConfig {
 	/** The RRM schedule (if enabled), only applied at the zone or network layer */
 	public RRMSchedule schedule;
 
-	/** earameters for the algorithms, mapping algorithm name to string of a list of parameters */
-	public Map<String, String> algorithmsParameters;
-
 	/** Whether pushing device config is enabled */
 	public Boolean enableConfig;
 
@@ -84,7 +81,6 @@ public class DeviceConfig {
 
 		config.enableRRM = true;
 		config.schedule = null;
-		config.algorithmsParameters = null;
 		config.enableConfig = true;
 		config.enableWifiScan = true;
 		config.boundary = null;

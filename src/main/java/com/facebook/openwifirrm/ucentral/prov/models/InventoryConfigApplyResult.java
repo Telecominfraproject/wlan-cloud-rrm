@@ -14,5 +14,5 @@ public class InventoryConfigApplyResult {
 	public String appliedConfiguration;
 	public List<String> errors;
 	public List<String> warnings;
-	public Integer errorCode;
+	public int errorCode;
 }
