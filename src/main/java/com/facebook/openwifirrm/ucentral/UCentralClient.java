@@ -605,6 +605,7 @@ public class UCentralClient {
 		}
 
 		try {
+			logger.debug("SERIAL {} BODY: {}", serial, response.getBody());
 			return gson.fromJson(response.getBody(), RRMDetails.class);
 		} catch (JsonSyntaxException e) {
 			String errMsg = String.format(

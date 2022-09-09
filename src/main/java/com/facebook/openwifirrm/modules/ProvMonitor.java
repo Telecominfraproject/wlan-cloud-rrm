@@ -13,7 +13,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.TreeMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +22,7 @@ import com.facebook.openwifirrm.DeviceDataManager;
 import com.facebook.openwifirrm.DeviceTopology;
 import com.facebook.openwifirrm.RRMAlgorithm;
 import com.facebook.openwifirrm.RRMConfig.ModuleConfig.ProvMonitorParams;
+import com.facebook.openwifirrm.RRMSchedule;
 import com.facebook.openwifirrm.ucentral.UCentralClient;
 import com.facebook.openwifirrm.ucentral.prov.models.InventoryTag;
 import com.facebook.openwifirrm.ucentral.prov.models.InventoryTagList;
@@ -117,7 +117,7 @@ public class ProvMonitor implements Runnable {
 		}
 
 		// fetch the RRM details for each AP that has RRM enabled
-		Map<String, RRMDetails> rrmDetails = new TreeMap<String, RRMDetails>();
+		Map<String, RRMDetails> rrmDetails = new HashMap<String, RRMDetails>();
 		for (String serialNumber : inventoryForRRM.serialNumbers) {
 			RRMDetails details =
 				client.getProvInventoryRrmDetails(serialNumber);
@@ -206,8 +206,6 @@ public class ProvMonitor implements Runnable {
 
 					// read the details from the config
 					RRMDetails details = rrmDetails.get(serialNumber);
-					// if we couldn't fetch the information directly, it must be inherited
-					// TODO use resolved config to handle this case
 					if (details == null) {
 						logger.error(
 							"No RRM details available for {} even though it has RRM enabled",
@@ -216,17 +214,28 @@ public class ProvMonitor implements Runnable {
 						continue;
 					}
 
-					cfg.schedule.cron = details.schedule;
-					cfg.schedule.algorithms = new ArrayList<RRMAlgorithm>();
-					for (
-						RRMAlgorithmDetails algorithmDetails : details.algorithms
-					) {
-						cfg.schedule.algorithms.add(
-							RRMAlgorithm.parse(
-								algorithmDetails.name,
-								algorithmDetails.parameters
-							)
-						);
+					cfg.schedule = new RRMSchedule();
+					if (details.rrm != null) {
+						cfg.schedule.cron = details.rrm.schedule;
+
+						if (details.rrm.algorithms != null) {
+							cfg.schedule.algorithms =
+								new ArrayList<RRMAlgorithm>();
+							for (
+								RRMAlgorithmDetails algorithmDetails : details.rrm.algorithms
+							) {
+								cfg.schedule.algorithms.add(
+									RRMAlgorithm.parse(
+										algorithmDetails.name,
+										algorithmDetails.parameters
+									)
+								);
+							}
+						}
+						logger.info("Set RRM settings for {}", serialNumber);
+					} else {
+						logger
+							.error("RRM setting for {} is null", serialNumber);
 					}
 				}
 			}
@@ -241,6 +250,8 @@ public class ProvMonitor implements Runnable {
 		modeler.revalidate();
 
 		// Update scheduler
-		scheduler.syncTriggers();
+		// TODO [ZoneBasedRrmScheduling] move this to syncTriggersForZones once
+		// that API is available and change it to be named just `syncTriggers`
+		scheduler.syncTriggersForDevices();
 	}
 }

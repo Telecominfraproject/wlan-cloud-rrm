@@ -454,13 +454,7 @@ public class DeviceDataManager {
 		);
 	}
 
-	/**
-	 * Return config (with all config layers applied) for all devices in a given
-	 * zone, or null if not present in the topology.
-	 *
-	 * @return map of serial number to computed config
-	 */
-	public Map<String, DeviceConfig> getAllDeviceConfigs(String zone) {
+	private Set<String> getAllDevicesInZone(String zone) {
 		// Get all devices in zone
 		if (zone == null || zone.isEmpty()) {
 			return null;
@@ -476,6 +470,18 @@ public class DeviceDataManager {
 		if (devicesInZone == null) {
 			return null;
 		}
+
+		return devicesInZone;
+	}
+
+	/**
+	 * Return config (with all config layers applied) for all devices in a given
+	 * zone, or null if not present in the topology.
+	 *
+	 * @return map of serial number to computed config
+	 */
+	public Map<String, DeviceConfig> getAllDeviceConfigs(String zone) {
+		Set<String> devicesInZone = getAllDevicesInZone(zone);
 
 		// Compute config for all devices
 		Map<String, DeviceConfig> configMap = new HashMap<>();
