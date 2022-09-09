@@ -8,6 +8,8 @@
 
 package com.facebook.openwifirrm.aggregators;
 
+import java.util.List;
+
 /**
  * Aggregates added values into one "aggregate" measure.
  *
@@ -19,6 +21,9 @@ public interface Aggregator<T> {
 
 	/** Returns the aggregate measure of all added values. */
 	T getAggregate();
+
+	/** Returns a list of all added values. */
+	List<T> getList();
 
 	/** Returns the number of values that are aggregated. */
 	long getCount();

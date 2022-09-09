@@ -11,6 +11,7 @@ package com.facebook.openwifirrm.optimizers;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -22,6 +23,8 @@ import com.facebook.openwifirrm.ucentral.UCentralConstants;
 import com.facebook.openwifirrm.ucentral.UCentralUtils;
 import com.facebook.openwifirrm.ucentral.UCentralUtils.WifiScanEntry;
 import com.facebook.openwifirrm.ucentral.models.State;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -36,8 +39,12 @@ public class TestUtils {
 
 	/** Default channel width in MHz */
 	public static final int DEFAULT_CHANNEL_WIDTH = 20;
+
 	/** Default tx power in dBm */
 	public static final int DEFAULT_TX_POWER = 20;
+
+	/** Default local time */
+	public static final long DEFAULT_LOCAL_TIME = 1632527275;
 
 	/** Create a topology from the given devices in a single zone. */
 	public static DeviceTopology createTopology(
@@ -75,6 +82,28 @@ public class TestUtils {
 			),
 			JsonObject.class
 		);
+	}
+
+	/**
+	 * Create a radio info object by given lists of keys and values.
+	 *
+	 * @param keys a list of key strings.
+	 * @param values a list of values.
+	 * @return a radio info as a {@code JsonNode}
+	 */
+	public static JsonNode createRadioObject(String[] keys, int[] values) {
+		if (
+			!(keys.length == values.length)
+		) {
+			throw new IllegalArgumentException(
+				"All arguments must have the same length."
+			);
+		}
+		Map<String, Integer> map = new HashMap<>();
+		for (int i = 0; i < keys.length; i++) {
+			map.put(keys[i], values[i]);
+		}
+		return new ObjectMapper().valueToTree(map);
 	}
 
 	/**
@@ -416,31 +445,33 @@ public class TestUtils {
 		// @formatter:on
 	}
 
-	/** Create a {@code State.Unit}. */
-	private static State.Unit createStateUnit() {
+	/** Create a {@code State.Unit} with specifying localtime. */
+	private static State.Unit createStateUnit(Long localtime) {
 		// @formatter:off
+		String jsonStr = String.format(
+		"  {\n" +
+		"    \"load\": [\n" +
+		"      0,\n" +
+		"      0,\n" +
+		"      0\n" +
+		"    ],\n" +
+		"    \"localtime\": %d,\n" +
+		"    \"memory\": {\n" +
+		"      \"free\": 788930560,\n" +
+		"      \"total\": 973561856\n" +
+		"    },\n" +
+		"    \"uptime\": 684456\n" +
+		"  }\n", localtime);
 		return gson.fromJson(
-			"  {\n" +
-			"    \"load\": [\n" +
-			"      0,\n" +
-			"      0,\n" +
-			"      0\n" +
-			"    ],\n" +
-			"    \"localtime\": 1632527275,\n" +
-			"    \"memory\": {\n" +
-			"      \"free\": 788930560,\n" +
-			"      \"total\": 973561856\n" +
-			"    },\n" +
-			"    \"uptime\": 684456\n" +
-			"  }\n",
+			jsonStr,
 			State.Unit.class
 		);
 		// @formatter:on
 	}
 
 	/**
-	 * Create a state with the appropriate interfaces and radios for the given
-	 * channels with the associated channel widths and bssids.
+	 * Create a state with the appropriate interfaces and radios for local time
+	 * and given channels with the associated channel widths and bssids.
 	 * <p>
 	 * All arguments must have the same length, and an index represents the
 	 * details of a radio (e.g., the first radio is on {@code channels[0]} with
@@ -450,8 +481,10 @@ public class TestUtils {
 	 * @param channels array of channel numbers
 	 * @param channelWidths array of channel widths (MHz)
 	 * @param txPowers array of tx powers (dBm)
-	 * @param bssids array of BSSIDs
-	 * @param clientRssis 2-D array of client RSSIs
+	 * @param bssids array of BSSIDs.
+	 * @param clientRssis 2-D array of client RSSIs.
+	 * @param stations 2-D array of client station codes.
+	 * @param local time
 	 * @return the state of an AP with radios described by the given parameters
 	 */
 	public static State createState(
@@ -459,12 +492,15 @@ public class TestUtils {
 		int[] channelWidths,
 		int[] txPowers,
 		String[] bssids,
-		int[][] clientRssis
+		String[][] stations,
+		int[][] clientRssis,
+		long localtime
 	) {
 		if (
 			!(channels.length == channelWidths.length &&
 				channelWidths.length == txPowers.length &&
-				txPowers.length == bssids.length)
+				txPowers.length == bssids.length &&
+				bssids.length == stations.length)
 		) {
 			throw new IllegalArgumentException(
 				"All arguments must have the same length."
@@ -487,14 +523,63 @@ public class TestUtils {
 			state.interfaces[i].ssids[0].associations =
 				new State.Interface.SSID.Association[clientRssis[i].length];
 			for (int j = 0; j < clientRssis[i].length; j++) {
+				if (!(clientRssis[i].length == stations[i].length)) {
+					throw new IllegalArgumentException(
+						"All arguments must have the same length."
+					);
+				}
 				state.interfaces[i].ssids[0].associations[j] =
 					state.interfaces[i].ssids[0].new Association();
 				state.interfaces[i].ssids[0].associations[j].rssi =
 					clientRssis[i][j];
+				state.interfaces[i].ssids[0].associations[j].station =
+					stations[i][j];
 			}
 		}
-		state.unit = createStateUnit();
+		for (int i = 0; i < numRadios; i++) {
+			int ref = Integer.parseInt(
+				state.interfaces[i].ssids[0].radio.get("$ref").getAsString().split("/")[2]
+			);
+			state.interfaces[i].ssids[0].radio = state.radios[ref];
+		}
+		state.unit = createStateUnit(localtime);
 		return state;
+	}
+
+	/**
+	 * Create a state with the appropriate interfaces and radios for local time
+	 * and given channels with the associated channel widths and bssids.
+	 * <p>
+	 * All arguments must have the same length, and an index represents the
+	 * details of a radio (e.g., the first radio is on {@code channels[0]} with
+	 * a channel width of {@code channelWidths[0]} and its bssid is
+	 * {@code bssids[0]}).
+	 *
+	 * @param channels array of channel numbers
+	 * @param channelWidths array of channel widths (MHz)
+	 * @param txPowers array of tx powers (dBm)
+	 * @param bssids array of BSSIDs.
+	 * @param clientRssis 2-D array of client RSSIs.
+	 * @param local time
+	 * @return the state of an AP with radios described by the given parameters
+	 */
+	public static State createState(
+		int[] channels,
+		int[] channelWidths,
+		int[] txPowers,
+		String[] bssids,
+		int[][] clientRssis,
+		long localtime
+	) {
+		return createState(
+			channels,
+			channelWidths,
+			txPowers,
+			bssids,
+			new String[clientRssis.length][clientRssis[0].length],
+			clientRssis,
+			localtime
+		);
 	}
 
 	/**
@@ -503,6 +588,7 @@ public class TestUtils {
 	 * @param channel channel number
 	 * @param channelWidth channel width in MHz
 	 * @param bssid bssid
+	 * @param localtime local time
 	 * @return the state of an AP with one radio
 	 */
 	public static State createState(
@@ -510,7 +596,12 @@ public class TestUtils {
 		int channelWidth,
 		String bssid
 	) {
-		return createState(channel, channelWidth, DEFAULT_TX_POWER, bssid);
+		return createState(
+			channel,
+			channelWidth,
+			DEFAULT_TX_POWER,
+			bssid
+		);
 	}
 
 	/**
@@ -520,6 +611,7 @@ public class TestUtils {
 	 * @param channelWidth channel width in MHz
 	 * @param txPower tx power in dBm
 	 * @param bssid bssid
+	 * @param localtime local time
 	 * @return the state of an AP with one radio
 	 */
 	public static State createState(
@@ -544,7 +636,40 @@ public class TestUtils {
 	 * @param channelWidth channel width in MHz
 	 * @param txPower tx power in dBm
 	 * @param bssid bssid
+	 * @param stations array of station codes
 	 * @param clientRssis array of client RSSIs
+	 * @param localtime local time
+	 * @return the state of an AP with one radio
+	 */
+	public static State createState(
+		int channel,
+		int channelWidth,
+		int txPower,
+		String bssid,
+		String[] stations,
+		int[] clientRssis,
+		long localtime
+	) {
+		return createState(
+			new int[] { channel },
+			new int[] { channelWidth },
+			new int[] { txPower },
+			new String[] { bssid },
+			new String[][] { stations },
+			new int[][] { clientRssis },
+			localtime
+		);
+	}
+
+	/**
+	 * Create a device state object with one radio.
+	 *
+	 * @param channel channel number
+	 * @param channelWidth channel width in MHz
+	 * @param txPower tx power in dBm
+	 * @param bssid bssid
+	 * @param clientRssis array of client RSSIs
+	 * @param localtime local time
 	 * @return the state of an AP with one radio
 	 */
 	public static State createState(
@@ -559,7 +684,8 @@ public class TestUtils {
 			new int[] { channelWidth },
 			new int[] { txPower },
 			new String[] { bssid },
-			new int[][] { clientRssis }
+			new int[][] { clientRssis },
+			DEFAULT_LOCAL_TIME
 		);
 	}
 
@@ -591,12 +717,57 @@ public class TestUtils {
 			channelWidthA,
 			txPowerA,
 			bssidA,
+			new String[] {},
 			new int[] {},
 			channelB,
 			channelWidthB,
 			txPowerB,
 			bssidB,
-			new int[] {}
+			new String[] {},
+			new int[] {},
+			DEFAULT_LOCAL_TIME
+		);
+	}
+
+	/**
+	 * Create a device state object with two radios.
+	 *
+	 * @param channelA channel number
+	 * @param channelWidthA channel width (MHz) of channelA
+	 * @param txPowerA tx power for channelA
+	 * @param bssidA bssid for radio on channelA
+	 * @param channelB channel number
+	 * @param channelWidthB channel width (MHz) of channelB
+	 * @param txPowerB tx power for channelB
+	 * @param bssidB bssid for radio on channelB
+	 * @param localtime local time
+	 * @return the state of an AP with two radios
+	 */
+	public static State createState(
+		int channelA,
+		int channelWidthA,
+		int txPowerA,
+		String bssidA,
+		int channelB,
+		int channelWidthB,
+		int txPowerB,
+		String bssidB,
+		long localtime
+	) {
+		return createState(
+			channelA,
+			channelWidthA,
+			txPowerA,
+			bssidA,
+			new String[] {},
+			new int[] {},
+			channelB,
+			channelWidthB,
+			txPowerB,
+			bssidB,
+			new String[] {},
+			new int[] {},
+			localtime
 		);
 	}
 
@@ -632,7 +803,50 @@ public class TestUtils {
 			new int[] { channelWidthA, channelWidthB },
 			new int[] { txPowerA, txPowerB },
 			new String[] { bssidA, bssidB },
-			new int[][] { clientRssisA, clientRssisB }
+			new int[][] { clientRssisA, clientRssisB },
+			DEFAULT_LOCAL_TIME
+		);
+	}
+
+	/**
+	 * Create a device state object with two radios.
+	 *
+	 * @param channelA channel number
+	 * @param channelWidthA channel width (MHz) of channelA
+	 * @param txPowerA tx power for channelA
+	 * @param bssidA bssid for radio on channelA
+	 * @param clientRssisA array of client RSSIs for channelA
+	 * @param channelB channel number
+	 * @param channelWidthB channel width (MHz) of channelB
+	 * @param txPowerB tx power for channelB
+	 * @param bssidB bssid for radio on channelB
+	 * @param clientRssisB array of client RSSIs for channelB
+	 * @param localtime local time for the State
+	 * @return the state of an AP with two radios
+	 */
+	public static State createState(
+		int channelA,
+		int channelWidthA,
+		int txPowerA,
+		String bssidA,
+		String[] stationsA,
+		int[] clientRssisA,
+		int channelB,
+		int channelWidthB,
+		int txPowerB,
+		String bssidB,
+		String[] stationsB,
+		int[] clientRssisB,
+		long localtime
+	) {
+		return createState(
+			new int[] { channelA, channelB },
+			new int[] { channelWidthA, channelWidthB },
+			new int[] { txPowerA, txPowerB },
+			new String[] { bssidA, bssidB },
+			new String[][] { stationsA, stationsB },
+			new int[][] { clientRssisA, clientRssisB },
+			localtime
 		);
 	}
 }

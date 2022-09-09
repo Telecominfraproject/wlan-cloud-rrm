@@ -8,6 +8,8 @@
 
 package com.facebook.openwifirrm.modules;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -94,6 +96,10 @@ public class Modeler implements Runnable {
 			new ConcurrentHashMap<>();
 
 		/** List of latest state per device. */
+		public Map<String, List<State>> latestStates =
+			new ConcurrentHashMap<>();
+
+		/** The most latest state per device.*/
 		public Map<String, State> latestState = new ConcurrentHashMap<>();
 
 		/** List of radio info per device. */
@@ -268,6 +274,10 @@ public class Modeler implements Runnable {
 				try {
 					State stateModel = gson.fromJson(state, State.class);
 					dataModel.latestState.put(device.serialNumber, stateModel);
+					dataModel.latestStates.put(
+						device.serialNumber,
+						new ArrayList<>(Arrays.asList(stateModel))
+					);
 					logger.debug(
 						"Device {}: added initial state from uCentralGw",
 						device.serialNumber
@@ -301,6 +311,12 @@ public class Modeler implements Runnable {
 						State stateModel = gson.fromJson(state, State.class);
 						dataModel.latestState
 							.put(record.serialNumber, stateModel);
+						dataModel.latestStates
+							.computeIfAbsent(
+								record.serialNumber,
+								k -> new ArrayList<>()
+							)
+							.add(stateModel);
 						stateUpdates.add(record.serialNumber);
 					} catch (JsonSyntaxException e) {
 						logger.error(
@@ -424,6 +440,12 @@ public class Modeler implements Runnable {
 		}
 		if (
 			dataModel.latestState.entrySet()
+				.removeIf(e -> !isRRMEnabled(e.getKey()))
+		) {
+			logger.debug("Removed some state entries from data model");
+		}
+		if (
+			dataModel.latestStates.entrySet()
 				.removeIf(e -> !isRRMEnabled(e.getKey()))
 		) {
 			logger.debug("Removed some state entries from data model");

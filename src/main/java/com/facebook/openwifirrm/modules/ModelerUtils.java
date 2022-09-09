@@ -8,7 +8,9 @@
 
 package com.facebook.openwifirrm.modules;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,13 +24,29 @@ import com.facebook.openwifirrm.aggregators.Aggregator;
 import com.facebook.openwifirrm.aggregators.MeanAggregator;
 import com.facebook.openwifirrm.modules.Modeler.DataModel;
 import com.facebook.openwifirrm.ucentral.UCentralUtils.WifiScanEntry;
+import com.facebook.openwifirrm.ucentral.models.State;
+import com.facebook.openwifirrm.ucentral.models.State.Interface;
+import com.facebook.openwifirrm.ucentral.models.State.Interface.SSID;
+import com.facebook.openwifirrm.ucentral.models.State.Interface.SSID.Association;
 import com.facebook.openwifirrm.ucentral.operationelement.HTOperationElement;
 import com.facebook.openwifirrm.ucentral.operationelement.VHTOperationElement;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
+import com.google.gson.reflect.TypeToken;
 
 /**
  * Modeler utilities.
  */
 public class ModelerUtils {
+	public enum AggregationType { LIST, MEAN };
+
 	private static final Logger logger =
 		LoggerFactory.getLogger(ModelerUtils.class);
 
@@ -380,5 +398,270 @@ public class ModelerUtils {
 			}
 		}
 		return aggregatedWifiScans;
+	}
+
+	/** This method converts the agggregated map to a Json String.
+	 *
+	 * @param aggregatedMap 	Aggregated map
+	 * @param aggType 			Determines how to aggregate the statistics.
+	 * @return String			A Json String representation of the aggregated map.
+	 */
+	public static String aggregatedStatesToJson(
+		Map<String, Map<String, Map<String, Map<JsonNode, Map<String, MeanAggregator>>>>> aggregatedMap,
+		AggregationType aggType
+	) {
+		GsonBuilder gsonBuilder = new GsonBuilder();
+
+		Type AggregationType = new TypeToken<MeanAggregator>() {}.getType();
+		JsonSerializer<MeanAggregator> serializer;
+		/**
+		 * Custom the json serializer by overriding the serialize method.
+		*/
+		switch (aggType) {
+		case LIST:
+			serializer =
+				new JsonSerializer<MeanAggregator>() {
+					/**
+					 * If the aggregation type is to take list of the values,
+					 * return a JsonArray of the value list.
+					 */
+					@Override
+					public JsonElement serialize(
+						MeanAggregator agg,
+						java.lang.reflect.Type typeOfSrc,
+						JsonSerializationContext context
+					) {
+						JsonArray aggJson = new JsonArray();
+						for (Double value : agg.getList()) {
+							aggJson.add(value.toString());
+						}
+						return aggJson;
+					}
+				};
+			break;
+		default:
+			serializer =
+				new JsonSerializer<MeanAggregator>() {
+					/**
+					 * If the aggregation type is to take mean of the values,
+					 * return a JsonPrimitive type of single value string.
+					 */
+					@Override
+					public JsonElement serialize(
+						MeanAggregator agg,
+						java.lang.reflect.Type typeOfSrc,
+						JsonSerializationContext context
+					) {
+						return new JsonPrimitive(agg.getAggregate().toString());
+					}
+				};
+			break;
+		}
+		gsonBuilder.registerTypeAdapter(AggregationType, serializer);
+		Gson customGson = gsonBuilder.create();
+		String aggregatedJson = customGson.toJson(aggregatedMap);
+		return aggregatedJson;
+	}
+
+	/** This method reports the agggregated statistics as a Json String.
+	 *
+	 * @see #getAggregatedStatesJson(DataModel, long, List, List, AggregationType)
+	 *
+	 * @param dataModel 			the data model which includes the latest recorded States.
+	 * @param obsoletionPeriodMs	the maximum amount of time (in milliseconds) it
+	 *                           	is worth aggregating over.
+	 * @param aggType				Determines how to aggregate the statistics.
+	 * @return String				A Json String of aggregation statistics.
+	 */
+	public static String getAggregatedStatesJson(
+		Modeler.DataModel dataModel,
+		long obsoletionPeriodMs,
+		AggregationType aggType
+	) {
+		return getAggregatedStatesJson(
+			dataModel,
+			obsoletionPeriodMs,
+			new ArrayList<>(
+				Arrays.asList("channel", "channel_width", "tx_power")
+			),
+			new ArrayList<>(Arrays.asList("rssi")),
+			aggType
+		);
+	}
+
+	/** This method serializes the aggregated statistics as a Json String.
+	 * How to aggregate the stats (mean/list) is defined by the input parameter.
+	 *
+	 * @see #getAggregatedStates(DataModel, long, long, List, List)
+	 *
+	 * @param dataModel 			the data model which includes the latest recorded States.
+	 * @param obsoletionPeriodMs	the maximum amount of time (in milliseconds) it
+	 *                           	is worth aggregating over
+	 * @param aggregatedKeys 		In which conditions the stats results need to be aggregated.
+	 * @param aggregatedFields		Which fields to be aggregated. RSSI, MCS for example.
+	 * @param aggType				Determines how to aggregate the statistics.
+	 * @return String				A Json String of aggregation statistics.
+	 */
+	public static String getAggregatedStatesJson(
+		Modeler.DataModel dataModel,
+		long obsoletionPeriodMs,
+		List<String> aggregatedKeys,
+		List<String> aggregatedFields,
+		AggregationType aggType
+	) {
+		Map<String, Map<String, Map<String, Map<JsonNode, Map<String, MeanAggregator>>>>> aggregatedMap =
+			new HashMap<>();
+		try {
+			aggregatedMap = getAggregatedStates(
+				dataModel,
+				obsoletionPeriodMs,
+				System.currentTimeMillis(),
+				aggregatedKeys,
+				aggregatedFields
+			);
+		} catch (
+			IllegalArgumentException | IllegalAccessException
+			| NoSuchFieldException | SecurityException e
+		) {
+			e.printStackTrace();
+		}
+		return aggregatedStatesToJson(aggregatedMap, aggType);
+	}
+
+	/**
+	 * This method aggregates States by given aggregated fields(RSSI, MCS...) and aggregated 
+	 * keys(channel, channel width, tx power...). Only non-obsolete clufcenfhtghtivgrfcvijnlrbnukccgStates are aggregated.
+	 *
+	 * @param dataModel 		 the data model which includes the latest recorded States.
+	 * @param obsoletionPeriodMs the maximum amount of time (in milliseconds) it
+	 *                           is worth aggregating over, starting from the
+	 *                           most recent States and working backwards in time.
+	 * 							 A State exactly {@code obsoletionPeriodMs} ms earlier
+	 * 							 than the most recent State is considered non-obsolete
+	 *                           (i.e., the "non-obsolete" window is inclusive).
+	 *                           Must be non-negative.
+	 * @param refTimeMs			the reference time were separated to make testing easier
+	 * @param aggregatedKeys  	In which conditions the stats results need to be aggregated.
+	 * 							For example, when channel, channel width and tx_power of two stats
+	 * 							matches, the two stats need to be aggregated.
+	 * @param aggregatedFields	Which fields to be aggregated. RSSI, MCS for example.
+	 * @return Map<String, Map<String, Map<String, Map<JsonNode, Map<String, MeanAggregator>>>>>
+	 * 							Aggregated map that the keys are serial number, bssid, station
+	 * 							({@link State.Interface.SSID.Association#station}), aggregatedKey,
+	 * 							aggregatedField respectively. The returned value of type {@code
+	 * 							MeanAggregator} contains all the aggregation results in specified
+	 * 							fields.
+	 * @throws SecurityException
+	 * @throws NoSuchFieldException
+	 * @throws IllegalAccessException
+	 * @throws IllegalArgumentException
+	 */
+	public static Map<String, Map<String, Map<String, Map<JsonNode, Map<String, MeanAggregator>>>>> getAggregatedStates(
+		Modeler.DataModel dataModel,
+		long obsoletionPeriodMs,
+		long refTimeMs,
+		List<String> aggregatedKeys,
+		List<String> aggregatedFields
+	) throws IllegalArgumentException, IllegalAccessException,
+		NoSuchFieldException, SecurityException {
+		if (obsoletionPeriodMs < 0) {
+			throw new IllegalArgumentException(
+				"obsoletionPeriodMs must be non-negative."
+			);
+		}
+		Map<String, Map<String, Map<String, Map<JsonNode, Map<String, MeanAggregator>>>>> aggregatedStates =
+			new HashMap<>();
+
+		for (
+			Map.Entry<String, List<State>> deviceToStateList : dataModel.latestStates
+				.entrySet()
+		) {
+			String serialNumber = deviceToStateList.getKey();
+			List<State> states = deviceToStateList.getValue();
+
+			if (states.isEmpty()) {
+				continue;
+			}
+
+			Map<String, Map<String, Map<JsonNode, Map<String, MeanAggregator>>>> bssidToStats =
+				aggregatedStates
+					.computeIfAbsent(serialNumber, k -> new HashMap<>());
+
+			/**
+			 * Sort in reverse chronological order. Sorting is done just in case the
+			 * States in the original list are not chronological already - although
+			 * they are inserted chronologically, perhaps latency, synchronization, etc.
+			 */
+			states.sort(
+				(state1, state2) -> -Long.compare(state1.unit.localtime, state2.unit.localtime)
+			);
+			for (State state : states) {
+				if (refTimeMs - state.unit.localtime > obsoletionPeriodMs) {
+					// discard obsolete entries
+					continue;
+				}
+
+				for (Interface stateInterface : state.interfaces) {
+					if (stateInterface.ssids == null) {
+						continue;
+					}
+
+					for (SSID ssid : stateInterface.ssids) {
+						/**
+						 * clientsToStats is the mapping from the station to aggregated statistis.
+						 */
+						Map<String, Map<JsonNode, Map<String, MeanAggregator>>> clientToStats =
+							bssidToStats.computeIfAbsent(
+								ssid.bssid,
+								k -> new HashMap<>()
+							);
+
+						/**
+						 * aggregatedKey is used to Determine if two associations should be aggregated.
+						 * It is a JsonNode type with a mapping between channel/channel width/txpower
+						 * and the related values. The following condition is true then two stats results
+						 * need to be aggregated: channel, channel width, and txpower under "radio" field
+						 * match.
+						*/
+
+						Map<String, Integer> map = new HashMap<>();
+						for (String aggKey : aggregatedKeys) {
+							map.put(aggKey, ssid.radio.get(aggKey).getAsInt());
+						}
+
+						JsonNode aggregatedNode =
+							new ObjectMapper().valueToTree(map);
+
+						for (Association association : ssid.associations) {
+							for (String aggField : aggregatedFields) {
+								String station = association.station;
+								Double value = Association.class
+									.getDeclaredField(aggField)
+									.getDouble(association);
+
+								clientToStats.computeIfAbsent(
+									station,
+									k -> new HashMap<>()
+								)
+									.computeIfAbsent(
+										aggregatedNode,
+										k -> new HashMap<>()
+									)
+									.computeIfAbsent(
+										aggField,
+										k -> new MeanAggregator()
+									)
+									.addValue(value);
+
+							}
+
+						}
+						bssidToStats.put(ssid.bssid, clientToStats);
+					}
+				}
+				aggregatedStates.put(serialNumber, bssidToStats);
+			}
+		}
+		return aggregatedStates;
 	}
 }

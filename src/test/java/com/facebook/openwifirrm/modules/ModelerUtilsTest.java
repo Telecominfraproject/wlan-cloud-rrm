@@ -15,15 +15,23 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.facebook.openwifirrm.aggregators.MeanAggregator;
 import com.facebook.openwifirrm.modules.Modeler.DataModel;
+import com.facebook.openwifirrm.modules.ModelerUtils.AggregationType;
 import com.facebook.openwifirrm.optimizers.TestUtils;
 import com.facebook.openwifirrm.ucentral.UCentralUtils.WifiScanEntry;
+import com.facebook.openwifirrm.ucentral.models.State;
 
 public class ModelerUtilsTest {
 	@Test
@@ -547,4 +555,317 @@ public class ModelerUtilsTest {
 			aggregateMap.get(apB).get(bssidA)
 		);
 	}
+
+	@Test
+	void testEmptyAggregatedStates() throws IllegalArgumentException,
+		IllegalAccessException, NoSuchFieldException, SecurityException {
+		final long obsoletionPeriodMs = 900000;
+
+		final String serialNumberA = "aa:aa:aa:aa:aa:aa";
+		final String serialNumberB = "bb:bb:bb:bb:bb:bb";
+		final String serialNumberC = "cc:cc:cc:cc:cc:cc";
+
+		long refTimeMs = TestUtils.DEFAULT_WIFISCANENTRY_TIME.toEpochMilli();
+
+		DataModel dataModel = new DataModel();
+
+		// Test empty State list.
+		dataModel.latestStates.put(serialNumberA, new ArrayList<>());
+		dataModel.latestStates.put(serialNumberB, new ArrayList<>());
+		dataModel.latestStates.put(serialNumberC, new ArrayList<>());
+
+		assertTrue(
+			ModelerUtils.getAggregatedStates(
+				dataModel,
+				obsoletionPeriodMs,
+				refTimeMs,
+				new ArrayList<>(
+					Arrays.asList("channel", "channel_width", "tx_power")
+				),
+				new ArrayList<>(Arrays.asList("rssi"))
+			).isEmpty()
+		);
+	}
+
+	@Test
+	void testValidAggregatedStates()
+		throws JsonMappingException, JsonProcessingException,
+		IllegalArgumentException, IllegalAccessException, NoSuchFieldException,
+		SecurityException {
+		final long obsoletionPeriodMs = 60000000;
+		final String serialNumberA = "aaaaaaaaaaaa";
+		final String bssidA1 = "aa:aa:aa:aa:aa:a1";
+		final String bssidA2 = "aa:aa:aa:aa:aa:a2";
+		final String serialNumberB = "bbbbbbbbbbbb";
+		final String bssidB = "bb:bb:bb:bb:bb:bb";
+		final String serialNumberC = "cccccccccccc";
+		final String bssidC = "cc:cc:cc:cc:cc:cc";
+
+		long refTimeMs = TestUtils.DEFAULT_LOCAL_TIME;
+
+		DataModel dataModel = new DataModel();
+
+		List<String> aggregatedKeys = new ArrayList<>(
+			Arrays.asList("channel", "channel_width", "tx_power")
+		);
+		List<String> aggregatedFields = new ArrayList<>(Arrays.asList("rssi"));
+
+		// This serie of StateA is used to test a valid input states.
+		State time1ToStateA = TestUtils.createState(
+			1,
+			80,
+			1000,
+			bssidA1,
+			new String[] { "stationA1_1", "stationA1_2" },
+			new int[] { -84, -67 },
+			2,
+			40,
+			2000,
+			bssidA2,
+			new String[] { "stationA2_1" },
+			new int[] { -80 },
+			TestUtils.DEFAULT_LOCAL_TIME
+		);
+
+		State time2ToStateA = TestUtils.createState(
+			1,
+			80,
+			1000,
+			bssidA1,
+			new String[] { "stationA1_2", "stationA1_3" },
+			new int[] { 27, 100 },
+			2,
+			40,
+			2000,
+			bssidA2,
+			new String[] { "stationA2_1" },
+			new int[] { 180 },
+			TestUtils.DEFAULT_LOCAL_TIME - 800
+		);
+
+		//As State time3ToStateA is obsolescent, it should not be aggregated.
+		State time3ToStateA = TestUtils.createState(
+			1,
+			80,
+			1000,
+			bssidA1,
+			new String[] { "stationA1_1", "stationA1_2", "stationA1_4" },
+			new int[] { 24, 27, 1000 },
+			2,
+			40,
+			2000,
+			bssidA2,
+			new String[] { "stationA2_1", "staionA2_2" },
+			new int[] { 180, 180 },
+			// Set the localtime exactly obsolescent
+			TestUtils.DEFAULT_LOCAL_TIME - obsoletionPeriodMs - 1
+		);
+
+		dataModel.latestStates.put(
+			serialNumberA,
+			new ArrayList<>(
+				Arrays.asList(
+					time1ToStateA,
+					time2ToStateA,
+					time3ToStateA
+				)
+			)
+		);
+		Map<String, Map<String, Map<String, Map<JsonNode, Map<String, MeanAggregator>>>>> aggregatedMap =
+			ModelerUtils.getAggregatedStates(
+				dataModel,
+				obsoletionPeriodMs,
+				refTimeMs,
+				aggregatedKeys,
+				aggregatedFields
+			);
+		assertFalse(aggregatedMap.containsKey(serialNumberB));
+		assertFalse(aggregatedMap.containsKey(serialNumberC));
+		assertTrue(
+			aggregatedMap.get(serialNumberA).get(bssidA1).containsKey("stationA1_1")
+		);
+		assertTrue(
+			aggregatedMap.get(serialNumberA).get(bssidA1).containsKey("stationA1_2")
+		);
+		assertTrue(
+			aggregatedMap.get(serialNumberA).get(bssidA2).containsKey("stationA2_1")
+		);
+		assertTrue(
+			aggregatedMap.get(serialNumberA).get(bssidA1).containsKey("stationA1_3")
+		);
+
+		//obsolescent States should not be aggregated.
+		assertFalse(
+			aggregatedMap.get(serialNumberA).get(bssidA1).containsKey("stationA1_4")
+		);
+		assertFalse(
+			aggregatedMap.get(serialNumberA).get(bssidA2).containsKey("stationA2_2")
+		);
+
+		ObjectMapper mapper = new ObjectMapper();
+
+		JsonNode expectedAggregatedKey1 = mapper.readTree(
+			TestUtils.createRadioObject(
+				new String[] { "channel", "channel_width", "tx_power" },
+				new int[] { 1, 80, 1000 }
+			).toString()
+		);
+
+		JsonNode expectedAggregatedKey2 = mapper.readTree(
+			TestUtils.createRadioObject(
+				new String[] { "channel", "channel_width", "tx_power" },
+				new int[] { 2, 40, 2000 }
+			).toString()
+		);
+
+		assertEquals(
+			aggregatedMap.get(serialNumberA).get(bssidA1).get("stationA1_1").get(expectedAggregatedKey1).get("rssi").getList(), Arrays.asList(-84.0)
+		);
+		assertEquals(
+			aggregatedMap.get(serialNumberA).get(bssidA1).get("stationA1_2").get(expectedAggregatedKey1).get("rssi").getList(), Arrays.asList(-67.0, 27.0)
+		);
+		assertEquals(
+			aggregatedMap.get(serialNumberA).get(bssidA2).get("stationA2_1").get(expectedAggregatedKey2).get("rssi").getList(), Arrays.asList(-80.0, 180.0)
+		);
+
+		// Test on same station operating on different channel.
+		State channel1ToStateA = TestUtils.createState(
+			2,
+			40,
+			2000,
+			bssidA1,
+			new String[] { "stationA1_1", "stationA1_2" },
+			new int[] { -1, -2 },
+			TestUtils.DEFAULT_LOCAL_TIME - 100
+		);
+
+		dataModel.latestStates
+			.get(serialNumberA)
+			.add(channel1ToStateA);
+
+		// Test more clients operate on the same channel (stationB and stationA)
+		State time1ToStateB = TestUtils.createState(
+			1,
+			80,
+			1000,
+			bssidB,
+			new String[] { "stationB1" },
+			new int[] { -30 },
+			TestUtils.DEFAULT_LOCAL_TIME
+		);
+		dataModel.latestStates
+			.computeIfAbsent(serialNumberB, k -> new ArrayList<>())
+			.add(time1ToStateB);
+
+		State time1ToStateC = TestUtils.createState(
+			2,
+			40,
+			2000,
+			bssidC,
+			new String[] { "stationC1" },
+			new int[] { -100 },
+			TestUtils.DEFAULT_LOCAL_TIME
+		);
+		dataModel.latestStates
+			.computeIfAbsent(serialNumberC, k -> new ArrayList<>())
+			.add(time1ToStateC);
+
+		Map<String, Map<String, Map<String, Map<JsonNode, Map<String, MeanAggregator>>>>> aggregatedMap2 =
+			ModelerUtils.getAggregatedStates(
+				dataModel,
+				obsoletionPeriodMs,
+				refTimeMs,
+				aggregatedKeys,
+				aggregatedFields
+			);
+
+		assertEquals(
+			aggregatedMap2.get(serialNumberA).get(bssidA1).get("stationA1_1").get(expectedAggregatedKey2).get("rssi").getList(), Arrays.asList(-1.0)
+		);
+		assertEquals(
+			aggregatedMap2.get(serialNumberA).get(bssidA1).get("stationA1_2").get(expectedAggregatedKey2).get("rssi").getList(), Arrays.asList(-2.0)
+		);
+		assertEquals(
+			aggregatedMap2.get(serialNumberB).get(bssidB).get("stationB1").get(expectedAggregatedKey1).get("rssi").getList(), Arrays.asList(-30.0)
+		);
+		assertEquals(
+			aggregatedMap2.get(serialNumberC).get(bssidC).get("stationC1").get(expectedAggregatedKey2).get("rssi").getList(), Arrays.asList(-100.0)
+		);
+
+	}
+
+	@Test
+	void testAggregatedMapToJson()
+		throws JsonMappingException, JsonProcessingException {
+		Map<String, Map<String, Map<String, Map<JsonNode, Map<String, MeanAggregator>>>>> aggregatedMap =
+			new HashMap<>();
+		JsonNode aggKey1 = new ObjectMapper().readTree(
+			TestUtils.createRadioObject(
+				new String[] { "a", "b" },
+				new int[] { 1, 2 }
+			).toString()
+		);
+
+		JsonNode aggKey2 = new ObjectMapper().readTree(
+			TestUtils.createRadioObject(
+				new String[] { "a", "b" },
+				new int[] { 2, 1 }
+			).toString()
+		);
+		aggregatedMap.computeIfAbsent("serial number A", k -> new HashMap<>())
+			.computeIfAbsent("bssidA1", k -> new HashMap<>())
+			.computeIfAbsent("stationA1_1", k -> new HashMap<>())
+			.computeIfAbsent(aggKey1, k -> new HashMap<>())
+			.computeIfAbsent(
+				"rssi",
+				k -> new MeanAggregator(new ArrayList<>(Arrays.asList(1.2, 2.1)))
+			);
+
+		aggregatedMap.computeIfAbsent("serial number A", k -> new HashMap<>())
+			.computeIfAbsent("bssidA1", k -> new HashMap<>())
+			.computeIfAbsent("stationA1_1", k -> new HashMap<>())
+			.computeIfAbsent(aggKey2, k -> new HashMap<>())
+			.computeIfAbsent(
+				"rssi",
+				k -> new MeanAggregator(new ArrayList<>(Arrays.asList(1.2, 2.1)))
+			);
+
+		aggregatedMap.computeIfAbsent("serial number A", k -> new HashMap<>())
+			.computeIfAbsent("bssidA1", k -> new HashMap<>())
+			.computeIfAbsent("stationA1_2", k -> new HashMap<>())
+			.computeIfAbsent(aggKey2, k -> new HashMap<>())
+			.computeIfAbsent(
+				"rssi",
+				k -> new MeanAggregator(
+					new ArrayList<>(Arrays.asList(100.0, 200.0))
+				)
+			);
+
+		assertEquals(
+			"{\"serial number A\":" +
+				"{\"bssidA1\":" +
+				"{\"stationA1_1\":" +
+				"{\"{\\\"a\\\":1,\\\"b\\\":2}\":{\"rssi\":\"1.65\"}," +
+				"\"{\\\"a\\\":2,\\\"b\\\":1}\":{\"rssi\":\"1.65\"}}," +
+				"\"stationA1_2\":" +
+				"{\"{\\\"a\\\":2,\\\"b\\\":1}\":{\"rssi\":\"150.0\"}}}}}",
+			ModelerUtils
+				.aggregatedStatesToJson(aggregatedMap, AggregationType.MEAN)
+		);
+		assertEquals(
+			"{\"serial number A\":" +
+				"{\"bssidA1\":" +
+				"{\"stationA1_1\":" +
+				"{\"{\\\"a\\\":1,\\\"b\\\":2}\":" +
+				"{\"rssi\":[\"1.2\",\"2.1\"]}," +
+				"\"{\\\"a\\\":2,\\\"b\\\":1}\":" +
+				"{\"rssi\":[\"1.2\",\"2.1\"]}}," +
+				"\"stationA1_2\":" +
+				"{\"{\\\"a\\\":2,\\\"b\\\":1}\":" +
+				"{\"rssi\":[\"100.0\",\"200.0\"]}}}}}",
+			ModelerUtils
+				.aggregatedStatesToJson(aggregatedMap, AggregationType.LIST)
+		);
+	}
+
 }
