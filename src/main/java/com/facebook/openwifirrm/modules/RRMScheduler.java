@@ -199,7 +199,14 @@ public class RRMScheduler {
 				try {
 					CronExpression.validateExpression(config.schedule.cron);
 				} catch (ParseException e) {
-					logger.error(String.format("Invalid cron expression (%s) for device %s", config.schedule.cron, serialNumber), e);
+					logger.error(
+						String.format(
+							"Invalid cron expression (%s) for device %s",
+							config.schedule.cron,
+							serialNumber
+						),
+						e
+					);
 					continue;
 				}
 
@@ -277,7 +284,14 @@ public class RRMScheduler {
 			try {
 				CronExpression.validateExpression(config.schedule.cron);
 			} catch (ParseException e) {
-				logger.error(String.format("Invalid cron expression (%s) for zone %s", config.schedule.cron, zone) + zone, e);
+				logger.error(
+					String.format(
+						"Invalid cron expression (%s) for zone %s",
+						config.schedule.cron,
+						zone
+					) + zone,
+					e
+				);
 				continue;
 			}
 

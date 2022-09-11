@@ -593,7 +593,14 @@ public class UCentralClient {
 		}
 	}
 
-	/** Retrieve the RRM config and schedule for a specific AP */
+	/**
+	 * Retrieve the RRM config and schedule for a specific AP
+	 *
+	 * @param serial the serial number of the AP
+	 *
+	 * @return {@link RRMDetails}, containing information about the RRM
+	 *   schedule and parameters
+	 */
 	public RRMDetails getProvInventoryRrmDetails(String serial) {
 		Map<String, Object> parameters = new HashMap<>();
 		parameters.put("rrmSettings", true);

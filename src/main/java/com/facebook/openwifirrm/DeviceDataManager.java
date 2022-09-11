@@ -454,6 +454,13 @@ public class DeviceDataManager {
 		);
 	}
 
+	/**
+	 * Return the serail number of devices in a given zone.
+	 *
+	 * @param zone the zone that will be looked up for devi es
+	 *
+	 * @return set of serial numbers
+	 */
 	private Set<String> getAllDevicesInZone(String zone) {
 		// Get all devices in zone
 		if (zone == null || zone.isEmpty()) {
@@ -477,6 +484,8 @@ public class DeviceDataManager {
 	/**
 	 * Return config (with all config layers applied) for all devices in a given
 	 * zone, or null if not present in the topology.
+	 *
+	 * @param zone the zone that will be looked up for devi es
 	 *
 	 * @return map of serial number to computed config
 	 */
