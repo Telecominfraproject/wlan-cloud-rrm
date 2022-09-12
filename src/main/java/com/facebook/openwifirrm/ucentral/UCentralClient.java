@@ -601,7 +601,7 @@ public class UCentralClient {
 	 * @return {@link RRMDetails}, containing information about the RRM
 	 *   schedule and parameters
 	 */
-	public RRMDetails getProvInventoryRrmDetails(String serial) {
+	public RRMDetails getProvInventoryRRMDetails(String serial) {
 		Map<String, Object> parameters = new HashMap<>();
 		parameters.put("rrmSettings", true);
 		HttpResponse<String> response =
@@ -639,14 +639,14 @@ public class UCentralClient {
 		try {
 			InventoryConfigApplyResult result = gson
 				.fromJson(response.getBody(), InventoryConfigApplyResult.class);
-			if (result.warnings != null) {
+			if (result.warnings != null && !result.warnings.isEmpty()) {
 				logger.error(
 					"Encountered warnings fetching applied config: {}",
 					result.warnings
 				);
 			}
 
-			if (result.errors != null) {
+			if (result.errors != null && !result.errors.isEmpty()) {
 				logger.error(
 					"Encountered errors fetching applied config: {}",
 					result.errors

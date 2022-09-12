@@ -431,7 +431,8 @@ public class ApiServer implements Runnable {
 		return Json.pretty(getOpenApi());
 	}
 
-	/** TODO [ZoneBasedRrmScheduling] remove this once we move to venues
+	// TODO [ZoneBasedRrmScheduling] remove this once we move to venues
+	/**
 	 * Calls prov to get a mapping of all RRM enabled devices to their settings
 	 * and updates the device config.
 	 */
@@ -445,7 +446,7 @@ public class ApiServer implements Runnable {
 		Map<String, RRMDetails> rrmDetails = new HashMap<String, RRMDetails>();
 		for (String serialNumber : inventoryForRRM.serialNumbers) {
 			RRMDetails details =
-				client.getProvInventoryRrmDetails(serialNumber);
+				client.getProvInventoryRRMDetails(serialNumber);
 			if (details == null) {
 				logger
 					.error("Could not fetch RRM details for {}", serialNumber);
@@ -881,7 +882,7 @@ public class ApiServer implements Runnable {
 
 				// Update scheduler
 
-				// TODO [ZoneBasedRrmScheduling] reeanable after venue based configs
+				// TODO [ZoneBasedRrmScheduling] reenable after venue based configs
 				// scheduler.syncTriggers();
 				getAndUpdateRRMDetails();
 				scheduler.syncTriggersForDevices();
