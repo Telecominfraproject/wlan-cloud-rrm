@@ -13,10 +13,13 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
@@ -238,7 +241,7 @@ public class MeasurementBasedApApTPCTest {
 
 	@Test
 	@Order(1)
-	void test_getManagedBSSIDs() throws Exception {
+	void testGetManagedBSSIDs() throws Exception {
 		DataModel dataModel = createModel();
 		Set<String> managedBSSIDs =
 			MeasurementBasedApApTPC.getManagedBSSIDs(dataModel);
@@ -250,7 +253,7 @@ public class MeasurementBasedApApTPCTest {
 
 	@Test
 	@Order(2)
-	void test_getCurrentTxPower() throws Exception {
+	void testGetCurrentTxPower() throws Exception {
 		final int expectedTxPower = 29;
 
 		DataModel model = new DataModel();
@@ -269,7 +272,7 @@ public class MeasurementBasedApApTPCTest {
 
 	@Test
 	@Order(3)
-	void test_buildRssiMap() throws Exception {
+	void testBuildRssiMap() throws Exception {
 		// This example includes three APs, and one AP that is unmanaged
 		Set<String> bssidSet = Set.of(BSSID_A, BSSID_B, BSSID_C);
 		Map<String, List<List<WifiScanEntry>>> latestWifiScans =
@@ -291,7 +294,7 @@ public class MeasurementBasedApApTPCTest {
 
 	@Test
 	@Order(4)
-	void test_computeTxPower() throws Exception {
+	void testComputeTxPower() throws Exception {
 		// Test examples here taken from algorithm design doc from @pohanhf
 		final String serialNumber = "testSerial";
 		final int currentTxPower = 30;
@@ -306,7 +309,8 @@ public class MeasurementBasedApApTPCTest {
 			currentTxPower,
 			rssiValues,
 			coverageThreshold,
-			nthSmallestRssi
+			nthSmallestRssi,
+			TPC.DEFAULT_TX_POWER_CHOICES
 		);
 		assertEquals(16, newTxPower);
 
@@ -316,7 +320,8 @@ public class MeasurementBasedApApTPCTest {
 			currentTxPower,
 			rssiValues,
 			coverageThreshold,
-			nthSmallestRssi
+			nthSmallestRssi,
+			TPC.DEFAULT_TX_POWER_CHOICES
 		);
 		assertEquals(12, newTxPower);
 
@@ -326,7 +331,8 @@ public class MeasurementBasedApApTPCTest {
 			currentTxPower,
 			rssiValues,
 			coverageThreshold,
-			nthSmallestRssi
+			nthSmallestRssi,
+			TPC.DEFAULT_TX_POWER_CHOICES
 		);
 		assertEquals(2, newTxPower);
 
@@ -337,7 +343,8 @@ public class MeasurementBasedApApTPCTest {
 			currentTxPower,
 			rssiValues,
 			coverageThreshold,
-			nthSmallestRssi
+			nthSmallestRssi,
+			TPC.DEFAULT_TX_POWER_CHOICES
 		);
 		assertEquals(0, newTxPower);
 
@@ -347,7 +354,8 @@ public class MeasurementBasedApApTPCTest {
 			0,
 			rssiValues,
 			coverageThreshold,
-			nthSmallestRssi
+			nthSmallestRssi,
+			TPC.DEFAULT_TX_POWER_CHOICES
 		);
 		assertEquals(30, newTxPower);
 	}
@@ -411,7 +419,7 @@ public class MeasurementBasedApApTPCTest {
 
 	@Test
 	@Order(5)
-	void test_computeTxPowerMapOnOneBand() throws Exception {
+	void testComputeTxPowerMapOnOneBand() throws Exception {
 		for (String band : UCentralConstants.BANDS) {
 			testComputeTxPowerMapSimpleInOneBand(band);
 			testComputeTxPowerMapMissingDataInOneBand(band);
@@ -420,7 +428,7 @@ public class MeasurementBasedApApTPCTest {
 
 	@Test
 	@Order(6)
-	void test_computeTxPowerMapMultiBand() {
+	void testComputeTxPowerMapMultiBand() {
 		// test both bands simultaneously with different setups on each band
 		DataModel dataModel = createModel();
 		// make device C not operate in the 5G band instead of dual band
@@ -496,4 +504,84 @@ public class MeasurementBasedApApTPCTest {
 			txPowerMap.get(DEVICE_C).containsKey(UCentralConstants.BAND_5G)
 		);
 	}
+
+	@Test
+	@Order(7)
+	void testComputeWithTxPowerChoices() {
+		// Test examples here are similar with testComputeTxPower, but the tx
+		// power choices are changed
+		final String serialNumber = "testSerial";
+		final int currentTxPower = 30;
+		final int coverageThreshold = -80;
+		final int nthSmallestRssi = 0;
+		List<Integer> rssiValues = List.of(-66);
+
+		int newTxPower = MeasurementBasedApApTPC.computeTxPower(
+			serialNumber,
+			currentTxPower,
+			rssiValues,
+			coverageThreshold,
+			nthSmallestRssi,
+			IntStream
+				.rangeClosed(20, 30)
+				.boxed()
+				.collect(Collectors.toList())
+		);
+		assertEquals(20, newTxPower);
+
+		rssiValues = List.of(-62);
+		newTxPower = MeasurementBasedApApTPC.computeTxPower(
+			serialNumber,
+			currentTxPower,
+			rssiValues,
+			coverageThreshold,
+			nthSmallestRssi,
+			Arrays.asList(8, 9, 10, 11)
+		);
+		assertEquals(11, newTxPower);
+
+		rssiValues = List.of(-52, -20);
+		newTxPower = MeasurementBasedApApTPC.computeTxPower(
+			serialNumber,
+			currentTxPower,
+			rssiValues,
+			coverageThreshold,
+			nthSmallestRssi,
+			IntStream
+				.rangeClosed(2, 20)
+				.boxed()
+				.collect(Collectors.toList())
+		);
+		assertEquals(2, newTxPower);
+
+		// Check edge cases
+		rssiValues = List.of(-30);
+		newTxPower = MeasurementBasedApApTPC.computeTxPower(
+			serialNumber,
+			currentTxPower,
+			rssiValues,
+			coverageThreshold,
+			nthSmallestRssi,
+			IntStream
+				.rangeClosed(5, 20)
+				.boxed()
+				.collect(Collectors.toList())
+		);
+		assertEquals(5, newTxPower);
+
+		rssiValues = List.of();
+		newTxPower = MeasurementBasedApApTPC.computeTxPower(
+			serialNumber,
+			0,
+			rssiValues,
+			coverageThreshold,
+			nthSmallestRssi,
+			IntStream
+				.rangeClosed(2, 30)
+				.boxed()
+				.collect(Collectors.toList())
+		);
+		assertEquals(30, newTxPower);
+	}
+
 }

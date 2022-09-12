@@ -8,6 +8,8 @@
 
 package com.facebook.openwifirrm.optimizers.tpc;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.TreeMap;
@@ -113,31 +115,50 @@ public class RandomTxPowerInitializer extends TPC {
 		this.rng = rng;
 	}
 
-	/** Get a random tx power in [MIN_TX_POWER, MAX_TX_POWER], both inclusive */
-	public int getRandomTxPower() {
-		return rng.nextInt(TPC.MAX_TX_POWER + 1 - TPC.MIN_TX_POWER) +
-			TPC.MIN_TX_POWER;
-	}
-
 	@Override
 	public Map<String, Map<String, Integer>> computeTxPowerMap() {
-		int defaultTxPower = this.getRandomTxPower();
-		logger.info("Default power: {}", defaultTxPower);
+		Integer defaultTxPower = MAX_TX_POWER;
+		if (!setDifferentTxPowerPerAp) {
+			List<Integer> txPowerChoices =
+				new ArrayList<>(DEFAULT_TX_POWER_CHOICES);
+			for (String serialNumber : model.latestState.keySet()) {
+				for (String band : UCentralConstants.BANDS) {
+					txPowerChoices = updateTxPowerChoices(
+						band,
+						serialNumber,
+						txPowerChoices
+					);
+				}
+			}
+
+			defaultTxPower =
+				txPowerChoices.get(rng.nextInt(txPowerChoices.size()));
+			logger.info("Default power: {}", defaultTxPower);
+		}
+
 		Map<String, Map<String, Integer>> txPowerMap = new TreeMap<>();
 		for (String serialNumber : model.latestState.keySet()) {
-			int txPower =
-				setDifferentTxPowerPerAp ? getRandomTxPower() : defaultTxPower;
 			Map<String, Integer> radioMap = new TreeMap<>();
 			for (String band : UCentralConstants.BANDS) {
+				Integer txPower = defaultTxPower;
+				if (setDifferentTxPowerPerAp) {
+					List<Integer> curTxPowerChoices = updateTxPowerChoices(
+						band,
+						serialNumber,
+						DEFAULT_TX_POWER_CHOICES
+					);
+					txPower = curTxPowerChoices
+						.get(rng.nextInt(curTxPowerChoices.size()));
+				}
 				radioMap.put(band, txPower);
+				logger.info(
+					"Device {} band {}: Assigning tx power = {}",
+					serialNumber,
+					band,
+					txPower
+				);
 			}
 			txPowerMap.put(serialNumber, radioMap);
-
-			logger.info(
-				"Device {}: Assigning tx power = {}",
-				serialNumber,
-				txPower
-			);
 		}
 
 		return txPowerMap;

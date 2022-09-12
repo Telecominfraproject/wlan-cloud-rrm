@@ -8,6 +8,8 @@
 
 package com.facebook.openwifirrm.optimizers.tpc;
 
+import com.facebook.openwifirrm.DeviceConfig;
+import com.facebook.openwifirrm.DeviceLayeredConfig;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -19,13 +21,12 @@ import com.facebook.openwifirrm.optimizers.TestUtils;
 import com.facebook.openwifirrm.ucentral.UCentralConstants;
 import com.facebook.openwifirrm.ucentral.models.State;
 
+import java.util.Arrays;
 import java.util.Map;
 import java.util.Random;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.TreeMap;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @TestMethodOrder(OrderAnnotation.class)
 public class RandomTxPowerInitializerTest {
@@ -64,7 +65,7 @@ public class RandomTxPowerInitializerTest {
 
 	@Test
 	@Order(1)
-	void testSeededTxPower() throws Exception {
+	void testSeededSameTxPower() throws Exception {
 		TPC optimizer = new RandomTxPowerInitializer(
 			createModel(),
 			TEST_ZONE,
@@ -76,7 +77,6 @@ public class RandomTxPowerInitializerTest {
 		Map<String, Map<String, Integer>> txPowerMap =
 			optimizer.computeTxPowerMap();
 
-		// first generated random number for seed of 0
 		int txPower = 2;
 		for (String band : UCentralConstants.BANDS) {
 			assertEquals(txPower, txPowerMap.get(DEVICE_A).get(band));
@@ -86,50 +86,48 @@ public class RandomTxPowerInitializerTest {
 
 	@Test
 	@Order(2)
-	void testRandomTxPower() throws Exception {
+	void testSeededDifferentTxPowers() throws Exception {
+		DeviceDataManager deviceDataManager = createDeviceDataManager();
+		DeviceLayeredConfig deviceLayeredConfig = new DeviceLayeredConfig();
+		DeviceConfig deviceConfigA = new DeviceConfig();
+		deviceConfigA.allowedTxPowers = new TreeMap<>();
+		deviceConfigA.allowedTxPowers
+			.put(UCentralConstants.BAND_2G, Arrays.asList(11, 12, 13, 14, 15));
+		deviceConfigA.userTxPowers = new TreeMap<>();
+		deviceConfigA.userTxPowers.put(UCentralConstants.BAND_2G, 6);
+		deviceConfigA.allowedTxPowers
+			.put(UCentralConstants.BAND_5G, Arrays.asList(11, 12, 13, 14, 15));
+		deviceLayeredConfig.apConfig.put(DEVICE_A, deviceConfigA);
+		DeviceConfig deviceConfigB = new DeviceConfig();
+		deviceConfigB.userTxPowers = new TreeMap<>();
+		deviceConfigB.userTxPowers.put(UCentralConstants.BAND_2G, 7);
+		deviceLayeredConfig.apConfig.put(DEVICE_B, deviceConfigB);
+		deviceDataManager.setDeviceLayeredConfig(deviceLayeredConfig);
 		TPC optimizer = new RandomTxPowerInitializer(
 			createModel(),
 			TEST_ZONE,
-			createDeviceDataManager()
-		);
-		Map<String, Map<String, Integer>> txPowerMap =
-			optimizer.computeTxPowerMap();
-		Set<Integer> txPowerSet = new TreeSet<>();
-		for (String serialNumber : txPowerMap.keySet()) {
-			txPowerSet.addAll(txPowerMap.get(serialNumber).values());
-		}
-		// One unique tx power for all devices and bands
-		assertEquals(1, txPowerSet.size());
-		for (int txPower : txPowerSet) {
-			assertTrue(
-				txPower >= TPC.MIN_TX_POWER && txPower <= TPC.MAX_TX_POWER
-			);
-		}
-	}
-
-	@Test
-	@Order(3)
-	void testRandomTxPowerPerAp() throws Exception {
-		TPC optimizer = new RandomTxPowerInitializer(
-			createModel(),
-			TEST_ZONE,
-			createDeviceDataManager(),
+			deviceDataManager,
 			true,
 			new Random(0)
 		);
 		Map<String, Map<String, Integer>> txPowerMap =
 			optimizer.computeTxPowerMap();
-		Set<Integer> txPowerSet = new TreeSet<>();
-		for (String serialNumber : txPowerMap.keySet()) {
-			txPowerSet.addAll(txPowerMap.get(serialNumber).values());
-		}
 
-		// different values per AP
-		assertTrue(txPowerSet.size() > 1);
-		for (int txPower : txPowerSet) {
-			assertTrue(
-				txPower >= TPC.MIN_TX_POWER && txPower <= TPC.MAX_TX_POWER
-			);
-		}
+		assertEquals(
+			6,
+			txPowerMap.get(DEVICE_A).get(UCentralConstants.BAND_2G)
+		);
+		assertEquals(
+			13,
+			txPowerMap.get(DEVICE_A).get(UCentralConstants.BAND_5G)
+		);
+		assertEquals(
+			7,
+			txPowerMap.get(DEVICE_B).get(UCentralConstants.BAND_2G)
+		);
+		assertEquals(
+			2,
+			txPowerMap.get(DEVICE_B).get(UCentralConstants.BAND_5G)
+		);
 	}
 }

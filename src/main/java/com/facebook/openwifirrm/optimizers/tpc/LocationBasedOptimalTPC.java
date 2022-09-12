@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -144,7 +143,8 @@ public class LocationBasedOptimalTPC extends TPC {
 			}
 		}
 		if (optimalIndex == permutations.size()) {
-			return Collections.nCopies(numOfAPs, 30);
+			return Collections
+				.nCopies(numOfAPs, Collections.max(txPowerChoices));
 		} else {
 			return permutations.get(optimalIndex);
 		}
@@ -167,11 +167,8 @@ public class LocationBasedOptimalTPC extends TPC {
 		Map<String, Integer> validAPs = new TreeMap<>();
 		List<Double> apLocX = new ArrayList<>();
 		List<Double> apLocY = new ArrayList<>();
-		List<Integer> txPowerChoices = IntStream
-			.rangeClosed(MIN_TX_POWER, MAX_TX_POWER)
-			.boxed()
-			.collect(Collectors.toList());
-
+		List<Integer> txPowerChoices =
+			new ArrayList<>(DEFAULT_TX_POWER_CHOICES);
 		// Filter out the invalid APs (e.g., no radio, no location data)
 		// Update txPowerChoices, boundary, apLocX, apLocY for the optimization
 		for (Map.Entry<String, State> e : model.latestState.entrySet()) {
@@ -215,11 +212,8 @@ public class LocationBasedOptimalTPC extends TPC {
 			}
 
 			// Update the txPowerChoices for the optimization
-			Map<String, List<Integer>> allowedTxPowers =
-				deviceCfg.allowedTxPowers;
-			if (allowedTxPowers != null && allowedTxPowers.get(band) != null) {
-				txPowerChoices.retainAll(allowedTxPowers.get(band));
-			}
+			txPowerChoices =
+				updateTxPowerChoices(band, serialNumber, txPowerChoices);
 
 			// Update the boundary for the optimization
 			if (deviceCfg.boundary != null) {
