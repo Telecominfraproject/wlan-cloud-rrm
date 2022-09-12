@@ -26,7 +26,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":10,"i1":10,"i2":9};
+var data = {"i0":10,"i1":9};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -181,7 +181,7 @@ extends <a href="TPC.html" title="class in com.facebook.openwifirrm.optimizers.t
 <!--   -->
 </a>
 <h3>Fields inherited from class&nbsp;com.facebook.openwifirrm.optimizers.tpc.<a href="TPC.html" title="class in com.facebook.openwifirrm.optimizers.tpc">TPC</a></h3>
-<code><a href="TPC.html#deviceConfigs">deviceConfigs</a>, <a href="TPC.html#MAX_TX_POWER">MAX_TX_POWER</a>, <a href="TPC.html#MIN_TX_POWER">MIN_TX_POWER</a>, <a href="TPC.html#model">model</a>, <a href="TPC.html#zone">zone</a></code></li>
+<code><a href="TPC.html#DEFAULT_TX_POWER_CHOICES">DEFAULT_TX_POWER_CHOICES</a>, <a href="TPC.html#deviceConfigs">deviceConfigs</a>, <a href="TPC.html#MAX_TX_POWER">MAX_TX_POWER</a>, <a href="TPC.html#MIN_TX_POWER">MIN_TX_POWER</a>, <a href="TPC.html#model">model</a>, <a href="TPC.html#zone">zone</a></code></li>
 </ul>
 </li>
 </ul>
@@ -254,13 +254,6 @@ extends <a href="TPC.html" title="class in com.facebook.openwifirrm.optimizers.t
 </td>
 </tr>
 <tr id="i1" class="rowColor">
-<td class="colFirst"><code>int</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getRandomTxPower()">getRandomTxPower</a></span>()</code></th>
-<td class="colLast">
-<div class="block">Get a random tx power in [MIN_TX_POWER, MAX_TX_POWER], both inclusive</div>
-</td>
-</tr>
-<tr id="i2" class="altColor">
 <td class="colFirst"><code>static <a href="RandomTxPowerInitializer.html" title="class in com.facebook.openwifirrm.optimizers.tpc">RandomTxPowerInitializer</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#makeWithArgs(com.facebook.openwifirrm.modules.Modeler.DataModel,java.lang.String,com.facebook.openwifirrm.DeviceDataManager,java.util.Map)">makeWithArgs</a></span>&#8203;(<a href="../../modules/Modeler.DataModel.html" title="class in com.facebook.openwifirrm.modules">Modeler.DataModel</a>&nbsp;model,
             <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;zone,
@@ -276,7 +269,7 @@ extends <a href="TPC.html" title="class in com.facebook.openwifirrm.optimizers.t
 <!--   -->
 </a>
 <h3>Methods inherited from class&nbsp;com.facebook.openwifirrm.optimizers.tpc.<a href="TPC.html" title="class in com.facebook.openwifirrm.optimizers.tpc">TPC</a></h3>
-<code><a href="TPC.html#applyConfig(com.facebook.openwifirrm.DeviceDataManager,com.facebook.openwifirrm.modules.ConfigManager,java.util.Map)">applyConfig</a></code></li>
+<code><a href="TPC.html#applyConfig(com.facebook.openwifirrm.DeviceDataManager,com.facebook.openwifirrm.modules.ConfigManager,java.util.Map)">applyConfig</a>, <a href="TPC.html#updateTxPowerChoices(java.lang.String,java.lang.String,java.util.List)">updateTxPowerChoices</a></code></li>
 </ul>
 <ul class="blockList">
 <li class="blockList"><a id="methods.inherited.from.class.java.lang.Object">
@@ -401,16 +394,6 @@ extends <a href="TPC.html" title="class in com.facebook.openwifirrm.optimizers.t
                                                     <a href="../../DeviceDataManager.html" title="class in com.facebook.openwifirrm">DeviceDataManager</a>&nbsp;deviceDataManager,
                                                     <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html?is-external=true" title="class or interface in java.util" class="externalLink">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>,&#8203;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&gt;&nbsp;args)</pre>
 <div class="block">Factory method to parse generic args map into the proper constructor</div>
-</li>
-</ul>
-<a id="getRandomTxPower()">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>getRandomTxPower</h4>
-<pre class="methodSignature">public&nbsp;int&nbsp;getRandomTxPower()</pre>
-<div class="block">Get a random tx power in [MIN_TX_POWER, MAX_TX_POWER], both inclusive</div>
 </li>
 </ul>
 <a id="computeTxPowerMap()">

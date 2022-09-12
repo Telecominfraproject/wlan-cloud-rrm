@@ -294,7 +294,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/DeviceConfig.html#autoTxPowers">autoTxPowers</a></span> - Variable in class com.facebook.openwifirrm.<a href="com/facebook/openwifirrm/DeviceConfig.html" title="class in com.facebook.openwifirrm">DeviceConfig</a></dt>
 <dd>
-<div class="block">The RRM-assigned tx powers to use (map from radio to tx power)</div>
+<div class="block">The RRM-assigned tx powers to use (map from band to tx power)</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/optimizers/channel/ChannelOptimizer.html#AVAILABLE_CHANNELS_BAND">AVAILABLE_CHANNELS_BAND</a></span> - Static variable in class com.facebook.openwifirrm.optimizers.channel.<a href="com/facebook/openwifirrm/optimizers/channel/ChannelOptimizer.html" title="class in com.facebook.openwifirrm.optimizers.channel">ChannelOptimizer</a></dt>
 <dd>
@@ -503,7 +503,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/optimizers/channel/RandomChannelInitializer.html#computeChannelMap()">computeChannelMap()</a></span> - Method in class com.facebook.openwifirrm.optimizers.channel.<a href="com/facebook/openwifirrm/optimizers/channel/RandomChannelInitializer.html" title="class in com.facebook.openwifirrm.optimizers.channel">RandomChannelInitializer</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/optimizers/tpc/MeasurementBasedApApTPC.html#computeTxPower(java.lang.String,int,java.util.List,int,int)">computeTxPower(String, int, List&lt;Integer&gt;, int, int)</a></span> - Static method in class com.facebook.openwifirrm.optimizers.tpc.<a href="com/facebook/openwifirrm/optimizers/tpc/MeasurementBasedApApTPC.html" title="class in com.facebook.openwifirrm.optimizers.tpc">MeasurementBasedApApTPC</a></dt>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/optimizers/tpc/MeasurementBasedApApTPC.html#computeTxPower(java.lang.String,int,java.util.List,int,int,java.util.List)">computeTxPower(String, int, List&lt;Integer&gt;, int, int, List&lt;Integer&gt;)</a></span> - Static method in class com.facebook.openwifirrm.optimizers.tpc.<a href="com/facebook/openwifirrm/optimizers/tpc/MeasurementBasedApApTPC.html" title="class in com.facebook.openwifirrm.optimizers.tpc">MeasurementBasedApApTPC</a></dt>
 <dd>
 <div class="block">Compute adjusted tx power (dBm) based on inputs.</div>
 </dd>
@@ -708,6 +708,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/optimizers/tpc/MeasurementBasedApClientTPC.html#DEFAULT_TX_POWER">DEFAULT_TX_POWER</a></span> - Static variable in class com.facebook.openwifirrm.optimizers.tpc.<a href="com/facebook/openwifirrm/optimizers/tpc/MeasurementBasedApClientTPC.html" title="class in com.facebook.openwifirrm.optimizers.tpc">MeasurementBasedApClientTPC</a></dt>
 <dd>
 <div class="block">Default tx power.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/optimizers/tpc/TPC.html#DEFAULT_TX_POWER_CHOICES">DEFAULT_TX_POWER_CHOICES</a></span> - Static variable in class com.facebook.openwifirrm.optimizers.tpc.<a href="com/facebook/openwifirrm/optimizers/tpc/TPC.html" title="class in com.facebook.openwifirrm.optimizers.tpc">TPC</a></dt>
+<dd>
+<div class="block">Default tx power choices.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/prov/models/Entity.html#defaultEntity">defaultEntity</a></span> - Variable in class com.facebook.openwifirrm.ucentral.prov.models.<a href="com/facebook/openwifirrm/ucentral/prov/models/Entity.html" title="class in com.facebook.openwifirrm.ucentral.prov.models">Entity</a></dt>
 <dd>&nbsp;</dd>
@@ -1159,10 +1163,6 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/UCentralApConfiguration.html#getRadioCount()">getRadioCount()</a></span> - Method in class com.facebook.openwifirrm.ucentral.<a href="com/facebook/openwifirrm/ucentral/UCentralApConfiguration.html" title="class in com.facebook.openwifirrm.ucentral">UCentralApConfiguration</a></dt>
 <dd>
 <div class="block">Return the number of radios, or -1 if the field is missing/malformed.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/optimizers/tpc/RandomTxPowerInitializer.html#getRandomTxPower()">getRandomTxPower()</a></span> - Method in class com.facebook.openwifirrm.optimizers.tpc.<a href="com/facebook/openwifirrm/optimizers/tpc/RandomTxPowerInitializer.html" title="class in com.facebook.openwifirrm.optimizers.tpc">RandomTxPowerInitializer</a></dt>
-<dd>
-<div class="block">Get a random tx power in [MIN_TX_POWER, MAX_TX_POWER], both inclusive</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/optimizers/channel/LeastUsedChannelOptimizer.html#getScanRespsByBandwidth(java.lang.String,java.lang.String,int,java.util.Map)">getScanRespsByBandwidth(String, String, int, Map&lt;String, List&lt;UCentralUtils.WifiScanEntry&gt;&gt;)</a></span> - Method in class com.facebook.openwifirrm.optimizers.channel.<a href="com/facebook/openwifirrm/optimizers/channel/LeastUsedChannelOptimizer.html" title="class in com.facebook.openwifirrm.optimizers.channel">LeastUsedChannelOptimizer</a></dt>
 <dd>
@@ -2738,6 +2738,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/RRMConfig.ModuleConfig.DataCollectorParams.html#updateIntervalMs">updateIntervalMs</a></span> - Variable in class com.facebook.openwifirrm.<a href="com/facebook/openwifirrm/RRMConfig.ModuleConfig.DataCollectorParams.html" title="class in com.facebook.openwifirrm">RRMConfig.ModuleConfig.DataCollectorParams</a></dt>
 <dd>
 <div class="block">The main logic loop interval (i.e.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/optimizers/tpc/TPC.html#updateTxPowerChoices(java.lang.String,java.lang.String,java.util.List)">updateTxPowerChoices(String, String, List&lt;Integer&gt;)</a></span> - Method in class com.facebook.openwifirrm.optimizers.tpc.<a href="com/facebook/openwifirrm/optimizers/tpc/TPC.html" title="class in com.facebook.openwifirrm.optimizers.tpc">TPC</a></dt>
+<dd>
+<div class="block">Update the tx power choices based on user and allowed channels from deviceConfig</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/UCentralUtils.html#UPPER_CHANNEL_LIMIT">UPPER_CHANNEL_LIMIT</a></span> - Static variable in class com.facebook.openwifirrm.ucentral.<a href="com/facebook/openwifirrm/ucentral/UCentralUtils.html" title="class in com.facebook.openwifirrm.ucentral">UCentralUtils</a></dt>
 <dd>
