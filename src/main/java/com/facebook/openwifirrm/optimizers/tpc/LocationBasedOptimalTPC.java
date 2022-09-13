@@ -22,7 +22,7 @@ import com.facebook.openwifirrm.DeviceConfig;
 import com.facebook.openwifirrm.DeviceDataManager;
 import com.facebook.openwifirrm.modules.Modeler.DataModel;
 import com.facebook.openwifirrm.modules.ModelerUtils;
-import com.facebook.openwifirrm.ucentral.UCentralConstants;
+import com.facebook.openwifirrm.ucentral.UCentralUtils;
 import com.facebook.openwifirrm.ucentral.models.State;
 
 /**
@@ -153,17 +153,20 @@ public class LocationBasedOptimalTPC extends TPC {
 	/**
 	 * Calculate new tx powers for the given band.
 	 *
-	 * @param band       band
+	 * @param channel channel
+	 * @param serialNumbers The serial numbers of the APs with the channel
 	 * @param txPowerMap this map from serial number to band to new tx power
 	 *                   (dBm) must be passed in empty, and it is filled in by
 	 *                   this method with the new tx powers.
 	 */
-	private void buildTxPowerMapForBand(
-		String band,
+	private void buildTxPowerMapForChannel(
+		int channel,
+		List<String> serialNumbers,
 		Map<String, Map<String, Integer>> txPowerMap
 	) {
 		int numOfAPs = 0;
 		int boundary = 100;
+		String band = UCentralUtils.getBandFromChannel(channel);
 		Map<String, Integer> validAPs = new TreeMap<>();
 		List<Double> apLocX = new ArrayList<>();
 		List<Double> apLocY = new ArrayList<>();
@@ -171,9 +174,8 @@ public class LocationBasedOptimalTPC extends TPC {
 			new ArrayList<>(DEFAULT_TX_POWER_CHOICES);
 		// Filter out the invalid APs (e.g., no radio, no location data)
 		// Update txPowerChoices, boundary, apLocX, apLocY for the optimization
-		for (Map.Entry<String, State> e : model.latestState.entrySet()) {
-			String serialNumber = e.getKey();
-			State state = e.getValue();
+		for (String serialNumber : serialNumbers) {
+			State state = model.latestState.get(serialNumber);
 
 			// Ignore the device if its radio is not active
 			if (state.radios == null || state.radios.length == 0) {
@@ -280,8 +282,9 @@ public class LocationBasedOptimalTPC extends TPC {
 	@Override
 	public Map<String, Map<String, Integer>> computeTxPowerMap() {
 		Map<String, Map<String, Integer>> txPowerMap = new TreeMap<>();
-		for (String band : UCentralConstants.BANDS) {
-			buildTxPowerMapForBand(band, txPowerMap);
+		Map<Integer, List<String>> apsPerChannel = getApsPerChannel();
+		for (Map.Entry<Integer, List<String>> e : apsPerChannel.entrySet()) {
+			buildTxPowerMapForChannel(e.getKey(), e.getValue(), txPowerMap);
 		}
 		return txPowerMap;
 	}

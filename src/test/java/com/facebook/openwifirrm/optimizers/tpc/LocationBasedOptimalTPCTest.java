@@ -194,7 +194,7 @@ public class LocationBasedOptimalTPCTest {
 		deviceDataManager2.setDeviceApConfig(deviceC, apCfgC2);
 
 		DataModel dataModel2 = new DataModel();
-		for (String device : Arrays.asList(deviceA, deviceB, deviceC)) {
+		for (String device : Arrays.asList(deviceA, deviceB)) {
 			dataModel2.latestDeviceStatus.put(
 				device,
 				TestUtils.createDeviceStatus(UCentralConstants.BANDS)
@@ -213,6 +213,22 @@ public class LocationBasedOptimalTPCTest {
 				)
 			);
 		}
+		dataModel2.latestDeviceStatus
+			.put(
+				deviceC,
+				TestUtils.createDeviceStatus(
+					Arrays.asList(UCentralConstants.BAND_5G)
+				)
+			);
+		dataModel2.latestState.put(
+			deviceC,
+			TestUtils.createState(
+				DEFAULT_CHANNEL_5G,
+				DEFAULT_CHANNEL_WIDTH,
+				DEFAULT_TX_POWER,
+				dummyBssid
+			)
+		);
 
 		Map<String, Map<String, Integer>> expected2 = new HashMap<>();
 		for (String band : UCentralConstants.BANDS) {
@@ -221,12 +237,12 @@ public class LocationBasedOptimalTPCTest {
 					band,
 					30
 				);
-			expected2.computeIfAbsent(deviceC, k -> new TreeMap<>())
-				.put(
-					band,
-					0
-				);
 		}
+		expected2.computeIfAbsent(deviceC, k -> new TreeMap<>())
+			.put(
+				UCentralConstants.BAND_5G,
+				0
+			);
 
 		LocationBasedOptimalTPC optimizer2 = new LocationBasedOptimalTPC(
 			dataModel2,

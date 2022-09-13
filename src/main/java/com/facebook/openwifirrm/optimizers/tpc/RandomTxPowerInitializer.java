@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.TreeMap;
 
+import com.facebook.openwifirrm.ucentral.UCentralUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -136,11 +137,16 @@ public class RandomTxPowerInitializer extends TPC {
 			logger.info("Default power: {}", defaultTxPower);
 		}
 
+		Map<Integer, List<String>> apsPerChannel = getApsPerChannel();
 		Map<String, Map<String, Integer>> txPowerMap = new TreeMap<>();
-		for (String serialNumber : model.latestState.keySet()) {
-			Map<String, Integer> radioMap = new TreeMap<>();
-			for (String band : UCentralConstants.BANDS) {
-				Integer txPower = defaultTxPower;
+
+		for (Map.Entry<Integer, List<String>> e : apsPerChannel.entrySet()) {
+			int channel = e.getKey();
+			List<String> serialNumbers = e.getValue();
+
+			String band = UCentralUtils.getBandFromChannel(channel);
+			for (String serialNumber : serialNumbers) {
+				int txPower = defaultTxPower;
 				if (setDifferentTxPowerPerAp) {
 					List<Integer> curTxPowerChoices = updateTxPowerChoices(
 						band,
@@ -150,7 +156,8 @@ public class RandomTxPowerInitializer extends TPC {
 					txPower = curTxPowerChoices
 						.get(rng.nextInt(curTxPowerChoices.size()));
 				}
-				radioMap.put(band, txPower);
+				txPowerMap.computeIfAbsent(serialNumber, k -> new TreeMap<>())
+					.put(band, txPower);
 				logger.info(
 					"Device {} band {}: Assigning tx power = {}",
 					serialNumber,
@@ -158,7 +165,6 @@ public class RandomTxPowerInitializer extends TPC {
 					txPower
 				);
 			}
-			txPowerMap.put(serialNumber, radioMap);
 		}
 
 		return txPowerMap;
