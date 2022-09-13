@@ -8,11 +8,11 @@
 
 package com.facebook.openwifirrm.modules;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +26,6 @@ import com.facebook.openwifirrm.RRMSchedule;
 import com.facebook.openwifirrm.ucentral.UCentralClient;
 import com.facebook.openwifirrm.ucentral.prov.models.InventoryTag;
 import com.facebook.openwifirrm.ucentral.prov.models.InventoryTagList;
-import com.facebook.openwifirrm.ucentral.prov.models.RRMAlgorithmDetails;
 import com.facebook.openwifirrm.ucentral.prov.models.RRMDetails;
 import com.facebook.openwifirrm.ucentral.prov.models.SerialNumberList;
 import com.facebook.openwifirrm.ucentral.prov.models.Venue;
@@ -116,19 +115,30 @@ public class ProvMonitor implements Runnable {
 			return;
 		}
 
+		VenueList venueList = client.getProvVenues();
+		if (venueList == null) {
+			logger.error("Failed to fetch venues from owprov");
+			return;
+		}
+
 		// fetch the RRM details for each venue
-		Map<String, RRMDetails> rrmDetails = new HashMap<String, RRMDetails>();
+		Map<String, RRMDetails> rrmDetails = new HashMap<>();
 		// TODO this currently chooses the first AP encountered per venue to fetch
 		// the RRMDetails. Once a proper venue based RRM settings API is available
 		// we should use that instead of doing this.
 		for (InventoryTag tag : inventory.taglist) {
+			// a device may not have a venue if it got auto added but not configured
+			if (tag.venue.isEmpty()) {
+				continue;
+			}
+
 			rrmDetails.computeIfAbsent(tag.venue, k -> {
 				RRMDetails details =
 					client.getProvInventoryRRMDetails(tag.serialNumber);
 				if (details == null) {
 					logger
 						.error(
-							"Could not fetch RRM details for device {} and venue {}",
+							"Could not fetch RRM details for device {} in venue {}",
 							tag.serialNumber,
 							tag.venue
 						);
@@ -137,14 +147,35 @@ public class ProvMonitor implements Runnable {
 			});
 		}
 
-		VenueList venueList = client.getProvVenues();
-		if (venueList == null) {
-			logger.error("Failed to fetch venues from owprov");
-			return;
-		}
-
 		// Sync data
 		syncDataToProv(inventory, inventoryForRRM, rrmDetails, venueList);
+	}
+
+	/**
+	 * Build {@link RRMSchedule} from {@link RRMDetails}
+	 */
+	protected RRMSchedule transformScheduleToDetails(RRMDetails details) {
+		if (details == null) {
+			return null;
+		}
+
+		RRMSchedule schedule = new RRMSchedule();
+		schedule.cron = RRMScheduler
+			.parseIntoQuartzCron(details.rrm.schedule);
+		if (schedule.cron.isEmpty()) {
+			return null;
+		}
+
+		if (details.rrm.algorithms != null) {
+			schedule.algorithms =
+				details.rrm.algorithms.stream()
+					.map(
+						algo -> RRMAlgorithm
+							.parse(algo.name, algo.parameters)
+					)
+					.collect(Collectors.toList());
+		}
+		return schedule;
 	}
 
 	/**
@@ -197,6 +228,12 @@ public class ProvMonitor implements Runnable {
 		// Sync zone configs
 		deviceDataManager.updateZoneConfig(
 			configMap -> {
+				// wipe zones to handle the case where some venue RRM config got newly
+				// wiped in Prov
+				for (Venue venue : venueList.venues) {
+					configMap.remove(venue.name);
+				}
+
 				for (
 					Map.Entry<String, RRMDetails> entry : rrmDetails.entrySet()
 				) {
@@ -217,8 +254,6 @@ public class ProvMonitor implements Runnable {
 
 					DeviceConfig cfg = configMap
 						.computeIfAbsent(zone, k -> new DeviceConfig());
-					cfg.enableRRM =
-						cfg.enableConfig = cfg.enableWifiScan = true;
 
 					// read the details from the config
 					RRMDetails details = entry.getValue();
@@ -230,38 +265,7 @@ public class ProvMonitor implements Runnable {
 						continue;
 					}
 
-					cfg.schedule = new RRMSchedule();
-					if (details.rrm != null) {
-						cfg.schedule.cron = RRMScheduler
-							.parseIntoQuartzCron(details.rrm.schedule);
-						if (cfg.schedule.cron == null) {
-							logger.error(
-								"Invalid cron for zone {} ({}), not scheduling",
-								zone,
-								details.rrm.schedule
-							);
-							continue;
-						}
-
-						if (details.rrm.algorithms != null) {
-							cfg.schedule.algorithms =
-								new ArrayList<RRMAlgorithm>();
-							for (
-								RRMAlgorithmDetails algorithmDetails : details.rrm.algorithms
-							) {
-								cfg.schedule.algorithms.add(
-									RRMAlgorithm.parse(
-										algorithmDetails.name,
-										algorithmDetails.parameters
-									)
-								);
-							}
-						}
-						logger.info("Set RRM settings for zone {}", zone);
-					} else {
-						logger
-							.error("RRM setting for zone {} is null", zone);
-					}
+					cfg.schedule = transformScheduleToDetails(details);
 				}
 			}
 		);

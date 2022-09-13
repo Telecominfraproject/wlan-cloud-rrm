@@ -28,7 +28,7 @@ public class Entity {
 	public List<String> contacts;
 	public List<String> locations;
 	public String managementPolicy;
-	//public String deviceConfiguration;  // TODO wrong in OpenAPI (array?)
+	public List<String> deviceConfiguration;
 	public List<String> devices;
 	public List<String> managementPolicies;
 	public List<String> variables;

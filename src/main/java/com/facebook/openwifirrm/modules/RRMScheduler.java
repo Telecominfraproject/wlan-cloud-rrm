@@ -122,23 +122,27 @@ public class RRMScheduler {
 			return null;
 		}
 
-		String dayOfMonth = split[3];
-		String dayOfWeek = split[5];
+		final int DAY_OF_MONTH_INDEX = 3;
+		final int DAY_OF_WEEK_INDEX = 5;
+
+		String dayOfMonth = split[DAY_OF_MONTH_INDEX];
+		String dayOfWeek = split[DAY_OF_WEEK_INDEX];
 
 		// Quartz uses 1-7, while standard cron expects 0-6 so replace all
 		// 0s with 7s (Sunday)
-		split[5] = split[5].replaceAll("0", "7");
+		split[DAY_OF_WEEK_INDEX] =
+			split[DAY_OF_WEEK_INDEX].replaceAll("0", "7");
 
 		if (dayOfMonth.equals("*") && dayOfWeek.equals("*")) {
 			// if both are * then it doesn't matter which one becomes ? since it's
 			// semantically the same
-			split[3] = "?";
+			split[DAY_OF_MONTH_INDEX] = "?";
 		} else if (dayOfMonth.equals("*")) {
 			// if first case failed and only day of month is *, set to ?
-			split[3] = "?";
+			split[DAY_OF_MONTH_INDEX] = "?";
 		} else if (dayOfWeek.equals("*")) {
 			// if first case failed and only day of week is *, set to ?
-			split[5] = "?";
+			split[DAY_OF_WEEK_INDEX] = "?";
 		} else {
 			// Quartz does not support both values being set, so return null
 			return null;

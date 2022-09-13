@@ -458,7 +458,7 @@ public class DeviceDataManager {
 	 * Return config (with all config layers applied) for all devices in a given
 	 * zone, or null if not present in the topology.
 	 *
-	 * @param zone the zone that will be looked up for devi es
+	 * @param zone the zone that will be looked up for devices
 	 *
 	 * @return map of serial number to computed config
 	 */
@@ -551,7 +551,7 @@ public class DeviceDataManager {
 	}
 
 	/** Device AP config layer update interface. */
-	public interface LayerConfigFunction {
+	public interface ZoneConfigFunction {
 		/** Update the AP config layer. */
 		void update(Map<String, DeviceConfig> apConfig);
 	}
@@ -562,7 +562,7 @@ public class DeviceDataManager {
 	 * @param fn The function to apply for the configs. The key of the argument is
 	 *        the zone name.
 	 */
-	public void updateZoneConfig(LayerConfigFunction fn) {
+	public void updateZoneConfig(ZoneConfigFunction fn) {
 		Lock l = deviceLayeredConfigLock.writeLock();
 		l.lock();
 		try {
@@ -575,13 +575,19 @@ public class DeviceDataManager {
 		saveDeviceLayeredConfig();
 	}
 
+	/** Device AP config layer update interface. */
+	public interface DeviceApConfigFunction {
+		/** Update the AP config layer. */
+		void update(Map<String, DeviceConfig> apConfig);
+	}
+
 	/**
 	 * Apply updates to the device AP config layer (under a write lock).
 	 *
 	 * @param fn The function to apply for the configs. The key of the argument is
 	 *        the serial number of the device.
 	 */
-	public void updateDeviceApConfig(LayerConfigFunction fn) {
+	public void updateDeviceApConfig(DeviceApConfigFunction fn) {
 		Lock l = deviceLayeredConfigLock.writeLock();
 		l.lock();
 		try {
