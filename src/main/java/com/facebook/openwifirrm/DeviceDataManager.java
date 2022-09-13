@@ -550,10 +550,10 @@ public class DeviceDataManager {
 		saveDeviceLayeredConfig();
 	}
 
-	/** Device AP config layer update interface. */
+	/** Device zone config layer update interface. */
 	public interface ZoneConfigFunction {
-		/** Update the AP config layer. */
-		void update(Map<String, DeviceConfig> apConfig);
+		/** Update the zone config layer. */
+		void update(Map<String, DeviceConfig> zoneConfig);
 	}
 
 	/**

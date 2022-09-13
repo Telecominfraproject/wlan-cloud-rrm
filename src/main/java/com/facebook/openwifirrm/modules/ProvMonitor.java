@@ -152,9 +152,9 @@ public class ProvMonitor implements Runnable {
 	}
 
 	/**
-	 * Build {@link RRMSchedule} from {@link RRMDetails}
+	 * Build RRMSchedule from RRMDetails
 	 */
-	protected RRMSchedule transformScheduleToDetails(RRMDetails details) {
+	protected RRMSchedule transformDetailsToSchedule(RRMDetails details) {
 		if (details == null) {
 			return null;
 		}
@@ -162,7 +162,7 @@ public class ProvMonitor implements Runnable {
 		RRMSchedule schedule = new RRMSchedule();
 		schedule.cron = RRMScheduler
 			.parseIntoQuartzCron(details.rrm.schedule);
-		if (schedule.cron.isEmpty()) {
+		if (schedule.cron == null || schedule.cron.isEmpty()) {
 			return null;
 		}
 
@@ -225,13 +225,18 @@ public class ProvMonitor implements Runnable {
 			topo.values().stream().mapToInt(x -> x.size()).sum()
 		);
 
-		// Sync zone configs
+		// Sync zone configs - sets RRM schedules and algorithms
 		deviceDataManager.updateZoneConfig(
 			configMap -> {
 				// wipe zones to handle the case where some venue RRM config got newly
 				// wiped in Prov
 				for (Venue venue : venueList.venues) {
-					configMap.remove(venue.name);
+					DeviceConfig config = configMap.get(venue.name);
+					if (config == null) {
+						continue;
+					}
+
+					config.schedule = null;
 				}
 
 				for (
@@ -265,12 +270,12 @@ public class ProvMonitor implements Runnable {
 						continue;
 					}
 
-					cfg.schedule = transformScheduleToDetails(details);
+					cfg.schedule = transformDetailsToSchedule(details);
 				}
 			}
 		);
 
-		// Sync device configs
+		// Sync device configs - enables/disables RRM
 		deviceDataManager.updateDeviceApConfig(
 			configMap -> {
 				// Pass 1: disable RRM on all devices
