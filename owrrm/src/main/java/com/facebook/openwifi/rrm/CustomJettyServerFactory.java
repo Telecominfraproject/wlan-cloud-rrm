@@ -30,9 +30,9 @@ public class CustomJettyServerFactory implements JettyServerFactory {
 	private final int internalPort;
 	private final int externalPort;
 
-	public CustomJettyServerFactory(int externalPort, int internalPort) {
-		this.externalPort = externalPort;
+	public CustomJettyServerFactory(int internalPort, int externalPort) {
 		this.internalPort = internalPort;
+		this.externalPort = externalPort;
 	}
 
 	/**
@@ -94,13 +94,13 @@ public class CustomJettyServerFactory implements JettyServerFactory {
 			server = new Server();
 		}
 
-		Connector externalConnector =
-			makeConnector(server, "localhost", externalPort);
 		Connector internalConnector =
 			makeConnector(server, "localhost", internalPort);
+		Connector externalConnector =
+			makeConnector(server, "localhost", externalPort);
 
 		server.setConnectors(
-			new Connector[] { externalConnector, internalConnector }
+			new Connector[] { internalConnector, externalConnector }
 		);
 
 		return server;
