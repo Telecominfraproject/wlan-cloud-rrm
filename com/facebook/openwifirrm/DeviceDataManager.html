@@ -26,7 +26,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10};
+var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -159,6 +159,13 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="DeviceDataManager.DeviceApConfigFunction.html" title="interface in com.facebook.openwifirrm">DeviceDataManager.DeviceApConfigFunction</a></span></code></th>
 <td class="colLast">
 <div class="block">Device AP config layer update interface.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>static interface&nbsp;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="DeviceDataManager.ZoneConfigFunction.html" title="interface in com.facebook.openwifirrm">DeviceDataManager.ZoneConfigFunction</a></span></code></th>
+<td class="colLast">
+<div class="block">Device zone config layer update interface.</div>
 </td>
 </tr>
 </table>
@@ -331,6 +338,13 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#updateDeviceApConfig(com.facebook.openwifirrm.DeviceDataManager.DeviceApConfigFunction)">updateDeviceApConfig</a></span>&#8203;(<a href="DeviceDataManager.DeviceApConfigFunction.html" title="interface in com.facebook.openwifirrm">DeviceDataManager.DeviceApConfigFunction</a>&nbsp;fn)</code></th>
 <td class="colLast">
 <div class="block">Apply updates to the device AP config layer (under a write lock).</div>
+</td>
+</tr>
+<tr id="i17" class="rowColor">
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#updateZoneConfig(com.facebook.openwifirrm.DeviceDataManager.ZoneConfigFunction)">updateZoneConfig</a></span>&#8203;(<a href="DeviceDataManager.ZoneConfigFunction.html" title="interface in com.facebook.openwifirrm">DeviceDataManager.ZoneConfigFunction</a>&nbsp;fn)</code></th>
+<td class="colLast">
+<div class="block">Apply updates to the zone layer (under a write lock)</div>
 </td>
 </tr>
 </table>
@@ -521,6 +535,8 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <div class="block">Return config (with all config layers applied) for all devices in a given
  zone, or null if not present in the topology.</div>
 <dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>zone</code> - the zone that will be looked up for devices</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>map of serial number to computed config</dd>
 </dl>
@@ -558,6 +574,21 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <div class="block">Set the device AP config for the given AP, or erase it if null.</div>
 </li>
 </ul>
+<a id="updateZoneConfig(com.facebook.openwifirrm.DeviceDataManager.ZoneConfigFunction)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>updateZoneConfig</h4>
+<pre class="methodSignature">public&nbsp;void&nbsp;updateZoneConfig&#8203;(<a href="DeviceDataManager.ZoneConfigFunction.html" title="interface in com.facebook.openwifirrm">DeviceDataManager.ZoneConfigFunction</a>&nbsp;fn)</pre>
+<div class="block">Apply updates to the zone layer (under a write lock)</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>fn</code> - The function to apply for the configs. The key of the argument is
+        the zone name.</dd>
+</dl>
+</li>
+</ul>
 <a id="updateDeviceApConfig(com.facebook.openwifirrm.DeviceDataManager.DeviceApConfigFunction)">
 <!--   -->
 </a>
@@ -566,6 +597,11 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <h4>updateDeviceApConfig</h4>
 <pre class="methodSignature">public&nbsp;void&nbsp;updateDeviceApConfig&#8203;(<a href="DeviceDataManager.DeviceApConfigFunction.html" title="interface in com.facebook.openwifirrm">DeviceDataManager.DeviceApConfigFunction</a>&nbsp;fn)</pre>
 <div class="block">Apply updates to the device AP config layer (under a write lock).</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>fn</code> - The function to apply for the configs. The key of the argument is
+        the serial number of the device.</dd>
+</dl>
 </li>
 </ul>
 <a id="getZoneConfig(java.lang.String)">

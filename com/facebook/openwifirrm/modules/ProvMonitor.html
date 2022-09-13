@@ -26,7 +26,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":10,"i1":10};
+var data = {"i0":10,"i1":10,"i2":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -221,11 +221,19 @@ implements <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>protected void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#syncDataToProv(com.facebook.openwifirrm.ucentral.prov.models.InventoryTagList,com.facebook.openwifirrm.ucentral.prov.models.SerialNumberList,com.facebook.openwifirrm.ucentral.prov.models.VenueList)">syncDataToProv</a></span>&#8203;(<a href="../ucentral/prov/models/InventoryTagList.html" title="class in com.facebook.openwifirrm.ucentral.prov.models">InventoryTagList</a>&nbsp;inventory,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#syncDataToProv(com.facebook.openwifirrm.ucentral.prov.models.InventoryTagList,com.facebook.openwifirrm.ucentral.prov.models.SerialNumberList,java.util.Map,com.facebook.openwifirrm.ucentral.prov.models.VenueList)">syncDataToProv</a></span>&#8203;(<a href="../ucentral/prov/models/InventoryTagList.html" title="class in com.facebook.openwifirrm.ucentral.prov.models">InventoryTagList</a>&nbsp;inventory,
               <a href="../ucentral/prov/models/SerialNumberList.html" title="class in com.facebook.openwifirrm.ucentral.prov.models">SerialNumberList</a>&nbsp;inventoryForRRM,
+              <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html?is-external=true" title="class or interface in java.util" class="externalLink">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>,&#8203;<a href="../ucentral/prov/models/RRMDetails.html" title="class in com.facebook.openwifirrm.ucentral.prov.models">RRMDetails</a>&gt;&nbsp;rrmDetails,
               <a href="../ucentral/prov/models/VenueList.html" title="class in com.facebook.openwifirrm.ucentral.prov.models">VenueList</a>&nbsp;venueList)</code></th>
 <td class="colLast">
 <div class="block">Sync RRM topology and device configs with owprov data.</div>
+</td>
+</tr>
+<tr id="i2" class="altColor">
+<td class="colFirst"><code>protected <a href="../RRMSchedule.html" title="class in com.facebook.openwifirrm">RRMSchedule</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#transformDetailsToSchedule(com.facebook.openwifirrm.ucentral.prov.models.RRMDetails)">transformDetailsToSchedule</a></span>&#8203;(<a href="../ucentral/prov/models/RRMDetails.html" title="class in com.facebook.openwifirrm.ucentral.prov.models">RRMDetails</a>&nbsp;details)</code></th>
+<td class="colLast">
+<div class="block">Build RRMSchedule from RRMDetails</div>
 </td>
 </tr>
 </table>
@@ -313,7 +321,17 @@ implements <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base
 </dl>
 </li>
 </ul>
-<a id="syncDataToProv(com.facebook.openwifirrm.ucentral.prov.models.InventoryTagList,com.facebook.openwifirrm.ucentral.prov.models.SerialNumberList,com.facebook.openwifirrm.ucentral.prov.models.VenueList)">
+<a id="transformDetailsToSchedule(com.facebook.openwifirrm.ucentral.prov.models.RRMDetails)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>transformDetailsToSchedule</h4>
+<pre class="methodSignature">protected&nbsp;<a href="../RRMSchedule.html" title="class in com.facebook.openwifirrm">RRMSchedule</a>&nbsp;transformDetailsToSchedule&#8203;(<a href="../ucentral/prov/models/RRMDetails.html" title="class in com.facebook.openwifirrm.ucentral.prov.models">RRMDetails</a>&nbsp;details)</pre>
+<div class="block">Build RRMSchedule from RRMDetails</div>
+</li>
+</ul>
+<a id="syncDataToProv(com.facebook.openwifirrm.ucentral.prov.models.InventoryTagList,com.facebook.openwifirrm.ucentral.prov.models.SerialNumberList,java.util.Map,com.facebook.openwifirrm.ucentral.prov.models.VenueList)">
 <!--   -->
 </a>
 <ul class="blockListLast">
@@ -321,8 +339,17 @@ implements <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base
 <h4>syncDataToProv</h4>
 <pre class="methodSignature">protected&nbsp;void&nbsp;syncDataToProv&#8203;(<a href="../ucentral/prov/models/InventoryTagList.html" title="class in com.facebook.openwifirrm.ucentral.prov.models">InventoryTagList</a>&nbsp;inventory,
                               <a href="../ucentral/prov/models/SerialNumberList.html" title="class in com.facebook.openwifirrm.ucentral.prov.models">SerialNumberList</a>&nbsp;inventoryForRRM,
+                              <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html?is-external=true" title="class or interface in java.util" class="externalLink">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>,&#8203;<a href="../ucentral/prov/models/RRMDetails.html" title="class in com.facebook.openwifirrm.ucentral.prov.models">RRMDetails</a>&gt;&nbsp;rrmDetails,
                               <a href="../ucentral/prov/models/VenueList.html" title="class in com.facebook.openwifirrm.ucentral.prov.models">VenueList</a>&nbsp;venueList)</pre>
 <div class="block">Sync RRM topology and device configs with owprov data.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>inventory</code> - List of inventory tags (APs)</dd>
+<dd><code>inventoryForRRM</code> - List of serial numbers of the APs which have RRM
+        enabled</dd>
+<dd><code>rrmDetails</code> - mapping of zone to <a href="../ucentral/prov/models/RRMDetails.html" title="class in com.facebook.openwifirrm.ucentral.prov.models"><code>RRMDetails</code></a></dd>
+<dd><code>venueList</code> - list of venues</dd>
+</dl>
 </li>
 </ul>
 </li>

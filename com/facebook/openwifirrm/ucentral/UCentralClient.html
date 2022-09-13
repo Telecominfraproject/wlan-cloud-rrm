@@ -26,7 +26,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":9,"i15":10};
+var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":9,"i16":10};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -255,20 +255,27 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 </td>
 </tr>
 <tr id="i7" class="rowColor">
+<td class="colFirst"><code><a href="prov/models/RRMDetails.html" title="class in com.facebook.openwifirrm.ucentral.prov.models">RRMDetails</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getProvInventoryRRMDetails(java.lang.String)">getProvInventoryRRMDetails</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;serialNumber)</code></th>
+<td class="colLast">
+<div class="block">Retrieve the RRM config and schedule for a specific AP</div>
+</td>
+</tr>
+<tr id="i8" class="altColor">
 <td class="colFirst"><code><a href="prov/models/VenueList.html" title="class in com.facebook.openwifirrm.ucentral.prov.models">VenueList</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getProvVenues()">getProvVenues</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Retrieve a list of venues from owprov.</div>
 </td>
 </tr>
-<tr id="i8" class="altColor">
+<tr id="i9" class="rowColor">
 <td class="colFirst"><code><a href="gw/models/SystemInfoResults.html" title="class in com.facebook.openwifirrm.ucentral.gw.models">SystemInfoResults</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getSystemInfo()">getSystemInfo</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Get uCentralGw system info.</div>
 </td>
 </tr>
-<tr id="i9" class="rowColor">
+<tr id="i10" class="altColor">
 <td class="colFirst"><code>boolean</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#isInitialized()">isInitialized</a></span>()</code></th>
 <td class="colLast">
@@ -276,7 +283,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
  dependent services, along with API keys (if necessary).</div>
 </td>
 </tr>
-<tr id="i10" class="altColor">
+<tr id="i11" class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#isProvInitialized()">isProvInitialized</a></span>()</code></th>
 <td class="colLast">
@@ -284,14 +291,14 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
  API keys (if necessary).</div>
 </td>
 </tr>
-<tr id="i11" class="rowColor">
+<tr id="i12" class="altColor">
 <td class="colFirst"><code>boolean</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#login()">login</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Perform login and uCentralGw endpoint retrieval.</div>
 </td>
 </tr>
-<tr id="i12" class="altColor">
+<tr id="i13" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setServiceEndpoint(java.lang.String,com.facebook.openwifirrm.ucentral.gw.models.ServiceEvent)">setServiceEndpoint</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;service,
                   <a href="gw/models/ServiceEvent.html" title="class in com.facebook.openwifirrm.ucentral.gw.models">ServiceEvent</a>&nbsp;event)</code></th>
@@ -299,21 +306,21 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <div class="block">System endpoints and API keys come from the service_event Kafka topic.</div>
 </td>
 </tr>
-<tr id="i13" class="rowColor">
+<tr id="i14" class="altColor">
 <td class="colFirst"><code><a href="gw/models/TokenValidationResult.html" title="class in com.facebook.openwifirrm.ucentral.gw.models">TokenValidationResult</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#validateToken(java.lang.String)">validateToken</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;token)</code></th>
 <td class="colLast">
 <div class="block">Validate the given token via uCentralSec.</div>
 </td>
 </tr>
-<tr id="i14" class="altColor">
+<tr id="i15" class="rowColor">
 <td class="colFirst"><code>static void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#verifySsl(boolean)">verifySsl</a></span>&#8203;(boolean&nbsp;enable)</code></th>
 <td class="colLast">
 <div class="block">Toggle verifying SSL/TLS certificates.</div>
 </td>
 </tr>
-<tr id="i15" class="rowColor">
+<tr id="i16" class="altColor">
 <td class="colFirst"><code><a href="gw/models/CommandInfo.html" title="class in com.facebook.openwifirrm.ucentral.gw.models">CommandInfo</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#wifiScan(java.lang.String,boolean)">wifiScan</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;serialNumber,
         boolean&nbsp;verbose)</code></th>
@@ -517,6 +524,23 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <h4>getProvInventoryForRRM</h4>
 <pre class="methodSignature">public&nbsp;<a href="prov/models/SerialNumberList.html" title="class in com.facebook.openwifirrm.ucentral.prov.models">SerialNumberList</a>&nbsp;getProvInventoryForRRM()</pre>
 <div class="block">Retrieve a list of inventory with RRM enabled from owprov.</div>
+</li>
+</ul>
+<a id="getProvInventoryRRMDetails(java.lang.String)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getProvInventoryRRMDetails</h4>
+<pre class="methodSignature">public&nbsp;<a href="prov/models/RRMDetails.html" title="class in com.facebook.openwifirrm.ucentral.prov.models">RRMDetails</a>&nbsp;getProvInventoryRRMDetails&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;serialNumber)</pre>
+<div class="block">Retrieve the RRM config and schedule for a specific AP</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>serialNumber</code> - the serial number of the AP</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>RRMDetails, containing information about the RRM
+   schedule and parameters</dd>
+</dl>
 </li>
 </ul>
 <a id="getProvVenues()">
