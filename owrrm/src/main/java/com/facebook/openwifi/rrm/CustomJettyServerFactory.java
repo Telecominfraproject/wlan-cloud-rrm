@@ -27,6 +27,9 @@ import spark.utils.Assert;
  * from JettyServerFactory with port logic added.
  */
 public class CustomJettyServerFactory implements JettyServerFactory {
+	// normally this is set in EmbeddedJettyServer but since we create our own connectors here,
+	// we need the value here
+	private boolean trustForwardHeaders = true; // true by default
 	private final int internalPort;
 	private final int externalPort;
 
@@ -35,22 +38,26 @@ public class CustomJettyServerFactory implements JettyServerFactory {
 		this.externalPort = externalPort;
 	}
 
+	public setTrustForwardHeaders(boolean trustForwardHeaders) {
+		this.trustForwardHeaders = trustForwardHeaders;
+	}
+
 	/**
 	 * This is basically
 	 * spark.embeddedserver.jetty.SocketConnectorFactory.createSocketConnector,
 	 * the only difference being that we use a different constructor for the
 	 * Connector and that the private methods called are just inlined.
-	 *
-	 * Note: this is based on Spark 2.9.3 - seems to have changed in 2.9.4
 	 */
-	public Connector makeConnector(Server server, String host, int port) {
+	public Connector makeConnector(Server server, String host, int port, boolean trustForwardHeaders) {
 		Assert.notNull(server, "'server' must not be null");
 		Assert.notNull(host, "'host' must not be null");
 
 		// spark.embeddedserver.jetty.SocketConnectorFactory.createHttpConnectionFactory
 		HttpConfiguration httpConfig = new HttpConfiguration();
 		httpConfig.setSecureScheme("https");
-		httpConfig.addCustomizer(new ForwardedRequestCustomizer());
+		if (trustForwardHeaders) {
+			httpConfig.addCustomizer(new ForwardedRequestCustomizer());
+		}
 		HttpConnectionFactory httpConnectionFactory =
 			new HttpConnectionFactory(httpConfig);
 
@@ -95,9 +102,9 @@ public class CustomJettyServerFactory implements JettyServerFactory {
 		}
 
 		Connector internalConnector =
-			makeConnector(server, "localhost", internalPort);
+			makeConnector(server, "localhost", internalPort, trustForwardHeaders);
 		Connector externalConnector =
-			makeConnector(server, "localhost", externalPort);
+			makeConnector(server, "localhost", externalPort, trustForwardHeaders);
 
 		server.setConnectors(
 			new Connector[] { internalConnector, externalConnector }
