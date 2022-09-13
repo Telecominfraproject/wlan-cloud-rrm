@@ -29,7 +29,7 @@ public class Venue {
 	public List<String> devices;
 	public DiGraph topology;
 	public String design;
-	//public String deviceConfiguration;  // TODO wrong in OpenAPI (array?)
+	public List<String> deviceConfiguration;
 	public List<String> contacts;
 	public String location;
 	public DeviceRules deviceRules;

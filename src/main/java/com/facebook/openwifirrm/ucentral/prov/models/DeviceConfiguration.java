@@ -12,7 +12,14 @@ import java.util.List;
 
 import com.facebook.openwifirrm.ucentral.gw.models.NoteInfo;
 
-public class Entity {
+public class DeviceConfiguration {
+	public class DeviceConfigurationElement {
+		public String name;
+		public String description;
+		public Integer weight;
+		public String configuration;
+	}
+
 	// from ObjectInfo
 	public String id;
 	public String name;
@@ -22,21 +29,14 @@ public class Entity {
 	public long modified;
 	public List<Long> tags;
 
-	public String parent;
-	public List<String> children;
-	public List<String> venues;
-	public List<String> contacts;
-	public List<String> locations;
 	public String managementPolicy;
-	public List<String> deviceConfiguration;
-	public List<String> devices;
-	public List<String> managementPolicies;
+	public List<String> deviceTypes;
+	public List<DeviceConfigurationElement> configuration;
 	public List<String> variables;
-	public List<String> managementRoles;
-	public List<String> maps;
-	public List<String> configurations;
+	public List<String> inUse;
+	public boolean subscriberOnly;
 	public DeviceRules deviceRules;
-	public List<String> sourceIP;
-	public boolean defaultEntity;
-	public String type;
+	public String venue;
+	public String entity;
+	public String subscriber;
 }

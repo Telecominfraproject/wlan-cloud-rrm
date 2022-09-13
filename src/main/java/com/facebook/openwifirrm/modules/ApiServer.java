@@ -912,6 +912,7 @@ public class ApiServer implements Runnable {
 			@Parameter(hidden = true) Request request,
 			@Parameter(hidden = true) Response response
 		) {
+			// TODO - block if prov sync is enabled
 			try {
 				DeviceConfig networkConfig =
 					gson.fromJson(request.body(), DeviceConfig.class);
@@ -969,6 +970,7 @@ public class ApiServer implements Runnable {
 			@Parameter(hidden = true) Request request,
 			@Parameter(hidden = true) Response response
 		) {
+			// TODO - block if prov sync is enabled
 			String zone = request.queryParams("zone");
 			if (zone == null || zone.trim().isEmpty()) {
 				response.status(400);

@@ -33,6 +33,7 @@ import com.facebook.openwifirrm.ucentral.gw.models.TokenValidationResult;
 import com.facebook.openwifirrm.ucentral.gw.models.WifiScanRequest;
 import com.facebook.openwifirrm.ucentral.prov.models.EntityList;
 import com.facebook.openwifirrm.ucentral.prov.models.InventoryTagList;
+import com.facebook.openwifirrm.ucentral.prov.models.RRMDetails;
 import com.facebook.openwifirrm.ucentral.prov.models.SerialNumberList;
 import com.facebook.openwifirrm.ucentral.prov.models.VenueList;
 import com.google.gson.Gson;
@@ -584,6 +585,36 @@ public class UCentralClient {
 		} catch (JsonSyntaxException e) {
 			String errMsg = String.format(
 				"Failed to deserialize to SerialNumberList: %s",
+				response.getBody()
+			);
+			logger.error(errMsg, e);
+			return null;
+		}
+	}
+
+	/**
+	 * Retrieve the RRM config and schedule for a specific AP
+	 *
+	 * @param serialNumber the serial number of the AP
+	 *
+	 * @return RRMDetails, containing information about the RRM
+	 *   schedule and parameters
+	 */
+	public RRMDetails getProvInventoryRRMDetails(String serialNumber) {
+		Map<String, Object> parameters = new HashMap<>();
+		parameters.put("rrmSettings", true);
+		HttpResponse<String> response =
+			httpGet(String.format("inventory/%s", serialNumber), OWPROV_SERVICE, parameters);
+		if (!response.isSuccess()) {
+			logger.error("Error: {}", response.getBody());
+			return null;
+		}
+
+		try {
+			return gson.fromJson(response.getBody(), RRMDetails.class);
+		} catch (JsonSyntaxException e) {
+			String errMsg = String.format(
+				"Failed to deserialize to RRMDetails: %s",
 				response.getBody()
 			);
 			logger.error(errMsg, e);
