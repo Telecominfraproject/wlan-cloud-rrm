@@ -323,13 +323,12 @@ public class MeasurementBasedApApTPC extends TPC {
 	}
 
 	/**
-	 * Calculate new tx powers for the given band.
+	 * Calculate new tx powers for the given channel on the given APs .
 	 *
 	 * @param channel channel
-	 * @param serialNumbers The serial numbers of the APs with the channel
-	 * @param txPowerMap this map from serial number to band to new tx power (dBm)
-	 *                   must be passed in empty, and it is filled in by this method
-	 *                   with the new tx powers.
+	 * @param serialNumbers the serial numbers of the APs with the channel
+	 * @param txPowerMap this maps from serial number to band to new tx power (dBm)
+	 *                   and is updated by this method with the new tx powers.
 	 */
 	protected void buildTxPowerMapForChannel(
 		int channel,

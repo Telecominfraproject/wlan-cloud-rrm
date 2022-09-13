@@ -15,7 +15,6 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
-import com.facebook.openwifirrm.ucentral.UCentralUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,6 +22,7 @@ import com.facebook.openwifirrm.DeviceConfig;
 import com.facebook.openwifirrm.DeviceDataManager;
 import com.facebook.openwifirrm.modules.Modeler.DataModel;
 import com.facebook.openwifirrm.modules.ModelerUtils;
+import com.facebook.openwifirrm.ucentral.UCentralUtils;
 import com.facebook.openwifirrm.ucentral.models.State;
 
 /**
