@@ -32,7 +32,6 @@ import com.facebook.openwifirrm.ucentral.gw.models.SystemInfoResults;
 import com.facebook.openwifirrm.ucentral.gw.models.TokenValidationResult;
 import com.facebook.openwifirrm.ucentral.gw.models.WifiScanRequest;
 import com.facebook.openwifirrm.ucentral.prov.models.EntityList;
-import com.facebook.openwifirrm.ucentral.prov.models.InventoryConfigApplyResult;
 import com.facebook.openwifirrm.ucentral.prov.models.InventoryTagList;
 import com.facebook.openwifirrm.ucentral.prov.models.RRMDetails;
 import com.facebook.openwifirrm.ucentral.prov.models.SerialNumberList;
@@ -596,68 +595,26 @@ public class UCentralClient {
 	/**
 	 * Retrieve the RRM config and schedule for a specific AP
 	 *
-	 * @param serial the serial number of the AP
+	 * @param serialNumber the serial number of the AP
 	 *
-	 * @return {@link RRMDetails}, containing information about the RRM
+	 * @return RRMDetails, containing information about the RRM
 	 *   schedule and parameters
 	 */
-	public RRMDetails getProvInventoryRRMDetails(String serial) {
+	public RRMDetails getProvInventoryRRMDetails(String serialNumber) {
 		Map<String, Object> parameters = new HashMap<>();
 		parameters.put("rrmSettings", true);
 		HttpResponse<String> response =
-			httpGet(String.format("inventory/%s", serial), OWPROV_SERVICE, parameters);
+			httpGet(String.format("inventory/%s", serialNumber), OWPROV_SERVICE, parameters);
 		if (!response.isSuccess()) {
 			logger.error("Error: {}", response.getBody());
 			return null;
 		}
 
 		try {
-			logger.debug("SERIAL {} BODY: {}", serial, response.getBody());
 			return gson.fromJson(response.getBody(), RRMDetails.class);
 		} catch (JsonSyntaxException e) {
 			String errMsg = String.format(
 				"Failed to deserialize to RRMDetails: %s",
-				response.getBody()
-			);
-			logger.error(errMsg, e);
-			return null;
-		}
-	}
-
-	/** Retrieve resolved inventory */
-	public InventoryTagList getProvInventoryGetConfigApplyResult(
-		String serial
-	) {
-		Map<String, Object> parameters = new HashMap<>();
-		parameters.put("resolveConfig", true);
-		HttpResponse<String> response =
-			httpGet(String.format("inventory/%s", serial), OWPROV_SERVICE, parameters);
-		if (!response.isSuccess()) {
-			logger.error("Error: {}", response.getBody());
-			return null;
-		}
-		try {
-			InventoryConfigApplyResult result = gson
-				.fromJson(response.getBody(), InventoryConfigApplyResult.class);
-			if (result.warnings != null && !result.warnings.isEmpty()) {
-				logger.error(
-					"Encountered warnings fetching applied config: {}",
-					result.warnings
-				);
-			}
-
-			if (result.errors != null && !result.errors.isEmpty()) {
-				logger.error(
-					"Encountered errors fetching applied config: {}",
-					result.errors
-				);
-			}
-
-			return gson
-				.fromJson(result.appliedConfiguration, InventoryTagList.class);
-		} catch (JsonSyntaxException e) {
-			String errMsg = String.format(
-				"Failed to deserialize to InventoryConfigApplyResult or InventoryTagList: %s",
 				response.getBody()
 			);
 			logger.error(errMsg, e);

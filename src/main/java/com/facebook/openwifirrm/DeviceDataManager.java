@@ -455,14 +455,14 @@ public class DeviceDataManager {
 	}
 
 	/**
-	 * Return the serail number of devices in a given zone.
+	 * Return config (with all config layers applied) for all devices in a given
+	 * zone, or null if not present in the topology.
 	 *
 	 * @param zone the zone that will be looked up for devi es
 	 *
-	 * @return set of serial numbers
+	 * @return map of serial number to computed config
 	 */
-	private Set<String> getAllDevicesInZone(String zone) {
-		// Get all devices in zone
+	public Map<String, DeviceConfig> getAllDeviceConfigs(String zone) {
 		if (zone == null || zone.isEmpty()) {
 			return null;
 		}
@@ -477,20 +477,6 @@ public class DeviceDataManager {
 		if (devicesInZone == null) {
 			return null;
 		}
-
-		return devicesInZone;
-	}
-
-	/**
-	 * Return config (with all config layers applied) for all devices in a given
-	 * zone, or null if not present in the topology.
-	 *
-	 * @param zone the zone that will be looked up for devi es
-	 *
-	 * @return map of serial number to computed config
-	 */
-	public Map<String, DeviceConfig> getAllDeviceConfigs(String zone) {
-		Set<String> devicesInZone = getAllDevicesInZone(zone);
 
 		// Compute config for all devices
 		Map<String, DeviceConfig> configMap = new HashMap<>();
@@ -565,13 +551,37 @@ public class DeviceDataManager {
 	}
 
 	/** Device AP config layer update interface. */
-	public interface DeviceApConfigFunction {
+	public interface LayerConfigFunction {
 		/** Update the AP config layer. */
 		void update(Map<String, DeviceConfig> apConfig);
 	}
 
-	/** Apply updates to the device AP config layer (under a write lock). */
-	public void updateDeviceApConfig(DeviceApConfigFunction fn) {
+	/**
+	 * Apply updates to the zone layer (under a write lock)
+	 *
+	 * @param fn The function to apply for the configs. The key of the argument is
+	 *        the zone name.
+	 */
+	public void updateZoneConfig(LayerConfigFunction fn) {
+		Lock l = deviceLayeredConfigLock.writeLock();
+		l.lock();
+		try {
+			fn.update(deviceLayeredConfig.zoneConfig);
+			sanitizeDeviceLayeredConfig(deviceLayeredConfig);
+		} finally {
+			l.unlock();
+		}
+		cachedDeviceConfigs.clear();
+		saveDeviceLayeredConfig();
+	}
+
+	/**
+	 * Apply updates to the device AP config layer (under a write lock).
+	 *
+	 * @param fn The function to apply for the configs. The key of the argument is
+	 *        the serial number of the device.
+	 */
+	public void updateDeviceApConfig(LayerConfigFunction fn) {
 		Lock l = deviceLayeredConfigLock.writeLock();
 		l.lock();
 		try {

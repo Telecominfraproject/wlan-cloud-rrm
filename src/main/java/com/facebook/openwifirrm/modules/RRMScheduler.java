@@ -10,7 +10,6 @@ package com.facebook.openwifirrm.modules;
 
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -78,12 +77,6 @@ public class RRMScheduler {
 	/** The zones with active triggers scheduled. */
 	private Set<String> scheduledZones;
 
-	/**
-	 * TODO [ZoneBasedRrmScheduling] remove this in favor of zones.
-	 * The devices with active triggers scheduled.
-	 */
-	private Set<String> scheduledDevices;
-
 	/** RRM job. */
 	public static class RRMJob implements Job {
 		@Override
@@ -102,6 +95,60 @@ public class RRMScheduler {
 				throw new JobExecutionException(e);
 			}
 		}
+	}
+
+	/**
+	 * Parses Linux cron spec (with seconds) into Quartz compatible cron spec.
+	 * Quartz does not allow setting both day of week and day of month. If valid
+	 * Quartz cron already we don't need to do anything. Otherwise we can't use
+	 * Quartz to even parse out the components as it will just throw a parse
+	 * error.
+	 *
+	 * @param linuxCron Linux cron with seconds
+	 *        (seconds minutes hours day_of_month month day_of_week [year])
+	 *
+	 * @throws IllegalArgumentException when a linux cron cannot be parsed
+	 *         into a valid Quartz spec
+	 * @return String a Quartz supported cron
+	 */
+	public static String parseIntoQuartzCron(String linuxCron) {
+		if (CronExpression.isValidExpression(linuxCron)) {
+			return linuxCron;
+		}
+
+		String[] split = linuxCron.split(" ");
+		if (split.length < 6 || split.length > 7) {
+			// Quartz cron MUST have at least 6 and no more than 7 fields
+			return null;
+		}
+
+		String dayOfMonth = split[3];
+		String dayOfWeek = split[5];
+
+		// Quartz uses 1-7, while standard cron expects 0-6 so replace all
+		// 0s with 7s (Sunday)
+		split[5] = split[5].replaceAll("0", "7");
+
+		if (dayOfMonth.equals("*") && dayOfWeek.equals("*")) {
+			// if both are * then it doesn't matter which one becomes ? since it's
+			// semantically the same
+			split[3] = "?";
+		} else if (dayOfMonth.equals("*")) {
+			// if first case failed and only day of month is *, set to ?
+			split[3] = "?";
+		} else if (dayOfWeek.equals("*")) {
+			// if first case failed and only day of week is *, set to ?
+			split[5] = "?";
+		} else {
+			// Quartz does not support both values being set, so return null
+			return null;
+		}
+
+		String quartzCron = String.join(" ", split);
+		if (!CronExpression.isValidExpression(quartzCron)) {
+			return null;
+		}
+		return quartzCron;
 	}
 
 	/** Constructor. */
@@ -142,12 +189,8 @@ public class RRMScheduler {
 
 			// Schedule job and triggers
 			scheduler.addJob(job, false);
-			// TODO [ZoneBasedRrmScheduling] move this to syncTriggersForZones once
-			// that API is available and change it to be named just `syncTriggers`
-			// syncTriggers();
-			// logger.info("Scheduled {} RRM trigger(s)", scheduledZones.size());
-			syncTriggersForDevices();
-			logger.info("Scheduled {} RRM trigger(s)", scheduledDevices.size());
+			syncTriggers();
+			logger.info("Scheduled {} RRM trigger(s)", scheduledZones.size());
 
 			// Start scheduler
 			scheduler.start();
@@ -170,100 +213,10 @@ public class RRMScheduler {
 	}
 
 	/**
-	 * TODO [ZoneBasedRrmScheduling] remove this and used venue based config.
-	 * Synchronize triggers to the current topology, adding/updating/deleting
-	 * them as necessary. This updates {@link #scheduledDevices}.
-	 */
-	public void syncTriggersForDevices() {
-		Set<String> scheduled = ConcurrentHashMap.newKeySet();
-		Set<String> prevScheduled = new HashSet<>();
-		if (scheduledDevices != null) {
-			prevScheduled.addAll(scheduledDevices);
-		}
-
-		Map<String, Set<String>> topology = deviceDataManager.getTopologyCopy();
-
-		// Add new triggers
-		for (Map.Entry<String, Set<String>> entry : topology.entrySet()) {
-			for (String serialNumber : entry.getValue()) {
-				DeviceConfig config =
-					deviceDataManager.getDeviceConfig(serialNumber);
-				if (
-					config.schedule == null ||
-						config.schedule.cron == null ||
-						config.schedule.cron.isEmpty()
-				) {
-					continue; // RRM not scheduled
-				}
-
-				try {
-					CronExpression.validateExpression(config.schedule.cron);
-				} catch (ParseException e) {
-					logger.error(
-						String.format(
-							"Invalid cron expression (%s) for device %s",
-							config.schedule.cron,
-							serialNumber
-						),
-						e
-					);
-					continue;
-				}
-
-				// Create trigger
-				Trigger trigger = TriggerBuilder.newTrigger()
-					.withIdentity(serialNumber)
-					.forJob(job)
-					.withSchedule(
-						CronScheduleBuilder.cronSchedule(config.schedule.cron)
-					)
-					.build();
-				try {
-					if (!prevScheduled.contains(serialNumber)) {
-						scheduler.scheduleJob(trigger);
-					} else {
-						scheduler.rescheduleJob(trigger.getKey(), trigger);
-					}
-				} catch (SchedulerException e) {
-					logger.error(
-						"Failed to schedule RRM trigger for device: " +
-							serialNumber,
-						e
-					);
-					continue;
-				}
-				scheduled.add(serialNumber);
-				logger.debug(
-					"Scheduled/updated RRM for device '{}' at: < {} >",
-					serialNumber,
-					config.schedule.cron
-				);
-			}
-		}
-
-		// Remove old triggers
-		prevScheduled.removeAll(scheduled);
-		for (String serialNumber : prevScheduled) {
-			try {
-				scheduler.unscheduleJob(TriggerKey.triggerKey(serialNumber));
-			} catch (SchedulerException e) {
-				logger.error(
-					"Failed to remove RRM trigger for device: " + serialNumber,
-					e
-				);
-				continue;
-			}
-			logger.debug("Removed RRM trigger for device '{}'", serialNumber);
-		}
-
-		this.scheduledDevices = scheduled;
-	}
-
-	/**
 	 * Synchronize triggers to the current topology, adding/updating/deleting
 	 * them as necessary. This updates {@link #scheduledZones}.
 	 */
-	public void syncTriggersForZones() {
+	public void syncTriggers() {
 		Set<String> scheduled = ConcurrentHashMap.newKeySet();
 		Set<String> prevScheduled = new HashSet<>();
 		if (scheduledZones != null) {
@@ -289,7 +242,7 @@ public class RRMScheduler {
 						"Invalid cron expression (%s) for zone %s",
 						config.schedule.cron,
 						zone
-					) + zone,
+					),
 					e
 				);
 				continue;

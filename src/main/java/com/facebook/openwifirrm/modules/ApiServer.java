@@ -14,7 +14,6 @@ import java.net.URISyntaxException;
 import java.net.UnknownHostException;
 import java.time.Instant;
 import java.util.Arrays;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -43,7 +42,6 @@ import com.facebook.openwifirrm.DeviceTopology;
 import com.facebook.openwifirrm.RRMAlgorithm;
 import com.facebook.openwifirrm.RRMConfig.ModuleConfig.ApiServerParams;
 import com.facebook.openwifirrm.RRMConfig.ServiceConfig;
-import com.facebook.openwifirrm.RRMSchedule;
 import com.facebook.openwifirrm.Utils.LruCache;
 import com.facebook.openwifirrm.VersionProvider;
 import com.facebook.openwifirrm.optimizers.channel.LeastUsedChannelOptimizer;
@@ -57,11 +55,6 @@ import com.facebook.openwifirrm.ucentral.UCentralClient;
 import com.facebook.openwifirrm.ucentral.UCentralUtils;
 import com.facebook.openwifirrm.ucentral.gw.models.SystemInfoResults;
 import com.facebook.openwifirrm.ucentral.gw.models.TokenValidationResult;
-import com.facebook.openwifirrm.ucentral.prov.models.InventoryTag;
-import com.facebook.openwifirrm.ucentral.prov.models.InventoryTagList;
-import com.facebook.openwifirrm.ucentral.prov.models.RRMAlgorithmDetails;
-import com.facebook.openwifirrm.ucentral.prov.models.RRMDetails;
-import com.facebook.openwifirrm.ucentral.prov.models.SerialNumberList;
 import com.facebook.openwifirrm.ucentral.prov.rrm.models.Algorithm;
 import com.facebook.openwifirrm.ucentral.prov.rrm.models.Provider;
 import com.google.gson.Gson;
@@ -431,90 +424,6 @@ public class ApiServer implements Runnable {
 		return Json.pretty(getOpenApi());
 	}
 
-	// TODO [ZoneBasedRrmScheduling] remove this once we move to venues
-	/**
-	 * Calls prov to get a mapping of all RRM enabled devices to their settings
-	 * and updates the device config.
-	 */
-	private void getAndUpdateRRMDetails() {
-		InventoryTagList inventory = client.getProvInventory();
-		SerialNumberList inventoryForRRM = client.getProvInventoryForRRM();
-		if (inventory == null || inventoryForRRM == null) {
-			return;
-		}
-
-		Map<String, RRMDetails> rrmDetails = new HashMap<String, RRMDetails>();
-		for (String serialNumber : inventoryForRRM.serialNumbers) {
-			RRMDetails details =
-				client.getProvInventoryRRMDetails(serialNumber);
-			if (details == null) {
-				logger
-					.error("Could not fetch RRM details for {}", serialNumber);
-				continue;
-			}
-
-			rrmDetails.put(serialNumber, details);
-		}
-
-		deviceDataManager.updateDeviceApConfig(
-			configMap -> {
-				// Pass 1: disable RRM on all devices
-				for (InventoryTag tag : inventory.taglist) {
-					DeviceConfig cfg = configMap.computeIfAbsent(
-						tag.serialNumber,
-						k -> new DeviceConfig()
-					);
-					cfg.enableRRM =
-						cfg.enableConfig = cfg.enableWifiScan = false;
-				}
-
-				// Pass 2: re-enable RRM on specific devices
-				for (String serialNumber : inventoryForRRM.serialNumbers) {
-					DeviceConfig cfg = configMap.computeIfAbsent(
-						serialNumber,
-						k -> new DeviceConfig()
-					);
-					cfg.enableRRM =
-						cfg.enableConfig = cfg.enableWifiScan = true;
-
-					// read the details from the config
-					RRMDetails details = rrmDetails.get(serialNumber);
-					if (details == null) {
-						logger.error(
-							"No RRM details available for {} even though it has RRM enabled",
-							serialNumber
-						);
-						continue;
-					}
-
-					cfg.schedule = new RRMSchedule();
-					if (details.rrm != null) {
-						cfg.schedule.cron = details.rrm.schedule;
-
-						if (details.rrm.algorithms != null) {
-							cfg.schedule.algorithms =
-								new ArrayList<RRMAlgorithm>();
-							for (
-								RRMAlgorithmDetails algorithmDetails : details.rrm.algorithms
-							) {
-								cfg.schedule.algorithms.add(
-									RRMAlgorithm.parse(
-										algorithmDetails.name,
-										algorithmDetails.parameters
-									)
-								);
-							}
-						}
-						logger.info("Set RRM settings for {}", serialNumber);
-					} else {
-						logger
-							.error("RRM setting for {} is null", serialNumber);
-					}
-				}
-			}
-		);
-	}
-
 	@Path("/api/v1/system")
 	public class SystemEndpoint implements Route {
 		@GET
@@ -881,11 +790,7 @@ public class ApiServer implements Runnable {
 				modeler.revalidate();
 
 				// Update scheduler
-
-				// TODO [ZoneBasedRrmScheduling] reenable after venue based configs
-				// scheduler.syncTriggers();
-				getAndUpdateRRMDetails();
-				scheduler.syncTriggersForDevices();
+				scheduler.syncTriggers();
 			} catch (Exception e) {
 				response.status(400);
 				return e.getMessage();
@@ -1007,6 +912,7 @@ public class ApiServer implements Runnable {
 			@Parameter(hidden = true) Request request,
 			@Parameter(hidden = true) Response response
 		) {
+			// TODO - block if prov sync is enabled
 			try {
 				DeviceConfig networkConfig =
 					gson.fromJson(request.body(), DeviceConfig.class);
@@ -1017,10 +923,7 @@ public class ApiServer implements Runnable {
 				modeler.revalidate();
 
 				// Update scheduler
-				// TODO [ZoneBasedRrmScheduling] reeanable after venue based configs
-				// scheduler.syncTriggers();
-				getAndUpdateRRMDetails();
-				scheduler.syncTriggersForDevices();
+				scheduler.syncTriggers();
 			} catch (Exception e) {
 				response.status(400);
 				return e.getMessage();
@@ -1067,6 +970,7 @@ public class ApiServer implements Runnable {
 			@Parameter(hidden = true) Request request,
 			@Parameter(hidden = true) Response response
 		) {
+			// TODO - block if prov sync is enabled
 			String zone = request.queryParams("zone");
 			if (zone == null || zone.trim().isEmpty()) {
 				response.status(400);
@@ -1083,10 +987,7 @@ public class ApiServer implements Runnable {
 				modeler.revalidate();
 
 				// Update scheduler
-				// TODO [ZoneBasedRrmScheduling] reeanable after venue based configs
-				// scheduler.syncTriggers();
-				getAndUpdateRRMDetails();
-				scheduler.syncTriggersForDevices();
+				scheduler.syncTriggers();
 			} catch (Exception e) {
 				response.status(400);
 				return e.getMessage();
