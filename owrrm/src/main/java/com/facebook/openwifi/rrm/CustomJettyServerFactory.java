@@ -38,7 +38,7 @@ public class CustomJettyServerFactory implements JettyServerFactory {
 		this.externalPort = externalPort;
 	}
 
-	public setTrustForwardHeaders(boolean trustForwardHeaders) {
+	public void setTrustForwardHeaders(boolean trustForwardHeaders) {
 		this.trustForwardHeaders = trustForwardHeaders;
 	}
 
