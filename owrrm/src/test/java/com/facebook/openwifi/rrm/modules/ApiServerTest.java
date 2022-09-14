@@ -49,8 +49,13 @@ import spark.Spark;
 
 @TestMethodOrder(OrderAnnotation.class)
 public class ApiServerTest {
-	/** The test server port. */
-	private static final int TEST_PORT = spark.Service.SPARK_DEFAULT_PORT;
+	/** The test server port for internal calls. */
+	private static final int TEST_INTERNAL_PORT =
+		spark.Service.SPARK_DEFAULT_PORT;
+
+	/** The test server port for external calls. */
+	private static final int TEST_EXTERNAL_PORT =
+		spark.Service.SPARK_DEFAULT_PORT + 1;
 
 	/** Test device data manager. */
 	private DeviceDataManager deviceDataManager;
@@ -68,8 +73,12 @@ public class ApiServerTest {
 	private final Gson gson = new Gson();
 
 	/** Build an endpoint URL. */
-	private String endpoint(String path) {
-		return String.format("http://localhost:%d%s", TEST_PORT, path);
+	private String endpoint(String path, boolean internal) {
+		return String.format(
+			"http://localhost:%d%s",
+			internal ? TEST_INTERNAL_PORT : TEST_EXTERNAL_PORT,
+			path
+		);
 	}
 
 	@BeforeEach
@@ -78,7 +87,10 @@ public class ApiServerTest {
 
 		// Create config
 		this.rrmConfig = new RRMConfig();
-		rrmConfig.moduleConfig.apiServerParams.httpPort = TEST_PORT;
+		rrmConfig.moduleConfig.apiServerParams.internalHttpPort =
+			TEST_INTERNAL_PORT;
+		rrmConfig.moduleConfig.apiServerParams.externalHttpPort =
+			TEST_EXTERNAL_PORT;
 
 		// Create clients (null for now)
 		UCentralClient client = null;
@@ -157,7 +169,7 @@ public class ApiServerTest {
 
 		// Fetch topology
 		HttpResponse<String> resp =
-			Unirest.get(endpoint("/api/v1/getTopology")).asString();
+			Unirest.get(endpoint("/api/v1/getTopology", true)).asString();
 		assertEquals(200, resp.getStatus());
 		assertEquals(deviceDataManager.getTopologyJson(), resp.getBody());
 	}
@@ -165,7 +177,7 @@ public class ApiServerTest {
 	@Test
 	@Order(2)
 	void test_setTopology() throws Exception {
-		String url = endpoint("/api/v1/setTopology");
+		String url = endpoint("/api/v1/setTopology", true);
 
 		// Create topology
 		DeviceTopology topology = new DeviceTopology();
@@ -210,7 +222,7 @@ public class ApiServerTest {
 
 		// Fetch config
 		HttpResponse<String> resp =
-			Unirest.get(endpoint("/api/v1/getDeviceLayeredConfig")).asString();
+			Unirest.get(endpoint("/api/v1/getDeviceLayeredConfig", true)).asString();
 		assertEquals(200, resp.getStatus());
 		assertEquals(
 			deviceDataManager.getDeviceLayeredConfigJson(),
@@ -221,7 +233,7 @@ public class ApiServerTest {
 	@Test
 	@Order(4)
 	void test_getDeviceConfig() throws Exception {
-		String url = endpoint("/api/v1/getDeviceConfig");
+		String url = endpoint("/api/v1/getDeviceConfig", true);
 
 		// Create topology
 		final String zone = "test-zone";
@@ -257,7 +269,7 @@ public class ApiServerTest {
 
 		// Set config
 		HttpResponse<String> resp = Unirest
-			.post(endpoint("/api/v1/setDeviceNetworkConfig"))
+			.post(endpoint("/api/v1/setDeviceNetworkConfig", true))
 			.body(gson.toJson(config))
 			.asString();
 		assertEquals(200, resp.getStatus());
@@ -271,7 +283,7 @@ public class ApiServerTest {
 	@Test
 	@Order(6)
 	void test_setDeviceZoneConfig() throws Exception {
-		String url = endpoint("/api/v1/setDeviceZoneConfig");
+		String url = endpoint("/api/v1/setDeviceZoneConfig", true);
 
 		// Create topology
 		final String zone = "test-zone";
@@ -318,7 +330,7 @@ public class ApiServerTest {
 	@Test
 	@Order(7)
 	void test_setDeviceApConfig() throws Exception {
-		String url = endpoint("/api/v1/setDeviceApConfig");
+		String url = endpoint("/api/v1/setDeviceApConfig", true);
 
 		// Create topology
 		final String zone = "test-zone";
@@ -365,7 +377,7 @@ public class ApiServerTest {
 	@Test
 	@Order(8)
 	void test_modifyDeviceApConfig() throws Exception {
-		String url = endpoint("/api/v1/modifyDeviceApConfig");
+		String url = endpoint("/api/v1/modifyDeviceApConfig", true);
 
 		// Create topology
 		final String zone = "test-zone";
@@ -432,7 +444,7 @@ public class ApiServerTest {
 	void test_currentModel() throws Exception {
 		// Fetch RRM model
 		HttpResponse<String> resp =
-			Unirest.get(endpoint("/api/v1/currentModel")).asString();
+			Unirest.get(endpoint("/api/v1/currentModel", true)).asString();
 		assertEquals(200, resp.getStatus());
 		assertEquals(gson.toJson(modeler.getDataModel()), resp.getBody());
 	}
@@ -440,7 +452,7 @@ public class ApiServerTest {
 	@Test
 	@Order(101)
 	void test_optimizeChannel() throws Exception {
-		String url = endpoint("/api/v1/optimizeChannel");
+		String url = endpoint("/api/v1/optimizeChannel", true);
 
 		// Create topology
 		final String zone = "test-zone";
@@ -474,7 +486,7 @@ public class ApiServerTest {
 	@Test
 	@Order(102)
 	void test_optimizeTxPower() throws Exception {
-		String url = endpoint("/api/v1/optimizeTxPower");
+		String url = endpoint("/api/v1/optimizeTxPower", true);
 
 		// Create topology
 		final String zone = "test-zone";
@@ -511,18 +523,21 @@ public class ApiServerTest {
 	@Order(1000)
 	void testDocs() throws Exception {
 		// Index page paths
-		assertEquals(200, Unirest.get(endpoint("/")).asString().getStatus());
 		assertEquals(
 			200,
-			Unirest.get(endpoint("/index.html")).asString().getStatus()
+			Unirest.get(endpoint("/", true)).asString().getStatus()
+		);
+		assertEquals(
+			200,
+			Unirest.get(endpoint("/index.html", true)).asString().getStatus()
 		);
 
 		// OpenAPI YAML/JSON
 		HttpResponse<String> yamlResp =
-			Unirest.get(endpoint("/openapi.yaml")).asString();
+			Unirest.get(endpoint("/openapi.yaml", true)).asString();
 		assertEquals(200, yamlResp.getStatus());
 		HttpResponse<JsonNode> jsonResp =
-			Unirest.get(endpoint("/openapi.json")).asJson();
+			Unirest.get(endpoint("/openapi.json", true)).asJson();
 		assertEquals(200, jsonResp.getStatus());
 		// Check that we got the OpenAPI 3.x version string
 		assertTrue(
@@ -546,7 +561,7 @@ public class ApiServerTest {
 	@Test
 	@Order(1001)
 	void test404() throws Exception {
-		final String fakeEndpoint = endpoint("/test123");
+		final String fakeEndpoint = endpoint("/test123", true);
 		assertEquals(404, Unirest.get(fakeEndpoint).asString().getStatus());
 		assertEquals(404, Unirest.post(fakeEndpoint).asString().getStatus());
 		assertEquals(404, Unirest.put(fakeEndpoint).asString().getStatus());
@@ -558,7 +573,7 @@ public class ApiServerTest {
 	@Test
 	@Order(1002)
 	void testCORS() throws Exception {
-		final String fakeEndpoint = endpoint("/test123");
+		final String fakeEndpoint = endpoint("/test123", true);
 		final String HEADERS = "authorization";
 		final String METHOD = "GET";
 		final String ORIGIN = "https://example.com";
@@ -594,7 +609,7 @@ public class ApiServerTest {
 	void test_system() throws Exception {
 		// Test on GET api
 		HttpResponse<JsonNode> get_resp =
-			Unirest.get(endpoint("/api/v1/system?command=info")).asJson();
+			Unirest.get(endpoint("/api/v1/system?command=info", true)).asJson();
 		assertEquals(200, get_resp.getStatus());
 		assertEquals(
 			VersionProvider.get(),
@@ -602,7 +617,7 @@ public class ApiServerTest {
 		);
 
 		// Test on POST api
-		String url = endpoint("/api/v1/system");
+		String url = endpoint("/api/v1/system", true);
 		// Valid command
 		HttpResponse<String> post_resp = Unirest
 			.post(url)
@@ -625,7 +640,7 @@ public class ApiServerTest {
 	@Order(2001)
 	void test_provider() throws Exception {
 		HttpResponse<JsonNode> resp =
-			Unirest.get(endpoint("/api/v1/provider")).asJson();
+			Unirest.get(endpoint("/api/v1/provider", true)).asJson();
 		assertEquals(200, resp.getStatus());
 		assertEquals(
 			rrmConfig.serviceConfig.vendor,
@@ -645,7 +660,7 @@ public class ApiServerTest {
 	@Order(2002)
 	void test_algorithms() throws Exception {
 		HttpResponse<JsonNode> resp =
-			Unirest.get(endpoint("/api/v1/algorithms")).asJson();
+			Unirest.get(endpoint("/api/v1/algorithms", true)).asJson();
 		assertEquals(200, resp.getStatus());
 		assertEquals(
 			RRMAlgorithm.AlgorithmType.values().length,
@@ -656,7 +671,7 @@ public class ApiServerTest {
 	@Test
 	@Order(2003)
 	void test_runRRM() throws Exception {
-		String url = endpoint("/api/v1/runRRM");
+		String url = endpoint("/api/v1/runRRM", true);
 
 		// Create topology
 		final String zone = "test-zone";
