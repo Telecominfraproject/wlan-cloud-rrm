@@ -13,19 +13,18 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.facebook.openwifirrm.DeviceConfig;
 import com.facebook.openwifirrm.DeviceDataManager;
 import com.facebook.openwifirrm.modules.ConfigManager;
 import com.facebook.openwifirrm.modules.Modeler.DataModel;
 import com.facebook.openwifirrm.ucentral.models.State;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * TPC (Transmit Power Control) base class.
@@ -83,19 +82,19 @@ public abstract class TPC {
 	}
 
 	/**
-	 * Update the tx power choices based on user and allowed channels from deviceConfig
+	 * Determine the new tx power choices based on user and allowed channels from deviceConfig.
+	 *
 	 * @param band the operational band
-	 * @param serialNumber the device
-	 * @param txPowerChoices the available tx powers of the device
-	 * @return the updated tx powers of the device
+	 * @param serialNumber the device's serial number
+	 * @param txPowerChoices the device's available tx powers
+	 * @return the device's updated tx powers
 	 */
 	protected List<Integer> updateTxPowerChoices(
 		String band,
 		String serialNumber,
 		List<Integer> txPowerChoices
 	) {
-		List<Integer> newTxPowerChoices =
-			new ArrayList<>(txPowerChoices);
+		List<Integer> newTxPowerChoices = new ArrayList<>(txPowerChoices);
 
 		// Update the available tx powers based on user tx powers or allowed tx powers
 		DeviceConfig deviceCfg = deviceConfigs.get(serialNumber);
@@ -127,8 +126,7 @@ public abstract class TPC {
 			newTxPowerChoices.retainAll(allowedTxPowers);
 		}
 
-		// If the intersection of the above steps gives an empty list,
-		// turn back to use the default available tx powers list
+		// If newTxPowerChoices is empty, use default available tx powers list
 		if (newTxPowerChoices.isEmpty()) {
 			logger.debug(
 				"Device {}: the updated availableTxPowersList is empty!!! " +
@@ -186,7 +184,7 @@ public abstract class TPC {
 	/**
 	 * Get AP serial numbers per channel.
 	 *
-	 * @return the map of channel to the list of serial numbers
+	 * @return the map from channel to the list of AP serial numbers
 	 */
 	protected Map<Integer, List<String>> getApsPerChannel() {
 		Map<Integer, List<String>> apsPerChannel = new TreeMap<>();
