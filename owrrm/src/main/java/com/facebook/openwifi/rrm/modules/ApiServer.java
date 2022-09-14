@@ -290,16 +290,23 @@ public class ApiServer implements Runnable {
 	 * HTTP 403 response and return false.
 	 */
 	private boolean performOpenWifiAuth(Request request, Response response) {
-		// TODO check if request came from internal endpoint
-		boolean internal = true;
-		String internalName = request.headers("X-INTERNAL-NAME");
-		if (internal && internalName != null) {
-			// Internal request, validate "X-API-KEY"
-			String apiKey = request.headers("X-API-KEY");
-			if (apiKey != null && apiKey.equals(serviceKey)) {
-				// auth success
-				return true;
+		boolean internal = request.port() == params.internalHttpPort;
+		if (internal) {
+			// TODO if this doesn't exist, is it an error???
+			String internalName = request.headers("X-INTERNAL-NAME");
+			if (internalName != null) {
+				// Internal request, validate "X-API-KEY"
+				String apiKey = request.headers("X-API-KEY");
+				if (apiKey != null && apiKey.equals(serviceKey)) {
+					// auth success
+					return true;
+				}
 			}
+			// auth failure
+			// TODO normally 401s are expected to have WWW-Authenticate header but this
+			// is only internal so is it needed??
+			Spark.halt(401, "Unauthorized");
+			return false;
 		} else {
 			// External request, validate token:
 			//   Authorization: Bearer <token>
@@ -315,11 +322,14 @@ public class ApiServer implements Runnable {
 					}
 				}
 			}
-		}
 
-		// auth failure
-		Spark.halt(403, "Forbidden");
-		return false;
+			// auth failure
+			// https://www.rfc-editor.org/rfc/rfc6750#section-3
+			response
+				.header("WWW-Authenticate", "Bearer error=\"invalid_token\"");
+			Spark.halt(401, "Unauthorized");
+			return false;
+		}
 	}
 
 	/**
