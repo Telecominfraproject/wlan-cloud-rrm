@@ -61,7 +61,7 @@ public class MeasurementBasedApApTPC extends TPC {
 	private final int coverageThreshold;
 
 	/** Nth smallest RSSI (zero-indexed) is used for Tx power calculation */
-	private final int nthSmallestRssi; // TODO non-zero values untested
+	private final int nthSmallestRssi;
 
 	/** Factory method to parse generic args map into the proper constructor */
 	public static MeasurementBasedApApTPC makeWithArgs(
