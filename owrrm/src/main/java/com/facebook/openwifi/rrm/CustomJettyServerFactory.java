@@ -48,7 +48,12 @@ public class CustomJettyServerFactory implements JettyServerFactory {
 	 * the only difference being that we use a different constructor for the
 	 * Connector and that the private methods called are just inlined.
 	 */
-	public Connector makeConnector(Server server, String host, int port, boolean trustForwardHeaders) {
+	public Connector makeConnector(
+		Server server,
+		String host,
+		int port,
+		boolean trustForwardHeaders
+	) {
 		Assert.notNull(server, "'server' must not be null");
 		Assert.notNull(host, "'host' must not be null");
 
@@ -101,14 +106,35 @@ public class CustomJettyServerFactory implements JettyServerFactory {
 			server = new Server();
 		}
 
-		Connector internalConnector =
-			makeConnector(server, "localhost", internalPort, trustForwardHeaders);
-		Connector externalConnector =
-			makeConnector(server, "localhost", externalPort, trustForwardHeaders);
+		Connector internalConnector = null;
+		if (internalPort != -1) {
+			internalConnector = makeConnector(
+				server,
+				"localhost",
+				internalPort,
+				trustForwardHeaders
+			);
+		}
 
-		server.setConnectors(
-			new Connector[] { internalConnector, externalConnector }
-		);
+		Connector externalConnector = null;
+		if (externalPort != -1) {
+			externalConnector = makeConnector(
+				server,
+				"localhost",
+				externalPort,
+				trustForwardHeaders
+			);
+		}
+
+		if (internalConnector == null) {
+			server.setConnectors(new Connector[] { externalConnector });
+		} else if (externalConnector == null) {
+			server.setConnectors(new Connector[] { internalConnector });
+		} else {
+			server.setConnectors(
+				new Connector[] { internalConnector, externalConnector }
+			);
+		}
 
 		return server;
 	}

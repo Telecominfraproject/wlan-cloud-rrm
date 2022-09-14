@@ -34,13 +34,13 @@ public class RRMConfig {
 		 * Private endpoint for the RRM service
 		 * ({@code SERVICECONFIG_PRIVATEENDPOINT})
 		 */
-		public String privateEndpoint = "http://owrrm.wlan.local:16789"; // see ApiServerParams.httpPort
+		public String privateEndpoint = "http://owrrm.wlan.local:16790"; // see ApiServerParams.externalHttpPort
 
 		/**
 		 * Public endpoint for the RRM service
 		 * ({@code SERVICECONFIG_PUBLICENDPOINT})
 		 */
-		public String publicEndpoint = "";
+		public String publicEndpoint = "http://owrrm.wlan.local:16789"; // see ApiServerParams.internalHttpPOrt
 
 		/**
 		 * RRM vendor name
@@ -325,10 +325,16 @@ public class RRMConfig {
 		 */
 		public class ApiServerParams {
 			/**
-			 * The HTTP port to listen on, or -1 to disable
-			 * ({@code APISERVERPARAMS_HTTPPORT})
+			 * The HTTP port to listen on for internal traffic, or -1 to disable
+			 * ({@code APISERVERPARAMS_INTERNALHTTPPORT})
 			 */
-			public int httpPort = 16789;
+			public int internalHttpPort = 16789;
+
+			/**
+			 * The HTTP port to listen on for external traffic, or -1 to disable
+			 * ({@code APISERVERPARAMS_EXTERNALHTTPPORT})
+			 */
+			public int externalHttpPort = 16790;
 
 			/**
 			 * Comma-separated list of all allowed CORS domains (exact match
@@ -543,8 +549,11 @@ public class RRMConfig {
 		}
 		ModuleConfig.ApiServerParams apiServerParams =
 			config.moduleConfig.apiServerParams;
-		if ((v = env.get("APISERVERPARAMS_HTTPPORT")) != null) {
-			apiServerParams.httpPort = Integer.parseInt(v);
+		if ((v = env.get("APISERVERPARAMS_INTERNALHTTPPORT")) != null) {
+			apiServerParams.internalHttpPort = Integer.parseInt(v);
+		}
+		if ((v = env.get("APISERVERPARAMS_EXTERNALHTTPPORT")) != null) {
+			apiServerParams.externalHttpPort = Integer.parseInt(v);
 		}
 		if ((v = env.get("APISERVERPARAMS_CORSDOMAINLIST")) != null) {
 			apiServerParams.corsDomainList = v;

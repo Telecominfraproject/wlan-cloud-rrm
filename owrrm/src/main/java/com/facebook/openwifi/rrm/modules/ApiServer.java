@@ -201,14 +201,23 @@ public class ApiServer implements Runnable {
 	public void run() {
 		this.startTimeMs = System.currentTimeMillis();
 
-		if (params.httpPort == -1) {
+		if (params.internalHttpPort == -1 && params.externalHttpPort == -1) {
 			logger.info("API server is disabled.");
 			return;
+		} else if (params.internalHttpPort == -1) {
+			logger.info("Internal API server is disabled");
+		} else if (params.externalHttpPort == -1) {
+			logger.info("External API server is disabled");
 		}
 
 		EmbeddedServers.add(
 			EmbeddedServers.defaultIdentifier(),
-			new EmbeddedJettyFactory(new CustomJettyServerFactory(16789, 16790))
+			new EmbeddedJettyFactory(
+				new CustomJettyServerFactory(
+					params.internalHttpPort,
+					params.externalHttpPort
+				)
+			)
 		);
 
 		Spark.port(0);
@@ -254,7 +263,11 @@ public class ApiServer implements Runnable {
 		Spark.get("/api/v1/optimizeChannel", new OptimizeChannelEndpoint());
 		Spark.get("/api/v1/optimizeTxPower", new OptimizeTxPowerEndpoint());
 
-		logger.info("API server listening on HTTP port {}", params.httpPort);
+		logger.info(
+			"API server listening for HTTP internal on port {} and external on port {}",
+			params.internalHttpPort,
+			params.externalHttpPort
+		);
 	}
 
 	/** Stop the server. */
