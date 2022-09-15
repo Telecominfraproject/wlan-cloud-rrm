@@ -16,7 +16,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Objects;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -26,7 +25,6 @@ import com.facebook.openwifirrm.RRMConfig;
 import com.facebook.openwifirrm.Utils;
 import com.facebook.openwifirrm.optimizers.channel.ChannelOptimizer;
 import com.facebook.openwifirrm.ucentral.models.State;
-import com.facebook.openwifirrm.ucentral.models.WifiScanEntryResult;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -60,60 +58,6 @@ public class UCentralUtils {
 
 	// This class should not be instantiated.
 	private UCentralUtils() {}
-
-	/**
-	 * Extends {@link WifiScanEntryResult} to track the response time of the entry.
-	 */
-	public static class WifiScanEntry extends WifiScanEntryResult {
-		/**
-		 * Unix time in milliseconds (ms). This field is not defined in the uCentral
-		 * API. This is added it because {@link WifiScanEntryResult#tsf} is an unknown
-		 * time reference.
-		 */
-		public long unixTimeMs;
-
-		/** Default Constructor. */
-		public WifiScanEntry() {}
-
-		/** Copy Constructor. */
-		public WifiScanEntry(WifiScanEntry o) {
-			super(o);
-			this.unixTimeMs = o.unixTimeMs;
-		}
-
-		@Override
-		public int hashCode() {
-			final int prime = 31;
-			int result = super.hashCode();
-			result = prime * result + Objects.hash(unixTimeMs);
-			return result;
-		}
-
-		@Override
-		public boolean equals(Object obj) {
-			if (this == obj) {
-				return true;
-			}
-			if (!super.equals(obj)) {
-				return false;
-			}
-			if (getClass() != obj.getClass()) {
-				return false;
-			}
-			WifiScanEntry other = (WifiScanEntry) obj;
-			return unixTimeMs == other.unixTimeMs;
-		}
-
-		@Override
-		public String toString() {
-			return String.format(
-				"WifiScanEntry[signal=%d, bssid=%s, unixTimeMs=%d]",
-				signal,
-				bssid,
-				unixTimeMs
-			);
-		}
-	}
 
 	/**
 	 * Parse a JSON wifi scan result into a list of WifiScanEntry objects.

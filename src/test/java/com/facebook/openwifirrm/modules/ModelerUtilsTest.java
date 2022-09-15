@@ -23,7 +23,7 @@ import org.junit.jupiter.api.Test;
 import com.facebook.openwifirrm.aggregators.MeanAggregator;
 import com.facebook.openwifirrm.modules.Modeler.DataModel;
 import com.facebook.openwifirrm.optimizers.TestUtils;
-import com.facebook.openwifirrm.ucentral.UCentralUtils.WifiScanEntry;
+import com.facebook.openwifirrm.ucentral.WifiScanEntry;
 
 public class ModelerUtilsTest {
 	@Test
