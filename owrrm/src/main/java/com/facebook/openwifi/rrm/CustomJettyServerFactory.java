@@ -23,8 +23,15 @@ import spark.embeddedserver.jetty.SocketConnectorFactory;
 import spark.utils.Assert;
 
 /**
- * Creates Jetty Server instances. Majority of the logic is taken
- * from JettyServerFactory with port logic added.
+ * Creates Jetty Server instances. Majority of the logic is taken from
+ * JettyServerFactory. The additional feature is that this class will actually
+ * set two connectors (original class doesn't set any connectors at all and
+ * leaves it up to the serivce start logic). Since we set two connectors here
+ * on the server, Spark uses the existing conectors instead of trying to spin
+ * up its own connectors. See
+ * main/java/spark/embeddedserver/jetty/EmbeddedJettyServer.java in spark. The
+ * other difference is that it uses a different ServerConnector constructor to
+ * avoid allocating additional threads that aren't necessary (see makeConnector)
  */
 public class CustomJettyServerFactory implements JettyServerFactory {
 	// normally this is set in EmbeddedJettyServer but since we create our own connectors here,

@@ -34,13 +34,13 @@ public class RRMConfig {
 		 * Private endpoint for the RRM service
 		 * ({@code SERVICECONFIG_PRIVATEENDPOINT})
 		 */
-		public String privateEndpoint = "http://owrrm.wlan.local:16790"; // see ApiServerParams.externalHttpPort
+		public String privateEndpoint = "http://owrrm.wlan.local:16789"; // see ApiServerParams.internalHttpPort
 
 		/**
 		 * Public endpoint for the RRM service
 		 * ({@code SERVICECONFIG_PUBLICENDPOINT})
 		 */
-		public String publicEndpoint = "http://owrrm.wlan.local:16789"; // see ApiServerParams.internalHttpPOrt
+		public String publicEndpoint = "";
 
 		/**
 		 * RRM vendor name

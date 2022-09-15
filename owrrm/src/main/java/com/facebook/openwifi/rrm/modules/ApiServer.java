@@ -220,6 +220,13 @@ public class ApiServer implements Runnable {
 			)
 		);
 
+		// Usually you would call this with an actual port and Spark would spin up a
+		// port on it. However, since we're putting our own connectors in so that we
+		// can use two ports and Spark has logic to use connectors that already exist
+		// so it doesn't matter what port we pass in here as long as it's not one of
+		// the actual ports we're using (Spark has some weird logic where it still
+		// tries to bind to the port:
+		// main/java/spark/embeddedserver/jetty/EmbeddedJettyServer.java in spark).
 		Spark.port(0);
 
 		// Configure API docs hosting
@@ -290,9 +297,9 @@ public class ApiServer implements Runnable {
 	 * HTTP 403 response and return false.
 	 */
 	private boolean performOpenWifiAuth(Request request, Response response) {
-		boolean internal = request.port() == params.internalHttpPort;
+		int port = request.port();
+		boolean internal = port > 0 && port == params.internalHttpPort;
 		if (internal) {
-			// TODO if this doesn't exist, is it an error???
 			String internalName = request.headers("X-INTERNAL-NAME");
 			if (internalName != null) {
 				// Internal request, validate "X-API-KEY"
@@ -302,11 +309,6 @@ public class ApiServer implements Runnable {
 					return true;
 				}
 			}
-			// auth failure
-			// TODO normally 401s are expected to have WWW-Authenticate header but this
-			// is only internal so is it needed??
-			Spark.halt(401, "Unauthorized");
-			return false;
 		} else {
 			// External request, validate token:
 			//   Authorization: Bearer <token>
@@ -322,14 +324,11 @@ public class ApiServer implements Runnable {
 					}
 				}
 			}
-
-			// auth failure
-			// https://www.rfc-editor.org/rfc/rfc6750#section-3
-			response
-				.header("WWW-Authenticate", "Bearer error=\"invalid_token\"");
-			Spark.halt(401, "Unauthorized");
-			return false;
 		}
+
+		// auth failure
+		Spark.halt(403, "Forbidden");
+		return false;
 	}
 
 	/**
