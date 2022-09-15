@@ -564,11 +564,13 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <div class="block">Get the current channel and channel width (MHz) of the device (from state data).</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>band</code> - the operational band</dd>
-<dd><code>serialNumber</code> - the device</dd>
+<dd><code>band</code> - the operational band (e.g., "2G")</dd>
+<dd><code>serialNumber</code> - the device's serial number</dd>
 <dd><code>state</code> - the latest state of all the devices</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>the current channel and channel width (MHz) of the device</dd>
+<dd>the current channel and channel width (MHz) of the device in the
+ given band; returns a current channel of 0 if no channel in the given
+ band is found.</dd>
 </dl>
 </li>
 </ul>
