@@ -192,7 +192,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#addWifiScan(java.lang.String,long,java.util.List)">addWifiScan</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;serialNumber,
            long&nbsp;timestampSeconds,
-           <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="../ucentral/UCentralUtils.WifiScanEntry.html" title="class in com.facebook.openwifirrm.ucentral">UCentralUtils.WifiScanEntry</a>&gt;&nbsp;entries)</code></th>
+           <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="../ucentral/WifiScanEntry.html" title="class in com.facebook.openwifirrm.ucentral">WifiScanEntry</a>&gt;&nbsp;entries)</code></th>
 <td class="colLast">
 <div class="block">Insert wifi scan results into the database.</div>
 </td>
@@ -212,7 +212,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 </td>
 </tr>
 <tr id="i4" class="altColor">
-<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html?is-external=true" title="class or interface in java.util" class="externalLink">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Long.html?is-external=true" title="class or interface in java.lang" class="externalLink">Long</a>,&#8203;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="../ucentral/UCentralUtils.WifiScanEntry.html" title="class in com.facebook.openwifirrm.ucentral">UCentralUtils.WifiScanEntry</a>&gt;&gt;</code></td>
+<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html?is-external=true" title="class or interface in java.util" class="externalLink">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Long.html?is-external=true" title="class or interface in java.lang" class="externalLink">Long</a>,&#8203;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="../ucentral/WifiScanEntry.html" title="class in com.facebook.openwifirrm.ucentral">WifiScanEntry</a>&gt;&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getLatestWifiScans(java.lang.String,int)">getLatestWifiScans</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;serialNumber,
                   int&nbsp;count)</code></th>
 <td class="colLast">
@@ -357,7 +357,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <h4>addWifiScan</h4>
 <pre class="methodSignature">public&nbsp;void&nbsp;addWifiScan&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;serialNumber,
                         long&nbsp;timestampSeconds,
-                        <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="../ucentral/UCentralUtils.WifiScanEntry.html" title="class in com.facebook.openwifirrm.ucentral">UCentralUtils.WifiScanEntry</a>&gt;&nbsp;entries)
+                        <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="../ucentral/WifiScanEntry.html" title="class in com.facebook.openwifirrm.ucentral">WifiScanEntry</a>&gt;&nbsp;entries)
                  throws <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.sql/java/sql/SQLException.html?is-external=true" title="class or interface in java.sql" class="externalLink">SQLException</a></pre>
 <div class="block">Insert wifi scan results into the database.</div>
 <dl>
@@ -376,9 +376,9 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <ul class="blockListLast">
 <li class="blockList">
 <h4>getLatestWifiScans</h4>
-<pre class="methodSignature">public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html?is-external=true" title="class or interface in java.util" class="externalLink">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Long.html?is-external=true" title="class or interface in java.lang" class="externalLink">Long</a>,&#8203;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="../ucentral/UCentralUtils.WifiScanEntry.html" title="class in com.facebook.openwifirrm.ucentral">UCentralUtils.WifiScanEntry</a>&gt;&gt;&nbsp;getLatestWifiScans&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;serialNumber,
-                                                                            int&nbsp;count)
-                                                                     throws <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.sql/java/sql/SQLException.html?is-external=true" title="class or interface in java.sql" class="externalLink">SQLException</a></pre>
+<pre class="methodSignature">public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html?is-external=true" title="class or interface in java.util" class="externalLink">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Long.html?is-external=true" title="class or interface in java.lang" class="externalLink">Long</a>,&#8203;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="../ucentral/WifiScanEntry.html" title="class in com.facebook.openwifirrm.ucentral">WifiScanEntry</a>&gt;&gt;&nbsp;getLatestWifiScans&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;serialNumber,
+                                                              int&nbsp;count)
+                                                       throws <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.sql/java/sql/SQLException.html?is-external=true" title="class or interface in java.sql" class="externalLink">SQLException</a></pre>
 <div class="block">Return up to the N latest wifiscan results for the given device as a map
  of timestamp to scan results.</div>
 <dl>
