@@ -391,9 +391,9 @@ public class LeastUsedChannelOptimizer extends ChannelOptimizer {
 				int[] currentChannelInfo =
 					getCurrentChannel(band, serialNumber, state);
 				int currentChannel = currentChannelInfo[0];
-				int currentChannelWidth = currentChannelInfo[1];
-				// Filter out APs if the number of radios in the state and config mismatches
-				// Happen when an AP's radio is enabled/disabled on the fly
+				// Filter out APs if the radios in the state do not contain a
+				// channel in a band given by the state. This can happen when
+				// an AP's radio is enabled/disabled on the fly
 				if (currentChannel == 0) {
 					logger.debug(
 						"Device {}: No {} radio, skipping...",
@@ -404,6 +404,7 @@ public class LeastUsedChannelOptimizer extends ChannelOptimizer {
 				}
 
 				// Get the occupied channels info of the device
+				int currentChannelWidth = currentChannelInfo[1];
 				Map<Integer, Integer> occupiedChannels = getOccupiedChannels(
 					band,
 					serialNumber,

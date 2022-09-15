@@ -357,10 +357,13 @@ public abstract class ChannelOptimizer {
 
 	/**
 	 * Get the current channel and channel width (MHz) of the device (from state data).
-	 * @param band the operational band
-	 * @param serialNumber the device
+	 *
+	 * @param band the operational band (e.g., "2G")
+	 * @param serialNumber the device's serial number
 	 * @param state the latest state of all the devices
-	 * @return the current channel and channel width (MHz) of the device
+	 * @return the current channel and channel width (MHz) of the device in the
+	 * given band; returns a current channel of 0 if no channel in the given
+	 * band is found.
 	 */
 	protected static int[] getCurrentChannel(
 		String band,
