@@ -24,6 +24,10 @@ import org.slf4j.LoggerFactory;
 import com.facebook.openwifirrm.RRMConfig;
 import com.facebook.openwifirrm.Utils;
 import com.facebook.openwifirrm.optimizers.channel.ChannelOptimizer;
+import com.facebook.openwifirrm.ucentral.informationelement.Country;
+import com.facebook.openwifirrm.ucentral.informationelement.LocalPowerConstraint;
+import com.facebook.openwifirrm.ucentral.informationelement.QbssLoad;
+import com.facebook.openwifirrm.ucentral.informationelement.TxPwrInfo;
 import com.facebook.openwifirrm.ucentral.models.State;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -36,6 +40,9 @@ import com.google.gson.JsonObject;
 public class UCentralUtils {
 	private static final Logger logger =
 		LoggerFactory.getLogger(UCentralUtils.class);
+
+	/** Information Element (IE) content field key */
+	private static final String IE_CONTENT_FIELD_KEY = "content";
 
 	/** The Gson instance. */
 	private static final Gson gson = new Gson();
@@ -79,13 +86,59 @@ public class UCentralUtils {
 			for (JsonElement e : scanInfo) {
 				WifiScanEntry entry = gson.fromJson(e, WifiScanEntry.class);
 				entry.unixTimeMs = timestampMs;
+				extractIEs(e, entry);
 				entries.add(entry);
-
 			}
 		} catch (Exception e) {
+			logger.debug("Exception when parsing wifiscan entries", e);
 			return null;
 		}
 		return entries;
+	}
+
+	/**
+	 * Extract desired information elements (IEs) from the wifiscan entry.
+	 * Modifies {@code entry} argument. Skips invalid IEs (IEs with missing
+	 * fields).
+	 */
+	private static void extractIEs(
+		JsonElement entryJsonElement,
+		WifiScanEntry entry
+	) {
+		JsonElement iesJsonElement =
+			entryJsonElement.getAsJsonObject().get("ies");
+		if (iesJsonElement == null) {
+			logger.debug("Wifiscan entry does not contain 'ies' field.");
+			return;
+		}
+		JsonArray ies = iesJsonElement.getAsJsonArray();
+		for (JsonElement ie : ies) {
+			JsonElement typeElement = ie.getAsJsonObject().get("type");
+			if (typeElement == null) {
+				continue;
+			}
+			JsonObject contents =
+				ie.getAsJsonObject().get(IE_CONTENT_FIELD_KEY).getAsJsonObject();
+			try {
+				switch (typeElement.getAsInt()) {
+				case Country.TYPE:
+					entry.country = Country.parse(contents);
+					break;
+				case QbssLoad.TYPE:
+					entry.qbssLoad = QbssLoad.parse(contents);
+					break;
+				case LocalPowerConstraint.TYPE:
+					entry.localPowerConstraint =
+						LocalPowerConstraint.parse(contents);
+					break;
+				case TxPwrInfo.TYPE:
+					entry.txPwrInfo = TxPwrInfo.parse(contents);
+					break;
+				}
+			} catch (NullPointerException e) {
+				logger.debug("Skipping invalid IE.", e);
+			}
+		}
 	}
 
 	/**

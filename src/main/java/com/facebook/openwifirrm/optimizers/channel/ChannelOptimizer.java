@@ -25,9 +25,9 @@ import com.facebook.openwifirrm.modules.Modeler.DataModel;
 import com.facebook.openwifirrm.ucentral.UCentralConstants;
 import com.facebook.openwifirrm.ucentral.UCentralUtils;
 import com.facebook.openwifirrm.ucentral.WifiScanEntry;
+import com.facebook.openwifirrm.ucentral.informationelement.HTOperationElement;
+import com.facebook.openwifirrm.ucentral.informationelement.VHTOperationElement;
 import com.facebook.openwifirrm.ucentral.models.State;
-import com.facebook.openwifirrm.ucentral.operationelement.HTOperationElement;
-import com.facebook.openwifirrm.ucentral.operationelement.VHTOperationElement;
 
 /**
  * Channel optimizer base class.
