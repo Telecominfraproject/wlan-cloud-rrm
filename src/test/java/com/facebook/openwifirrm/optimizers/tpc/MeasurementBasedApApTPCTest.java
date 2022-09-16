@@ -297,32 +297,6 @@ public class MeasurementBasedApApTPCTest {
 
 	@Test
 	@Order(2)
-	void testGetCurrentTxPower() throws Exception {
-		final int expectedTxPower = 29;
-
-		DataModel model = new DataModel();
-		TestUtils.createDeviceStatusDualBand(1, 5, 36, expectedTxPower);
-		model.latestState.put(
-			DEVICE_A,
-			TestUtils.createState(
-				new int[] { 1, 36 },
-				new int[] { 20, 20 },
-				new int[] { 5, expectedTxPower },
-				new String[] { BSSID_A, BSSID_A },
-				new int[][] { new int[] {}, new int[] {} }
-			)
-		);
-
-		State state =
-			model.latestState.get(DEVICE_A);
-		int txPower = MeasurementBasedApApTPC
-			.getCurrentTxPower(state, UCentralConstants.BAND_5G)
-			.get();
-		assertEquals(expectedTxPower, txPower);
-	}
-
-	@Test
-	@Order(3)
 	void testBuildRssiMap() throws Exception {
 		// This example includes three APs, and one AP that is unmanaged
 		Set<String> bssidSet = Set.of(BSSID_A, BSSID_B, BSSID_C);
@@ -344,7 +318,7 @@ public class MeasurementBasedApApTPCTest {
 	}
 
 	@Test
-	@Order(4)
+	@Order(3)
 	void testComputeTxPower() throws Exception {
 		// Test examples here taken from algorithm design doc from @pohanhf
 		final String serialNumber = "testSerial";
