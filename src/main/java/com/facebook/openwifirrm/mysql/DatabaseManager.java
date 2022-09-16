@@ -456,7 +456,7 @@ public class DatabaseManager {
 			.toArray(new State.Interface[0]);
 		state.radios = new State.Radio[radios.lastKey() + 1];
 		for (Map.Entry<Integer, JsonObject> entry : radios.entrySet()) {
-			State.Radio radio = state.new Radio();
+			State.Radio radio = new State.Radio();
 			state.radios[entry.getKey()] = radio;
 		}
 		return state;

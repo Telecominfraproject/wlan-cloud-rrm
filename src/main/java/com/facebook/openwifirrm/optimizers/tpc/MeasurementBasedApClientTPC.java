@@ -41,6 +41,9 @@ public class MeasurementBasedApClientTPC extends TPC {
 	/** Default tx power. */
 	public static final int DEFAULT_TX_POWER = 10;
 
+	/** Default channel width in HMz */
+	public static final int DEFAULT_CHANNEL_WIDTH = 20;
+
 	/** Mapping of MCS index to required SNR (dB) in 802.11ac. */
 	private static final List<Double> MCS_TO_SNR = Collections.unmodifiableList(
 		Arrays.asList(
@@ -158,13 +161,10 @@ public class MeasurementBasedApClientTPC extends TPC {
 	) {
 		// Find current tx power and bandwidth
 		int currentTxPower = radio.tx_power;
-		int channelWidth = 20;
-		try {
-			channelWidth = Integer.parseInt(radio.channel_width);
-		} catch (NumberFormatException e) {
-			logger.error("Could not parse channel width in state radio", e);
-		}
-		channelWidth *= 1_000_000 /* convert MHz to Hz */;
+		Integer channelWidthMHz =
+			UCentralUtils.parseChannelWidth(radio.channel_width);
+		int channelWidth = (channelWidthMHz != null
+			? channelWidthMHz : DEFAULT_CHANNEL_WIDTH) * 1_000_000; // convert MHz to HZ
 		Collections.sort(txPowerChoices);
 		int minTxPower = txPowerChoices.get(0);
 		int maxTxPower = txPowerChoices.get(txPowerChoices.size() - 1);

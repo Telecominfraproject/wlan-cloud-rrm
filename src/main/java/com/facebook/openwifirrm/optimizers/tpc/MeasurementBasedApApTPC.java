@@ -350,20 +350,14 @@ public class MeasurementBasedApApTPC extends TPC {
 				}
 
 				for (State.Interface.SSID ssid : iface.ssids) {
-					String radioRef = ssid.radio.get("$ref").getAsString();
-					int idx = -1;
-					try {
-						idx = Integer.parseInt(
-							radioRef,
-							radioRef.lastIndexOf("/") + 1,
-							radioRef.length(),
-							10
-						);
-					} catch (NumberFormatException e) {
+					Integer idx = UCentralUtils.parseReferenceIndex(
+						ssid.radio.get("$ref").getAsString()
+					);
+					if (idx == null) {
 						logger.error(
-							"Unable to get radio for {}, invalid radio ref",
-							e,
-							serialNumber
+							"Unable to get radio for {}, invalid radio ref {}",
+							serialNumber,
+							ssid.radio.get("$ref").getAsString()
 						);
 						continue;
 					}

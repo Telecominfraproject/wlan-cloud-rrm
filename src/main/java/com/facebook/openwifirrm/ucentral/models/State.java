@@ -112,7 +112,7 @@ public class State {
 
 	public Unit unit;
 
-	public class Radio {
+	public static class Radio {
 		public long active_ms;
 		public long busy_ms;
 		public int channel;
