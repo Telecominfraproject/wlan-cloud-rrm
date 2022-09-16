@@ -22,7 +22,6 @@ import org.slf4j.LoggerFactory;
 import com.facebook.openwifirrm.DeviceDataManager;
 import com.facebook.openwifirrm.modules.Modeler.DataModel;
 import com.facebook.openwifirrm.ucentral.models.State;
-import com.google.gson.JsonObject;
 
 /**
  * Measurement-based AP-client algorithm.
@@ -154,19 +153,18 @@ public class MeasurementBasedApClientTPC extends TPC {
 	private int computeTxPowerForRadio(
 		String serialNumber,
 		State state,
-		JsonObject radio,
+		State.Radio radio,
 		List<Integer> txPowerChoices
 	) {
 		// Find current tx power and bandwidth
-		int currentTxPower =
-			radio.has("tx_power") && !radio.get("tx_power").isJsonNull()
-				? radio.get("tx_power").getAsInt()
-				: 0;
-		int channelWidth =
-			1_000_000 /* convert MHz to Hz */ * (radio.has("channel_width") &&
-				!radio.get("channel_width").isJsonNull()
-					? radio.get("channel_width").getAsInt()
-					: 20);
+		int currentTxPower = radio.tx_power;
+		int channelWidth = 20;
+		try {
+			channelWidth = Integer.parseInt(radio.channel_width);
+		} catch (NumberFormatException e) {
+			logger.error("Could not parse channel width in state radio", e);
+		}
+		channelWidth *= 1_000_000 /* convert MHz to Hz */;
 		Collections.sort(txPowerChoices);
 		int minTxPower = txPowerChoices.get(0);
 		int maxTxPower = txPowerChoices.get(txPowerChoices.size() - 1);
@@ -303,17 +301,10 @@ public class MeasurementBasedApClientTPC extends TPC {
 				);
 				continue;
 			}
+
 			Map<String, Integer> radioMap = new TreeMap<>();
-
-			for (JsonObject radio : state.radios) {
-				Integer currentChannel =
-					radio.has("channel") && !radio.get("channel").isJsonNull()
-						? radio.get("channel").getAsInt()
-						: null;
-				if (currentChannel == null) {
-					continue;
-				}
-
+			for (State.Radio radio : state.radios) {
+				int currentChannel = radio.channel;
 				String band = UCentralUtils.getBandFromChannel(currentChannel);
 				if (band == null) {
 					continue;

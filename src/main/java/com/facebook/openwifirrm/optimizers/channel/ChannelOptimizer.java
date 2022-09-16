@@ -375,14 +375,16 @@ public abstract class ChannelOptimizer {
 			radioIndex < state.radios.length;
 			radioIndex++
 		) {
-			int tempChannel = state.radios[radioIndex]
-				.get("channel")
-				.getAsInt();
+			int tempChannel = state.radios[radioIndex].channel;
 			if (UCentralUtils.isChannelInBand(tempChannel, band)) {
 				currentChannel = tempChannel;
-				currentChannelWidth = state.radios[radioIndex]
-					.get("channel_width")
-					.getAsInt();
+				try {
+					currentChannelWidth = Integer
+						.parseInt(state.radios[radioIndex].channel_width);
+				} catch (NumberFormatException e) {
+					logger.error("Invalid channel width", e);
+					continue;
+				}
 				break;
 			}
 		}

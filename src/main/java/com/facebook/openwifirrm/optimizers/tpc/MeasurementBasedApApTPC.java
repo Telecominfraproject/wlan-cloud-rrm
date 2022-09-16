@@ -26,9 +26,6 @@ import com.facebook.openwifirrm.modules.Modeler.DataModel;
 import com.facebook.openwifirrm.ucentral.UCentralUtils;
 import com.facebook.openwifirrm.ucentral.UCentralUtils.WifiScanEntry;
 import com.facebook.openwifirrm.ucentral.models.State;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 
 /**
  * Measurement-based AP-AP TPC algorithm.
@@ -182,23 +179,23 @@ public class MeasurementBasedApApTPC extends TPC {
 	 * Get the current band radio tx power (the first one found) for an AP using
 	 * the latest device status.
 	 *
-	 * @param latestDeviceStatusRadios JsonArray containing radio config for the AP
+	 * @param deviceState the state of the device
 	 * @param band band (e.g., "2G")
 	 * @return an Optional containing the tx power if one exists, or else an
 	 *         empty Optional
 	 */
 	protected static Optional<Integer> getCurrentTxPower(
-		JsonArray latestDeviceStatusRadios,
+		State deviceState,
 		String band
 	) {
-		for (JsonElement e : latestDeviceStatusRadios) {
-			if (!e.isJsonObject()) {
-				continue;
-			}
-			JsonObject radioObject = e.getAsJsonObject();
-			String radioBand = radioObject.get("band").getAsString();
-			if (radioBand.equals(band) && radioObject.has("tx-power")) {
-				return Optional.of(radioObject.get("tx-power").getAsInt());
+		if (deviceState != null) {
+			for (State.Radio radio : deviceState.radios) {
+				if (radio == null) {
+					continue;
+				}
+				if (UCentralUtils.isChannelInBand(radio.channel, band)) {
+					return Optional.of(radio.tx_power);
+				}
 			}
 		}
 		return Optional.empty();
@@ -340,7 +337,7 @@ public class MeasurementBasedApApTPC extends TPC {
 		Map<String, List<Integer>> bssidToRssiValues =
 			buildRssiMap(managedBSSIDs, model.latestWifiScans, band);
 		logger.debug("Starting TPC for the {} band", band);
-		Map<String, JsonArray> allStatuses = model.latestDeviceStatusRadios;
+		Map<String, State> allStates = model.latestState;
 		for (String serialNumber : serialNumbers) {
 			State state = model.latestState.get(serialNumber);
 			if (
@@ -370,10 +367,10 @@ public class MeasurementBasedApApTPC extends TPC {
 				);
 				continue;
 			}
-			JsonArray radioStatuses =
-				allStatuses.get(serialNumber).getAsJsonArray();
+			State deviceState =
+				allStates.get(serialNumber);
 			Optional<Integer> possibleCurrentTxPower = getCurrentTxPower(
-				radioStatuses,
+				deviceState,
 				band
 			);
 			if (possibleCurrentTxPower.isEmpty()) {

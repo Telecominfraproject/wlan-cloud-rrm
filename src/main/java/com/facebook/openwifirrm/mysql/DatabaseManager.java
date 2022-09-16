@@ -454,9 +454,10 @@ public class DatabaseManager {
 			.map(o -> gson.fromJson(o, State.Interface.class))
 			.collect(Collectors.toList())
 			.toArray(new State.Interface[0]);
-		state.radios = new JsonObject[radios.lastKey() + 1];
+		state.radios = new State.Radio[radios.lastKey() + 1];
 		for (Map.Entry<Integer, JsonObject> entry : radios.entrySet()) {
-			state.radios[entry.getKey()] = entry.getValue();
+			State.Radio radio = state.new Radio();
+			state.radios[entry.getKey()] = radio;
 		}
 		return state;
 	}

@@ -34,7 +34,6 @@ import com.facebook.openwifirrm.ucentral.UCentralConstants;
 import com.facebook.openwifirrm.ucentral.UCentralUtils;
 import com.facebook.openwifirrm.ucentral.UCentralUtils.WifiScanEntry;
 import com.facebook.openwifirrm.ucentral.models.State;
-import com.google.gson.JsonArray;
 
 @TestMethodOrder(OrderAnnotation.class)
 public class MeasurementBasedApApTPCTest {
@@ -302,15 +301,22 @@ public class MeasurementBasedApApTPCTest {
 		final int expectedTxPower = 29;
 
 		DataModel model = new DataModel();
-		model.latestDeviceStatusRadios.put(
+		TestUtils.createDeviceStatusDualBand(1, 5, 36, expectedTxPower);
+		model.latestState.put(
 			DEVICE_A,
-			TestUtils.createDeviceStatusDualBand(1, 5, 36, expectedTxPower)
+			TestUtils.createState(
+				new int[] { 1, 36 },
+				new int[] { 20, 20 },
+				new int[] { 5, expectedTxPower },
+				new String[] { BSSID_A, BSSID_A },
+				new int[][] { new int[] {}, new int[] {} }
+			)
 		);
 
-		JsonArray radioStatuses =
-			model.latestDeviceStatusRadios.get(DEVICE_A).getAsJsonArray();
+		State state =
+			model.latestState.get(DEVICE_A);
 		int txPower = MeasurementBasedApApTPC
-			.getCurrentTxPower(radioStatuses, UCentralConstants.BAND_5G)
+			.getCurrentTxPower(state, UCentralConstants.BAND_5G)
 			.get();
 		assertEquals(expectedTxPower, txPower);
 	}
@@ -513,12 +519,13 @@ public class MeasurementBasedApApTPCTest {
 			)
 		);
 		// make device C not operate in the 5G band instead of dual band
-		dataModel.latestDeviceStatusRadios.put(
+		dataModel.latestState.put(
 			DEVICE_C,
-			TestUtils.createDeviceStatus(
-				UCentralConstants.BAND_2G,
+			TestUtils.createState(
 				1,
-				MAX_TX_POWER
+				DEFAULT_CHANNEL_WIDTH,
+				MAX_TX_POWER,
+				BSSID_C
 			)
 		);
 		DeviceDataManager deviceDataManager = createDeviceDataManager();
