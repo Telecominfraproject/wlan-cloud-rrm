@@ -26,7 +26,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9,"i5":9,"i6":9,"i7":9,"i8":9};
+var data = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9,"i5":9,"i6":9,"i7":9,"i8":9,"i9":9,"i10":9};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -240,6 +240,22 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 </td>
 </tr>
 <tr id="i7" class="rowColor">
+<td class="colFirst"><code>static <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Integer.html?is-external=true" title="class or interface in java.lang" class="externalLink">Integer</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#parseChannelWidth(java.lang.String,boolean)">parseChannelWidth</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;channelWidthStr,
+                 boolean&nbsp;treatSeparate)</code></th>
+<td class="colLast">
+<div class="block">Tries to parse channel width, if it encounters an error it will return null.</div>
+</td>
+</tr>
+<tr id="i8" class="altColor">
+<td class="colFirst"><code>static <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Integer.html?is-external=true" title="class or interface in java.lang" class="externalLink">Integer</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#parseReferenceIndex(java.lang.String)">parseReferenceIndex</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;reference)</code></th>
+<td class="colLast">
+<div class="block">Tries to parse the index from the reference string in the JSON returned from
+ other services.</div>
+</td>
+</tr>
+<tr id="i9" class="rowColor">
 <td class="colFirst"><code>static <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="WifiScanEntry.html" title="class in com.facebook.openwifirrm.ucentral">WifiScanEntry</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#parseWifiScanEntries(com.google.gson.JsonObject,long)">parseWifiScanEntries</a></span>&#8203;(com.google.gson.JsonObject&nbsp;result,
                     long&nbsp;timestampMs)</code></th>
@@ -247,7 +263,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <div class="block">Parse a JSON wifi scan result into a list of WifiScanEntry objects.</div>
 </td>
 </tr>
-<tr id="i8" class="altColor">
+<tr id="i10" class="altColor">
 <td class="colFirst"><code>static boolean</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setRadioConfigField(java.lang.String,com.facebook.openwifirrm.ucentral.UCentralApConfiguration,java.lang.String,java.util.Map)">setRadioConfigField</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;serialNumber,
                    <a href="UCentralApConfiguration.html" title="class in com.facebook.openwifirrm.ucentral">UCentralApConfiguration</a>&nbsp;config,
@@ -441,7 +457,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <a id="getBandFromChannel(int)">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>getBandFromChannel</h4>
 <pre class="methodSignature">public static&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;getBandFromChannel&#8203;(int&nbsp;channel)</pre>
@@ -452,6 +468,47 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <dd><code>channel</code> - channel number</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>band if the channel can be mapped to a valid band; null otherwise</dd>
+</dl>
+</li>
+</ul>
+<a id="parseChannelWidth(java.lang.String,boolean)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>parseChannelWidth</h4>
+<pre class="methodSignature">public static&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Integer.html?is-external=true" title="class or interface in java.lang" class="externalLink">Integer</a>&nbsp;parseChannelWidth&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;channelWidthStr,
+                                        boolean&nbsp;treatSeparate)</pre>
+<div class="block">Tries to parse channel width, if it encounters an error it will return null.
+ It can handle 80p80 in two ways. First it can just treat it as 160. Second,
+ it can just apply to the first 80 channel and ignore the second. This is
+ controlled by treatSeparate.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>channelWidthStr</code> - the channel width</dd>
+<dd><code>treatSeparate</code> - treats each band separately</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>channel width in MHz</dd>
+</dl>
+</li>
+</ul>
+<a id="parseReferenceIndex(java.lang.String)">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>parseReferenceIndex</h4>
+<pre class="methodSignature">public static&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Integer.html?is-external=true" title="class or interface in java.lang" class="externalLink">Integer</a>&nbsp;parseReferenceIndex&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;reference)</pre>
+<div class="block">Tries to parse the index from the reference string in the JSON returned from
+ other services. Note that this only returns the index, the caller is
+ responsible for making sure that the correct field is passed in and the
+ index is used in the correct fields. If there's an error parsing, it will
+ return null.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>reference</code> - The reference string, keyed under "$ref"</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the index of the reference or null if an error occurred.</dd>
 </dl>
 </li>
 </ul>
