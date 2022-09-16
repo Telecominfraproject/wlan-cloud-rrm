@@ -310,7 +310,6 @@ public class MeasurementBasedApApTPC extends TPC {
 		Map<String, List<Integer>> bssidToRssiValues =
 			buildRssiMap(managedBSSIDs, model.latestWifiScans, band);
 		logger.debug("Starting TPC for the {} band", band);
-		Map<String, State> allStates = model.latestState;
 		for (String serialNumber : serialNumbers) {
 			State state = model.latestState.get(serialNumber);
 			if (
@@ -340,11 +339,9 @@ public class MeasurementBasedApApTPC extends TPC {
 				);
 				continue;
 			}
-			State deviceState =
-				allStates.get(serialNumber);
 
 			// An AP can have multiple interfaces, optimize for all of them
-			for (State.Interface iface : deviceState.interfaces) {
+			for (State.Interface iface : state.interfaces) {
 				if (iface.ssids == null) {
 					continue;
 				}
@@ -361,7 +358,7 @@ public class MeasurementBasedApApTPC extends TPC {
 						);
 						continue;
 					}
-					State.Radio radio = deviceState.radios[idx];
+					State.Radio radio = state.radios[idx];
 
 					// this specific SSID is not on the band of interest
 					if (
