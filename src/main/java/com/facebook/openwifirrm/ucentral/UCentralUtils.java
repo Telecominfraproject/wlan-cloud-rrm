@@ -445,8 +445,7 @@ public class UCentralUtils {
 	 * Tries to parse channel width, if it encounters an error it will return null.
 	 * It can handle 80p80 in two ways. First it can just treat it as 160. Second,
 	 * it can just apply to the first 80 channel and ignore the second. This is
-	 * controlled by treatSeparate. For purposes of TPC algorithms, we treat it as
-	 * 160 while channel assignment treats it as separate.
+	 * controlled by treatSeparate.
 	 *
 	 * @param channelWidthStr the channel width
 	 * @param treatSeparate treats each band separately
