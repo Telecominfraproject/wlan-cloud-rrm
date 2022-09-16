@@ -75,7 +75,7 @@ public abstract class TPC {
 		this.model.latestState.keySet()
 			.removeIf(serialNumber -> !deviceConfigs.containsKey(serialNumber)
 			);
-		this.model.latestDeviceStatus.keySet()
+		this.model.latestDeviceStatusRadios.keySet()
 			.removeIf(serialNumber -> !deviceConfigs.containsKey(serialNumber)
 			);
 		this.model.latestDeviceCapabilities.keySet()

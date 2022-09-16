@@ -122,17 +122,17 @@ public class MeasurementBasedApApTPCTest {
 		model.latestState.put(DEVICE_B, stateB);
 		model.latestState.put(DEVICE_C, stateC);
 
-		model.latestDeviceStatus.put(
+		model.latestDeviceStatusRadios.put(
 			DEVICE_A,
 			TestUtils
 				.createDeviceStatusDualBand(1, MAX_TX_POWER, 36, MAX_TX_POWER)
 		);
-		model.latestDeviceStatus.put(
+		model.latestDeviceStatusRadios.put(
 			DEVICE_B,
 			TestUtils
 				.createDeviceStatusDualBand(1, MAX_TX_POWER, 36, MAX_TX_POWER)
 		);
-		model.latestDeviceStatus.put(
+		model.latestDeviceStatusRadios.put(
 			DEVICE_C,
 			TestUtils
 				.createDeviceStatusDualBand(1, MAX_TX_POWER, 36, MAX_TX_POWER)
@@ -302,13 +302,13 @@ public class MeasurementBasedApApTPCTest {
 		final int expectedTxPower = 29;
 
 		DataModel model = new DataModel();
-		model.latestDeviceStatus.put(
+		model.latestDeviceStatusRadios.put(
 			DEVICE_A,
 			TestUtils.createDeviceStatusDualBand(1, 5, 36, expectedTxPower)
 		);
 
 		JsonArray radioStatuses =
-			model.latestDeviceStatus.get(DEVICE_A).getAsJsonArray();
+			model.latestDeviceStatusRadios.get(DEVICE_A).getAsJsonArray();
 		int txPower = MeasurementBasedApApTPC
 			.getCurrentTxPower(radioStatuses, UCentralConstants.BAND_5G)
 			.get();
@@ -513,7 +513,7 @@ public class MeasurementBasedApApTPCTest {
 			)
 		);
 		// make device C not operate in the 5G band instead of dual band
-		dataModel.latestDeviceStatus.put(
+		dataModel.latestDeviceStatusRadios.put(
 			DEVICE_C,
 			TestUtils.createDeviceStatus(
 				UCentralConstants.BAND_2G,

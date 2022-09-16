@@ -51,7 +51,7 @@ public class LeastUsedChannelOptimizerTest {
 
 		// A -> No APs on current channel, so stay on it (48)
 		int aExpectedChannel = 48;
-		dataModel.latestDeviceStatus.put(
+		dataModel.latestDeviceStatusRadios.put(
 			deviceA,
 			TestUtils.createDeviceStatus(band, aExpectedChannel)
 		);
@@ -73,7 +73,7 @@ public class LeastUsedChannelOptimizerTest {
 		LinkedList<Integer> channelsB = new LinkedList<>();
 		channelsB.addAll(ChannelOptimizer.AVAILABLE_CHANNELS_BAND.get(band));
 		int bExpectedChannel = channelsB.removeLast();
-		dataModel.latestDeviceStatus.put(
+		dataModel.latestDeviceStatusRadios.put(
 			deviceB,
 			TestUtils.createDeviceStatus(band, 40)
 		);
@@ -94,7 +94,7 @@ public class LeastUsedChannelOptimizerTest {
 		channelsC.addAll(ChannelOptimizer.AVAILABLE_CHANNELS_BAND.get(band));
 		channelsC.addAll(ChannelOptimizer.AVAILABLE_CHANNELS_BAND.get(band));
 		int cExpectedChannel = channelsC.removeFirst();
-		dataModel.latestDeviceStatus.put(
+		dataModel.latestDeviceStatusRadios.put(
 			deviceC,
 			TestUtils.createDeviceStatus(band, 149)
 		);
@@ -138,7 +138,7 @@ public class LeastUsedChannelOptimizerTest {
 
 		// A -> No APs on current channel, so stay on it (1)
 		int aExpectedChannel = 1;
-		dataModel.latestDeviceStatus.put(
+		dataModel.latestDeviceStatusRadios.put(
 			deviceA,
 			TestUtils.createDeviceStatus(band, aExpectedChannel)
 		);
@@ -160,7 +160,7 @@ public class LeastUsedChannelOptimizerTest {
 		LinkedList<Integer> channelsB = new LinkedList<>();
 		channelsB.addAll(ChannelOptimizer.AVAILABLE_CHANNELS_BAND.get(band));
 		int bExpectedChannel = channelsB.removeLast();
-		dataModel.latestDeviceStatus.put(
+		dataModel.latestDeviceStatusRadios.put(
 			deviceB,
 			TestUtils.createDeviceStatus(band, 6)
 		);
@@ -178,7 +178,7 @@ public class LeastUsedChannelOptimizerTest {
 
 		// C -> Assigned to only free prioritized channel (1)
 		int cExpectedChannel = 1;
-		dataModel.latestDeviceStatus.put(
+		dataModel.latestDeviceStatusRadios.put(
 			deviceC,
 			TestUtils.createDeviceStatus(band, 6)
 		);
@@ -231,7 +231,7 @@ public class LeastUsedChannelOptimizerTest {
 
 		// A, B, C should just be assigned to the same userChannel
 		int aExpectedChannel = 48;
-		dataModel.latestDeviceStatus.put(
+		dataModel.latestDeviceStatusRadios.put(
 			deviceA,
 			TestUtils.createDeviceStatus(band, aExpectedChannel)
 		);
@@ -252,7 +252,7 @@ public class LeastUsedChannelOptimizerTest {
 		LinkedList<Integer> channelsB = new LinkedList<>();
 		channelsB.addAll(ChannelOptimizer.AVAILABLE_CHANNELS_BAND.get(band));
 		channelsB.removeLast();
-		dataModel.latestDeviceStatus.put(
+		dataModel.latestDeviceStatusRadios.put(
 			deviceB,
 			TestUtils.createDeviceStatus(band, 40)
 		);
@@ -272,7 +272,7 @@ public class LeastUsedChannelOptimizerTest {
 		channelsC.addAll(ChannelOptimizer.AVAILABLE_CHANNELS_BAND.get(band));
 		channelsC.addAll(ChannelOptimizer.AVAILABLE_CHANNELS_BAND.get(band));
 		channelsC.removeFirst();
-		dataModel.latestDeviceStatus.put(
+		dataModel.latestDeviceStatusRadios.put(
 			deviceC,
 			TestUtils.createDeviceStatus(band, 149)
 		);
@@ -324,7 +324,7 @@ public class LeastUsedChannelOptimizerTest {
 		// A -> No APs on current channel and the current channel is in allowedChannels,
 		// so stay on it (48)
 		int aExpectedChannel = 48;
-		dataModel.latestDeviceStatus.put(
+		dataModel.latestDeviceStatusRadios.put(
 			deviceA,
 			TestUtils.createDeviceStatus(band, aExpectedChannel)
 		);
@@ -347,7 +347,7 @@ public class LeastUsedChannelOptimizerTest {
 		LinkedList<Integer> channelsB = new LinkedList<>();
 		channelsB.addAll(ChannelOptimizer.AVAILABLE_CHANNELS_BAND.get(band));
 		channelsB.removeLast();
-		dataModel.latestDeviceStatus.put(
+		dataModel.latestDeviceStatusRadios.put(
 			deviceB,
 			TestUtils.createDeviceStatus(band, 40)
 		);
@@ -368,7 +368,7 @@ public class LeastUsedChannelOptimizerTest {
 		channelsC.addAll(ChannelOptimizer.AVAILABLE_CHANNELS_BAND.get(band));
 		channelsC.addAll(ChannelOptimizer.AVAILABLE_CHANNELS_BAND.get(band));
 		channelsC.removeFirst();
-		dataModel.latestDeviceStatus.put(
+		dataModel.latestDeviceStatusRadios.put(
 			deviceC,
 			TestUtils.createDeviceStatus(band, 149)
 		);
@@ -414,7 +414,7 @@ public class LeastUsedChannelOptimizerTest {
 
 		// A -> No APs on current channel, so stay on it (48)
 		int aExpectedChannel = 157;
-		dataModel.latestDeviceStatus.put(
+		dataModel.latestDeviceStatusRadios.put(
 			deviceA,
 			TestUtils.createDeviceStatus(band, aExpectedChannel)
 		);
@@ -438,7 +438,7 @@ public class LeastUsedChannelOptimizerTest {
 		channelsB.addAll(Arrays.asList(40, 48, 153, 161));
 		channelsB.addAll(Arrays.asList(40, 48, 153, 161));
 		int bExpectedChannel = channelsB.removeLast() - 4; // upper extension
-		dataModel.latestDeviceStatus.put(
+		dataModel.latestDeviceStatusRadios.put(
 			deviceB,
 			TestUtils.createDeviceStatus(band, 40)
 		);
@@ -459,7 +459,7 @@ public class LeastUsedChannelOptimizerTest {
 		channelsC.addAll(ChannelOptimizer.AVAILABLE_CHANNELS_BAND.get(band));
 		channelsC.addAll(ChannelOptimizer.AVAILABLE_CHANNELS_BAND.get(band));
 		int cExpectedChannel = channelsC.removeFirst();
-		dataModel.latestDeviceStatus.put(
+		dataModel.latestDeviceStatusRadios.put(
 			deviceC,
 			TestUtils.createDeviceStatus(band, 149)
 		);
@@ -479,7 +479,7 @@ public class LeastUsedChannelOptimizerTest {
 		LinkedList<Integer> channelsD = new LinkedList<>();
 		channelsD.addAll(Arrays.asList(36, 44, 149, 157));
 		int dExpectedChannel = channelsD.removeLast();
-		dataModel.latestDeviceStatus.put(
+		dataModel.latestDeviceStatusRadios.put(
 			deviceD,
 			TestUtils.createDeviceStatus(band, 40)
 		);
@@ -532,7 +532,7 @@ public class LeastUsedChannelOptimizerTest {
 
 		// A -> No APs on current channel, so stay on it (36)
 		int aExpectedChannel = 36;
-		dataModel.latestDeviceStatus.put(
+		dataModel.latestDeviceStatusRadios.put(
 			deviceA,
 			TestUtils.createDeviceStatus(band, aExpectedChannel)
 		);
@@ -554,7 +554,7 @@ public class LeastUsedChannelOptimizerTest {
 		LinkedList<Integer> channelsB = new LinkedList<>();
 		channelsB.addAll(Arrays.asList(40, 48, 149));
 		int bExpectedChannel = channelsB.removeLast();
-		dataModel.latestDeviceStatus.put(
+		dataModel.latestDeviceStatusRadios.put(
 			deviceB,
 			TestUtils.createDeviceStatus(band, 36)
 		);
@@ -575,7 +575,7 @@ public class LeastUsedChannelOptimizerTest {
 		channelsC.addAll(ChannelOptimizer.AVAILABLE_CHANNELS_BAND.get(band));
 		channelsC.addAll(ChannelOptimizer.AVAILABLE_CHANNELS_BAND.get(band));
 		int cExpectedChannel = channelsC.removeFirst();
-		dataModel.latestDeviceStatus.put(
+		dataModel.latestDeviceStatusRadios.put(
 			deviceC,
 			TestUtils.createDeviceStatus(band, 149)
 		);
@@ -597,7 +597,7 @@ public class LeastUsedChannelOptimizerTest {
 		channelsD.addAll(Arrays.asList(40, 48, 153, 161));
 		channelsD.addAll(Arrays.asList(40, 48, 153, 161));
 		int dExpectedChannel = channelsD.removeLast() - 12;
-		dataModel.latestDeviceStatus.put(
+		dataModel.latestDeviceStatusRadios.put(
 			deviceD,
 			TestUtils.createDeviceStatus(band, 36)
 		);
@@ -622,7 +622,7 @@ public class LeastUsedChannelOptimizerTest {
 			.put(UCentralConstants.BAND_5G, Arrays.asList(48, 165));
 		deviceDataManager.setDeviceApConfig(deviceE, apConfig);
 		int eExpectedChannel = 36;
-		dataModel.latestDeviceStatus.put(
+		dataModel.latestDeviceStatusRadios.put(
 			deviceE,
 			TestUtils.createDeviceStatus(band, eExpectedChannel)
 		);
@@ -668,7 +668,7 @@ public class LeastUsedChannelOptimizerTest {
 
 		// A -> No APs on current channel, so stay on it (48)
 		int aExpectedChannel = 48;
-		dataModel.latestDeviceStatus.put(
+		dataModel.latestDeviceStatusRadios.put(
 			deviceA,
 			TestUtils.createDeviceStatus(band, aExpectedChannel)
 		);
@@ -689,7 +689,7 @@ public class LeastUsedChannelOptimizerTest {
 		// B -> Same setting as A, but the scan results are bandwidth aware
 		// Assign to only free channel (165)
 		int bExpectedChannel = 165;
-		dataModel.latestDeviceStatus.put(
+		dataModel.latestDeviceStatusRadios.put(
 			deviceB,
 			TestUtils.createDeviceStatus(band, 48)
 		);
@@ -721,7 +721,7 @@ public class LeastUsedChannelOptimizerTest {
 		channelsC1.addAll(ChannelOptimizer.AVAILABLE_CHANNELS_BAND.get(band));
 		channelsC2.addAll(Arrays.asList(36, 157, 165));
 		int cExpectedChannel = channelsC1.removeFirst();
-		dataModel.latestDeviceStatus.put(
+		dataModel.latestDeviceStatusRadios.put(
 			deviceC,
 			TestUtils.createDeviceStatus(band, 149)
 		);

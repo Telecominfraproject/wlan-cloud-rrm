@@ -331,11 +331,11 @@ public class LeastUsedChannelOptimizer extends ChannelOptimizer {
 	public Map<String, Map<String, Integer>> computeChannelMap() {
 		Map<String, Map<String, Integer>> channelMap = new TreeMap<>();
 		Map<String, List<String>> bandsMap = UCentralUtils
-			.getBandsMap(model.latestDeviceStatus);
+			.getBandsMap(model.latestDeviceStatusRadios);
 
 		Map<String, Map<String, List<Integer>>> deviceAvailableChannels =
 			UCentralUtils.getDeviceAvailableChannels(
-				model.latestDeviceStatus,
+				model.latestDeviceStatusRadios,
 				model.latestDeviceCapabilities,
 				AVAILABLE_CHANNELS_BAND
 			);

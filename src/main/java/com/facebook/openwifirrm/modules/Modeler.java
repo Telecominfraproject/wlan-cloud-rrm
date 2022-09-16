@@ -97,7 +97,7 @@ public class Modeler implements Runnable {
 		public Map<String, State> latestState = new ConcurrentHashMap<>();
 
 		/** List of radio info per device. */
-		public Map<String, JsonArray> latestDeviceStatus =
+		public Map<String, JsonArray> latestDeviceStatusRadios =
 			new ConcurrentHashMap<>();
 
 		/** List of capabilities per device. */
@@ -379,7 +379,7 @@ public class Modeler implements Runnable {
 		// Get old vs new radios info and store the new radios info
 		JsonArray newRadioList = config.getRadioConfigList();
 		Set<String> newRadioBandsSet = config.getRadioBandsSet(newRadioList);
-		JsonArray oldRadioList = dataModel.latestDeviceStatus
+		JsonArray oldRadioList = dataModel.latestDeviceStatusRadios
 			.put(serialNumber, newRadioList);
 		Set<String> oldRadioBandsSet = config.getRadioBandsSet(oldRadioList);
 
@@ -429,7 +429,7 @@ public class Modeler implements Runnable {
 			logger.debug("Removed some state entries from data model");
 		}
 		if (
-			dataModel.latestDeviceStatus.entrySet()
+			dataModel.latestDeviceStatusRadios.entrySet()
 				.removeIf(e -> !isRRMEnabled(e.getKey()))
 		) {
 			logger.debug("Removed some status entries from data model");

@@ -182,16 +182,16 @@ public class MeasurementBasedApApTPC extends TPC {
 	 * Get the current band radio tx power (the first one found) for an AP using
 	 * the latest device status.
 	 *
-	 * @param latestDeviceStatus JsonArray containing radio config for the AP
+	 * @param latestDeviceStatusRadios JsonArray containing radio config for the AP
 	 * @param band band (e.g., "2G")
 	 * @return an Optional containing the tx power if one exists, or else an
 	 *         empty Optional
 	 */
 	protected static Optional<Integer> getCurrentTxPower(
-		JsonArray latestDeviceStatus,
+		JsonArray latestDeviceStatusRadios,
 		String band
 	) {
-		for (JsonElement e : latestDeviceStatus) {
+		for (JsonElement e : latestDeviceStatusRadios) {
 			if (!e.isJsonObject()) {
 				continue;
 			}
@@ -340,7 +340,7 @@ public class MeasurementBasedApApTPC extends TPC {
 		Map<String, List<Integer>> bssidToRssiValues =
 			buildRssiMap(managedBSSIDs, model.latestWifiScans, band);
 		logger.debug("Starting TPC for the {} band", band);
-		Map<String, JsonArray> allStatuses = model.latestDeviceStatus;
+		Map<String, JsonArray> allStatuses = model.latestDeviceStatusRadios;
 		for (String serialNumber : serialNumbers) {
 			State state = model.latestState.get(serialNumber);
 			if (
