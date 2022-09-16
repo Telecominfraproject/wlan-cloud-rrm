@@ -474,9 +474,8 @@ public class UCentralUtils {
 	 * index is used in the correct fields. If there's an error parsing, it will
 	 * return null.
 	 *
-	 * @param reference The reference string, keyed under `$ref`
+	 * @param reference The reference string, keyed under "$ref"
 	 * @return the index of the reference or null if an error occurred.
-	 * @
 	 */
 	public static Integer parseReferenceIndex(String reference) {
 		try {
