@@ -54,11 +54,11 @@ public class RandomChannelInitializerTest {
 			deviceB,
 			TestUtils.createState(11, channelWidth, deviceBBssid)
 		);
-		dataModel.latestDeviceStatus.put(
+		dataModel.latestDeviceStatusRadios.put(
 			deviceA,
 			TestUtils.createDeviceStatus(band, 7)
 		);
-		dataModel.latestDeviceStatus.put(
+		dataModel.latestDeviceStatusRadios.put(
 			deviceB,
 			TestUtils.createDeviceStatus(band, 8)
 		);
@@ -99,11 +99,11 @@ public class RandomChannelInitializerTest {
 			deviceB,
 			TestUtils.createState(11, channelWidth, deviceBBssid)
 		);
-		dataModel.latestDeviceStatus.put(
+		dataModel.latestDeviceStatusRadios.put(
 			deviceA,
 			TestUtils.createDeviceStatus(band, 7)
 		);
-		dataModel.latestDeviceStatus.put(
+		dataModel.latestDeviceStatusRadios.put(
 			deviceB,
 			TestUtils.createDeviceStatus(band, 8)
 		);

@@ -14,7 +14,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.TreeMap;
 
@@ -26,9 +25,6 @@ import com.facebook.openwifirrm.modules.Modeler.DataModel;
 import com.facebook.openwifirrm.ucentral.UCentralUtils;
 import com.facebook.openwifirrm.ucentral.WifiScanEntry;
 import com.facebook.openwifirrm.ucentral.models.State;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 
 /**
  * Measurement-based AP-AP TPC algorithm.
@@ -179,32 +175,6 @@ public class MeasurementBasedApApTPC extends TPC {
 	}
 
 	/**
-	 * Get the current band radio tx power (the first one found) for an AP using
-	 * the latest device status.
-	 *
-	 * @param latestDeviceStatus JsonArray containing radio config for the AP
-	 * @param band band (e.g., "2G")
-	 * @return an Optional containing the tx power if one exists, or else an
-	 *         empty Optional
-	 */
-	protected static Optional<Integer> getCurrentTxPower(
-		JsonArray latestDeviceStatus,
-		String band
-	) {
-		for (JsonElement e : latestDeviceStatus) {
-			if (!e.isJsonObject()) {
-				continue;
-			}
-			JsonObject radioObject = e.getAsJsonObject();
-			String radioBand = radioObject.get("band").getAsString();
-			if (radioBand.equals(band) && radioObject.has("tx-power")) {
-				return Optional.of(radioObject.get("tx-power").getAsInt());
-			}
-		}
-		return Optional.empty();
-	}
-
-	/**
 	 * Get a map from BSSID to the received signal strength at neighboring APs (RSSI).
 	 * List of RSSIs are returned in sorted, ascending order.
 	 *
@@ -340,7 +310,6 @@ public class MeasurementBasedApApTPC extends TPC {
 		Map<String, List<Integer>> bssidToRssiValues =
 			buildRssiMap(managedBSSIDs, model.latestWifiScans, band);
 		logger.debug("Starting TPC for the {} band", band);
-		Map<String, JsonArray> allStatuses = model.latestDeviceStatus;
 		for (String serialNumber : serialNumbers) {
 			State state = model.latestState.get(serialNumber);
 			if (
@@ -370,40 +339,68 @@ public class MeasurementBasedApApTPC extends TPC {
 				);
 				continue;
 			}
-			JsonArray radioStatuses =
-				allStatuses.get(serialNumber).getAsJsonArray();
-			Optional<Integer> possibleCurrentTxPower = getCurrentTxPower(
-				radioStatuses,
-				band
-			);
-			if (possibleCurrentTxPower.isEmpty()) {
-				// this AP is not on the band of interest
-				continue;
+
+			// An AP can have multiple interfaces, optimize for all of them
+			for (State.Interface iface : state.interfaces) {
+				if (iface.ssids == null) {
+					continue;
+				}
+
+				for (State.Interface.SSID ssid : iface.ssids) {
+					Integer idx = UCentralUtils.parseReferenceIndex(
+						ssid.radio.get("$ref").getAsString()
+					);
+					if (idx == null) {
+						logger.error(
+							"Unable to get radio for {}, invalid radio ref {}",
+							serialNumber,
+							ssid.radio.get("$ref").getAsString()
+						);
+						continue;
+					}
+					State.Radio radio = state.radios[idx];
+
+					// this specific SSID is not on the band of interest
+					if (
+						!UCentralUtils.isChannelInBand(radio.channel, band)
+					) {
+						continue;
+					}
+
+					int currentTxPower = radio.tx_power;
+					String bssid = ssid.bssid;
+					List<Integer> rssiValues = bssidToRssiValues.get(bssid);
+					logger
+						.debug(
+							"Device <{}> : Interface <{}> : Channel <{}> : BSSID <{}>",
+							serialNumber,
+							iface.name,
+							channel,
+							bssid
+						);
+					for (int rssi : rssiValues) {
+						logger.debug("  Neighbor received RSSI: {}", rssi);
+					}
+					List<Integer> txPowerChoices = updateTxPowerChoices(
+						band,
+						serialNumber,
+						DEFAULT_TX_POWER_CHOICES
+					);
+					int newTxPower = computeTxPower(
+						serialNumber,
+						currentTxPower,
+						rssiValues,
+						coverageThreshold,
+						nthSmallestRssi,
+						txPowerChoices
+					);
+					logger.debug("  Old tx_power: {}", currentTxPower);
+					logger.debug("  New tx_power: {}", newTxPower);
+					txPowerMap
+						.computeIfAbsent(serialNumber, k -> new TreeMap<>())
+						.put(band, newTxPower);
+				}
 			}
-			int currentTxPower = possibleCurrentTxPower.get();
-			String bssid = state.interfaces[0].ssids[0].bssid;
-			List<Integer> rssiValues = bssidToRssiValues.get(bssid);
-			logger.debug("Device <{}> : BSSID <{}>", serialNumber, bssid);
-			for (int rssi : rssiValues) {
-				logger.debug("  Neighbor received RSSI: {}", rssi);
-			}
-			List<Integer> txPowerChoices = updateTxPowerChoices(
-				band,
-				serialNumber,
-				DEFAULT_TX_POWER_CHOICES
-			);
-			int newTxPower = computeTxPower(
-				serialNumber,
-				currentTxPower,
-				rssiValues,
-				coverageThreshold,
-				nthSmallestRssi,
-				txPowerChoices
-			);
-			logger.debug("  Old tx_power: {}", currentTxPower);
-			logger.debug("  New tx_power: {}", newTxPower);
-			txPowerMap.computeIfAbsent(serialNumber, k -> new TreeMap<>())
-				.put(band, newTxPower);
 		}
 	}
 

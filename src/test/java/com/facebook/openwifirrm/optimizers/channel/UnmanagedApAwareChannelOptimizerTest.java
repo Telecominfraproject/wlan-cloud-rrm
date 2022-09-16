@@ -52,7 +52,7 @@ public class UnmanagedApAwareChannelOptimizerTest {
 
 		// A -> No APs on current channel, so stay on it (48)
 		int aExpectedChannel = 48;
-		dataModel.latestDeviceStatus.put(
+		dataModel.latestDeviceStatusRadios.put(
 			deviceA,
 			TestUtils.createDeviceStatus(band, aExpectedChannel)
 		);
@@ -76,7 +76,7 @@ public class UnmanagedApAwareChannelOptimizerTest {
 		LinkedList<Integer> channelsB = new LinkedList<>();
 		channelsB.addAll(ChannelOptimizer.AVAILABLE_CHANNELS_BAND.get(band));
 		int bExpectedChannel = channelsB.removeLast();
-		dataModel.latestDeviceStatus.put(
+		dataModel.latestDeviceStatusRadios.put(
 			deviceB,
 			TestUtils.createDeviceStatus(band, 40)
 		);
@@ -110,7 +110,7 @@ public class UnmanagedApAwareChannelOptimizerTest {
 			)
 		);
 		int cExpectedChannel = 48;
-		dataModel.latestDeviceStatus.put(
+		dataModel.latestDeviceStatusRadios.put(
 			deviceC,
 			TestUtils.createDeviceStatus(band, 149)
 		);
@@ -156,7 +156,7 @@ public class UnmanagedApAwareChannelOptimizerTest {
 
 		// A -> No APs on current channel, so stay on it (1)
 		int aExpectedChannel = 1;
-		dataModel.latestDeviceStatus.put(
+		dataModel.latestDeviceStatusRadios.put(
 			deviceA,
 			TestUtils.createDeviceStatus(band, aExpectedChannel)
 		);
@@ -178,7 +178,7 @@ public class UnmanagedApAwareChannelOptimizerTest {
 		LinkedList<Integer> channelsB = new LinkedList<>();
 		channelsB.addAll(ChannelOptimizer.AVAILABLE_CHANNELS_BAND.get(band));
 		int bExpectedChannel = channelsB.removeLast();
-		dataModel.latestDeviceStatus.put(
+		dataModel.latestDeviceStatusRadios.put(
 			deviceB,
 			TestUtils.createDeviceStatus(band, 6)
 		);
@@ -196,7 +196,7 @@ public class UnmanagedApAwareChannelOptimizerTest {
 
 		// C -> Assigned to only free prioritized channel (1)
 		int cExpectedChannel = 1;
-		dataModel.latestDeviceStatus.put(
+		dataModel.latestDeviceStatusRadios.put(
 			deviceC,
 			TestUtils.createDeviceStatus(band, 6)
 		);

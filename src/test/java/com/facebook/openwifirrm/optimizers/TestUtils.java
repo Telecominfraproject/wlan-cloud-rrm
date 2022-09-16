@@ -397,23 +397,15 @@ public class TestUtils {
 	}
 
 	/** Create an element of {@link State#radios}. */
-	private static JsonObject createStateRadio() {
-		// @formatter:off
-		return gson.fromJson(
-			String.format(
-				"    {\n" +
-				"      \"active_ms\": 564328,\n" +
-				"      \"busy_ms\": 36998,\n" +
-				"      \"noise\": 4294967193,\n" +
-				"      \"phy\": \"platform/soc/c000000.wifi\",\n" +
-				"      \"receive_ms\": 28,\n" +
-				"      \"temperature\": 45,\n" +
-				"      \"transmit_ms\": 4893\n" +
-				"    }\n"
-			),
-			JsonObject.class
-		);
-		// @formatter:on
+	private static State.Radio createStateRadio() {
+		State.Radio radio = new State.Radio();
+		radio.active_ms = 564328;
+		radio.busy_ms = 36998;
+		radio.noise = 4294967193L;
+		radio.phy = "platform/soc/c000000.wifi";
+		radio.receive_ms = 28;
+		radio.transmit_ms = 4893;
+		return radio;
 	}
 
 	/** Create a {@code State.Unit}. */
@@ -477,12 +469,12 @@ public class TestUtils {
 			state.interfaces[index] = createUpStateInterface(index);
 		}
 		state.interfaces[numRadios] = createDownStateInterface(numRadios);
-		state.radios = new JsonObject[numRadios];
+		state.radios = new State.Radio[numRadios];
 		for (int i = 0; i < numRadios; i++) {
 			state.radios[i] = createStateRadio();
-			state.radios[i].addProperty("channel", channels[i]);
-			state.radios[i].addProperty("channel_width", channelWidths[i]);
-			state.radios[i].addProperty("tx_power", txPowers[i]);
+			state.radios[i].channel = channels[i];
+			state.radios[i].channel_width = Integer.toString(channelWidths[i]);
+			state.radios[i].tx_power = txPowers[i];
 			state.interfaces[i].ssids[0].bssid = bssids[i];
 			state.interfaces[i].ssids[0].associations =
 				new State.Interface.SSID.Association[clientRssis[i].length];

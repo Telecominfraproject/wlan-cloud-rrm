@@ -34,7 +34,6 @@ import com.facebook.openwifirrm.ucentral.UCentralConstants;
 import com.facebook.openwifirrm.ucentral.UCentralUtils;
 import com.facebook.openwifirrm.ucentral.WifiScanEntry;
 import com.facebook.openwifirrm.ucentral.models.State;
-import com.google.gson.JsonArray;
 
 @TestMethodOrder(OrderAnnotation.class)
 public class MeasurementBasedApApTPCTest {
@@ -122,17 +121,17 @@ public class MeasurementBasedApApTPCTest {
 		model.latestState.put(DEVICE_B, stateB);
 		model.latestState.put(DEVICE_C, stateC);
 
-		model.latestDeviceStatus.put(
+		model.latestDeviceStatusRadios.put(
 			DEVICE_A,
 			TestUtils
 				.createDeviceStatusDualBand(1, MAX_TX_POWER, 36, MAX_TX_POWER)
 		);
-		model.latestDeviceStatus.put(
+		model.latestDeviceStatusRadios.put(
 			DEVICE_B,
 			TestUtils
 				.createDeviceStatusDualBand(1, MAX_TX_POWER, 36, MAX_TX_POWER)
 		);
-		model.latestDeviceStatus.put(
+		model.latestDeviceStatusRadios.put(
 			DEVICE_C,
 			TestUtils
 				.createDeviceStatusDualBand(1, MAX_TX_POWER, 36, MAX_TX_POWER)
@@ -298,25 +297,6 @@ public class MeasurementBasedApApTPCTest {
 
 	@Test
 	@Order(2)
-	void testGetCurrentTxPower() throws Exception {
-		final int expectedTxPower = 29;
-
-		DataModel model = new DataModel();
-		model.latestDeviceStatus.put(
-			DEVICE_A,
-			TestUtils.createDeviceStatusDualBand(1, 5, 36, expectedTxPower)
-		);
-
-		JsonArray radioStatuses =
-			model.latestDeviceStatus.get(DEVICE_A).getAsJsonArray();
-		int txPower = MeasurementBasedApApTPC
-			.getCurrentTxPower(radioStatuses, UCentralConstants.BAND_5G)
-			.get();
-		assertEquals(expectedTxPower, txPower);
-	}
-
-	@Test
-	@Order(3)
 	void testBuildRssiMap() throws Exception {
 		// This example includes three APs, and one AP that is unmanaged
 		Set<String> bssidSet = Set.of(BSSID_A, BSSID_B, BSSID_C);
@@ -338,7 +318,7 @@ public class MeasurementBasedApApTPCTest {
 	}
 
 	@Test
-	@Order(4)
+	@Order(3)
 	void testComputeTxPower() throws Exception {
 		// Test examples here taken from algorithm design doc from @pohanhf
 		final String serialNumber = "testSerial";
@@ -513,12 +493,13 @@ public class MeasurementBasedApApTPCTest {
 			)
 		);
 		// make device C not operate in the 5G band instead of dual band
-		dataModel.latestDeviceStatus.put(
+		dataModel.latestState.put(
 			DEVICE_C,
-			TestUtils.createDeviceStatus(
-				UCentralConstants.BAND_2G,
+			TestUtils.createState(
 				1,
-				MAX_TX_POWER
+				DEFAULT_CHANNEL_WIDTH,
+				MAX_TX_POWER,
+				BSSID_C
 			)
 		);
 		DeviceDataManager deviceDataManager = createDeviceDataManager();

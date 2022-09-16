@@ -384,4 +384,52 @@ public class UCentralUtils {
 		}
 		return null;
 	}
+
+	/**
+	 * Tries to parse channel width, if it encounters an error it will return null.
+	 * It can handle 80p80 in two ways. First it can just treat it as 160. Second,
+	 * it can just apply to the first 80 channel and ignore the second. This is
+	 * controlled by treatSeparate.
+	 *
+	 * @param channelWidthStr the channel width
+	 * @param treatSeparate treats each band separately
+	 * @return channel width in MHz
+	 */
+	public static Integer parseChannelWidth(
+		String channelWidthStr,
+		boolean treatSeparate
+	) {
+		// 80p80 is the only case where it can't be parsed into an integer
+		if (channelWidthStr.equals("80p80")) {
+			return treatSeparate ? 80 : 160;
+		}
+		try {
+			return Integer.parseInt(channelWidthStr);
+		} catch (NumberFormatException e) {
+			return null;
+		}
+	}
+
+	/**
+	 * Tries to parse the index from the reference string in the JSON returned from
+	 * other services. Note that this only returns the index, the caller is
+	 * responsible for making sure that the correct field is passed in and the
+	 * index is used in the correct fields. If there's an error parsing, it will
+	 * return null.
+	 *
+	 * @param reference The reference string, keyed under "$ref"
+	 * @return the index of the reference or null if an error occurred.
+	 */
+	public static Integer parseReferenceIndex(String reference) {
+		try {
+			return Integer.parseInt(
+				reference,
+				reference.lastIndexOf("/") + 1,
+				reference.length(),
+				10
+			);
+		} catch (NumberFormatException e) {
+			return null;
+		}
+	}
 }

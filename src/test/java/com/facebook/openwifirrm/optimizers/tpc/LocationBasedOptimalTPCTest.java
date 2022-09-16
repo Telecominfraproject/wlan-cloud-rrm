@@ -128,7 +128,7 @@ public class LocationBasedOptimalTPCTest {
 
 		DataModel dataModel = new DataModel();
 		for (String device : Arrays.asList(deviceA, deviceB, deviceC)) {
-			dataModel.latestDeviceStatus.put(
+			dataModel.latestDeviceStatusRadios.put(
 				device,
 				TestUtils.createDeviceStatus(UCentralConstants.BANDS)
 			);
@@ -195,7 +195,7 @@ public class LocationBasedOptimalTPCTest {
 
 		DataModel dataModel2 = new DataModel();
 		for (String device : Arrays.asList(deviceA, deviceB)) {
-			dataModel2.latestDeviceStatus.put(
+			dataModel2.latestDeviceStatusRadios.put(
 				device,
 				TestUtils.createDeviceStatus(UCentralConstants.BANDS)
 			);
@@ -213,7 +213,7 @@ public class LocationBasedOptimalTPCTest {
 				)
 			);
 		}
-		dataModel2.latestDeviceStatus
+		dataModel2.latestDeviceStatusRadios
 			.put(
 				deviceC,
 				TestUtils.createDeviceStatus(
@@ -304,7 +304,7 @@ public class LocationBasedOptimalTPCTest {
 
 		DataModel dataModel2 = new DataModel();
 		for (String device : Arrays.asList(deviceA, deviceB, deviceC)) {
-			dataModel2.latestDeviceStatus.put(
+			dataModel2.latestDeviceStatusRadios.put(
 				device,
 				TestUtils.createDeviceStatus(UCentralConstants.BANDS)
 			);
@@ -363,7 +363,7 @@ public class LocationBasedOptimalTPCTest {
 
 		DataModel dataModel3 = new DataModel();
 		for (String device : Arrays.asList(deviceA, deviceB, deviceC)) {
-			dataModel3.latestDeviceStatus.put(
+			dataModel3.latestDeviceStatusRadios.put(
 				device,
 				TestUtils.createDeviceStatus(UCentralConstants.BANDS)
 			);
@@ -412,7 +412,7 @@ public class LocationBasedOptimalTPCTest {
 
 		DataModel dataModel4 = new DataModel();
 		for (String device : Arrays.asList(deviceA, deviceB, deviceC)) {
-			dataModel4.latestDeviceStatus.put(
+			dataModel4.latestDeviceStatusRadios.put(
 				device,
 				TestUtils.createDeviceStatus(UCentralConstants.BANDS)
 			);
