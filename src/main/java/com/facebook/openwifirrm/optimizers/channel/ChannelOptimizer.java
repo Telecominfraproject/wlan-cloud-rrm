@@ -156,7 +156,7 @@ public abstract class ChannelOptimizer {
 			.removeIf(serialNumber -> !deviceConfigs.containsKey(serialNumber));
 		this.model.latestState.keySet()
 			.removeIf(serialNumber -> !deviceConfigs.containsKey(serialNumber));
-		this.model.latestDeviceStatus.keySet()
+		this.model.latestDeviceStatusRadios.keySet()
 			.removeIf(serialNumber -> !deviceConfigs.containsKey(serialNumber));
 		this.model.latestDeviceCapabilities.keySet()
 			.removeIf(serialNumber -> !deviceConfigs.containsKey(serialNumber));
@@ -378,15 +378,26 @@ public abstract class ChannelOptimizer {
 			radioIndex < state.radios.length;
 			radioIndex++
 		) {
-			int tempChannel = state.radios[radioIndex]
-				.get("channel")
-				.getAsInt();
+			int tempChannel = state.radios[radioIndex].channel;
 			if (UCentralUtils.isChannelInBand(tempChannel, band)) {
 				currentChannel = tempChannel;
-				currentChannelWidth = state.radios[radioIndex]
-					.get("channel_width")
-					.getAsInt();
-				break;
+				// treat as two separate 80MHz channel and only assign to one
+				// TODO: support 80p80 properly
+				Integer parsedChannelWidth = UCentralUtils
+					.parseChannelWidth(
+						state.radios[radioIndex].channel_width,
+						true
+					);
+				if (parsedChannelWidth != null) {
+					currentChannelWidth = parsedChannelWidth;
+					break;
+				}
+
+				logger.error(
+					"Invalid channel width {}",
+					state.radios[radioIndex].channel_width
+				);
+				continue;
 			}
 		}
 		return new int[] { currentChannel, currentChannelWidth };

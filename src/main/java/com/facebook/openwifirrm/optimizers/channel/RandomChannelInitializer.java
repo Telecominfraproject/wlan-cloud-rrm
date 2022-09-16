@@ -119,11 +119,11 @@ public class RandomChannelInitializer extends ChannelOptimizer {
 	public Map<String, Map<String, Integer>> computeChannelMap() {
 		Map<String, Map<String, Integer>> channelMap = new TreeMap<>();
 		Map<String, List<String>> bandsMap =
-			UCentralUtils.getBandsMap(model.latestDeviceStatus);
+			UCentralUtils.getBandsMap(model.latestDeviceStatusRadios);
 
 		Map<String, Map<String, List<Integer>>> deviceAvailableChannels =
 			UCentralUtils.getDeviceAvailableChannels(
-				model.latestDeviceStatus,
+				model.latestDeviceStatusRadios,
 				model.latestDeviceCapabilities,
 				AVAILABLE_CHANNELS_BAND
 			);

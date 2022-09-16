@@ -24,7 +24,6 @@ import com.facebook.openwifirrm.DeviceDataManager;
 import com.facebook.openwifirrm.modules.ConfigManager;
 import com.facebook.openwifirrm.modules.Modeler.DataModel;
 import com.facebook.openwifirrm.ucentral.models.State;
-import com.google.gson.JsonObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -75,7 +74,7 @@ public abstract class TPC {
 		this.model.latestState.keySet()
 			.removeIf(serialNumber -> !deviceConfigs.containsKey(serialNumber)
 			);
-		this.model.latestDeviceStatus.keySet()
+		this.model.latestDeviceStatusRadios.keySet()
 			.removeIf(serialNumber -> !deviceConfigs.containsKey(serialNumber)
 			);
 		this.model.latestDeviceCapabilities.keySet()
@@ -203,12 +202,9 @@ public abstract class TPC {
 				continue;
 			}
 
-			for (JsonObject radio : state.radios) {
-				Integer currentChannel =
-					radio.has("channel") && !radio.get("channel").isJsonNull()
-						? radio.get("channel").getAsInt()
-						: null;
-				if (currentChannel == null) {
+			for (State.Radio radio : state.radios) {
+				Integer currentChannel = radio.channel;
+				if (currentChannel == 0) {
 					continue;
 				}
 				apsPerChannel
