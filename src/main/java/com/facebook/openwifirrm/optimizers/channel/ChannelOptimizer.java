@@ -378,8 +378,13 @@ public abstract class ChannelOptimizer {
 			int tempChannel = state.radios[radioIndex].channel;
 			if (UCentralUtils.isChannelInBand(tempChannel, band)) {
 				currentChannel = tempChannel;
+				// treat as two separate 80MHz channel and only assign to one
+				// TODO: support 80p80 properly
 				Integer parsedChannelWidth = UCentralUtils
-					.parseChannelWidth(state.radios[radioIndex].channel_width);
+					.parseChannelWidth(
+						state.radios[radioIndex].channel_width,
+						true
+					);
 				if (parsedChannelWidth != null) {
 					currentChannelWidth = parsedChannelWidth;
 					break;

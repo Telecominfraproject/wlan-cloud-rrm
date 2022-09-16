@@ -161,8 +161,9 @@ public class MeasurementBasedApClientTPC extends TPC {
 	) {
 		// Find current tx power and bandwidth
 		int currentTxPower = radio.tx_power;
+		// treat as one 160MHz channel vs two 80MHz channels
 		Integer channelWidthMHz =
-			UCentralUtils.parseChannelWidth(radio.channel_width);
+			UCentralUtils.parseChannelWidth(radio.channel_width, false);
 		int channelWidth = (channelWidthMHz != null
 			? channelWidthMHz : DEFAULT_CHANNEL_WIDTH) * 1_000_000; // convert MHz to HZ
 		Collections.sort(txPowerChoices);

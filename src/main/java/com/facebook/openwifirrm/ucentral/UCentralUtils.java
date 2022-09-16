@@ -443,12 +443,23 @@ public class UCentralUtils {
 
 	/**
 	 * Tries to parse channel width, if it encounters an error it will return null.
-	 * Note: Currently does not handle 80p80.
+	 * It can handle 80p80 in two ways. First it can just treat it as 160. Second,
+	 * it can just apply to the first 80 channel and ignore the second. This is
+	 * controlled by treatSeparate. For purposes of TPC algorithms, we treat it as
+	 * 160 while channel assignment treats it as separate.
 	 *
 	 * @param channelWidthStr the channel width
+	 * @param treatSeparate treats each band separately
 	 * @return channel width in MHz
 	 */
-	public static Integer parseChannelWidth(String channelWidthStr) {
+	public static Integer parseChannelWidth(
+		String channelWidthStr,
+		boolean treatSeparate
+	) {
+		// 80p80 is the only case where it can't be parsed into an integer
+		if (channelWidthStr.equals("80p80")) {
+			return treatSeparate ? 80 : 160;
+		}
 		try {
 			return Integer.parseInt(channelWidthStr);
 		} catch (NumberFormatException e) {
