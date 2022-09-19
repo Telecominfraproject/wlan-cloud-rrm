@@ -232,7 +232,7 @@ public class RRMConfig {
 			 * The main logic loop interval (i.e. sleep time), in ms
 			 * ({@code DATACOLLECTORPARAMS_UPDATEINTERVALMS})
 			 */
-			public int updateIntervalMs = 5000;
+			public int updateIntervalMs = 30000; // 30sec
 
 			/**
 			 * The expected device statistics interval, in seconds (or -1 to
@@ -246,13 +246,13 @@ public class RRMConfig {
 			 * automatic scans)
 			 * ({@code DATACOLLECTORPARAMS_WIFISCANINTERVALSEC})
 			 */
-			public int wifiScanIntervalSec = 900;
+			public int wifiScanIntervalSec = 900; // 15min
 
 			/**
 			 * The capabilities request interval (per device), in seconds
 			 * ({@code DATACOLLECTORPARAMS_CAPABILITIESINTERVALSEC})
 			 */
-			public int capabilitiesIntervalSec = 3600;
+			public int capabilitiesIntervalSec = 3600; // 1hr
 
 			/**
 			 * Number of executor threads for async tasks (ex. wifi scans)
@@ -273,7 +273,7 @@ public class RRMConfig {
 			 * The main logic loop interval (i.e. sleep time), in ms
 			 * ({@code CONFIGMANAGERPARAMS_UPDATEINTERVALMS})
 			 */
-			public int updateIntervalMs = 60000;
+			public int updateIntervalMs = 120000; // 2min
 
 			/**
 			 * Enable pushing device config changes?
@@ -363,7 +363,7 @@ public class RRMConfig {
 			 * Sync interval, in ms, for owprov venue information etc.
 			 * ({@code PROVMONITORPARAMS_SYNCINTERVALMS})
 			 */
-			public int syncIntervalMs = 300000;
+			public int syncIntervalMs = 300000; // 5min
 		}
 
 		/** ProvMonitor parameters. */
