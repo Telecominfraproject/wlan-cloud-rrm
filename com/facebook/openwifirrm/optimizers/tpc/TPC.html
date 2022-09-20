@@ -273,7 +273,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
                     <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;serialNumber,
                     <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Integer.html?is-external=true" title="class or interface in java.lang" class="externalLink">Integer</a>&gt;&nbsp;txPowerChoices)</code></th>
 <td class="colLast">
-<div class="block">Update the tx power choices based on user and allowed channels from deviceConfig</div>
+<div class="block">Determine the new tx power choices based on user and allowed channels from deviceConfig.</div>
 </td>
 </tr>
 </table>
@@ -409,14 +409,14 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <pre class="methodSignature">protected&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Integer.html?is-external=true" title="class or interface in java.lang" class="externalLink">Integer</a>&gt;&nbsp;updateTxPowerChoices&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;band,
                                              <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;serialNumber,
                                              <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Integer.html?is-external=true" title="class or interface in java.lang" class="externalLink">Integer</a>&gt;&nbsp;txPowerChoices)</pre>
-<div class="block">Update the tx power choices based on user and allowed channels from deviceConfig</div>
+<div class="block">Determine the new tx power choices based on user and allowed channels from deviceConfig.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>band</code> - the operational band</dd>
-<dd><code>serialNumber</code> - the device</dd>
-<dd><code>txPowerChoices</code> - the available tx powers of the device</dd>
+<dd><code>serialNumber</code> - the device's serial number</dd>
+<dd><code>txPowerChoices</code> - the device's available tx powers</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>the updated tx powers of the device</dd>
+<dd>the device's updated tx powers</dd>
 </dl>
 </li>
 </ul>
@@ -463,7 +463,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <div class="block">Get AP serial numbers per channel.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>the map of channel to the list of serial numbers</dd>
+<dd>the map from channel to the list of AP serial numbers</dd>
 </dl>
 </li>
 </ul>
