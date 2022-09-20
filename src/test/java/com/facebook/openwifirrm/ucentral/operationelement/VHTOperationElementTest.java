@@ -19,8 +19,8 @@ public class VHTOperationElementTest {
 		String vhtOper = "ACQAAAA=";
 		VHTOperationElement vhtOperObj = new VHTOperationElement(vhtOper);
 		byte expectedChannelWidthIndicator = 0; // 20 MHz channel width
-		int expectedChannel1 = 36;
-		int expectedChannel2 = 0;
+		short expectedChannel1 = 36;
+		short expectedChannel2 = 0;
 		byte[] expectedVhtMcsForNss = new byte[] { 0, 0, 0, 0, 0, 0, 0, 0 };
 		VHTOperationElement expectedVhtOperObj = new VHTOperationElement(
 			expectedChannelWidthIndicator,

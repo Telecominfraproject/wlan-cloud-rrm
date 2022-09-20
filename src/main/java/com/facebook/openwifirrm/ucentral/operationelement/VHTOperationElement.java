@@ -32,10 +32,10 @@ public class VHTOperationElement {
 	 * parameter is the channel number of the primary channel.
 	 * <p>
 	 * This field is an unsigned byte in the specification (i.e., with values
-	 * between 0 and 255). But because Java only supports signed bytes, an int
+	 * between 0 and 255). But because Java only supports signed bytes, a short
 	 * data type is used to store the value.
 	 */
-	public final int channel1;
+	public final short channel1;
 	/**
 	 * This should be zero unless the channel is 160MHz or 80+80 MHz wide. If the
 	 * channel is 160 MHz wide, this parameter is the channel number of the 160 MHz
@@ -43,10 +43,10 @@ public class VHTOperationElement {
 	 * index of the secondary 80 MHz wide channel.
 	 * <p>
 	 * This field is an unsigned byte in the specification (i.e., with values
-	 * between 0 and 255). But because Java only supports signed bytes, an int
+	 * between 0 and 255). But because Java only supports signed bytes, a short
 	 * data type is used to store the value.
 	 */
-	public final int channel2;
+	public final short channel2;
 	/**
 	 * An 8-element array where each element is between 0 and 4 inclusive. MCS means
 	 * Modulation and Coding Scheme. NSS means Number of Spatial Streams. There can
@@ -68,8 +68,8 @@ public class VHTOperationElement {
 	public VHTOperationElement(String vhtOper) {
 		byte[] bytes = Base64.decodeBase64(vhtOper);
 		this.channelWidth = bytes[0];
-		this.channel1 = bytes[1] & 0xff; // read as unsigned value
-		this.channel2 = bytes[2] & 0xff; // read as unsigned value
+		this.channel1 = (short) (bytes[1] & 0xff); // read as unsigned value
+		this.channel2 = (short) (bytes[2] & 0xff); // read as unsigned value
 		byte[] vhtMcsForNss = new byte[8];
 		vhtMcsForNss[0] = (byte) (bytes[3] >>> 6);
 		vhtMcsForNss[1] = (byte) ((bytes[3] & 0b00110000) >>> 4);
@@ -91,8 +91,8 @@ public class VHTOperationElement {
 	 */
 	public VHTOperationElement(
 		byte channelWidth,
-		int channel1,
-		int channel2,
+		short channel1,
+		short channel2,
 		byte[] vhtMcsForNss
 	) {
 		/*
