@@ -33,7 +33,6 @@ import com.facebook.openwifirrm.optimizers.TestUtils;
 import com.facebook.openwifirrm.ucentral.UCentralConstants;
 import com.facebook.openwifirrm.ucentral.UCentralUtils;
 import com.facebook.openwifirrm.ucentral.WifiScanEntry;
-import com.facebook.openwifirrm.ucentral.models.State;
 
 @TestMethodOrder(OrderAnnotation.class)
 public class MeasurementBasedApApTPCTest {
@@ -78,64 +77,83 @@ public class MeasurementBasedApApTPCTest {
 	}
 
 	/**
+	 * Creates a data model with 3 devices in only the given band.
+	 * All are at max_tx_power, which represents the first step in greedy TPC.
+	 *
+	 * @param band band (e.g., "2G")
+	 */
+	private static DataModel createModelSingleBand(String band) {
+		DataModel model = new DataModel();
+
+		final int channel = UCentralUtils.LOWER_CHANNEL_LIMIT.get(band);
+
+		List<String> bssids = Arrays.asList(BSSID_A, BSSID_B, BSSID_C);
+		List<String> devices = Arrays.asList(DEVICE_A, DEVICE_B, DEVICE_C);
+		for (int i = 0; i < devices.size(); i++) {
+			String device = devices.get(i);
+			String bssid = bssids.get(i);
+			model.latestState.put(
+				device,
+				TestUtils.createState(
+					channel,
+					DEFAULT_CHANNEL_WIDTH,
+					MAX_TX_POWER,
+					bssid
+				)
+			);
+			model.latestDeviceStatusRadios.put(
+				device,
+				TestUtils
+					.createDeviceStatusSingleBand(channel, MAX_TX_POWER)
+			);
+		}
+
+		return model;
+	}
+
+	/**
 	 * Creates a data model with 3 devices. All are at max_tx_power, which
 	 * represents the first step in greedy TPC.
 	 *
 	 * @return a data model
 	 */
-	private static DataModel createModel() {
+	private static DataModel createModelDualBand() {
 		DataModel model = new DataModel();
 
-		State stateA = TestUtils.createState(
-			1,
-			DEFAULT_CHANNEL_WIDTH,
-			MAX_TX_POWER,
-			BSSID_A,
-			36,
-			DEFAULT_CHANNEL_WIDTH,
-			MAX_TX_POWER,
-			BSSID_A
-		);
-		State stateB = TestUtils.createState(
-			1,
-			DEFAULT_CHANNEL_WIDTH,
-			MAX_TX_POWER,
-			BSSID_B,
-			36,
-			DEFAULT_CHANNEL_WIDTH,
-			MAX_TX_POWER,
-			BSSID_B
-		);
-		State stateC = TestUtils.createState(
-			1,
-			DEFAULT_CHANNEL_WIDTH,
-			MAX_TX_POWER,
-			BSSID_C,
-			36,
-			DEFAULT_CHANNEL_WIDTH,
-			MAX_TX_POWER,
-			BSSID_C
-		);
+		final int channel2G =
+			UCentralUtils.LOWER_CHANNEL_LIMIT.get(UCentralConstants.BAND_2G);
+		final int channel5G =
+			UCentralUtils.LOWER_CHANNEL_LIMIT.get(UCentralConstants.BAND_5G);
 
-		model.latestState.put(DEVICE_A, stateA);
-		model.latestState.put(DEVICE_B, stateB);
-		model.latestState.put(DEVICE_C, stateC);
-
-		model.latestDeviceStatusRadios.put(
-			DEVICE_A,
-			TestUtils
-				.createDeviceStatusDualBand(1, MAX_TX_POWER, 36, MAX_TX_POWER)
-		);
-		model.latestDeviceStatusRadios.put(
-			DEVICE_B,
-			TestUtils
-				.createDeviceStatusDualBand(1, MAX_TX_POWER, 36, MAX_TX_POWER)
-		);
-		model.latestDeviceStatusRadios.put(
-			DEVICE_C,
-			TestUtils
-				.createDeviceStatusDualBand(1, MAX_TX_POWER, 36, MAX_TX_POWER)
-		);
+		List<String> bssids = Arrays.asList(BSSID_A, BSSID_B, BSSID_C);
+		List<String> devices = Arrays.asList(DEVICE_A, DEVICE_B, DEVICE_C);
+		for (int i = 0; i < devices.size(); i++) {
+			String device = devices.get(i);
+			String bssid = bssids.get(i);
+			model.latestState.put(
+				device,
+				TestUtils.createState(
+					channel2G,
+					DEFAULT_CHANNEL_WIDTH,
+					MAX_TX_POWER,
+					bssid,
+					channel5G,
+					DEFAULT_CHANNEL_WIDTH,
+					MAX_TX_POWER,
+					bssid
+				)
+			);
+			model.latestDeviceStatusRadios.put(
+				device,
+				TestUtils
+					.createDeviceStatusDualBand(
+						channel2G,
+						MAX_TX_POWER,
+						channel5G,
+						MAX_TX_POWER
+					)
+			);
+		}
 
 		return model;
 	}
@@ -286,7 +304,7 @@ public class MeasurementBasedApApTPCTest {
 	@Test
 	@Order(1)
 	void testGetManagedBSSIDs() throws Exception {
-		DataModel dataModel = createModel();
+		DataModel dataModel = createModelDualBand();
 		Set<String> managedBSSIDs =
 			MeasurementBasedApApTPC.getManagedBSSIDs(dataModel);
 		assertEquals(3, managedBSSIDs.size());
@@ -393,7 +411,7 @@ public class MeasurementBasedApApTPCTest {
 	 */
 	private static void testComputeTxPowerMapSimpleInOneBand(String band) {
 		int channel = UCentralUtils.LOWER_CHANNEL_LIMIT.get(band);
-		DataModel dataModel = createModel();
+		DataModel dataModel = createModelSingleBand(band);
 		dataModel.latestWifiScans = createLatestWifiScansB(channel);
 		DeviceDataManager deviceDataManager = createDeviceDataManager();
 
@@ -418,7 +436,7 @@ public class MeasurementBasedApApTPCTest {
 		String band
 	) {
 		int channel = UCentralUtils.LOWER_CHANNEL_LIMIT.get(band);
-		DataModel dataModel = createModel();
+		DataModel dataModel = createModelSingleBand(band);
 		dataModel.latestWifiScans = createLatestWifiScansC(channel);
 		DeviceDataManager deviceDataManager = createDeviceDataManager();
 
@@ -445,7 +463,7 @@ public class MeasurementBasedApApTPCTest {
 	 */
 	private static void testComputeTxPowerMapMissingDataInOneBand(String band) {
 		int channel = UCentralUtils.LOWER_CHANNEL_LIMIT.get(band);
-		DataModel dataModel = createModel();
+		DataModel dataModel = createModelSingleBand(band);
 		dataModel.latestWifiScans =
 			createLatestWifiScansWithMissingEntries(channel);
 		DeviceDataManager deviceDataManager = createDeviceDataManager();
@@ -481,35 +499,17 @@ public class MeasurementBasedApApTPCTest {
 	@Order(6)
 	void testComputeTxPowerMapMultiBand() {
 		// test both bands simultaneously with different setups on each band
-		DataModel dataModel = createModel();
-		dataModel.latestState.remove(DEVICE_B);
-		dataModel.latestState.put(
-			DEVICE_B,
-			TestUtils.createState(
-				1,
-				DEFAULT_CHANNEL_WIDTH,
-				MAX_TX_POWER,
-				BSSID_B
-			)
-		);
-		// make device C not operate in the 5G band instead of dual band
-		dataModel.latestState.put(
-			DEVICE_C,
-			TestUtils.createState(
-				1,
-				DEFAULT_CHANNEL_WIDTH,
-				MAX_TX_POWER,
-				BSSID_C
-			)
-		);
+		DataModel dataModel = createModelDualBand();
+
 		DeviceDataManager deviceDataManager = createDeviceDataManager();
-		// 2G setup
+		// 2G: use testComputeTxPowerMapSimpleInOneBand setup
 		final int channel2G =
 			UCentralUtils.LOWER_CHANNEL_LIMIT.get(UCentralConstants.BAND_2G);
 		dataModel.latestWifiScans = createLatestWifiScansB(channel2G);
-		// 5G setup
+		// 5G: use testComputeTxPowerMapMissingDataInOneBand setup
 		final int channel5G =
 			UCentralUtils.LOWER_CHANNEL_LIMIT.get(UCentralConstants.BAND_5G);
+		// add 5G wifiscan results to dataModel.latestWifiScans
 		Map<String, List<List<WifiScanEntry>>> toMerge =
 			createLatestWifiScansWithMissingEntries(channel5G);
 		for (
@@ -537,8 +537,10 @@ public class MeasurementBasedApApTPCTest {
 		Map<String, Map<String, Integer>> txPowerMap =
 			optimizer.computeTxPowerMap();
 
-		// test 2G band
+		// every AP operates in at least one band
 		assertEquals(3, txPowerMap.size());
+
+		// test 2G band
 		assertEquals(
 			2,
 			txPowerMap.get(DEVICE_A).get(UCentralConstants.BAND_2G)
@@ -557,11 +559,69 @@ public class MeasurementBasedApApTPCTest {
 			0,
 			txPowerMap.get(DEVICE_A).get(UCentralConstants.BAND_5G)
 		);
-		// deivce B does not have 5G radio
-		assertFalse(
-			txPowerMap.get(DEVICE_B).containsKey(UCentralConstants.BAND_5G)
+		assertEquals(
+			0,
+			txPowerMap.get(DEVICE_B).get(UCentralConstants.BAND_5G)
 		);
-		// device C is not in the 5G band
+		assertEquals(
+			30,
+			txPowerMap.get(DEVICE_C).get(UCentralConstants.BAND_5G)
+		);
+
+		// now test when device C does not have a 5G radio
+		dataModel.latestState.put(
+			DEVICE_C,
+			TestUtils.createState(
+				1,
+				DEFAULT_CHANNEL_WIDTH,
+				MAX_TX_POWER,
+				BSSID_C
+			)
+		);
+		dataModel.latestDeviceStatusRadios.put(
+			DEVICE_C,
+			TestUtils.createDeviceStatus(
+				UCentralConstants.BAND_2G,
+				1,
+				MAX_TX_POWER
+			)
+		);
+		optimizer = new MeasurementBasedApApTPC(
+			dataModel,
+			TEST_ZONE,
+			deviceDataManager,
+			-80,
+			0
+		);
+		txPowerMap = optimizer.computeTxPowerMap();
+
+		// every AP operates in at least one band
+		assertEquals(3, txPowerMap.size());
+
+		// test 2G band (all APs), same as testComputeTxPowerMapSimpleInOneBand
+		assertEquals(
+			2,
+			txPowerMap.get(DEVICE_A).get(UCentralConstants.BAND_2G)
+		);
+		assertEquals(
+			15,
+			txPowerMap.get(DEVICE_B).get(UCentralConstants.BAND_2G)
+		);
+		assertEquals(
+			10,
+			txPowerMap.get(DEVICE_C).get(UCentralConstants.BAND_2G)
+		);
+
+		// test 5G band (only device A and device B operate in 5G)
+		assertEquals(
+			0,
+			txPowerMap.get(DEVICE_A).get(UCentralConstants.BAND_5G)
+		);
+		assertEquals(
+			0,
+			txPowerMap.get(DEVICE_B).get(UCentralConstants.BAND_5G)
+		);
+		// this time device C has no 5G radio so it is not set to max power (30)
 		assertFalse(
 			txPowerMap.get(DEVICE_C).containsKey(UCentralConstants.BAND_5G)
 		);

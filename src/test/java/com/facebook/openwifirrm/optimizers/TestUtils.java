@@ -141,6 +141,26 @@ public class TestUtils {
 	}
 
 	/**
+	 * Create an array with one radio info entry with the given tx power and
+	 * channel.
+	 */
+	public static JsonArray createDeviceStatusSingleBand(
+		int channel,
+		int txPower2G
+	) {
+		JsonArray jsonList = new JsonArray();
+		jsonList.add(
+			createDeviceStatusRadioObject(
+				UCentralUtils.getBandFromChannel(channel),
+				channel,
+				DEFAULT_CHANNEL_WIDTH,
+				txPower2G
+			)
+		);
+		return jsonList;
+	}
+
+	/**
 	 * Create an array with two radio info entries (2G and 5G), with the given
 	 * tx powers and channels.
 	 */
