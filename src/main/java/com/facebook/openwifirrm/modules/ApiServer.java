@@ -917,7 +917,7 @@ public class ApiServer implements Runnable {
 				DeviceConfig networkConfig =
 					gson.fromJson(request.body(), DeviceConfig.class);
 				deviceDataManager.setDeviceNetworkConfig(networkConfig);
-				configManager.wakeUp();
+				configManager.wakeUp(null);
 
 				// Revalidate data model
 				modeler.revalidate();
@@ -981,7 +981,7 @@ public class ApiServer implements Runnable {
 				DeviceConfig zoneConfig =
 					gson.fromJson(request.body(), DeviceConfig.class);
 				deviceDataManager.setDeviceZoneConfig(zone, zoneConfig);
-				configManager.wakeUp();
+				configManager.wakeUp(zone);
 
 				// Revalidate data model
 				modeler.revalidate();
@@ -1044,7 +1044,9 @@ public class ApiServer implements Runnable {
 				DeviceConfig apConfig =
 					gson.fromJson(request.body(), DeviceConfig.class);
 				deviceDataManager.setDeviceApConfig(serialNumber, apConfig);
-				configManager.wakeUp();
+				final String zone =
+					deviceDataManager.getDeviceZone(serialNumber);
+				configManager.wakeUp(zone);
 
 				// Revalidate data model
 				modeler.revalidate();
@@ -1117,7 +1119,9 @@ public class ApiServer implements Runnable {
 						.computeIfAbsent(serialNumber, k -> new DeviceConfig())
 						.apply(apConfig);
 				});
-				configManager.wakeUp();
+				final String zone =
+					deviceDataManager.getDeviceZone(serialNumber);
+				configManager.wakeUp(zone);
 
 				// Revalidate data model
 				modeler.revalidate();

@@ -12,7 +12,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.slf4j.Logger;
@@ -63,8 +65,14 @@ public class ConfigManager implements Runnable {
 	/** Is the main thread sleeping? */
 	private final AtomicBoolean sleepingFlag = new AtomicBoolean(false);
 
-	/** Was a manual config update requested? */
-	private final AtomicBoolean eventFlag = new AtomicBoolean(false);
+	/**
+	 * Set of venues for which manual config updates have been requested.
+	 * This is a thread-safe (concurrent, not synchronized) set, since it is
+	 * backed by a {@code ConcurrentHashMap}, but is still statically typed as
+	 * {@code Set<String>} since there is nothing like ConcurrentHashSet in
+	 * Java.
+	 */
+	private Set<String> venuesToUpdate = ConcurrentHashMap.newKeySet();
 
 	/** Config listener interface. */
 	public interface ConfigListener {
@@ -180,7 +188,6 @@ public class ConfigManager implements Runnable {
 		List<String> devicesNeedingUpdate = new ArrayList<>();
 		final long CONFIG_DEBOUNCE_INTERVAL_NS =
 			params.configDebounceIntervalSec * 1_000_000_000L;
-		final boolean isEvent = eventFlag.getAndSet(false);
 		for (DeviceWithStatus device : devices) {
 			// Update config structure
 			DeviceData data = deviceDataMap.computeIfAbsent(
@@ -202,7 +209,12 @@ public class ConfigManager implements Runnable {
 				listener.receiveDeviceConfig(device.serialNumber, data.config);
 			}
 
-			// Check event flag
+			/*
+			 * Check the even-only param, and check if there are requested
+			 * updates for this venue (and if so, remove this venue from the
+			 * set of venues for which there are requested updates).
+			 */
+			boolean isEvent = venuesToUpdate.remove(device.venue);
 			if (params.configOnEventOnly && !isEvent) {
 				logger.debug(
 					"Skipping config for {} (event flag not set)",
@@ -256,7 +268,7 @@ public class ConfigManager implements Runnable {
 			logger.trace("Config changes are disabled.");
 		} else if (devicesNeedingUpdate.isEmpty()) {
 			logger.debug("No device configs to send.");
-		} else if (params.configOnEventOnly && !isEvent) {
+		} else if (params.configOnEventOnly && venuesToUpdate.isEmpty()) {
 			// shouldn't happen
 			logger.error(
 				"ERROR!! {} device(s) queued for config update, but event flag not set",
@@ -364,9 +376,23 @@ public class ConfigManager implements Runnable {
 		return (configListeners.remove(id) != null);
 	}
 
-	/** Interrupt the main thread, possibly triggering an update immediately. */
-	public void wakeUp() {
-		eventFlag.set(true);
+	/**
+	 * Interrupt the main thread, possibly triggering an update immediately.
+	 *
+	 * @param venue venue, or null, which indicates all venues
+	 */
+	public void wakeUp(String venue) {
+		if (venue != null) {
+			venuesToUpdate.add(venue);
+		} else {
+			/*
+			 * Here, addAll is not atomic, so read operations during the addAll
+			 * may none, some, or all of the items passed in to addAll. But, it
+			 * does not matter, since no thread reads venuesToUpdate.
+			 */
+			venuesToUpdate.addAll(deviceDataManager.getZones());
+		}
+
 		if (mainThread != null && mainThread.isAlive() && sleepingFlag.get()) {
 			wakeupFlag.set(true);
 			mainThread.interrupt();

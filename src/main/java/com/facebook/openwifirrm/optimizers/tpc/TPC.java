@@ -13,19 +13,18 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.facebook.openwifirrm.DeviceConfig;
 import com.facebook.openwifirrm.DeviceDataManager;
 import com.facebook.openwifirrm.modules.ConfigManager;
 import com.facebook.openwifirrm.modules.Modeler.DataModel;
 import com.facebook.openwifirrm.ucentral.models.State;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * TPC (Transmit Power Control) base class.
@@ -180,7 +179,7 @@ public abstract class TPC {
 		});
 
 		// Trigger config update now
-		configManager.wakeUp();
+		configManager.wakeUp(zone);
 	}
 
 	/**
