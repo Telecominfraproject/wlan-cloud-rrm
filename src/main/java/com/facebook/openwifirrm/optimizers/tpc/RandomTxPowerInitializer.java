@@ -122,7 +122,7 @@ public class RandomTxPowerInitializer extends TPC {
 		if (!setDifferentTxPowerPerAp) {
 			List<Integer> txPowerChoices =
 				new ArrayList<>(DEFAULT_TX_POWER_CHOICES);
-			for (String serialNumber : model.latestState.keySet()) {
+			for (String serialNumber : model.latestStates.keySet()) {
 				for (String band : UCentralConstants.BANDS) {
 					txPowerChoices = updateTxPowerChoices(
 						band,

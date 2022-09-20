@@ -10,6 +10,7 @@ package com.facebook.openwifirrm.optimizers.channel;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -56,9 +57,15 @@ public class UnmanagedApAwareChannelOptimizerTest {
 			deviceA,
 			TestUtils.createDeviceStatus(band, aExpectedChannel)
 		);
-		dataModel.latestState.put(
+		dataModel.latestStates.put(
 			deviceA,
-			TestUtils.createState(aExpectedChannel, channelWidth, bssidA)
+			new ArrayList<>(
+				Arrays
+					.asList(
+						TestUtils
+							.createState(aExpectedChannel, channelWidth, bssidA)
+					)
+			)
 		);
 		dataModel.latestWifiScans.put(
 			deviceA,
@@ -80,9 +87,11 @@ public class UnmanagedApAwareChannelOptimizerTest {
 			deviceB,
 			TestUtils.createDeviceStatus(band, 40)
 		);
-		dataModel.latestState.put(
+		dataModel.latestStates.put(
 			deviceB,
-			TestUtils.createState(40, channelWidth, bssidB)
+			new ArrayList<>(
+				Arrays.asList(TestUtils.createState(40, channelWidth, bssidB))
+			)
 		);
 		dataModel.latestWifiScans.put(
 			deviceB,
@@ -114,9 +123,11 @@ public class UnmanagedApAwareChannelOptimizerTest {
 			deviceC,
 			TestUtils.createDeviceStatus(band, 149)
 		);
-		dataModel.latestState.put(
+		dataModel.latestStates.put(
 			deviceC,
-			TestUtils.createState(149, channelWidth, bssidC)
+			new ArrayList<>(
+				Arrays.asList(TestUtils.createState(149, channelWidth, bssidC))
+			)
 		);
 		dataModel.latestWifiScans.put(
 			deviceC,
@@ -160,9 +171,15 @@ public class UnmanagedApAwareChannelOptimizerTest {
 			deviceA,
 			TestUtils.createDeviceStatus(band, aExpectedChannel)
 		);
-		dataModel.latestState.put(
+		dataModel.latestStates.put(
 			deviceA,
-			TestUtils.createState(aExpectedChannel, channelWidth, bssidA)
+			new ArrayList<>(
+				Arrays
+					.asList(
+						TestUtils
+							.createState(aExpectedChannel, channelWidth, bssidA)
+					)
+			)
 		);
 		dataModel.latestWifiScans.put(
 			deviceA,
@@ -182,9 +199,11 @@ public class UnmanagedApAwareChannelOptimizerTest {
 			deviceB,
 			TestUtils.createDeviceStatus(band, 6)
 		);
-		dataModel.latestState.put(
+		dataModel.latestStates.put(
 			deviceB,
-			TestUtils.createState(6, channelWidth, bssidB)
+			new ArrayList<>(
+				Arrays.asList(TestUtils.createState(6, channelWidth, bssidB))
+			)
 		);
 		dataModel.latestWifiScans.put(
 			deviceB,
@@ -200,9 +219,11 @@ public class UnmanagedApAwareChannelOptimizerTest {
 			deviceC,
 			TestUtils.createDeviceStatus(band, 6)
 		);
-		dataModel.latestState.put(
+		dataModel.latestStates.put(
 			deviceC,
-			TestUtils.createState(6, channelWidth, bssidC)
+			new ArrayList<>(
+				Arrays.asList(TestUtils.createState(6, channelWidth, bssidC))
+			)
 		);
 		dataModel.latestWifiScans.put(
 			deviceC,

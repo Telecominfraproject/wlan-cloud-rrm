@@ -154,8 +154,9 @@ public class MeasurementBasedApApTPC extends TPC {
 	 */
 	protected static Set<String> getManagedBSSIDs(DataModel model) {
 		Set<String> managedBSSIDs = new HashSet<>();
-		for (Map.Entry<String, State> e : model.latestState.entrySet()) {
-			State state = e.getValue();
+		for (Map.Entry<String, List<State>> e : model.latestStates.entrySet()) {
+			List<State> states = e.getValue();
+			State state = states.get(states.size() - 1);
 			if (state.interfaces == null) {
 				continue;
 			}
@@ -311,7 +312,8 @@ public class MeasurementBasedApApTPC extends TPC {
 			buildRssiMap(managedBSSIDs, model.latestWifiScans, band);
 		logger.debug("Starting TPC for the {} band", band);
 		for (String serialNumber : serialNumbers) {
-			State state = model.latestState.get(serialNumber);
+			List<State> states = model.latestStates.get(serialNumber);
+			State state = states.get(states.size() - 1);
 			if (
 				state == null || state.radios == null ||
 					state.radios.length == 0

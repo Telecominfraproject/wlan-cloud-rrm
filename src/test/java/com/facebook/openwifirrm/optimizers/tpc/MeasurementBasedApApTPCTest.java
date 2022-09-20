@@ -92,13 +92,15 @@ public class MeasurementBasedApApTPCTest {
 		for (int i = 0; i < devices.size(); i++) {
 			String device = devices.get(i);
 			String bssid = bssids.get(i);
-			model.latestState.put(
+			model.latestStates.put(
 				device,
-				TestUtils.createState(
-					channel,
-					DEFAULT_CHANNEL_WIDTH,
-					MAX_TX_POWER,
-					bssid
+				Arrays.asList(
+					TestUtils.createState(
+						channel,
+						DEFAULT_CHANNEL_WIDTH,
+						MAX_TX_POWER,
+						bssid
+					)
 				)
 			);
 			model.latestDeviceStatusRadios.put(
@@ -130,17 +132,21 @@ public class MeasurementBasedApApTPCTest {
 		for (int i = 0; i < devices.size(); i++) {
 			String device = devices.get(i);
 			String bssid = bssids.get(i);
-			model.latestState.put(
+			model.latestStates.put(
 				device,
-				TestUtils.createState(
-					channel2G,
-					DEFAULT_CHANNEL_WIDTH,
-					MAX_TX_POWER,
-					bssid,
-					channel5G,
-					DEFAULT_CHANNEL_WIDTH,
-					MAX_TX_POWER,
-					bssid
+				new ArrayList<>(
+					Arrays.asList(
+						TestUtils.createState(
+							channel2G,
+							DEFAULT_CHANNEL_WIDTH,
+							MAX_TX_POWER,
+							bssid,
+							channel5G,
+							DEFAULT_CHANNEL_WIDTH,
+							MAX_TX_POWER,
+							bssid
+						)
+					)
 				)
 			);
 			model.latestDeviceStatusRadios.put(
@@ -569,13 +575,17 @@ public class MeasurementBasedApApTPCTest {
 		);
 
 		// now test when device C does not have a 5G radio
-		dataModel.latestState.put(
+		dataModel.latestStates.put(
 			DEVICE_C,
-			TestUtils.createState(
-				1,
-				DEFAULT_CHANNEL_WIDTH,
-				MAX_TX_POWER,
-				BSSID_C
+			new ArrayList<>(
+				Arrays.asList(
+					TestUtils.createState(
+						1,
+						DEFAULT_CHANNEL_WIDTH,
+						MAX_TX_POWER,
+						BSSID_C
+					)
+				)
 			)
 		);
 		dataModel.latestDeviceStatusRadios.put(

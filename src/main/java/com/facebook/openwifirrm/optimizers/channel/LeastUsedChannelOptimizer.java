@@ -21,6 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.facebook.openwifirrm.DeviceDataManager;
+import com.facebook.openwifirrm.modules.ModelerUtils;
 import com.facebook.openwifirrm.modules.Modeler.DataModel;
 import com.facebook.openwifirrm.ucentral.UCentralConstants;
 import com.facebook.openwifirrm.ucentral.UCentralUtils;
@@ -340,8 +341,10 @@ public class LeastUsedChannelOptimizer extends ChannelOptimizer {
 				AVAILABLE_CHANNELS_BAND
 			);
 
+		Map<String, State> latestState =
+			ModelerUtils.getLatestState(model.latestStates);
 		Map<String, String> bssidsMap =
-			UCentralUtils.getBssidsMap(model.latestState);
+			UCentralUtils.getBssidsMap(latestState);
 
 		for (String band : bandsMap.keySet()) {
 			// Performance metrics
@@ -373,7 +376,8 @@ public class LeastUsedChannelOptimizer extends ChannelOptimizer {
 				}
 
 				// Get current channel of the device
-				State state = model.latestState.get(serialNumber);
+				List<State> states = model.latestStates.get(serialNumber);
+				State state = states.get(states.size() - 1);
 				if (state == null) {
 					logger.debug(
 						"Device {}: No state found, skipping...",
