@@ -360,7 +360,7 @@ public class DatabaseManager {
 	/** Convert a list of state records to a State object. */
 	private State toState(List<StateRecord> records, long ts) {
 		State state = new State();
-		state.unit = state.new Unit();
+		state.unit = new State.Unit();
 		state.unit.localtime = ts;
 
 		// Parse each record
