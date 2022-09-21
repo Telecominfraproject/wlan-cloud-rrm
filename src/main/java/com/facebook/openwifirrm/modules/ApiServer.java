@@ -1121,6 +1121,7 @@ public class ApiServer implements Runnable {
 				});
 				final String zone =
 					deviceDataManager.getDeviceZone(serialNumber);
+				// TODO enable updates to device(s), not just the entire zone
 				configManager.wakeUp(zone);
 
 				// Revalidate data model

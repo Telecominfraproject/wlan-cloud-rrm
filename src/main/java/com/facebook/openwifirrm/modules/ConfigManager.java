@@ -67,13 +67,17 @@ public class ConfigManager implements Runnable {
 	private final AtomicBoolean sleepingFlag = new AtomicBoolean(false);
 
 	/**
-	 * Set of venues for which manual config updates have been requested.
-	 * This is a thread-safe (concurrent, not synchronized) set, since it is
-	 * backed by a {@code ConcurrentHashMap}, but is still statically typed as
+	 * Set of zones for which manual config updates have been requested.
+	 * <p>
+	 * This is a thread-safe (concurrent) set, since it is backed by a
+	 * {@code ConcurrentHashMap}, but is still statically typed as
 	 * {@code Set<String>} since there is nothing like ConcurrentHashSet in
 	 * Java.
+	 * <p>
+	 * This set is "concurrent but not synchronized" meaning it is thread-
+	 * safe, but simultaneous writes are allowed for different "hash buckets".
 	 */
-	private Set<String> venuesToUpdate = ConcurrentHashMap.newKeySet();
+	private Set<String> zonesToUpdate = ConcurrentHashMap.newKeySet();
 
 	/** Config listener interface. */
 	public interface ConfigListener {
@@ -189,12 +193,12 @@ public class ConfigManager implements Runnable {
 		List<String> devicesNeedingUpdate = new ArrayList<>();
 		final long CONFIG_DEBOUNCE_INTERVAL_NS =
 			params.configDebounceIntervalSec * 1_000_000_000L;
-		Set<String> venuesToUpdateCopy = new HashSet<>(venuesToUpdate);
-		// use removeAll() instad of clear() in case items are added between
+		Set<String> zonesToUpdateCopy = new HashSet<>(zonesToUpdate);
+		// use removeAll() instead of clear() in case items are added between
 		// the previous line and the following line
-		venuesToUpdate.removeAll(venuesToUpdateCopy);
+		zonesToUpdate.removeAll(zonesToUpdateCopy);
 		// used after the loop, calculated now before the set is emptied
-		final boolean shouldUpdate = !venuesToUpdateCopy.isEmpty();
+		final boolean shouldUpdate = !zonesToUpdateCopy.isEmpty();
 		for (DeviceWithStatus device : devices) {
 			// Update config structure
 			DeviceData data = deviceDataMap.computeIfAbsent(
@@ -215,12 +219,12 @@ public class ConfigManager implements Runnable {
 			for (ConfigListener listener : configListeners.values()) {
 				listener.receiveDeviceConfig(device.serialNumber, data.config);
 			}
-			// Check if there are requested updates for this venue
-			// And if so, remove this venue from the set of to-be-updated venues
-			boolean isEvent = venuesToUpdateCopy.remove(device.venue);
+			// Check if there are requested updates for this zone
+			// And if so, remove this zone from the set of to-be-updated zones
+			boolean isEvent = zonesToUpdateCopy.remove(device.venue);
 			if (params.configOnEventOnly && !isEvent) {
 				logger.debug(
-					"Skipping config for {} (event flag not set)",
+					"Skipping config for {} (zone not marked for updates)",
 					device.serialNumber
 				);
 				continue;
@@ -382,18 +386,18 @@ public class ConfigManager implements Runnable {
 	/**
 	 * Interrupt the main thread, possibly triggering an update immediately.
 	 *
-	 * @param venue venue, or null, which indicates all venues
+	 * @param zone zone (i.e., venue), or null, which indicates all zones
 	 */
-	public void wakeUp(String venue) {
-		if (venue != null) {
-			venuesToUpdate.add(venue);
+	public void wakeUp(String zone) {
+		if (zone != null) {
+			zonesToUpdate.add(zone);
 		} else {
 			/*
 			 * Here, addAll is not atomic, so read operations during the addAll
 			 * may read none, some, or all of the items passed in to addAll.
 			 * But, it is ok if different zones are updated at different times.g
 			 */
-			venuesToUpdate.addAll(deviceDataManager.getZones());
+			zonesToUpdate.addAll(deviceDataManager.getZones());
 		}
 
 		if (mainThread != null && mainThread.isAlive() && sleepingFlag.get()) {
