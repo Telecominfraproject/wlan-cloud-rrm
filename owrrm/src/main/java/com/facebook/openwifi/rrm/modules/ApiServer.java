@@ -82,7 +82,7 @@ import io.swagger.v3.oas.models.OpenAPI;
 import spark.Request;
 import spark.Response;
 import spark.Route;
-import spark.Spark;
+import spark.Service;
 import spark.embeddedserver.EmbeddedServers;
 import spark.embeddedserver.jetty.EmbeddedJettyFactory;
 
@@ -110,8 +110,14 @@ import spark.embeddedserver.jetty.EmbeddedJettyFactory;
 	scheme = "bearer"
 )
 public class ApiServer implements Runnable {
+	private static final String SPARK_EMBEDDED_SERVER_IDENTIFIER =
+		ApiServer.class.getName();
+
 	private static final Logger logger =
 		LoggerFactory.getLogger(ApiServer.class);
+
+	/** The Spark service instance */
+	private final Service service;
 
 	/** The module parameters. */
 	private final ApiServerParams params;
@@ -167,6 +173,7 @@ public class ApiServer implements Runnable {
 		UCentralClient client,
 		RRMScheduler scheduler
 	) {
+		this.service = Service.ignite();
 		this.params = params;
 		this.serviceConfig = serviceConfig;
 		this.serviceKey = Utils.generateServiceKey(serviceConfig);
@@ -197,6 +204,21 @@ public class ApiServer implements Runnable {
 		return ret;
 	}
 
+	/**
+	 * Block until initialization finishes. Just calls the method on the
+	 * underlying service.
+	 */
+	public void awaitInitialization() {
+		service.awaitInitialization();
+	}
+
+	/**
+	 * Block until stop finishes. Just calls the method on the underlying service.
+	 */
+	public void awaitStop() {
+		service.awaitStop();
+	}
+
 	@Override
 	public void run() {
 		this.startTimeMs = System.currentTimeMillis();
@@ -211,7 +233,7 @@ public class ApiServer implements Runnable {
 		}
 
 		EmbeddedServers.add(
-			EmbeddedServers.defaultIdentifier(),
+			SPARK_EMBEDDED_SERVER_IDENTIFIER,
 			new EmbeddedJettyFactory(
 				new CustomJettyServerFactory(
 					params.internalHttpPort,
@@ -220,55 +242,60 @@ public class ApiServer implements Runnable {
 			)
 		);
 
+		// use the embedded server factory added above, this is required so that we
+		// don't mess up the default factory which can and will be used for
+		// additional Spark services in testing
+		service.embeddedServerIdentifier(SPARK_EMBEDDED_SERVER_IDENTIFIER);
+
 		// Usually you would call this with an actual port and Spark would spin up a
 		// port on it. However, since we're putting our own connectors in so that we
 		// can use two ports and Spark has logic to use connectors that already exist
 		// so it doesn't matter what port we pass in here as long as it's not one of
 		// the actual ports we're using (Spark has some weird logic where it still
-		// tries to bind to the port:
-		// main/java/spark/embeddedserver/jetty/EmbeddedJettyServer.java in spark).
-		Spark.port(0);
+		// tries to bind to the port).
+		// @see EmbeddedJettyServer
+		service.port(0);
 
 		// Configure API docs hosting
-		Spark.staticFiles.location("/public");
-		Spark.get("/openapi.yaml", this::getOpenApiYaml);
-		Spark.get("/openapi.json", this::getOpenApiJson);
+		service.staticFiles.location("/public");
+		service.get("/openapi.yaml", this::getOpenApiYaml);
+		service.get("/openapi.json", this::getOpenApiJson);
 
 		// Install routes
-		Spark.before(this::beforeFilter);
-		Spark.after(this::afterFilter);
-		Spark.options("/*", this::options);
-		Spark.get("/api/v1/system", new SystemEndpoint());
-		Spark.post("/api/v1/system", new SetSystemEndpoint());
-		Spark.get("/api/v1/provider", new ProviderEndpoint());
-		Spark.get("/api/v1/algorithms", new AlgorithmsEndpoint());
-		Spark.put("/api/v1/runRRM", new RunRRMEndpoint());
-		Spark.get("/api/v1/getTopology", new GetTopologyEndpoint());
-		Spark.post("/api/v1/setTopology", new SetTopologyEndpoint());
-		Spark.get(
+		service.before(this::beforeFilter);
+		service.after(this::afterFilter);
+		service.options("/*", this::options);
+		service.get("/api/v1/system", new SystemEndpoint());
+		service.post("/api/v1/system", new SetSystemEndpoint());
+		service.get("/api/v1/provider", new ProviderEndpoint());
+		service.get("/api/v1/algorithms", new AlgorithmsEndpoint());
+		service.put("/api/v1/runRRM", new RunRRMEndpoint());
+		service.get("/api/v1/getTopology", new GetTopologyEndpoint());
+		service.post("/api/v1/setTopology", new SetTopologyEndpoint());
+		service.get(
 			"/api/v1/getDeviceLayeredConfig",
 			new GetDeviceLayeredConfigEndpoint()
 		);
-		Spark.get("/api/v1/getDeviceConfig", new GetDeviceConfigEndpoint());
-		Spark.post(
+		service.get("/api/v1/getDeviceConfig", new GetDeviceConfigEndpoint());
+		service.post(
 			"/api/v1/setDeviceNetworkConfig",
 			new SetDeviceNetworkConfigEndpoint()
 		);
-		Spark.post(
+		service.post(
 			"/api/v1/setDeviceZoneConfig",
 			new SetDeviceZoneConfigEndpoint()
 		);
-		Spark.post(
+		service.post(
 			"/api/v1/setDeviceApConfig",
 			new SetDeviceApConfigEndpoint()
 		);
-		Spark.post(
+		service.post(
 			"/api/v1/modifyDeviceApConfig",
 			new ModifyDeviceApConfigEndpoint()
 		);
-		Spark.get("/api/v1/currentModel", new GetCurrentModelEndpoint());
-		Spark.get("/api/v1/optimizeChannel", new OptimizeChannelEndpoint());
-		Spark.get("/api/v1/optimizeTxPower", new OptimizeTxPowerEndpoint());
+		service.get("/api/v1/currentModel", new GetCurrentModelEndpoint());
+		service.get("/api/v1/optimizeChannel", new OptimizeChannelEndpoint());
+		service.get("/api/v1/optimizeTxPower", new OptimizeTxPowerEndpoint());
 
 		logger.info(
 			"API server listening for HTTP internal on port {} and external on port {}",
@@ -279,7 +306,7 @@ public class ApiServer implements Runnable {
 
 	/** Stop the server. */
 	public void shutdown() {
-		Spark.stop();
+		service.stop();
 	}
 
 	/** Reconstructs a URL. */
@@ -327,7 +354,7 @@ public class ApiServer implements Runnable {
 		}
 
 		// auth failure
-		Spark.halt(403, "Forbidden");
+		service.halt(403, "Forbidden");
 		return false;
 	}
 

@@ -12,7 +12,7 @@ public class WebTokenResult {
 	public String access_token;
 	public String refresh_token;
 	public String token_type;
-	public int expires_in;
+	public long expires_in;
 	public int idle_timeout;
 	public String username;
 	public long created;

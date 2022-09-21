@@ -16,7 +16,7 @@ paths:
       - SDK
       summary: Get RRM algorithms
       description: Returns the RRM algorithm list.
-      operationId: algorithms
+      operationId: algorithms_1
       responses:
         "200":
           description: Success
@@ -32,7 +32,7 @@ paths:
       - Optimization
       summary: Get current RRM model
       description: Returns the current RRM data model.
-      operationId: getCurrentModel
+      operationId: getCurrentModel_1
       responses:
         "200":
           description: Data model
@@ -47,7 +47,7 @@ paths:
       summary: Get device configuration
       description: Returns the device configuration by applying all configuration
         layers.
-      operationId: getDeviceConfig
+      operationId: getDeviceConfig_1
       parameters:
       - name: serial
         in: query
@@ -70,7 +70,7 @@ paths:
       - Config
       summary: Get device layered configuration
       description: Returns the device layered configuration.
-      operationId: getDeviceLayeredConfig
+      operationId: getDeviceLayeredConfig_1
       responses:
         "200":
           description: Device layered configuration
@@ -84,7 +84,7 @@ paths:
       - Config
       summary: Get device topology
       description: Returns the device topology.
-      operationId: getTopology
+      operationId: getTopology_1
       responses:
         "200":
           description: Device topology
@@ -99,7 +99,7 @@ paths:
       summary: Modify device AP configuration
       description: Modify the AP layer of the network configuration for the given
         AP. Any existing fields absent from the request body will be preserved.
-      operationId: modifyDeviceApConfig
+      operationId: modifyDeviceApConfig_1
       parameters:
       - name: serial
         in: query
@@ -125,7 +125,7 @@ paths:
       - Optimization
       summary: Optimize channel configuration
       description: Run channel optimizer and return the new channel allocation.
-      operationId: optimizeChannel
+      operationId: optimizeChannel_1
       parameters:
       - name: mode
         in: query
@@ -165,7 +165,7 @@ paths:
       - Optimization
       summary: Optimize tx power configuration
       description: Run tx power optimizer and return the new tx power allocation.
-      operationId: optimizeTxPower
+      operationId: optimizeTxPower_1
       parameters:
       - name: mode
         in: query
@@ -207,7 +207,7 @@ paths:
       - SDK
       summary: Get RRM provider info
       description: Returns the RRM provider info.
-      operationId: provider
+      operationId: provider_1
       responses:
         "200":
           description: Success
@@ -221,7 +221,7 @@ paths:
       - SDK
       summary: Run RRM algorithm
       description: Run a specific RRM algorithm now.
-      operationId: runRRM
+      operationId: runRRM_1
       parameters:
       - name: algorithm
         in: query
@@ -260,7 +260,7 @@ paths:
       - Config
       summary: Set device AP configuration
       description: Set the AP layer of the network configuration for the given AP.
-      operationId: setDeviceApConfig
+      operationId: setDeviceApConfig_1
       parameters:
       - name: serial
         in: query
@@ -286,7 +286,7 @@ paths:
       - Config
       summary: Set device network configuration
       description: Set the network layer of the device configuration.
-      operationId: setDeviceNetworkConfig
+      operationId: setDeviceNetworkConfig_1
       requestBody:
         description: The device network configuration
         content:
@@ -305,7 +305,7 @@ paths:
       - Config
       summary: Set device zone configuration
       description: Set the zone layer of the network configuration for the given zone.
-      operationId: setDeviceZoneConfig
+      operationId: setDeviceZoneConfig_1
       parameters:
       - name: zone
         in: query
@@ -331,7 +331,7 @@ paths:
       - SDK
       summary: Get system info
       description: Returns the system info from the running service.
-      operationId: system
+      operationId: system_1
       parameters:
       - name: command
         in: query
@@ -355,7 +355,7 @@ paths:
       - SDK
       summary: Run system commands
       description: Perform some system-wide commands.
-      operationId: setSystem
+      operationId: setSystem_1
       requestBody:
         description: Command details
         content:
@@ -378,7 +378,7 @@ paths:
       - Config
       summary: Set device topology
       description: Set the device topology.
-      operationId: setTopology
+      operationId: setTopology_1
       requestBody:
         description: The device topology
         content:

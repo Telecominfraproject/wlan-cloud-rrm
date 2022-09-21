@@ -30,7 +30,7 @@ import spark.utils.Assert;
  * on the server, Spark uses the existing conectors instead of trying to spin
  * up its own connectors. The other difference is that it uses a different
  * ServerConnector constructor to avoid allocating additional threads that
- * aren't necessary (@{@link #makeConnector})
+ * aren't necessary ({@link #makeConnector})
  * @see EmbeddedJettyFactory
  */
 public class CustomJettyServerFactory implements JettyServerFactory {
