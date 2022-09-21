@@ -500,7 +500,7 @@ public class TestUtils {
 				new State.Interface.SSID.Association[clientRssis[i].length];
 			for (int j = 0; j < clientRssis[i].length; j++) {
 				state.interfaces[i].ssids[0].associations[j] =
-					state.interfaces[i].ssids[0].new Association();
+					new State.Interface.SSID.Association();
 				state.interfaces[i].ssids[0].associations[j].rssi =
 					clientRssis[i][j];
 			}

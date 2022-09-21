@@ -13,7 +13,7 @@ import java.util.List;
 import com.facebook.openwifirrm.ucentral.gw.models.NoteInfo;
 
 public class DeviceConfiguration {
-	public class DeviceConfigurationElement {
+	public static class DeviceConfigurationElement {
 		public String name;
 		public String description;
 		public Integer weight;

@@ -11,7 +11,7 @@ package com.facebook.openwifirrm.ucentral.prov.models;
 import java.util.List;
 
 public class RRMDetails {
-	public class RRMDetailsImpl {
+	public static class RRMDetailsImpl {
 		public String vendor;
 		public String schedule;
 		public List<RRMAlgorithmDetails> algorithms;

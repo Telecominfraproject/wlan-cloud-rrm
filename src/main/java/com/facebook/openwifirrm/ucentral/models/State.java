@@ -12,8 +12,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
 
 public class State {
-	public class Interface {
-		public class Client {
+	public static class Interface {
+		public static class Client {
 			public String mac;
 			public String[] ipv4_addresses;
 			public String[] ipv6_addresses;
@@ -21,9 +21,9 @@ public class State {
 			// TODO last_seen
 		}
 
-		public class SSID {
-			public class Association {
-				public class Rate {
+		public static class SSID {
+			public static class Association {
+				public static class Rate {
 					public long bitrate;
 					public int chwidth;
 					public boolean sgi;
@@ -66,7 +66,7 @@ public class State {
 			public JsonObject radio;
 		}
 
-		public class Counters {
+		public static class Counters {
 			public long collisions;
 			public long multicast;
 			public long rx_bytes;
@@ -96,8 +96,8 @@ public class State {
 
 	public Interface[] interfaces;
 
-	public class Unit {
-		public class Memory {
+	public static class Unit {
+		public static class Memory {
 			public long buffered;
 			public long cached;
 			public long free;
