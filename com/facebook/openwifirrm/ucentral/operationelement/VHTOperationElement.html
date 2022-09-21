@@ -156,7 +156,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr class="altColor">
-<td class="colFirst"><code>byte</code></td>
+<td class="colFirst"><code>short</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#channel1">channel1</a></span></code></th>
 <td class="colLast">
 <div class="block">If the channel is 20 MHz, 40 MHz, or 80 MHz wide, this parameter is the
@@ -164,7 +164,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 </td>
 </tr>
 <tr class="rowColor">
-<td class="colFirst"><code>byte</code></td>
+<td class="colFirst"><code>short</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#channel2">channel2</a></span></code></th>
 <td class="colLast">
 <div class="block">This should be zero unless the channel is 160MHz or 80+80 MHz wide.</div>
@@ -202,9 +202,9 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr class="altColor">
-<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(byte,byte,byte,byte%5B%5D)">VHTOperationElement</a></span>&#8203;(byte&nbsp;channelWidth,
-                   byte&nbsp;channel1,
-                   byte&nbsp;channel2,
+<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(byte,short,short,byte%5B%5D)">VHTOperationElement</a></span>&#8203;(byte&nbsp;channelWidth,
+                   short&nbsp;channel1,
+                   short&nbsp;channel2,
                    byte[]&nbsp;vhtMcsForNss)</code></th>
 <td class="colLast">
 <div class="block">Constructs an <code>HTOperationElement</code> using the given field values.</div>
@@ -302,12 +302,16 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <ul class="blockList">
 <li class="blockList">
 <h4>channel1</h4>
-<pre>public final&nbsp;byte channel1</pre>
+<pre>public final&nbsp;short channel1</pre>
 <div class="block">If the channel is 20 MHz, 40 MHz, or 80 MHz wide, this parameter is the
  channel number. E.g., the channel centered at 5180 MHz is channel 36. For a
  160 MHz wide channel, this parameter is the channel number of the 80MHz
  channel that contains the primary channel. For a 80+80 MHz wide channel, this
- parameter is the channel number of the primary channel.</div>
+ parameter is the channel number of the primary channel.
+ <p>
+ This field is an unsigned byte in the specification (i.e., with values
+ between 0 and 255). But because Java only supports signed bytes, a short
+ data type is used to store the value.</div>
 </li>
 </ul>
 <a id="channel2">
@@ -316,11 +320,15 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <ul class="blockList">
 <li class="blockList">
 <h4>channel2</h4>
-<pre>public final&nbsp;byte channel2</pre>
+<pre>public final&nbsp;short channel2</pre>
 <div class="block">This should be zero unless the channel is 160MHz or 80+80 MHz wide. If the
  channel is 160 MHz wide, this parameter is the channel number of the 160 MHz
  wide channel. If the channel is 80+80 MHz wide, this parameter is the channel
- index of the secondary 80 MHz wide channel.</div>
+ index of the secondary 80 MHz wide channel.
+ <p>
+ This field is an unsigned byte in the specification (i.e., with values
+ between 0 and 255). But because Java only supports signed bytes, a short
+ data type is used to store the value.</div>
 </li>
 </ul>
 <a id="vhtMcsForNss">
@@ -365,15 +373,15 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 </dl>
 </li>
 </ul>
-<a id="&lt;init&gt;(byte,byte,byte,byte[])">
+<a id="&lt;init&gt;(byte,short,short,byte[])">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>VHTOperationElement</h4>
 <pre>public&nbsp;VHTOperationElement&#8203;(byte&nbsp;channelWidth,
-                           byte&nbsp;channel1,
-                           byte&nbsp;channel2,
+                           short&nbsp;channel1,
+                           short&nbsp;channel2,
                            byte[]&nbsp;vhtMcsForNss)</pre>
 <div class="block">Constructs an <code>HTOperationElement</code> using the given field values. See
  802.11 for more details.
