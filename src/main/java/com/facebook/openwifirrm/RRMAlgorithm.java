@@ -279,6 +279,7 @@ public class RRMAlgorithm {
 		} else {
 			result.error = String.format("Unknown algorithm: '%s'", name);
 		}
+		configManager.wakeUp();
 		return result;
 	}
 }

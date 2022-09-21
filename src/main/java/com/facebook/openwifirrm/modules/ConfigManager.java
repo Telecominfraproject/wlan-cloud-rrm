@@ -384,25 +384,41 @@ public class ConfigManager implements Runnable {
 	}
 
 	/**
-	 * Interrupt the main thread, possibly triggering an update immediately.
+	 * Queue zone(s) to be updated next time.
 	 *
 	 * @param zone zone (i.e., venue), or null, which indicates all zones
 	 */
-	public void wakeUp(String zone) {
+	public void queueForUpdate(String zone) {
 		if (zone != null) {
 			zonesToUpdate.add(zone);
 		} else {
 			/*
 			 * Here, addAll is not atomic, so read operations during the addAll
 			 * may read none, some, or all of the items passed in to addAll.
-			 * But, it is ok if different zones are updated at different times.g
+			 * But, it is ok if different zones are updated at different times.
 			 */
 			zonesToUpdate.addAll(deviceDataManager.getZones());
 		}
+	}
 
+	/**
+	 * Interrupt the main thread, possibly triggering an update immediately.
+	 */
+	public void wakeUp() {
 		if (mainThread != null && mainThread.isAlive() && sleepingFlag.get()) {
 			wakeupFlag.set(true);
 			mainThread.interrupt();
 		}
+	}
+
+	/**
+	 * Queue zone(s) to be updated and interrupt the main thread to possibly
+	 * trigger an update immediately.
+	 *
+	 * @param zone zone (i.e., venue), or null, which indicates all zones
+	 */
+	public void wakeUp(String zone) {
+		queueForUpdate(zone);
+		wakeUp();
 	}
 }

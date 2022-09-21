@@ -665,6 +665,6 @@ public abstract class ChannelOptimizer {
 		});
 
 		// Trigger config update now
-		configManager.wakeUp(zone);
+		configManager.queueForUpdate(zone);
 	}
 }
