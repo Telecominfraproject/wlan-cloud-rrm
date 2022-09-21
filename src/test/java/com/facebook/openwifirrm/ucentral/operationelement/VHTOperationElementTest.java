@@ -19,8 +19,8 @@ public class VHTOperationElementTest {
 		String vhtOper = "ACQAAAA=";
 		VHTOperationElement vhtOperObj = new VHTOperationElement(vhtOper);
 		byte expectedChannelWidthIndicator = 0; // 20 MHz channel width
-		byte expectedChannel1 = 36;
-		byte expectedChannel2 = 0;
+		short expectedChannel1 = 36;
+		short expectedChannel2 = 0;
 		byte[] expectedVhtMcsForNss = new byte[] { 0, 0, 0, 0, 0, 0, 0, 0 };
 		VHTOperationElement expectedVhtOperObj = new VHTOperationElement(
 			expectedChannelWidthIndicator,
@@ -50,6 +50,21 @@ public class VHTOperationElementTest {
 		expectedChannel1 = 42;
 		expectedChannel2 = 50;
 		// same vhtMcsForNss
+		expectedVhtOperObj = new VHTOperationElement(
+			expectedChannelWidthIndicator,
+			expectedChannel1,
+			expectedChannel2,
+			expectedVhtMcsForNss
+		);
+		assertEquals(expectedVhtOperObj, vhtOperObj);
+
+		// test with channel number >= 128 (channel fields should be unsigned)
+		vhtOper = "AJUAAAA=";
+		vhtOperObj = new VHTOperationElement(vhtOper);
+		expectedChannelWidthIndicator = 0;
+		expectedChannel1 = 149;
+		expectedChannel2 = 0;
+		expectedVhtMcsForNss = new byte[] { 0, 0, 0, 0, 0, 0, 0, 0 };
 		expectedVhtOperObj = new VHTOperationElement(
 			expectedChannelWidthIndicator,
 			expectedChannel1,
