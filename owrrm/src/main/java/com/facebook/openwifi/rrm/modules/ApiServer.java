@@ -110,13 +110,28 @@ import spark.embeddedserver.jetty.EmbeddedJettyFactory;
 	scheme = "bearer"
 )
 public class ApiServer implements Runnable {
-	private static final String SPARK_EMBEDDED_SERVER_IDENTIFIER =
-		ApiServer.class.getName();
-
 	private static final Logger logger =
 		LoggerFactory.getLogger(ApiServer.class);
 
-	/** The Spark service instance */
+	/**
+	 * This is the identifier for the server factory that Spark should use. This
+	 * particular identifier points to the custom factory that we register to
+	 * enable running multiple ports on one service.
+	 *
+	 * @see #run()
+	 */
+	private static final String SPARK_EMBEDDED_SERVER_IDENTIFIER =
+		ApiServer.class.getName();
+
+	/**
+	 * The Spark service instance. Normally, you would use the static methods on
+	 * Spark, but since we need to spin up multiple instances of Spark for testing,
+	 * we choose to go with instantiating the service ourselves. There is really no
+	 * difference except with the static method, Spark calls ignite and holds a
+	 * singleton instance for us.
+	 *
+	 * @see Spark
+	 */
 	private final Service service;
 
 	/** The module parameters. */
@@ -212,13 +227,6 @@ public class ApiServer implements Runnable {
 		service.awaitInitialization();
 	}
 
-	/**
-	 * Block until stop finishes. Just calls the method on the underlying service.
-	 */
-	public void awaitStop() {
-		service.awaitStop();
-	}
-
 	@Override
 	public void run() {
 		this.startTimeMs = System.currentTimeMillis();
@@ -307,6 +315,13 @@ public class ApiServer implements Runnable {
 	/** Stop the server. */
 	public void shutdown() {
 		service.stop();
+	}
+
+	/**
+	 * Block until stop finishes. Just calls the method on the underlying service.
+	 */
+	public void awaitStop() {
+		service.awaitStop();
 	}
 
 	/** Reconstructs a URL. */

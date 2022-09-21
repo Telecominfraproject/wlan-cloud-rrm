@@ -48,6 +48,11 @@ import kong.unirest.JsonNode;
 import kong.unirest.Unirest;
 import kong.unirest.json.JSONObject;
 
+/**
+ * A class for testing ApiServer. In order to test auth logic, you must tag
+ * the test "auth". Doing so will spin up a mock ow security service and
+ * enable auth on the server.
+ */
 @TestMethodOrder(OrderAnnotation.class)
 public class ApiServerTest {
 	/** The test server port for internal calls. */
@@ -118,7 +123,7 @@ public class ApiServerTest {
 				fail("Could not instantiate OWSec.", e);
 			}
 
-			// Create central client with mock services as necessary
+			// Create uCentral client with mock services as necessary
 			client = new UCentralClient(
 				"rrm",
 				false,

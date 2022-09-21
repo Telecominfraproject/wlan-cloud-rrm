@@ -22,8 +22,13 @@ import spark.Request;
 import spark.Response;
 import spark.Route;
 
+/**
+ * This is a mock OW Security service meant to be used in tests.
+ *
+ * @see <a href="https://github.com/Telecominfraproject/wlan-cloud-ucentralsec">owsec</a>
+ */
 public class MockOWSecService {
-	public class Time {
+	private class TokenInfo {
 		long expiry;
 		long created;
 	}
@@ -31,7 +36,7 @@ public class MockOWSecService {
 	private final Gson gson = new Gson();
 
 	/** A mapping of valid tokens to their expiry time in seconds since epoch */
-	private Map<String, Time> validTokens;
+	private Map<String, TokenInfo> validTokens;
 
 	/** The Spark service */
 	private Service service;
@@ -54,7 +59,7 @@ public class MockOWSecService {
 	}
 
 	public void addToken(String token, long expiresInSec) {
-		Time time = new Time();
+		TokenInfo time = new TokenInfo();
 		time.created = Instant.now().getEpochSecond();
 		time.expiry = expiresInSec;
 
@@ -92,13 +97,13 @@ public class MockOWSecService {
 				return "Forbidden";
 			}
 
-			Time times = validTokens.get(token);
-			if (times == null) {
+			TokenInfo info = validTokens.get(token);
+			if (info == null) {
 				response.status(403);
 				return "Forbidden";
 			}
 
-			if (times.created + times.expiry < Instant.now().getEpochSecond()) {
+			if (info.created + info.expiry < Instant.now().getEpochSecond()) {
 				response.status(403);
 				return "Forbidden";
 			}
@@ -107,8 +112,8 @@ public class MockOWSecService {
 			result.userInfo = new UserInfo();
 			result.tokenInfo = new WebTokenResult();
 			result.tokenInfo.access_token = token;
-			result.tokenInfo.created = times.created;
-			result.tokenInfo.expires_in = times.expiry;
+			result.tokenInfo.created = info.created;
+			result.tokenInfo.expires_in = info.expiry;
 
 			return gson.toJson(result);
 		}
