@@ -10,6 +10,7 @@ package com.facebook.openwifirrm.modules;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -188,6 +189,12 @@ public class ConfigManager implements Runnable {
 		List<String> devicesNeedingUpdate = new ArrayList<>();
 		final long CONFIG_DEBOUNCE_INTERVAL_NS =
 			params.configDebounceIntervalSec * 1_000_000_000L;
+		Set<String> venuesToUpdateCopy = new HashSet<>(venuesToUpdate);
+		// use removeAll() instad of clear() in case items are added between
+		// the previous line and the following line
+		venuesToUpdate.removeAll(venuesToUpdateCopy);
+		// used after the loop, calculated now before the set is emptied
+		final boolean shouldUpdate = !venuesToUpdateCopy.isEmpty();
 		for (DeviceWithStatus device : devices) {
 			// Update config structure
 			DeviceData data = deviceDataMap.computeIfAbsent(
@@ -208,13 +215,9 @@ public class ConfigManager implements Runnable {
 			for (ConfigListener listener : configListeners.values()) {
 				listener.receiveDeviceConfig(device.serialNumber, data.config);
 			}
-
-			/*
-			 * Check the even-only param, and check if there are requested
-			 * updates for this venue (and if so, remove this venue from the
-			 * set of venues for which there are requested updates).
-			 */
-			boolean isEvent = venuesToUpdate.remove(device.venue);
+			// Check if there are requested updates for this venue
+			// And if so, remove this venue from the set of to-be-updated venues
+			boolean isEvent = venuesToUpdateCopy.remove(device.venue);
 			if (params.configOnEventOnly && !isEvent) {
 				logger.debug(
 					"Skipping config for {} (event flag not set)",
@@ -268,10 +271,10 @@ public class ConfigManager implements Runnable {
 			logger.trace("Config changes are disabled.");
 		} else if (devicesNeedingUpdate.isEmpty()) {
 			logger.debug("No device configs to send.");
-		} else if (params.configOnEventOnly && venuesToUpdate.isEmpty()) {
+		} else if (params.configOnEventOnly && !shouldUpdate) {
 			// shouldn't happen
 			logger.error(
-				"ERROR!! {} device(s) queued for config update, but event flag not set",
+				"ERROR!! {} device(s) queued for config update, but set of zones to update is empty.",
 				devicesNeedingUpdate.size()
 			);
 		} else {
@@ -387,8 +390,8 @@ public class ConfigManager implements Runnable {
 		} else {
 			/*
 			 * Here, addAll is not atomic, so read operations during the addAll
-			 * may none, some, or all of the items passed in to addAll. But, it
-			 * does not matter, since no thread reads venuesToUpdate.
+			 * may read none, some, or all of the items passed in to addAll.
+			 * But, it is ok if different zones are updated at different times.g
 			 */
 			venuesToUpdate.addAll(deviceDataManager.getZones());
 		}
