@@ -2,8 +2,8 @@ import http from 'k6/http';
 import { sleep } from 'k6';
 
 
-const INTERNAL_BASE_URL = 'http://localhost:16789/api/v1';
-const EXTERNAL_BASE_URL = __ENV.SEPARATE_INTERNAL_EXTERNAL_PORTS ? 'http://localhost:16790/api/v1' : INTERNAL_BASE_URL;
+const INTERNAL_BASE_URL = 'http://localhost:16790/api/v1';
+const EXTERNAL_BASE_URL = __ENV.SEPARATE_INTERNAL_EXTERNAL_PORTS ? 'http://localhost:16789/api/v1' : INTERNAL_BASE_URL;
 
 
 export default function () {

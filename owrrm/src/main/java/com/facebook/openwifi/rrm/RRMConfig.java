@@ -34,7 +34,7 @@ public class RRMConfig {
 		 * Private endpoint for the RRM service
 		 * ({@code SERVICECONFIG_PRIVATEENDPOINT})
 		 */
-		public String privateEndpoint = "http://owrrm.wlan.local:16789"; // see ApiServerParams.internalHttpPort
+		public String privateEndpoint = "http://owrrm.wlan.local:16790"; // see ApiServerParams.internalHttpPort
 
 		/**
 		 * Public endpoint for the RRM service
@@ -328,13 +328,13 @@ public class RRMConfig {
 			 * The HTTP port to listen on for internal traffic, or -1 to disable
 			 * ({@code APISERVERPARAMS_INTERNALHTTPPORT})
 			 */
-			public int internalHttpPort = 16789;
+			public int internalHttpPort = 16790;
 
 			/**
 			 * The HTTP port to listen on for external traffic, or -1 to disable
 			 * ({@code APISERVERPARAMS_EXTERNALHTTPPORT})
 			 */
-			public int externalHttpPort = 16790;
+			public int externalHttpPort = 16789;
 
 			/**
 			 * Comma-separated list of all allowed CORS domains (exact match

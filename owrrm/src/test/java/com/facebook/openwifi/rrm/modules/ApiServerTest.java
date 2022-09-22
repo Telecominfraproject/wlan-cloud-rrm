@@ -55,17 +55,17 @@ import kong.unirest.json.JSONObject;
  */
 @TestMethodOrder(OrderAnnotation.class)
 public class ApiServerTest {
-	/** The test server port for internal calls. */
-	private static final int TEST_INTERNAL_PORT =
-		spark.Service.SPARK_DEFAULT_PORT;
-
 	/** The test server port for external calls. */
 	private static final int TEST_EXTERNAL_PORT =
-		TEST_INTERNAL_PORT + 1;
+		spark.Service.SPARK_DEFAULT_PORT;
+
+	/** The test server port for internal calls. */
+	private static final int TEST_INTERNAL_PORT =
+		TEST_EXTERNAL_PORT + 1;
 
 	/** The mock ow sec service port */
 	private static final int TEST_OWSEC_PORT =
-		TEST_EXTERNAL_PORT + 1;
+		TEST_INTERNAL_PORT + 1;
 
 	/** Test device data manager. */
 	private DeviceDataManager deviceDataManager;
