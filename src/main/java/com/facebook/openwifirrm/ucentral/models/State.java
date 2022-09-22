@@ -112,8 +112,21 @@ public class State {
 
 	public Unit unit;
 
+	public static class Radio {
+		public long active_ms;
+		public long busy_ms;
+		public int channel;
+		public String channel_width;
+		public long noise;
+		public String phy;
+		public long receive_ms;
+		public long transmit_ms;
+		public int tx_power;
+	}
+
+	public Radio[] radios;
+
 	// TODO
-	public JsonObject[] radios;
 	@SerializedName("link-state") public JsonObject linkState;
 	public JsonObject gps;
 	public JsonObject poe;
