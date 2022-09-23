@@ -79,6 +79,15 @@ public class ConfigManager implements Runnable {
 	 */
 	private Set<String> zonesToUpdate = ConcurrentHashMap.newKeySet();
 
+	/**
+	 * This set is used as a buffer to track queued updates without actually
+	 * writing them to {@link #zonesToUpdate}. This is done in order to prevent
+	 * the possibility of trying to update zones in quick succession (which is
+	 * not allowed by the debounce timer).
+	 */
+	private Set<String> temporaryZonesToUpdateBuffer =
+		ConcurrentHashMap.newKeySet();
+
 	/** Config listener interface. */
 	public interface ConfigListener {
 		/**
@@ -384,20 +393,20 @@ public class ConfigManager implements Runnable {
 	}
 
 	/**
-	 * Queue zone(s) to be updated next time.
+	 * Track the zone to be updated in the future.
 	 *
 	 * @param zone zone (i.e., venue), or null, which indicates all zones
 	 */
 	public void queueForUpdate(String zone) {
 		if (zone != null) {
-			zonesToUpdate.add(zone);
+			temporaryZonesToUpdateBuffer.add(zone);
 		} else {
 			/*
 			 * Here, addAll is not atomic, so read operations during the addAll
 			 * may read none, some, or all of the items passed in to addAll.
 			 * But, it is ok if different zones are updated at different times.
 			 */
-			zonesToUpdate.addAll(deviceDataManager.getZones());
+			temporaryZonesToUpdateBuffer.addAll(deviceDataManager.getZones());
 		}
 	}
 
@@ -405,6 +414,8 @@ public class ConfigManager implements Runnable {
 	 * Interrupt the main thread, possibly triggering an update immediately.
 	 */
 	public void wakeUp() {
+		zonesToUpdate.addAll(temporaryZonesToUpdateBuffer);
+		temporaryZonesToUpdateBuffer.clear();
 		if (mainThread != null && mainThread.isAlive() && sleepingFlag.get()) {
 			wakeupFlag.set(true);
 			mainThread.interrupt();
@@ -412,7 +423,7 @@ public class ConfigManager implements Runnable {
 	}
 
 	/**
-	 * Queue zone(s) to be updated and interrupt the main thread to possibly
+	 * Track the zone to be updated, then interrupt the main thread to possibly
 	 * trigger an update immediately.
 	 *
 	 * @param zone zone (i.e., venue), or null, which indicates all zones
