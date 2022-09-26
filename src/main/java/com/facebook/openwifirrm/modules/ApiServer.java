@@ -302,9 +302,9 @@ public class ApiServer implements Runnable {
 	}
 
 	/**
-	 * Validate an OpenWiFi token (external), caching successful lookups. Both normal
-	 * token and subtoken is checked in the validateToken call already so there is
-	 * no need to call validateSubToken separately.
+	 * Validate an OpenWiFi token (external), caching successful lookups. This will
+	 * validate a USER token - subscriber token won't work and will fail (plus only
+	 * users should be dealing with RRM).
 	 * @return true if token is valid
 	 */
 	private boolean validateOpenWifiToken(String token) {
