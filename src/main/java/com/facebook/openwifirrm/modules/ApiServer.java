@@ -302,12 +302,13 @@ public class ApiServer implements Runnable {
 	}
 
 	/**
-	 * Validate an OpenWiFi token (external), caching successful lookups.
+	 * Validate an OpenWiFi token (external), caching successful lookups. Both normal
+	 * token and subtoken is checked in the validateToken call already so there is
+	 * no need to call validateSubToken separately.
 	 * @return true if token is valid
 	 */
 	private boolean validateOpenWifiToken(String token) {
 		// The below only checks /api/v1/validateToken and caches it as necessary.
-		// TODO - /api/v1/validateSubToken still has to be implemented.
 		Long expiry = tokenCache.get(token);
 		if (expiry == null) {
 			TokenValidationResult result = client.validateToken(token);
