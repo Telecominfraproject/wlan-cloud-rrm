@@ -211,7 +211,6 @@ public class ConfigManager implements Runnable {
 				listener.receiveDeviceConfig(device.serialNumber, data.config);
 			}
 			// Check if there are requested updates for this zone
-			// And if so, remove this zone from the set of to-be-updated zones
 			String deviceZone =
 				deviceDataManager.getDeviceZone(device.serialNumber);
 			boolean isEvent = zonesToUpdateCopy.contains(deviceZone);
