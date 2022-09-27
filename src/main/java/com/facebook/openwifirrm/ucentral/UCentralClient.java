@@ -8,6 +8,7 @@
 
 package com.facebook.openwifirrm.ucentral;
 
+import java.time.Instant;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -30,6 +31,8 @@ import com.facebook.openwifirrm.ucentral.gw.models.ServiceEvent;
 import com.facebook.openwifirrm.ucentral.gw.models.StatisticsRecords;
 import com.facebook.openwifirrm.ucentral.gw.models.SystemInfoResults;
 import com.facebook.openwifirrm.ucentral.gw.models.TokenValidationResult;
+import com.facebook.openwifirrm.ucentral.gw.models.WebTokenRefreshRequest;
+import com.facebook.openwifirrm.ucentral.gw.models.WebTokenResult;
 import com.facebook.openwifirrm.ucentral.gw.models.WifiScanRequest;
 import com.facebook.openwifirrm.ucentral.prov.models.EntityList;
 import com.facebook.openwifirrm.ucentral.prov.models.InventoryTagList;
@@ -137,7 +140,10 @@ public class UCentralClient {
 	 * The access token obtained from uCentralSec, needed only when using public
 	 * endpoints.
 	 */
-	private String accessToken;
+	private WebTokenResult accessToken;
+
+	/** Time window to refresh token in seconds. */
+	private int TOKEN_REFRESH_WINDOW_S = 21600;
 
 	/**
 	 * Constructor.
@@ -184,7 +190,8 @@ public class UCentralClient {
 		Map<String, Object> body = new HashMap<>();
 		body.put("userId", username);
 		body.put("password", password);
-		HttpResponse<String> response = httpPost("oauth2", OWSEC_SERVICE, body);
+		HttpResponse<String> response =
+			httpPost("oauth2", OWSEC_SERVICE, body, null);
 		if (!response.isSuccess()) {
 			logger.error(
 				"Login failed: Response code {}, body: {}",
@@ -195,25 +202,115 @@ public class UCentralClient {
 		}
 
 		// Parse access token from response
-		JSONObject respBody;
+		WebTokenResult token;
 		try {
-			respBody = new JSONObject(response.getBody());
-		} catch (JSONException e) {
+			token = gson.fromJson(response.getBody(), WebTokenResult.class);
+		} catch (JsonSyntaxException e) {
 			logger.error("Login failed: Unexpected response", e);
 			logger.debug("Response body: {}", response.getBody());
 			return false;
 		}
-		if (!respBody.has("access_token")) {
+		if (token.access_token == null || token.access_token.isEmpty()) {
 			logger.error("Login failed: Missing access token");
-			logger.debug("Response body: {}", respBody.toString());
+			logger.debug("Response body: {}", token.toString());
 			return false;
 		}
-		this.accessToken = respBody.getString("access_token");
+		this.accessToken = token;
 		logger.info("Login successful as user: {}", username);
-		logger.debug("Access token: {}", accessToken);
+		logger.debug("Access token: {}", accessToken.access_token);
+		logger.debug("Refresh token: {}", accessToken.refresh_token);
 
 		// Load system endpoints
 		return loadSystemEndpoints();
+	}
+
+	/**
+	 * Check if an access token is expired.
+	 *
+	 * @return true if the access token is expired
+	 */
+	private boolean isAccessTokenExpired() {
+		return accessToken.created + accessToken.idle_timeout <
+			Instant.now().getEpochSecond();
+	}
+
+	/**
+	 * Check if the refresh token is expired.
+	 *
+	 * @return true if the refresh token is expired
+	 */
+	private boolean isRefreshTokenExpired() {
+		return accessToken.created + TOKEN_REFRESH_WINDOW_S <
+			Instant.now().getEpochSecond();
+	}
+
+	/**
+	 * Get access token. If the refresh token is expired, login again. 
+	 * If the access token is expired, POST a WebTokenRefreshRequest to refresh token. 
+	 * Otherwise return the current access token.
+	 *
+	 * @return a valid access token ({@code WebTokenResult})
+	 */
+	private WebTokenResult getAccessToken() {
+		if (isRefreshTokenExpired()) {
+			logger.info("Refresh token is expired, login again");
+			if (login()) {
+				return accessToken;
+			}
+			return null;
+		} else if (isAccessTokenExpired()) {
+			logger.debug("Access token is expired, start refreshing a token.");
+			WebTokenResult refresh_token = refreshToken();
+			if (refresh_token != null) {
+				logger.debug("Successfully refresh token.");
+				return refresh_token;
+			}
+			logger.error(
+				"Fail to refresh token with access token: {}",
+				accessToken.access_token
+			);
+			return null;
+		}
+		return accessToken;
+	}
+
+	/**
+	 * POST a WebTokenRefreshRequest to refresh the access token.
+	 *
+	 * @return valid access token if success, otherwise return null.
+	 */
+	private WebTokenResult refreshToken() {
+		WebTokenRefreshRequest refreshRequest = new WebTokenRefreshRequest();
+		refreshRequest.userId = username;
+		refreshRequest.refreshToken = accessToken.refresh_token;
+		logger.debug("refresh token: {}", accessToken.refresh_token);
+		Map<String, Object> query = new HashMap<>();
+		query.put("grant_type", "refresh_token");
+		HttpResponse<String> response =
+			httpPost(
+				"oauth2",
+				OWSEC_SERVICE,
+				refreshRequest,
+				query
+			);
+		if (!response.isSuccess()) {
+			logger.error(
+				"Failed to refresh token: Response code {}, body: {}",
+				response.getStatus(),
+				response.getBody()
+			);
+			return null;
+		}
+		try {
+			return gson.fromJson(response.getBody(), WebTokenResult.class);
+		} catch (JsonSyntaxException e) {
+			logger.error(
+				"Failed to serialize responseBody: Unexpected response:",
+				e
+			);
+			logger.debug("Response body: {}", response.getBody());
+			return null;
+		}
 	}
 
 	/** Read system endpoint URLs from uCentralSec. */
@@ -270,6 +367,7 @@ public class UCentralClient {
 		) {
 			return false;
 		}
+		accessToken = getAccessToken();
 		if (usePublicEndpoints && accessToken == null) {
 			return false;
 		}
@@ -284,6 +382,7 @@ public class UCentralClient {
 		if (!serviceEndpoints.containsKey(OWPROV_SERVICE)) {
 			return false;
 		}
+		accessToken = getAccessToken();
 		if (usePublicEndpoints && accessToken == null) {
 			return false;
 		}
@@ -325,7 +424,10 @@ public class UCentralClient {
 			.socketTimeout(socketTimeoutMs);
 		if (usePublicEndpoints) {
 			if (accessToken != null) {
-				req.header("Authorization", "Bearer " + accessToken);
+				req.header(
+					"Authorization",
+					"Bearer " + accessToken.access_token
+				);
 			}
 		} else {
 			req
@@ -339,37 +441,52 @@ public class UCentralClient {
 		}
 	}
 
-	/** Send a POST request with a JSON body. */
+	/** Send a POST request with a JSON body and query params. */
 	private HttpResponse<String> httpPost(
 		String endpoint,
 		String service,
-		Object body
+		Object body,
+		Map<String, Object> query
 	) {
 		return httpPost(
 			endpoint,
 			service,
 			body,
+			query,
 			socketParams.connectTimeoutMs,
 			socketParams.socketTimeoutMs
 		);
 	}
 
-	/** Send a POST request with a JSON body using given timeout values. */
+	/** Send a POST request with a JSON body and query params using given timeout values. */
 	private HttpResponse<String> httpPost(
 		String endpoint,
 		String service,
 		Object body,
+		Map<String, Object> query,
 		int connectTimeoutMs,
 		int socketTimeoutMs
 	) {
 		String url = makeServiceUrl(endpoint, service);
-		HttpRequestWithBody req = Unirest.post(url)
-			.header("accept", "application/json")
-			.connectTimeout(connectTimeoutMs)
-			.socketTimeout(socketTimeoutMs);
+		HttpRequestWithBody req;
+		if (query == null || query.isEmpty()) {
+			req = Unirest.post(url)
+				.header("accept", "application/json")
+				.connectTimeout(connectTimeoutMs)
+				.socketTimeout(socketTimeoutMs);
+		} else {
+			req = Unirest.post(url)
+				.header("accept", "application/json")
+				.queryString(query)
+				.connectTimeout(connectTimeoutMs)
+				.socketTimeout(socketTimeoutMs);
+		}
 		if (usePublicEndpoints) {
 			if (accessToken != null) {
-				req.header("Authorization", "Bearer " + accessToken);
+				req.header(
+					"Authorization",
+					"Bearer " + accessToken.access_token
+				);
 			}
 		} else {
 			req
@@ -454,6 +571,7 @@ public class UCentralClient {
 			String.format("device/%s/wifiscan", serialNumber),
 			OWGW_SERVICE,
 			req,
+			null,
 			socketParams.connectTimeoutMs,
 			socketParams.wifiScanTimeoutMs
 		);
@@ -482,7 +600,8 @@ public class UCentralClient {
 		HttpResponse<String> response = httpPost(
 			String.format("device/%s/configure", serialNumber),
 			OWGW_SERVICE,
-			req
+			req,
+			null
 		);
 		if (!response.isSuccess()) {
 			logger.error("Error: {}", response.getBody());
