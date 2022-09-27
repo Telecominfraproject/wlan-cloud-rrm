@@ -638,14 +638,13 @@ public abstract class ChannelOptimizer {
 	public abstract Map<String, Map<String, Integer>> computeChannelMap();
 
 	/**
-	 * Program the given channel map into the AP config and notify the config
-	 * manager.
+	 * Program the given channel map into the AP config.
 	 *
 	 * @param deviceDataManager the DeviceDataManager instance
 	 * @param configManager the ConfigManager instance
 	 * @param channelMap the map of devices (by serial number) to radio to channel
 	 */
-	public void applyConfig(
+	public void updateDeviceApConfig(
 		DeviceDataManager deviceDataManager,
 		ConfigManager configManager,
 		Map<String, Map<String, Integer>> channelMap
@@ -663,8 +662,5 @@ public abstract class ChannelOptimizer {
 				deviceConfig.autoChannels = entry.getValue();
 			}
 		});
-
-		// Trigger config update now
-		configManager.queueForUpdate(zone);
 	}
 }

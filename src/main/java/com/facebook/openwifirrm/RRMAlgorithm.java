@@ -143,6 +143,8 @@ public class RRMAlgorithm {
 	 * @param dryRun if set, do not apply changes
 	 * @param allowDefaultMode if false, "mode" argument must be present and
 	 *                         valid (returns error if invalid)
+	 * @param updateImmediately whether to interrupt the config manager thread
+	 * to trigger immediate update
 	 *
 	 * @return the algorithm result, with exactly one field set ("error" upon
 	 *         failure, any others upon success)
@@ -153,7 +155,8 @@ public class RRMAlgorithm {
 		Modeler modeler,
 		String zone,
 		boolean dryRun,
-		boolean allowDefaultMode
+		boolean allowDefaultMode,
+		boolean updateImmediately
 	) {
 		AlgorithmResult result = new AlgorithmResult();
 		if (name == null || args == null) {
@@ -212,11 +215,14 @@ public class RRMAlgorithm {
 			}
 			result.channelMap = optimizer.computeChannelMap();
 			if (!dryRun) {
-				optimizer.applyConfig(
+				optimizer.updateDeviceApConfig(
 					deviceDataManager,
 					configManager,
 					result.channelMap
 				);
+				if (updateImmediately) {
+					configManager.queueZoneAndWakeUp(zone);
+				}
 			}
 		} else if (
 			name.equals(RRMAlgorithm.AlgorithmType.OptimizeTxPower.name())
@@ -270,16 +276,18 @@ public class RRMAlgorithm {
 			}
 			result.txPowerMap = optimizer.computeTxPowerMap();
 			if (!dryRun) {
-				optimizer.applyConfig(
+				optimizer.updateDeviceApConfig(
 					deviceDataManager,
 					configManager,
 					result.txPowerMap
 				);
+				if (updateImmediately) {
+					configManager.queueZoneAndWakeUp(zone);
+				}
 			}
 		} else {
 			result.error = String.format("Unknown algorithm: '%s'", name);
 		}
-		configManager.wakeUp();
 		return result;
 	}
 }

@@ -72,15 +72,6 @@ public class ConfigManager implements Runnable {
 	 */
 	private Set<String> zonesToUpdate = ConcurrentHashMap.newKeySet();
 
-	/**
-	 * This set is used as a buffer to track queued updates without actually
-	 * writing them to {@link #zonesToUpdate}. This is done in order to prevent
-	 * the possibility of trying to update zones in quick succession (which is
-	 * not allowed by the debounce timer).
-	 */
-	private Set<String> temporaryZonesToUpdateBuffer =
-		ConcurrentHashMap.newKeySet();
-
 	/** Config listener interface. */
 	public interface ConfigListener {
 		/**
@@ -199,8 +190,6 @@ public class ConfigManager implements Runnable {
 		// use removeAll() instead of clear() in case items are added between
 		// the previous line and the following line
 		zonesToUpdate.removeAll(zonesToUpdateCopy);
-		// used after the loop, calculated now before the set is emptied
-		final boolean shouldUpdate = !zonesToUpdateCopy.isEmpty();
 		for (DeviceWithStatus device : devices) {
 			// Update config structure
 			DeviceData data = deviceDataMap.computeIfAbsent(
@@ -223,8 +212,9 @@ public class ConfigManager implements Runnable {
 			}
 			// Check if there are requested updates for this zone
 			// And if so, remove this zone from the set of to-be-updated zones
-			boolean isEvent = zonesToUpdateCopy
-				.contains(deviceDataManager.getDeviceZone(device.serialNumber));
+			String deviceZone =
+				deviceDataManager.getDeviceZone(device.serialNumber);
+			boolean isEvent = zonesToUpdateCopy.contains(deviceZone);
 			if (params.configOnEventOnly && !isEvent) {
 				logger.debug(
 					"Skipping config for {} (zone not marked for updates)",
@@ -273,6 +263,7 @@ public class ConfigManager implements Runnable {
 			}
 		}
 
+		final boolean shouldUpdate = !zonesToUpdateCopy.isEmpty();
 		// Send config changes to devices
 		if (!params.configEnabled) {
 			logger.trace("Config changes are disabled.");
@@ -387,43 +378,49 @@ public class ConfigManager implements Runnable {
 	}
 
 	/**
-	 * Track the zone to be updated in the future.
+	 * Mark the zone to be updated, then interrupt the main thread to possibly
+	 * trigger an update immediately.
 	 *
-	 * @param zone zone (i.e., venue), or null, which indicates all zones
+	 * @param zone non-null zone (i.e., venue)
 	 */
-	public void queueForUpdate(String zone) {
-		if (zone != null) {
-			temporaryZonesToUpdateBuffer.add(zone);
-		} else {
-			/*
-			 * Here, addAll is not atomic, so read operations during the addAll
-			 * may read none, some, or all of the items passed in to addAll.
-			 * But, it is ok if different zones are updated at different times.
-			 */
-			temporaryZonesToUpdateBuffer.addAll(deviceDataManager.getZones());
+	public void queueZoneAndWakeUp(String zone) {
+		if (zone == null) {
+			logger.debug("Zone to queue must be a non-null String.");
 		}
+		zonesToUpdate.add(zone);
+		wakeUp();
 	}
 
 	/**
-	 * Interrupt the main thread, possibly triggering an update immediately.
+	 * Track all zones to be updated, then interrupt the main thread to possibly
+	 * trigger an update immediately.
 	 */
-	public void wakeUp() {
-		zonesToUpdate.addAll(temporaryZonesToUpdateBuffer);
-		temporaryZonesToUpdateBuffer.clear();
+	public void queueAllZonesAndWakeUp() {
+		/*
+		 * zonesToUpdate.addAll(...) is not atomic. If it were used, it is
+		 * possible that: only some zones are added before the main thread
+		 * enters its update loop, completes it, and goes to sleep. Then, a zone
+		 * that was initially in zonesToUpdate (but not anymore) may be added
+		 * again (as part of the addAll(...)). Then, an interrupt would trigger
+		 * an update with the latest configs for this zone, but the update would
+		 * not work due to the debounce timer. Therefore, we make it a point to
+		 * copy the state of zonesToUpdate and only add zones that are not
+		 * already in zonesToUpdate at that time.
+		 */
+		Set<String> copy = new HashSet<>(zonesToUpdate);
+		for (String z : deviceDataManager.getZones()) {
+			if (!copy.contains(z)) {
+				zonesToUpdate.add(z);
+			}
+		}
+		wakeUp();
+	}
+
+	/** Interrupt the main thread to possibly trigger an update immediately. */
+	private void wakeUp() {
 		if (mainThread != null && mainThread.isAlive() && sleepingFlag.get()) {
 			wakeupFlag.set(true);
 			mainThread.interrupt();
 		}
-	}
-
-	/**
-	 * Track the zone to be updated, then interrupt the main thread to possibly
-	 * trigger an update immediately.
-	 *
-	 * @param zone zone (i.e., venue), or null, which indicates all zones
-	 */
-	public void wakeUp(String zone) {
-		queueForUpdate(zone);
-		wakeUp();
 	}
 }

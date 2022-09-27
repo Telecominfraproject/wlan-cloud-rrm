@@ -711,7 +711,8 @@ public class ApiServer implements Runnable {
 				modeler,
 				venue,
 				mock,
-				true /* allowDefaultMode */
+				true, /* allowDefaultMode */
+				true /* updateImmediately */
 			);
 			if (result.error != null) {
 				response.status(400);
@@ -917,7 +918,7 @@ public class ApiServer implements Runnable {
 				DeviceConfig networkConfig =
 					gson.fromJson(request.body(), DeviceConfig.class);
 				deviceDataManager.setDeviceNetworkConfig(networkConfig);
-				configManager.wakeUp(null);
+				configManager.queueAllZonesAndWakeUp();
 
 				// Revalidate data model
 				modeler.revalidate();
@@ -981,7 +982,7 @@ public class ApiServer implements Runnable {
 				DeviceConfig zoneConfig =
 					gson.fromJson(request.body(), DeviceConfig.class);
 				deviceDataManager.setDeviceZoneConfig(zone, zoneConfig);
-				configManager.wakeUp(zone);
+				configManager.queueZoneAndWakeUp(zone);
 
 				// Revalidate data model
 				modeler.revalidate();
@@ -1044,9 +1045,10 @@ public class ApiServer implements Runnable {
 				DeviceConfig apConfig =
 					gson.fromJson(request.body(), DeviceConfig.class);
 				deviceDataManager.setDeviceApConfig(serialNumber, apConfig);
+				// TODO enable updates to device(s), not just the entire zone
 				final String zone =
 					deviceDataManager.getDeviceZone(serialNumber);
-				configManager.wakeUp(zone);
+				configManager.queueZoneAndWakeUp(zone);
 
 				// Revalidate data model
 				modeler.revalidate();
@@ -1122,7 +1124,7 @@ public class ApiServer implements Runnable {
 				final String zone =
 					deviceDataManager.getDeviceZone(serialNumber);
 				// TODO enable updates to device(s), not just the entire zone
-				configManager.wakeUp(zone);
+				configManager.queueZoneAndWakeUp(zone);
 
 				// Revalidate data model
 				modeler.revalidate();
@@ -1265,7 +1267,8 @@ public class ApiServer implements Runnable {
 				modeler,
 				zone,
 				dryRun,
-				false /* allowDefaultMode */
+				false, /* allowDefaultMode */
+				true /* updateImmediately */
 			);
 			if (result.error != null) {
 				response.status(400);
@@ -1376,7 +1379,8 @@ public class ApiServer implements Runnable {
 				modeler,
 				zone,
 				dryRun,
-				false /* allowDefaultMode */
+				false, /* allowDefaultMode */
+				true /* updateImmediately */
 			);
 			if (result.error != null) {
 				response.status(400);

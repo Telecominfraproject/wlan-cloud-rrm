@@ -8,15 +8,15 @@
 
 package com.facebook.openwifirrm.modules;
 
+import java.text.ParseException;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.text.ParseException;
 
-import org.quartz.CronScheduleBuilder;
 import org.quartz.CronExpression;
+import org.quartz.CronScheduleBuilder;
 import org.quartz.Job;
 import org.quartz.JobBuilder;
 import org.quartz.JobDetail;
@@ -332,8 +332,10 @@ public class RRMScheduler {
 				modeler,
 				zone,
 				params.dryRun,
-				true /* allowDefaultMode */
+				true, /* allowDefaultMode */
+				false /* updateImmediately */
 			);
+			configManager.queueZoneAndWakeUp(zone);
 			logger.info(
 				"'{}' result for zone '{}': {}",
 				algo.getName(),
