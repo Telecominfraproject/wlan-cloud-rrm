@@ -15,6 +15,7 @@ import com.google.gson.JsonObject;
 public class DeviceWithStatus {
 	public String owner;
 	public String location;
+	/** Unreliable */
 	public String venue;
 	public String serialNumber;
 	public DeviceType deviceType;

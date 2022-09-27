@@ -67,15 +67,8 @@ public class ConfigManager implements Runnable {
 	private final AtomicBoolean sleepingFlag = new AtomicBoolean(false);
 
 	/**
-	 * Set of zones for which manual config updates have been requested.
-	 * <p>
-	 * This is a thread-safe (concurrent) set, since it is backed by a
-	 * {@code ConcurrentHashMap}, but is still statically typed as
-	 * {@code Set<String>} since there is nothing like ConcurrentHashSet in
-	 * Java.
-	 * <p>
-	 * This set is "concurrent but not synchronized" meaning it is thread-
-	 * safe, but simultaneous writes are allowed for different "hash buckets".
+	 * Thread-safe set of zones for which manual config updates have been
+	 * requested.
 	 */
 	private Set<String> zonesToUpdate = ConcurrentHashMap.newKeySet();
 
@@ -230,7 +223,8 @@ public class ConfigManager implements Runnable {
 			}
 			// Check if there are requested updates for this zone
 			// And if so, remove this zone from the set of to-be-updated zones
-			boolean isEvent = zonesToUpdateCopy.remove(device.venue);
+			boolean isEvent = zonesToUpdateCopy
+				.contains(deviceDataManager.getDeviceZone(device.serialNumber));
 			if (params.configOnEventOnly && !isEvent) {
 				logger.debug(
 					"Skipping config for {} (zone not marked for updates)",
@@ -287,7 +281,7 @@ public class ConfigManager implements Runnable {
 		} else if (params.configOnEventOnly && !shouldUpdate) {
 			// shouldn't happen
 			logger.error(
-				"ERROR!! {} device(s) queued for config update, but set of zones to update is empty.",
+				"ERROR!! {} device(s) queued for config update, but no zones queued for update.",
 				devicesNeedingUpdate.size()
 			);
 		} else {
