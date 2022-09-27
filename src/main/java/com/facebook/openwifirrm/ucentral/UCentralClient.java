@@ -143,7 +143,7 @@ public class UCentralClient {
 	private WebTokenResult accessToken;
 
 	/** Time window to refresh token in seconds. */
-	private int TOKEN_REFRESH_WINDOW_S = 21600;
+	private final int TOKEN_REFRESH_WINDOW_S = 21600;
 
 	/**
 	 * Constructor.
@@ -245,8 +245,8 @@ public class UCentralClient {
 	}
 
 	/**
-	 * Get access token. If the refresh token is expired, login again. 
-	 * If the access token is expired, POST a WebTokenRefreshRequest to refresh token. 
+	 * Get access token. If the refresh token is expired, login again.
+	 * If the access token is expired, POST a WebTokenRefreshRequest to refresh token.
 	 * Otherwise return the current access token.
 	 *
 	 * @return a valid access token ({@code WebTokenResult})
@@ -260,10 +260,10 @@ public class UCentralClient {
 			return null;
 		} else if (isAccessTokenExpired()) {
 			logger.debug("Access token is expired, start refreshing a token.");
-			WebTokenResult refresh_token = refreshToken();
-			if (refresh_token != null) {
+			WebTokenResult refreshToken = refreshToken();
+			if (refreshToken != null) {
 				logger.debug("Successfully refresh token.");
-				return refresh_token;
+				return refreshToken;
 			}
 			logger.error(
 				"Fail to refresh token with access token: {}",
@@ -284,8 +284,8 @@ public class UCentralClient {
 		refreshRequest.userId = username;
 		refreshRequest.refreshToken = accessToken.refresh_token;
 		logger.debug("refresh token: {}", accessToken.refresh_token);
-		Map<String, Object> query = new HashMap<>();
-		query.put("grant_type", "refresh_token");
+		Map<String, Object> query =
+			Collections.singletonMap("grant_type", "refresh_token");
 		HttpResponse<String> response =
 			httpPost(
 				"oauth2",
@@ -305,7 +305,7 @@ public class UCentralClient {
 			return gson.fromJson(response.getBody(), WebTokenResult.class);
 		} catch (JsonSyntaxException e) {
 			logger.error(
-				"Failed to serialize responseBody: Unexpected response:",
+				"Failed to serialize WebTokenResult: Unexpected response:",
 				e
 			);
 			logger.debug("Response body: {}", response.getBody());
@@ -468,18 +468,12 @@ public class UCentralClient {
 		int socketTimeoutMs
 	) {
 		String url = makeServiceUrl(endpoint, service);
-		HttpRequestWithBody req;
-		if (query == null || query.isEmpty()) {
-			req = Unirest.post(url)
-				.header("accept", "application/json")
-				.connectTimeout(connectTimeoutMs)
-				.socketTimeout(socketTimeoutMs);
-		} else {
-			req = Unirest.post(url)
-				.header("accept", "application/json")
-				.queryString(query)
-				.connectTimeout(connectTimeoutMs)
-				.socketTimeout(socketTimeoutMs);
+		HttpRequestWithBody req = Unirest.post(url)
+			.header("accept", "application/json")
+			.connectTimeout(connectTimeoutMs)
+			.socketTimeout(socketTimeoutMs);
+		if (query != null && !query.isEmpty()) {
+			req.queryString(query);
 		}
 		if (usePublicEndpoints) {
 			if (accessToken != null) {
