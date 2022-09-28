@@ -335,7 +335,6 @@ public class RRMScheduler {
 				true, /* allowDefaultMode */
 				false /* updateImmediately */
 			);
-			configManager.queueZoneAndWakeUp(zone);
 			logger.info(
 				"'{}' result for zone '{}': {}",
 				algo.getName(),
@@ -343,5 +342,6 @@ public class RRMScheduler {
 				gson.toJson(result)
 			);
 		}
+		configManager.queueZoneAndWakeUp(zone);
 	}
 }
