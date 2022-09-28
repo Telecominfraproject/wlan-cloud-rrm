@@ -159,12 +159,22 @@ public class ProvMonitor implements Runnable {
 			return null;
 		}
 
-		RRMSchedule schedule = new RRMSchedule();
-		schedule.cron = RRMScheduler
+		// RRMScheduler.parseIntoQuartzCron will only return an array of length 1 or 2
+		String[] crons = RRMScheduler
 			.parseIntoQuartzCron(details.rrm.schedule);
-		if (schedule.cron == null || schedule.cron.isEmpty()) {
+		if (crons == null || crons.length == 0) {
 			return null;
 		}
+		// if ANY crons are invalid throw it out since it doesn't make sense to
+		// schedule partial jobs
+		for (String cron : crons) {
+			if (cron == null || cron.isEmpty()) {
+				return null;
+			}
+		}
+
+		RRMSchedule schedule = new RRMSchedule();
+		schedule.cron = crons;
 
 		if (details.rrm.algorithms != null) {
 			schedule.algorithms =
@@ -175,6 +185,7 @@ public class ProvMonitor implements Runnable {
 					)
 					.collect(Collectors.toList());
 		}
+
 		return schedule;
 	}
 

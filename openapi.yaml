@@ -479,7 +479,9 @@ components:
       type: object
       properties:
         cron:
-          type: string
+          type: array
+          items:
+            type: string
         algorithms:
           type: array
           items:

@@ -35,6 +35,7 @@ import org.slf4j.LoggerFactory;
 import com.facebook.openwifirrm.DeviceConfig;
 import com.facebook.openwifirrm.DeviceDataManager;
 import com.facebook.openwifirrm.RRMAlgorithm;
+import com.facebook.openwifirrm.RRMSchedule;
 import com.facebook.openwifirrm.RRMConfig.ModuleConfig.RRMSchedulerParams;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -74,15 +75,22 @@ public class RRMScheduler {
 	/** The scheduler instance. */
 	private Scheduler scheduler;
 
-	/** The zones with active triggers scheduled. */
-	private Set<String> scheduledZones;
+	/**
+	 * The job keys with active triggers scheduled. Job keys take the format of
+	 * <zone>:<index>, where index applies only if there are multiple schedules for
+	 * one zone
+	 *
+	 * @see RRMScheduler.parseIntoQuartzCron
+	 * */
+	private Set<String> scheduledJobKeys;
 
 	/** RRM job. */
 	public static class RRMJob implements Job {
 		@Override
 		public void execute(JobExecutionContext context)
 			throws JobExecutionException {
-			String zone = context.getTrigger().getKey().getName();
+			String jobKey = context.getTrigger().getKey().getName();
+			String zone = jobKey.split(":")[0];
 			logger.debug("Executing job for zone: {}", zone);
 			try {
 				SchedulerContext schedulerContext =
@@ -107,13 +115,14 @@ public class RRMScheduler {
 	 * @param linuxCron Linux cron with seconds
 	 *        (seconds minutes hours day_of_month month day_of_week [year])
 	 *
-	 * @throws IllegalArgumentException when a linux cron cannot be parsed
-	 *         into a valid Quartz spec
-	 * @return String a Quartz supported cron
+	 * @throws IllegalArgumentException when a linux cron cannot be parsed into a
+	 *         valid Quartz spec
+	 * @return String[] an array of length 1 or 2 of Quartz supported cron that's
+	 *         equivalent to the original linux cron
 	 */
-	public static String parseIntoQuartzCron(String linuxCron) {
+	public static String[] parseIntoQuartzCron(String linuxCron) {
 		if (CronExpression.isValidExpression(linuxCron)) {
-			return linuxCron;
+			return new String[] { linuxCron };
 		}
 
 		String[] split = linuxCron.split(" ");
@@ -125,7 +134,8 @@ public class RRMScheduler {
 		final int DAY_OF_MONTH_INDEX = 3;
 		final int DAY_OF_WEEK_INDEX = 5;
 
-		String dayOfMonth = split[DAY_OF_MONTH_INDEX];
+		// make a copy since it's possible it'll be used below
+		String dayOfMonth = new String(split[DAY_OF_MONTH_INDEX]);
 		String dayOfWeek = split[DAY_OF_WEEK_INDEX];
 
 		// Quartz uses 1-7, while standard cron expects 0-6 so replace all
@@ -144,15 +154,32 @@ public class RRMScheduler {
 			// if first case failed and only day of week is *, set to ?
 			split[DAY_OF_WEEK_INDEX] = "?";
 		} else {
-			// Quartz does not support both values being set, so return null
-			return null;
+			// Quartz does not support both values being set but the standard says that
+			// if both are specified then it becomes OR of the two fields. Which means
+			// that we can split it into two separate crons and have it work the same way
+			split[DAY_OF_MONTH_INDEX] = "?";
+			String dayOfWeekCron = String.join(" ", split);
+
+			split[DAY_OF_MONTH_INDEX] = dayOfMonth;
+			split[DAY_OF_WEEK_INDEX] = "?";
+			String dayOfMonthCron = String.join(" ", split);
+
+			if (
+				!CronExpression.isValidExpression(dayOfWeekCron) ||
+					!CronExpression.isValidExpression(dayOfMonthCron)
+			) {
+				return null;
+			}
+
+			return new String[] { dayOfWeekCron, dayOfMonthCron };
 		}
 
 		String quartzCron = String.join(" ", split);
 		if (!CronExpression.isValidExpression(quartzCron)) {
 			return null;
 		}
-		return quartzCron;
+
+		return new String[] { quartzCron };
 	}
 
 	/** Constructor. */
@@ -194,7 +221,7 @@ public class RRMScheduler {
 			// Schedule job and triggers
 			scheduler.addJob(job, false);
 			syncTriggers();
-			logger.info("Scheduled {} RRM trigger(s)", scheduledZones.size());
+			logger.info("Scheduled {} RRM trigger(s)", scheduledJobKeys.size());
 
 			// Start scheduler
 			scheduler.start();
@@ -218,85 +245,105 @@ public class RRMScheduler {
 
 	/**
 	 * Synchronize triggers to the current topology, adding/updating/deleting
-	 * them as necessary. This updates {@link #scheduledZones}.
+	 * them as necessary. This updates {@link #scheduledJobKeys}.
 	 */
 	public void syncTriggers() {
 		Set<String> scheduled = ConcurrentHashMap.newKeySet();
 		Set<String> prevScheduled = new HashSet<>();
-		if (scheduledZones != null) {
-			prevScheduled.addAll(scheduledZones);
+		if (scheduledJobKeys != null) {
+			prevScheduled.addAll(scheduledJobKeys);
 		}
 
 		// Add new triggers
 		for (String zone : deviceDataManager.getZones()) {
 			DeviceConfig config = deviceDataManager.getZoneConfig(zone);
+			RRMSchedule schedule = config.schedule;
 			if (
-				config.schedule == null ||
-					config.schedule.cron == null ||
-					config.schedule.cron.isEmpty()
+				schedule == null || schedule.cron == null ||
+					schedule.cron.length == 0
 			) {
 				continue; // RRM not scheduled
 			}
 
-			try {
-				CronExpression.validateExpression(config.schedule.cron);
-			} catch (ParseException e) {
-				logger.error(
-					String.format(
-						"Invalid cron expression (%s) for zone %s",
-						config.schedule.cron,
-						zone
-					),
-					e
-				);
+			if (
+				schedule.cron == null ||
+					schedule.cron.length == 0
+			) {
 				continue;
 			}
 
-			// Create trigger
-			Trigger trigger = TriggerBuilder.newTrigger()
-				.withIdentity(zone)
-				.forJob(job)
-				.withSchedule(
-					CronScheduleBuilder.cronSchedule(config.schedule.cron)
-				)
-				.build();
-			try {
-				if (!prevScheduled.contains(zone)) {
-					scheduler.scheduleJob(trigger);
-				} else {
-					scheduler.rescheduleJob(trigger.getKey(), trigger);
+			for (int i = 0; i < schedule.cron.length; i++) {
+				String cron = schedule.cron[i];
+
+				// if even one schedule has invalid cron, the whole thing is probably wrong
+				if (cron == null || cron.isEmpty()) {
+					break;
 				}
-			} catch (SchedulerException e) {
-				logger.error(
-					"Failed to schedule RRM trigger for zone: " + zone,
-					e
+
+				try {
+					CronExpression.validateExpression(cron);
+				} catch (ParseException e) {
+					logger.error(
+						String.format(
+							"Invalid cron expression (%s) for zone %s",
+							schedule.cron,
+							zone
+						),
+						e
+					);
+					continue;
+				}
+
+				// Create trigger
+				String jobKey = String.format("%s:%d", zone, i);
+				Trigger trigger = TriggerBuilder.newTrigger()
+					.withIdentity(jobKey)
+					.forJob(job)
+					.withSchedule(
+						CronScheduleBuilder.cronSchedule(cron)
+					)
+					.build();
+
+				try {
+					if (!prevScheduled.contains(jobKey)) {
+						scheduler.scheduleJob(trigger);
+					} else {
+						scheduler.rescheduleJob(trigger.getKey(), trigger);
+					}
+				} catch (SchedulerException e) {
+					logger.error(
+						"Failed to schedule RRM trigger for job key: " + jobKey,
+						e
+					);
+					continue;
+				}
+
+				scheduled.add(jobKey);
+				logger.debug(
+					"Scheduled/updated RRM for job key '{}' at: < {} >",
+					jobKey,
+					cron
 				);
-				continue;
 			}
-			scheduled.add(zone);
-			logger.debug(
-				"Scheduled/updated RRM for zone '{}' at: < {} >",
-				zone,
-				config.schedule.cron
-			);
+
 		}
 
 		// Remove old triggers
 		prevScheduled.removeAll(scheduled);
-		for (String zone : prevScheduled) {
+		for (String jobKey : prevScheduled) {
 			try {
-				scheduler.unscheduleJob(TriggerKey.triggerKey(zone));
+				scheduler.unscheduleJob(TriggerKey.triggerKey(jobKey));
 			} catch (SchedulerException e) {
 				logger.error(
-					"Failed to remove RRM trigger for zone: " + zone,
+					"Failed to remove RRM trigger for jobKey: " + jobKey,
 					e
 				);
 				continue;
 			}
-			logger.debug("Removed RRM trigger for zone '{}'", zone);
+			logger.debug("Removed RRM trigger for jobKey '{}'", jobKey);
 		}
 
-		this.scheduledZones = scheduled;
+		this.scheduledJobKeys = scheduled;
 	}
 
 	/** Run RRM algorithms for the given zone. */
@@ -305,16 +352,19 @@ public class RRMScheduler {
 
 		// Get algorithms from zone config
 		DeviceConfig config = deviceDataManager.getZoneConfig(zone);
-		if (config.schedule == null) {
+		RRMSchedule schedule = config.schedule;
+		if (schedule == null) {
 			logger.error("RRM schedule missing for zone '{}', aborting!", zone);
 			return;
 		}
+
 		if (
-			config.schedule.algorithms == null ||
-				config.schedule.algorithms.isEmpty()
+			schedule.algorithms == null ||
+				schedule.algorithms.isEmpty()
 		) {
-			logger.debug("Using default RRM algorithms for zone '{}'", zone);
-			config.schedule.algorithms = Arrays.asList(
+			logger
+				.debug("Using default RRM algorithms for zone '{}'", zone);
+			schedule.algorithms = Arrays.asList(
 				new RRMAlgorithm(
 					RRMAlgorithm.AlgorithmType.OptimizeChannel.name()
 				),
@@ -325,7 +375,7 @@ public class RRMScheduler {
 		}
 
 		// Execute algorithms
-		for (RRMAlgorithm algo : config.schedule.algorithms) {
+		for (RRMAlgorithm algo : schedule.algorithms) {
 			RRMAlgorithm.AlgorithmResult result = algo.run(
 				deviceDataManager,
 				configManager,
