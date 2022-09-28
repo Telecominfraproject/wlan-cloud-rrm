@@ -143,8 +143,9 @@ public class RRMAlgorithm {
 	 * @param dryRun if set, do not apply changes
 	 * @param allowDefaultMode if false, "mode" argument must be present and
 	 *                         valid (returns error if invalid)
-	 * @param updateImmediately whether to interrupt the config manager thread
-	 * to trigger immediate update
+	 * @param updateImmediately true if the method should queue the zone for
+	 * 							update and interrupt the config manager thread
+	 * 							to trigger immediate update
 	 *
 	 * @return the algorithm result, with exactly one field set ("error" upon
 	 *         failure, any others upon success)

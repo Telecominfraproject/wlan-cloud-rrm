@@ -385,6 +385,7 @@ public class ConfigManager implements Runnable {
 	public void queueZoneAndWakeUp(String zone) {
 		if (zone == null) {
 			logger.debug("Zone to queue must be a non-null String.");
+			return;
 		}
 		zonesToUpdate.add(zone);
 		wakeUp();
@@ -396,22 +397,12 @@ public class ConfigManager implements Runnable {
 	 */
 	public void queueAllZonesAndWakeUp() {
 		/*
-		 * zonesToUpdate.addAll(...) is not atomic. If it were used, it is
-		 * possible that: only some zones are added before the main thread
-		 * enters its update loop, completes it, and goes to sleep. Then, a zone
-		 * that was initially in zonesToUpdate (but not anymore) may be added
-		 * again (as part of the addAll(...)). Then, an interrupt would trigger
-		 * an update with the latest configs for this zone, but the update would
-		 * not work due to the debounce timer. Therefore, we make it a point to
-		 * copy the state of zonesToUpdate and only add zones that are not
-		 * already in zonesToUpdate at that time.
+		 * Note, addAll is not atomic, but that is ok. This just means that it
+		 * is possible that some zones may get updated now by the main thread
+		 * while others get updated either when the main thread is woken up or
+		 * the next time the main thread does its periodic update.
 		 */
-		Set<String> copy = new HashSet<>(zonesToUpdate);
-		for (String z : deviceDataManager.getZones()) {
-			if (!copy.contains(z)) {
-				zonesToUpdate.add(z);
-			}
-		}
+		zonesToUpdate.addAll(deviceDataManager.getZones());
 		wakeUp();
 	}
 
