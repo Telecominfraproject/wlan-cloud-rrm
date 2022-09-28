@@ -141,12 +141,13 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <tbody>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../../RRMAlgorithm.AlgorithmResult.html" title="class in com.facebook.openwifirrm">RRMAlgorithm.AlgorithmResult</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">RRMAlgorithm.</span><code><span class="memberNameLink"><a href="../../RRMAlgorithm.html#run(com.facebook.openwifirrm.DeviceDataManager,com.facebook.openwifirrm.modules.ConfigManager,com.facebook.openwifirrm.modules.Modeler,java.lang.String,boolean,boolean)">run</a></span>&#8203;(<a href="../../DeviceDataManager.html" title="class in com.facebook.openwifirrm">DeviceDataManager</a>&nbsp;deviceDataManager,
+<th class="colSecond" scope="row"><span class="typeNameLabel">RRMAlgorithm.</span><code><span class="memberNameLink"><a href="../../RRMAlgorithm.html#run(com.facebook.openwifirrm.DeviceDataManager,com.facebook.openwifirrm.modules.ConfigManager,com.facebook.openwifirrm.modules.Modeler,java.lang.String,boolean,boolean,boolean)">run</a></span>&#8203;(<a href="../../DeviceDataManager.html" title="class in com.facebook.openwifirrm">DeviceDataManager</a>&nbsp;deviceDataManager,
    <a href="../ConfigManager.html" title="class in com.facebook.openwifirrm.modules">ConfigManager</a>&nbsp;configManager,
    <a href="../Modeler.html" title="class in com.facebook.openwifirrm.modules">Modeler</a>&nbsp;modeler,
    <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;zone,
    boolean&nbsp;dryRun,
-   boolean&nbsp;allowDefaultMode)</code></th>
+   boolean&nbsp;allowDefaultMode,
+   boolean&nbsp;updateImmediately)</code></th>
 <td class="colLast">
 <div class="block">Run the algorithm.</div>
 </td>
@@ -238,12 +239,11 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <tbody>
 <tr class="altColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">ChannelOptimizer.</span><code><span class="memberNameLink"><a href="../../optimizers/channel/ChannelOptimizer.html#applyConfig(com.facebook.openwifirrm.DeviceDataManager,com.facebook.openwifirrm.modules.ConfigManager,java.util.Map)">applyConfig</a></span>&#8203;(<a href="../../DeviceDataManager.html" title="class in com.facebook.openwifirrm">DeviceDataManager</a>&nbsp;deviceDataManager,
-           <a href="../ConfigManager.html" title="class in com.facebook.openwifirrm.modules">ConfigManager</a>&nbsp;configManager,
-           <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html?is-external=true" title="class or interface in java.util" class="externalLink">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>,&#8203;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html?is-external=true" title="class or interface in java.util" class="externalLink">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>,&#8203;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Integer.html?is-external=true" title="class or interface in java.lang" class="externalLink">Integer</a>&gt;&gt;&nbsp;channelMap)</code></th>
+<th class="colSecond" scope="row"><span class="typeNameLabel">ChannelOptimizer.</span><code><span class="memberNameLink"><a href="../../optimizers/channel/ChannelOptimizer.html#updateDeviceApConfig(com.facebook.openwifirrm.DeviceDataManager,com.facebook.openwifirrm.modules.ConfigManager,java.util.Map)">updateDeviceApConfig</a></span>&#8203;(<a href="../../DeviceDataManager.html" title="class in com.facebook.openwifirrm">DeviceDataManager</a>&nbsp;deviceDataManager,
+                    <a href="../ConfigManager.html" title="class in com.facebook.openwifirrm.modules">ConfigManager</a>&nbsp;configManager,
+                    <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html?is-external=true" title="class or interface in java.util" class="externalLink">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>,&#8203;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html?is-external=true" title="class or interface in java.util" class="externalLink">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>,&#8203;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Integer.html?is-external=true" title="class or interface in java.lang" class="externalLink">Integer</a>&gt;&gt;&nbsp;channelMap)</code></th>
 <td class="colLast">
-<div class="block">Program the given channel map into the AP config and notify the config
- manager.</div>
+<div class="block">Program the given channel map into the AP config.</div>
 </td>
 </tr>
 </tbody>
@@ -265,12 +265,11 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <tbody>
 <tr class="altColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">TPC.</span><code><span class="memberNameLink"><a href="../../optimizers/tpc/TPC.html#applyConfig(com.facebook.openwifirrm.DeviceDataManager,com.facebook.openwifirrm.modules.ConfigManager,java.util.Map)">applyConfig</a></span>&#8203;(<a href="../../DeviceDataManager.html" title="class in com.facebook.openwifirrm">DeviceDataManager</a>&nbsp;deviceDataManager,
-           <a href="../ConfigManager.html" title="class in com.facebook.openwifirrm.modules">ConfigManager</a>&nbsp;configManager,
-           <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html?is-external=true" title="class or interface in java.util" class="externalLink">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>,&#8203;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html?is-external=true" title="class or interface in java.util" class="externalLink">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>,&#8203;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Integer.html?is-external=true" title="class or interface in java.lang" class="externalLink">Integer</a>&gt;&gt;&nbsp;txPowerMap)</code></th>
+<th class="colSecond" scope="row"><span class="typeNameLabel">TPC.</span><code><span class="memberNameLink"><a href="../../optimizers/tpc/TPC.html#updateDeviceApConfig(com.facebook.openwifirrm.DeviceDataManager,com.facebook.openwifirrm.modules.ConfigManager,java.util.Map)">updateDeviceApConfig</a></span>&#8203;(<a href="../../DeviceDataManager.html" title="class in com.facebook.openwifirrm">DeviceDataManager</a>&nbsp;deviceDataManager,
+                    <a href="../ConfigManager.html" title="class in com.facebook.openwifirrm.modules">ConfigManager</a>&nbsp;configManager,
+                    <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html?is-external=true" title="class or interface in java.util" class="externalLink">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>,&#8203;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html?is-external=true" title="class or interface in java.util" class="externalLink">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>,&#8203;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Integer.html?is-external=true" title="class or interface in java.lang" class="externalLink">Integer</a>&gt;&gt;&nbsp;txPowerMap)</code></th>
 <td class="colLast">
-<div class="block">Program the given tx power map into the AP config and notify the config
- manager.</div>
+<div class="block">Program the given tx power map into the AP config.</div>
 </td>
 </tr>
 </tbody>

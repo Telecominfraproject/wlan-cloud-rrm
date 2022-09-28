@@ -263,16 +263,6 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Merge all non-null public fields of the given object into this object
  (via reflection).</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/optimizers/channel/ChannelOptimizer.html#applyConfig(com.facebook.openwifirrm.DeviceDataManager,com.facebook.openwifirrm.modules.ConfigManager,java.util.Map)">applyConfig(DeviceDataManager, ConfigManager, Map&lt;String, Map&lt;String, Integer&gt;&gt;)</a></span> - Method in class com.facebook.openwifirrm.optimizers.channel.<a href="com/facebook/openwifirrm/optimizers/channel/ChannelOptimizer.html" title="class in com.facebook.openwifirrm.optimizers.channel">ChannelOptimizer</a></dt>
-<dd>
-<div class="block">Program the given channel map into the AP config and notify the config
- manager.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/optimizers/tpc/TPC.html#applyConfig(com.facebook.openwifirrm.DeviceDataManager,com.facebook.openwifirrm.modules.ConfigManager,java.util.Map)">applyConfig(DeviceDataManager, ConfigManager, Map&lt;String, Map&lt;String, Integer&gt;&gt;)</a></span> - Method in class com.facebook.openwifirrm.optimizers.tpc.<a href="com/facebook/openwifirrm/optimizers/tpc/TPC.html" title="class in com.facebook.openwifirrm.optimizers.tpc">TPC</a></dt>
-<dd>
-<div class="block">Program the given tx power map into the AP config and notify the config
- manager.</div>
-</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/models/State.Interface.SSID.Association.html#%3Cinit%3E()">Association()</a></span> - Constructor for class com.facebook.openwifirrm.ucentral.models.<a href="com/facebook/openwifirrm/ucentral/models/State.Interface.SSID.Association.html" title="class in com.facebook.openwifirrm.ucentral.models">State.Interface.SSID.Association</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/models/State.Interface.SSID.html#associations">associations</a></span> - Variable in class com.facebook.openwifirrm.ucentral.models.<a href="com/facebook/openwifirrm/ucentral/models/State.Interface.SSID.html" title="class in com.facebook.openwifirrm.ucentral.models">State.Interface.SSID</a></dt>
@@ -2097,6 +2087,16 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dl>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/prov/models/InventoryTag.html#qrCode">qrCode</a></span> - Variable in class com.facebook.openwifirrm.ucentral.prov.models.<a href="com/facebook/openwifirrm/ucentral/prov/models/InventoryTag.html" title="class in com.facebook.openwifirrm.ucentral.prov.models">InventoryTag</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/modules/ConfigManager.html#queueAllZonesAndWakeUp()">queueAllZonesAndWakeUp()</a></span> - Method in class com.facebook.openwifirrm.modules.<a href="com/facebook/openwifirrm/modules/ConfigManager.html" title="class in com.facebook.openwifirrm.modules">ConfigManager</a></dt>
+<dd>
+<div class="block">Track all zones to be updated, then interrupt the main thread to possibly
+ trigger an update immediately.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/modules/ConfigManager.html#queueZoneAndWakeUp(java.lang.String)">queueZoneAndWakeUp(String)</a></span> - Method in class com.facebook.openwifirrm.modules.<a href="com/facebook/openwifirrm/modules/ConfigManager.html" title="class in com.facebook.openwifirrm.modules">ConfigManager</a></dt>
+<dd>
+<div class="block">Mark the zone to be updated, then interrupt the main thread to possibly
+ trigger an update immediately.</div>
+</dd>
 </dl>
 <a id="I:R">
 <!--   -->
@@ -2341,7 +2341,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/KafkaRunner.html#run()">run()</a></span> - Method in class com.facebook.openwifirrm.ucentral.<a href="com/facebook/openwifirrm/ucentral/KafkaRunner.html" title="class in com.facebook.openwifirrm.ucentral">KafkaRunner</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/RRMAlgorithm.html#run(com.facebook.openwifirrm.DeviceDataManager,com.facebook.openwifirrm.modules.ConfigManager,com.facebook.openwifirrm.modules.Modeler,java.lang.String,boolean,boolean)">run(DeviceDataManager, ConfigManager, Modeler, String, boolean, boolean)</a></span> - Method in class com.facebook.openwifirrm.<a href="com/facebook/openwifirrm/RRMAlgorithm.html" title="class in com.facebook.openwifirrm">RRMAlgorithm</a></dt>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/RRMAlgorithm.html#run(com.facebook.openwifirrm.DeviceDataManager,com.facebook.openwifirrm.modules.ConfigManager,com.facebook.openwifirrm.modules.Modeler,java.lang.String,boolean,boolean,boolean)">run(DeviceDataManager, ConfigManager, Modeler, String, boolean, boolean, boolean)</a></span> - Method in class com.facebook.openwifirrm.<a href="com/facebook/openwifirrm/RRMAlgorithm.html" title="class in com.facebook.openwifirrm">RRMAlgorithm</a></dt>
 <dd>
 <div class="block">Run the algorithm.</div>
 </dd>
@@ -2861,6 +2861,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Apply updates to the device AP config layer (under a write lock).</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/optimizers/channel/ChannelOptimizer.html#updateDeviceApConfig(com.facebook.openwifirrm.DeviceDataManager,com.facebook.openwifirrm.modules.ConfigManager,java.util.Map)">updateDeviceApConfig(DeviceDataManager, ConfigManager, Map&lt;String, Map&lt;String, Integer&gt;&gt;)</a></span> - Method in class com.facebook.openwifirrm.optimizers.channel.<a href="com/facebook/openwifirrm/optimizers/channel/ChannelOptimizer.html" title="class in com.facebook.openwifirrm.optimizers.channel">ChannelOptimizer</a></dt>
+<dd>
+<div class="block">Program the given channel map into the AP config.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/optimizers/tpc/TPC.html#updateDeviceApConfig(com.facebook.openwifirrm.DeviceDataManager,com.facebook.openwifirrm.modules.ConfigManager,java.util.Map)">updateDeviceApConfig(DeviceDataManager, ConfigManager, Map&lt;String, Map&lt;String, Integer&gt;&gt;)</a></span> - Method in class com.facebook.openwifirrm.optimizers.tpc.<a href="com/facebook/openwifirrm/optimizers/tpc/TPC.html" title="class in com.facebook.openwifirrm.optimizers.tpc">TPC</a></dt>
+<dd>
+<div class="block">Program the given tx power map into the AP config.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/RRMConfig.ModuleConfig.ConfigManagerParams.html#updateIntervalMs">updateIntervalMs</a></span> - Variable in class com.facebook.openwifirrm.<a href="com/facebook/openwifirrm/RRMConfig.ModuleConfig.ConfigManagerParams.html" title="class in com.facebook.openwifirrm">RRMConfig.ModuleConfig.ConfigManagerParams</a></dt>
 <dd>
 <div class="block">The main logic loop interval (i.e.</div>
@@ -3130,10 +3138,6 @@ the order they are declared.</div>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/UCentralKafkaConsumer.html#wakeup()">wakeup()</a></span> - Method in class com.facebook.openwifirrm.ucentral.<a href="com/facebook/openwifirrm/ucentral/UCentralKafkaConsumer.html" title="class in com.facebook.openwifirrm.ucentral">UCentralKafkaConsumer</a></dt>
 <dd>
 <div class="block">Wakeup the consumer.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/modules/ConfigManager.html#wakeUp()">wakeUp()</a></span> - Method in class com.facebook.openwifirrm.modules.<a href="com/facebook/openwifirrm/modules/ConfigManager.html" title="class in com.facebook.openwifirrm.modules">ConfigManager</a></dt>
-<dd>
-<div class="block">Interrupt the main thread, possibly triggering an update immediately.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/prov/models/InventoryConfigApplyResult.html#warnings">warnings</a></span> - Variable in class com.facebook.openwifirrm.ucentral.prov.models.<a href="com/facebook/openwifirrm/ucentral/prov/models/InventoryConfigApplyResult.html" title="class in com.facebook.openwifirrm.ucentral.prov.models">InventoryConfigApplyResult</a></dt>
 <dd>&nbsp;</dd>
