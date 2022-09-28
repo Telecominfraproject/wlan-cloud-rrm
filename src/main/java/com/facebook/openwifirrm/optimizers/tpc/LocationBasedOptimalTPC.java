@@ -175,7 +175,6 @@ public class LocationBasedOptimalTPC extends TPC {
 		// Filter out the invalid APs (e.g., no radio, no location data)
 		// Update txPowerChoices, boundary, apLocX, apLocY for the optimization
 		for (String serialNumber : serialNumbers) {
-
 			List<State> states = model.latestStates.get(serialNumber);
 			State state = states.get(states.size() - 1);
 

@@ -134,18 +134,16 @@ public class MeasurementBasedApApTPCTest {
 			String bssid = bssids.get(i);
 			model.latestStates.put(
 				device,
-				new ArrayList<>(
-					Arrays.asList(
-						TestUtils.createState(
-							channel2G,
-							DEFAULT_CHANNEL_WIDTH,
-							MAX_TX_POWER,
-							bssid,
-							channel5G,
-							DEFAULT_CHANNEL_WIDTH,
-							MAX_TX_POWER,
-							bssid
-						)
+				Arrays.asList(
+					TestUtils.createState(
+						channel2G,
+						DEFAULT_CHANNEL_WIDTH,
+						MAX_TX_POWER,
+						bssid,
+						channel5G,
+						DEFAULT_CHANNEL_WIDTH,
+						MAX_TX_POWER,
+						bssid
 					)
 				)
 			);
@@ -577,14 +575,12 @@ public class MeasurementBasedApApTPCTest {
 		// now test when device C does not have a 5G radio
 		dataModel.latestStates.put(
 			DEVICE_C,
-			new ArrayList<>(
-				Arrays.asList(
-					TestUtils.createState(
-						1,
-						DEFAULT_CHANNEL_WIDTH,
-						MAX_TX_POWER,
-						BSSID_C
-					)
+			Arrays.asList(
+				TestUtils.createState(
+					1,
+					DEFAULT_CHANNEL_WIDTH,
+					MAX_TX_POWER,
+					BSSID_C
 				)
 			)
 		);

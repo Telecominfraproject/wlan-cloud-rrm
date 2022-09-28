@@ -10,7 +10,6 @@ package com.facebook.openwifirrm.optimizers.tpc;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Set;
@@ -58,50 +57,39 @@ public class MeasurementBasedApClientTPCTest {
 		DataModel dataModel = new DataModel();
 		dataModel.latestStates.put(
 			deviceA,
-			new ArrayList<>(
-				Arrays.asList(
-					TestUtils.createState(36, 20, 20, null, new int[] {})
-				)
+			Arrays.asList(
+				TestUtils.createState(36, 20, 20, null, new int[] {})
 			)
 		);
 		dataModel.latestStates.put(
 			deviceB,
-			new ArrayList<>(
-				Arrays.asList(
-					TestUtils.createState(36, 20, 20, "", new int[] { -65 })
-				)
+			Arrays.asList(
+				TestUtils.createState(36, 20, 20, "", new int[] { -65 })
 			)
 		);
 		dataModel.latestStates.put(
 			deviceC,
-			new ArrayList<>(
-				Arrays.asList(
-					TestUtils.createState(
-						36,
-						40,
-						21,
-						null,
-						new int[] { -65, -73, -58 }
-					)
+			Arrays.asList(
+				TestUtils.createState(
+					36,
+					40,
+					21,
+					null,
+					new int[] { -65, -73, -58 }
 				)
 			)
 		);
 		dataModel.latestStates.put(
 			deviceD,
-			new ArrayList<>(
-				Arrays.asList(
-					TestUtils.createState(36, 20, 22, null, new int[] { -80 })
-				)
+			Arrays.asList(
+				TestUtils.createState(36, 20, 22, null, new int[] { -80 })
 			)
 		);
 		dataModel.latestStates.put(
 			deviceE,
-			new ArrayList<>(
-				Arrays.asList(
-					TestUtils.createState(36, 20, 23, null, new int[] { -45 })
-				)
+			Arrays.asList(
+				TestUtils.createState(36, 20, 23, null, new int[] { -45 })
 			)
-
 		);
 
 		TPC optimizer = new MeasurementBasedApClientTPC(
@@ -166,50 +154,40 @@ public class MeasurementBasedApClientTPCTest {
 		// 2G only
 		dataModel.latestStates.put(
 			deviceA,
-			new ArrayList<>(
-				Arrays.asList(
-					TestUtils.createState(1, 20, 20, null, new int[] {})
-				)
+			Arrays.asList(
+				TestUtils.createState(1, 20, 20, null, new int[] {})
 			)
-
 		);
 		// 5G only
 		dataModel.latestStates.put(
 			deviceB,
-			new ArrayList<>(
-				Arrays.asList(
-					TestUtils.createState(36, 20, 20, null, new int[] {})
-				)
+			Arrays.asList(
+				TestUtils.createState(36, 20, 20, null, new int[] {})
 			)
-
 		);
 		// 2G and 5G
 		dataModel.latestStates.put(
 			deviceC,
-			new ArrayList<>(
-				Arrays.asList(
-					TestUtils.createState(
-						1,
-						20,
-						20,
-						null,
-						new int[] {},
-						36,
-						20,
-						20,
-						null,
-						new int[] {}
-					)
+			Arrays.asList(
+				TestUtils.createState(
+					1,
+					20,
+					20,
+					null,
+					new int[] {},
+					36,
+					20,
+					20,
+					null,
+					new int[] {}
 				)
 			)
 		);
 		// No valid bands in 2G or 5G
 		dataModel.latestStates.put(
 			deviceD,
-			new ArrayList<>(
-				Arrays.asList(
-					TestUtils.createState(25, 20, 20, null, new int[] {})
-				)
+			Arrays.asList(
+				TestUtils.createState(25, 20, 20, null, new int[] {})
 			)
 		);
 
@@ -268,35 +246,27 @@ public class MeasurementBasedApClientTPCTest {
 		DataModel dataModel = new DataModel();
 		dataModel.latestStates.put(
 			deviceA,
-			new ArrayList<>(
-				Arrays.asList(
-					TestUtils.createState(36, 20, 20, null, new int[] {})
-				)
+			Arrays.asList(
+				TestUtils.createState(36, 20, 20, null, new int[] {})
 			)
 		);
 		dataModel.latestStates.put(
 			deviceB,
-			new ArrayList<>(
-				Arrays.asList(
-					TestUtils.createState(36, 20, 20, "", new int[] { -65 })
-				)
+			Arrays.asList(
+				TestUtils.createState(36, 20, 20, "", new int[] { -65 })
 			)
-
 		);
 		dataModel.latestStates.put(
 			deviceC,
-			new ArrayList<>(
-				Arrays.asList(
-					TestUtils.createState(
-						36,
-						40,
-						21,
-						null,
-						new int[] { -65, -73, -58 }
-					)
+			Arrays.asList(
+				TestUtils.createState(
+					36,
+					40,
+					21,
+					null,
+					new int[] { -65, -73, -58 }
 				)
 			)
-
 		);
 
 		TPC optimizer = new MeasurementBasedApClientTPC(

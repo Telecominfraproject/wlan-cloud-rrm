@@ -9,7 +9,6 @@
 package com.facebook.openwifirrm.modules;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -270,10 +269,10 @@ public class Modeler implements Runnable {
 			if (state != null) {
 				try {
 					State stateModel = gson.fromJson(state, State.class);
-					dataModel.latestStates.put(
+					dataModel.latestStates.computeIfAbsent(
 						device.serialNumber,
-						new ArrayList<>(Arrays.asList(stateModel))
-					);
+						k -> new ArrayList<>()
+					).add(stateModel);
 					logger.debug(
 						"Device {}: added initial state from uCentralGw",
 						device.serialNumber

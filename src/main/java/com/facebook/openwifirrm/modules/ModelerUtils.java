@@ -387,7 +387,8 @@ public class ModelerUtils {
 		return aggregatedWifiScans;
 	}
 
-	/** This method converts the input State info to an AggregatedState
+	/**
+	 * This method converts the input State info to an AggregatedState
 	 * and adds it to the bssidToAggregatedStates map. If the bssid&station
 	 * of the input State does not exist in the map, create a new
 	 * AggregatedState list. If the bssid&station of the input State exists,
@@ -408,10 +409,14 @@ public class ModelerUtils {
 				continue;
 			}
 			for (SSID ssid : stateInterface.ssids) {
-
-				int[] radios = new int[] { ssid.radio.get("channel").getAsInt(),
-					ssid.radio.get("channel_width").getAsInt(),
-					ssid.radio.get("tx_power").getAsInt() };
+				Map<String, Integer> radioInfo = new HashMap<>();
+				radioInfo.put("channel", ssid.radio.get("channel").getAsInt());
+				radioInfo.put(
+					"channel_width",
+					ssid.radio.get("channel_width").getAsInt()
+				);
+				radioInfo
+					.put("tx_power", ssid.radio.get("tx_power").getAsInt());
 
 				for (Association association : ssid.associations) {
 					if (association == null) {
@@ -426,7 +431,7 @@ public class ModelerUtils {
 						bssidToAggregatedStates
 							.computeIfAbsent(key, k -> new ArrayList<>());
 					AggregatedState aggState =
-						new AggregatedState(association, radios);
+						new AggregatedState(association, radioInfo);
 
 					boolean toBeAggregated = false;
 					for (
@@ -515,9 +520,11 @@ public class ModelerUtils {
 		return aggregatedStates;
 	}
 
-	/** This method gets the most latest State from latestStates per device.
+	/**
+	 * This method gets the most latest State from latestStates per device.
+	 *
 	 * @param latestStates list of latest States per device.
-	 * @return Map<String, State>  a map from device String to  most latest State.
+	 * @return Map<String, State> a map from device String to latest State.
 	 */
 	public static Map<String, State> getLatestState(
 		Map<String, List<State>> latestStates

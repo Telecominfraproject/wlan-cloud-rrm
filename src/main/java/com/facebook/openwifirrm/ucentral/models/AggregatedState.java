@@ -10,40 +10,25 @@ package com.facebook.openwifirrm.ucentral.models;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import com.facebook.openwifirrm.ucentral.models.State.Interface.SSID.Association;
 import com.facebook.openwifirrm.ucentral.models.State.Interface.SSID.Association.Rate;
 
+/**
+ * Aggregation model for State aggregation. Only contains info useful for analysis.
+ */
 public class AggregatedState {
 
-	public class AggregatedRate {
-		public long bitrate;
-		public int chwidth;
+	public static class AggregatedRate {
+		public long bitRate;
+		public int chWidth;
 		public List<Integer> mcs;
 
 		/** Constructor with no args */
 		public AggregatedRate() {
-			this.mcs = new ArrayList<>();
-		}
-
-		/** Constructor */
-		public AggregatedRate(List<Rate> rates) {
-			int size = rates.size();
-			if (size == 0) {
-				return;
-			}
-			add(rates);
-		}
-
-		/** Add a list of Rates to the AggregatedRate */
-		public void add(List<Rate> rates) {
-			if (rates.isEmpty()) {
-				return;
-			}
-			for (Rate rate : rates) {
-				this.mcs.add(rate.mcs);
-			}
+			mcs = new ArrayList<>();
 		}
 
 		/** Add a Rate to the AggregatedRate */
@@ -52,22 +37,22 @@ public class AggregatedState {
 				return;
 			}
 			if (mcs == null || mcs.isEmpty()) {
-				this.bitrate = rate.bitrate;
-				this.chwidth = rate.chwidth;
+				bitRate = rate.bitrate;
+				chWidth = rate.chwidth;
 			}
-			this.mcs.add(rate.mcs);
+			mcs.add(rate.mcs);
 		}
 
 		/** Add an AggregatedRate with the same channel_width to the AggregatedRate */
 		public void add(AggregatedRate rate) {
-			if (rate.chwidth != chwidth) {
+			if (rate.chWidth != chWidth) {
 				return;
 			}
 			if (mcs == null || mcs.isEmpty()) {
-				this.bitrate = rate.bitrate;
-				this.chwidth = rate.chwidth;
+				bitRate = rate.bitRate;
+				chWidth = rate.chWidth;
 			}
-			this.mcs.addAll(rate.mcs);
+			mcs.addAll(rate.mcs);
 		}
 	}
 
@@ -76,41 +61,41 @@ public class AggregatedState {
 	public long connected;
 	public long inactive;
 	public List<Integer> rssi;
-	public long rx_bytes;
-	public long rx_packets;
-	public AggregatedRate rx_rate;
-	public long tx_bytes;
-	public long tx_duration;
-	public long tx_failed;
-	public long tx_packets;
-	public AggregatedRate tx_rate;
-	public long tx_retries;
-	public int ack_signal;
-	public int ack_signal_avg;
+	public long rxBytes;
+	public long rxPackets;
+	public AggregatedRate rxRate;
+	public long txBytes;
+	public long txDuration;
+	public long txFailed;
+	public long txPackets;
+	public AggregatedRate txRate;
+	public long txRetries;
+	public int ackSignal;
+	public int ackSignalAvg;
 	public Radio radio;
 
-	public class Radio {
+	public static class Radio {
 		public int channel;
-		public int channel_width;
-		public int tx_power;
+		public int channelWidth;
+		public int txPower;
 
 		public Radio() {}
 
-		public Radio(int channel, int channel_width, int tx_power) {
+		public Radio(int channel, int channelWidth, int txPower) {
 			this.channel = channel;
-			this.channel_width = channel_width;
-			this.tx_power = tx_power;
+			this.channelWidth = channelWidth;
+			this.txPower = txPower;
 		}
 
-		public Radio(int[] radios) {
-			this.channel = radios[0];
-			this.channel_width = radios[1];
-			this.tx_power = radios[2];
+		public Radio(Map<String, Integer> radioInfo) {
+			channel = radioInfo.getOrDefault("channel", null);
+			channelWidth = radioInfo.getOrDefault("channel_width", null);
+			txPower = radioInfo.getOrDefault("tx_power", null);
 		}
 
 		@Override
 		public int hashCode() {
-			return Objects.hash(channel, channel_width, tx_power);
+			return Objects.hash(channel, channelWidth, txPower);
 		}
 
 		@Override
@@ -127,8 +112,8 @@ public class AggregatedState {
 
 			Radio other = (Radio) obj;
 			return channel == other.channel &&
-				channel_width == other.channel_width &&
-				tx_power == other.tx_power;
+				channelWidth == other.channelWidth &&
+				txPower == other.txPower;
 		}
 	}
 
@@ -137,26 +122,60 @@ public class AggregatedState {
 		return Objects.hash(bssid, station, radio);
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+
+		AggregatedState other = (AggregatedState) obj;
+
+		return bssid == other.bssid &&
+			station == other.station &&
+			connected == other.connected && inactive == other.inactive && rssi
+				.equals(other.rssi) &&
+			rxBytes == other.rxBytes && rxBytes == other.rxPackets &&
+			rxRate.bitRate == other.rxRate.bitRate &&
+			rxRate.chWidth == other.rxRate.chWidth && rxRate.mcs
+				.equals(other.rxRate.mcs) &&
+			txBytes == other.txBytes && txDuration == other.txDuration &&
+			txFailed == other.txFailed && txPackets == other.txPackets &&
+			txRate.bitRate == other.txRate.bitRate &&
+			txRate.chWidth == other.txRate.chWidth && txRate.mcs
+				.equals(other.txRate.mcs) &&
+			txRetries == other.txRetries && ackSignal == other.ackSignal &&
+			ackSignalAvg == other.ackSignalAvg && radio.equals(other.radio);
+	}
+
 	/** Constructor with no args */
 	public AggregatedState() {
-		this.rx_rate = new AggregatedRate();
-		this.tx_rate = new AggregatedRate();
+		this.rxRate = new AggregatedRate();
+		this.txRate = new AggregatedRate();
 		this.rssi = new ArrayList<>();
 		this.radio = new Radio();
 	}
 
 	/** Construct from Aggregatedstate */
 	public AggregatedState(AggregatedState state) {
-		this.rx_rate = new AggregatedRate();
-		this.tx_rate = new AggregatedRate();
+		this.rxRate = new AggregatedRate();
+		this.txRate = new AggregatedRate();
 		this.rssi = new ArrayList<>();
 		add(state);
 	}
 
-	/** Construt from Asscociation and radio */
-	public AggregatedState(Association association, int[] radios) {
-		this.rx_rate = new AggregatedRate();
-		this.tx_rate = new AggregatedRate();
+	/** Construct from Association and radio */
+	public AggregatedState(
+		Association association,
+		Map<String, Integer> radioInfo
+	) {
+		this.rxRate = new AggregatedRate();
+		this.txRate = new AggregatedRate();
 		this.rssi = new ArrayList<>();
 
 		this.bssid = association.bssid;
@@ -164,21 +183,22 @@ public class AggregatedState {
 		this.connected = association.connected;
 		this.inactive = association.inactive;
 		this.rssi.add(association.rssi);
-		this.rx_bytes = association.rx_bytes;
-		this.rx_packets = association.rx_packets;
-		this.rx_rate.add(association.rx_rate);
-		this.tx_bytes = association.tx_bytes;
-		this.tx_duration = association.tx_duration;
-		this.tx_failed = association.tx_failed;
-		this.tx_packets = association.tx_packets;
-		this.tx_rate.add(association.tx_rate);
-		this.tx_retries = association.tx_retries;
-		this.ack_signal = association.ack_signal;
-		this.ack_signal_avg = association.ack_signal_avg;
-		this.radio = new Radio(radios);
+		this.rxBytes = association.rx_bytes;
+		this.rxPackets = association.rx_packets;
+		this.rxRate.add(association.rx_rate);
+		this.txBytes = association.tx_bytes;
+		this.txDuration = association.tx_duration;
+		this.txFailed = association.tx_failed;
+		this.txPackets = association.tx_packets;
+		this.txRate.add(association.tx_rate);
+		this.txRetries = association.tx_retries;
+		this.ackSignal = association.ack_signal;
+		this.ackSignalAvg = association.ack_signal_avg;
+		this.radio = new Radio(radioInfo);
 	}
 
-	/** Add an AggregatedState to this AggregatedState. Succeed only when the two
+	/**
+	 * Add an AggregatedState to this AggregatedState. Succeed only when the two
 	 * matches in hashCode.
 	 *
 	 * @param state input AggregatedState
@@ -191,21 +211,21 @@ public class AggregatedState {
 			this.connected = state.connected;
 			this.inactive = state.inactive;
 			this.rssi.addAll(state.rssi);
-			this.rx_bytes = state.rx_bytes;
-			this.rx_packets = state.rx_packets;
-			this.rx_rate.add(state.rx_rate);
-			this.tx_bytes = state.tx_bytes;
-			this.tx_duration = state.tx_duration;
-			this.tx_failed = state.tx_failed;
-			this.tx_packets = state.tx_packets;
-			this.tx_rate.add(state.tx_rate);
-			this.tx_retries = state.tx_retries;
-			this.ack_signal = state.ack_signal;
-			this.ack_signal_avg = state.ack_signal_avg;
+			this.rxBytes = state.rxBytes;
+			this.rxPackets = state.rxPackets;
+			this.rxRate.add(state.rxRate);
+			this.txBytes = state.txBytes;
+			this.txDuration = state.txDuration;
+			this.txFailed = state.txFailed;
+			this.txPackets = state.txPackets;
+			this.txRate.add(state.txRate);
+			this.txRetries = state.txRetries;
+			this.ackSignal = state.ackSignal;
+			this.ackSignalAvg = state.ackSignalAvg;
 			this.radio = new Radio(
 				state.radio.channel,
-				state.radio.channel_width,
-				state.radio.tx_power
+				state.radio.channelWidth,
+				state.radio.txPower
 			);
 			return true;
 		}

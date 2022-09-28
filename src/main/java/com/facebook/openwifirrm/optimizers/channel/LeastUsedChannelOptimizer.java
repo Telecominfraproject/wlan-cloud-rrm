@@ -376,8 +376,7 @@ public class LeastUsedChannelOptimizer extends ChannelOptimizer {
 				}
 
 				// Get current channel of the device
-				List<State> states = model.latestStates.get(serialNumber);
-				State state = states.get(states.size() - 1);
+				State state = latestState.get(serialNumber);
 				if (state == null) {
 					logger.debug(
 						"Device {}: No state found, skipping...",

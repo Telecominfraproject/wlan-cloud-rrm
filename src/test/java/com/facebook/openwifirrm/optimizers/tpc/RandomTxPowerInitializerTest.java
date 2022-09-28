@@ -20,7 +20,6 @@ import com.facebook.openwifirrm.modules.Modeler.DataModel;
 import com.facebook.openwifirrm.optimizers.TestUtils;
 import com.facebook.openwifirrm.ucentral.UCentralConstants;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Random;
@@ -66,32 +65,27 @@ public class RandomTxPowerInitializerTest {
 		DataModel dataModel = new DataModel();
 		dataModel.latestStates.put(
 			DEVICE_A,
-			new ArrayList<>(
-				Arrays.asList(
-					TestUtils.createState(
-						36,
-						DEFAULT_CHANNEL_WIDTH,
-						DEFAULT_TX_POWER,
-						BSSID_A,
-						2,
-						DEFAULT_CHANNEL_WIDTH,
-						DEFAULT_TX_POWER,
-						BSSID_A
-					)
+			Arrays.asList(
+				TestUtils.createState(
+					36,
+					DEFAULT_CHANNEL_WIDTH,
+					DEFAULT_TX_POWER,
+					BSSID_A,
+					2,
+					DEFAULT_CHANNEL_WIDTH,
+					DEFAULT_TX_POWER,
+					BSSID_A
 				)
 			)
-
 		);
 		dataModel.latestStates.put(
 			DEVICE_B,
-			new ArrayList<>(
-				Arrays.asList(
-					TestUtils.createState(
-						2,
-						DEFAULT_CHANNEL_WIDTH,
-						DEFAULT_TX_POWER,
-						BSSID_B
-					)
+			Arrays.asList(
+				TestUtils.createState(
+					2,
+					DEFAULT_CHANNEL_WIDTH,
+					DEFAULT_TX_POWER,
+					BSSID_B
 				)
 			)
 		);

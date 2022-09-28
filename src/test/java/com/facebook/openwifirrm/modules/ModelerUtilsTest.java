@@ -28,7 +28,6 @@ import com.facebook.openwifirrm.optimizers.TestUtils;
 import com.facebook.openwifirrm.ucentral.WifiScanEntry;
 import com.facebook.openwifirrm.ucentral.models.AggregatedState;
 import com.facebook.openwifirrm.ucentral.models.State;
-import com.facebook.openwifirrm.ucentral.models.AggregatedState.Radio;
 
 public class ModelerUtilsTest {
 	@Test
@@ -716,7 +715,7 @@ public class ModelerUtilsTest {
 			TestUtils.DEFAULT_LOCAL_TIME - 800
 		);
 
-		//As State time3ToStateA is obsolescent, it should not be aggregated.
+		//As State time3ToStateA is obsolete, it should not be aggregated.
 		State time3ToStateA = TestUtils.createState(
 			1,
 			80,
@@ -730,7 +729,7 @@ public class ModelerUtilsTest {
 			bssidA,
 			new String[] { "stationA1", "staionA2" },
 			new int[] { 180, 180 },
-			// Set the localtime exactly obsolescent
+			// Set the localtime exactly obsolete
 			TestUtils.DEFAULT_LOCAL_TIME - obsoletionPeriodMs - 1
 		);
 
@@ -750,37 +749,48 @@ public class ModelerUtilsTest {
 				.getAggregatedStates(dataModel, obsoletionPeriodMs, refTimeMs);
 
 		assertEquals(
-			aggregatedMap.get(serialNumberA).get(TestUtils.getBssidStationKeyPair(bssidA, "stationA1")).size(), 2
+			aggregatedMap.get(serialNumberA).get(TestUtils.getBssidStationKeyPair(bssidA, "stationA1")).size(),
+			2
 		);
 		assertEquals(
-			aggregatedMap.get(serialNumberA).get(TestUtils.getBssidStationKeyPair(bssidA, "stationA1")).get(0).radio, new AggregatedState().new Radio(1, 80, 1000)
+			aggregatedMap.get(serialNumberA).get(TestUtils.getBssidStationKeyPair(bssidA, "stationA1")).get(0).radio,
+			new AggregatedState.Radio(1, 80, 1000)
 		);
 		assertEquals(
-			aggregatedMap.get(serialNumberA).get(TestUtils.getBssidStationKeyPair(bssidA, "stationA1")).get(0).rssi, new ArrayList<>(Arrays.asList(-84, 27))
+			aggregatedMap.get(serialNumberA).get(TestUtils.getBssidStationKeyPair(bssidA, "stationA1")).get(0).rssi,
+			Arrays.asList(-84, 27)
 		);
 		assertEquals(
-			aggregatedMap.get(serialNumberA).get(TestUtils.getBssidStationKeyPair(bssidA, "stationA1")).get(1).radio, new AggregatedState().new Radio(2, 40, 2000)
+			aggregatedMap.get(serialNumberA).get(TestUtils.getBssidStationKeyPair(bssidA, "stationA1")).get(1).radio,
+			new AggregatedState.Radio(2, 40, 2000)
 		);
 		assertEquals(
-			aggregatedMap.get(serialNumberA).get(TestUtils.getBssidStationKeyPair(bssidA, "stationA1")).get(1).rssi, new ArrayList<>(Arrays.asList(-80))
+			aggregatedMap.get(serialNumberA).get(TestUtils.getBssidStationKeyPair(bssidA, "stationA1")).get(1).rssi,
+			Arrays.asList(-80)
 		);
 		assertEquals(
-			aggregatedMap.get(serialNumberA).get(TestUtils.getBssidStationKeyPair(bssidA, "stationA2")).get(0).radio, new AggregatedState().new Radio(1, 80, 1000)
+			aggregatedMap.get(serialNumberA).get(TestUtils.getBssidStationKeyPair(bssidA, "stationA2")).get(0).radio,
+			new AggregatedState.Radio(1, 80, 1000)
 		);
 		assertEquals(
-			aggregatedMap.get(serialNumberA).get(TestUtils.getBssidStationKeyPair(bssidA, "stationA2")).get(0).rssi, new ArrayList<>(Arrays.asList(-67, -67))
+			aggregatedMap.get(serialNumberA).get(TestUtils.getBssidStationKeyPair(bssidA, "stationA2")).get(0).rssi,
+			Arrays.asList(-67, -67)
 		);
 		assertEquals(
-			aggregatedMap.get(serialNumberA).get(TestUtils.getBssidStationKeyPair(bssidA, "stationA2")).get(1).radio, new AggregatedState().new Radio(2, 40, 2000)
+			aggregatedMap.get(serialNumberA).get(TestUtils.getBssidStationKeyPair(bssidA, "stationA2")).get(1).radio,
+			new AggregatedState.Radio(2, 40, 2000)
 		);
 		assertEquals(
-			aggregatedMap.get(serialNumberA).get(TestUtils.getBssidStationKeyPair(bssidA, "stationA2")).get(1).rssi, new ArrayList<>(Arrays.asList(180, 67))
+			aggregatedMap.get(serialNumberA).get(TestUtils.getBssidStationKeyPair(bssidA, "stationA2")).get(1).rssi,
+			Arrays.asList(180, 67)
 		);
 		assertEquals(
-			aggregatedMap.get(serialNumberA).get(TestUtils.getBssidStationKeyPair(bssidA, "stationA3")).get(0).radio, new AggregatedState().new Radio(1, 80, 1000)
+			aggregatedMap.get(serialNumberA).get(TestUtils.getBssidStationKeyPair(bssidA, "stationA3")).get(0).radio,
+			new AggregatedState.Radio(1, 80, 1000)
 		);
 		assertEquals(
-			aggregatedMap.get(serialNumberA).get(TestUtils.getBssidStationKeyPair(bssidA, "stationA3")).get(0).rssi, new ArrayList<>(Arrays.asList(10, 100))
+			aggregatedMap.get(serialNumberA).get(TestUtils.getBssidStationKeyPair(bssidA, "stationA3")).get(0).rssi,
+			Arrays.asList(10, 100)
 		);
 
 		// Test more clients operate on the same channel (stationB and stationA)
@@ -823,7 +833,8 @@ public class ModelerUtilsTest {
 		);
 
 		assertEquals(
-			aggregatedMap2.get(serialNumberA).get(TestUtils.getBssidStationKeyPair(bssidA, "stationA1")).size(), aggregatedMap.get(serialNumberA).get(TestUtils.getBssidStationKeyPair(bssidA, "stationA1")).size()
+			aggregatedMap2.get(serialNumberA).get(TestUtils.getBssidStationKeyPair(bssidA, "stationA1")).size(),
+			aggregatedMap.get(serialNumberA).get(TestUtils.getBssidStationKeyPair(bssidA, "stationA1")).size()
 		);
 	}
 }

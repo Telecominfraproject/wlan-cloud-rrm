@@ -205,21 +205,18 @@ public class LocationBasedOptimalTPCTest {
 			);
 			dataModel2.latestStates.put(
 				device,
-				new ArrayList<>(
-					Arrays.asList(
-						TestUtils.createState(
-							DEFAULT_CHANNEL_2G,
-							DEFAULT_CHANNEL_WIDTH,
-							DEFAULT_TX_POWER,
-							dummyBssid,
-							DEFAULT_CHANNEL_5G,
-							DEFAULT_CHANNEL_WIDTH,
-							DEFAULT_TX_POWER,
-							dummyBssid
-						)
+				Arrays.asList(
+					TestUtils.createState(
+						DEFAULT_CHANNEL_2G,
+						DEFAULT_CHANNEL_WIDTH,
+						DEFAULT_TX_POWER,
+						dummyBssid,
+						DEFAULT_CHANNEL_5G,
+						DEFAULT_CHANNEL_WIDTH,
+						DEFAULT_TX_POWER,
+						dummyBssid
 					)
 				)
-
 			);
 		}
 		dataModel2.latestDeviceStatusRadios
@@ -231,17 +228,14 @@ public class LocationBasedOptimalTPCTest {
 			);
 		dataModel2.latestStates.put(
 			deviceC,
-			new ArrayList<>(
-				Arrays.asList(
-					TestUtils.createState(
-						DEFAULT_CHANNEL_5G,
-						DEFAULT_CHANNEL_WIDTH,
-						DEFAULT_TX_POWER,
-						dummyBssid
-					)
+			Arrays.asList(
+				TestUtils.createState(
+					DEFAULT_CHANNEL_5G,
+					DEFAULT_CHANNEL_WIDTH,
+					DEFAULT_TX_POWER,
+					dummyBssid
 				)
 			)
-
 		);
 
 		Map<String, Map<String, Integer>> expected2 = new HashMap<>();
@@ -324,21 +318,18 @@ public class LocationBasedOptimalTPCTest {
 			);
 			dataModel2.latestStates.put(
 				device,
-				new ArrayList<>(
-					Arrays.asList(
-						TestUtils.createState(
-							DEFAULT_CHANNEL_2G,
-							DEFAULT_CHANNEL_WIDTH,
-							DEFAULT_TX_POWER,
-							dummyBssid,
-							DEFAULT_CHANNEL_5G,
-							DEFAULT_CHANNEL_WIDTH,
-							DEFAULT_TX_POWER,
-							dummyBssid
-						)
+				Arrays.asList(
+					TestUtils.createState(
+						DEFAULT_CHANNEL_2G,
+						DEFAULT_CHANNEL_WIDTH,
+						DEFAULT_TX_POWER,
+						dummyBssid,
+						DEFAULT_CHANNEL_5G,
+						DEFAULT_CHANNEL_WIDTH,
+						DEFAULT_TX_POWER,
+						dummyBssid
 					)
 				)
-
 			);
 		}
 
@@ -388,21 +379,18 @@ public class LocationBasedOptimalTPCTest {
 			);
 			dataModel3.latestStates.put(
 				device,
-				new ArrayList<>(
-					Arrays.asList(
-						TestUtils.createState(
-							DEFAULT_CHANNEL_2G,
-							DEFAULT_CHANNEL_WIDTH,
-							DEFAULT_TX_POWER,
-							dummyBssid,
-							DEFAULT_CHANNEL_5G,
-							DEFAULT_CHANNEL_WIDTH,
-							DEFAULT_TX_POWER,
-							dummyBssid
-						)
+				Arrays.asList(
+					TestUtils.createState(
+						DEFAULT_CHANNEL_2G,
+						DEFAULT_CHANNEL_WIDTH,
+						DEFAULT_TX_POWER,
+						dummyBssid,
+						DEFAULT_CHANNEL_5G,
+						DEFAULT_CHANNEL_WIDTH,
+						DEFAULT_TX_POWER,
+						dummyBssid
 					)
 				)
-
 			);
 		}
 
@@ -442,18 +430,16 @@ public class LocationBasedOptimalTPCTest {
 			);
 			dataModel4.latestStates.put(
 				device,
-				new ArrayList<>(
-					Arrays.asList(
-						TestUtils.createState(
-							DEFAULT_CHANNEL_2G,
-							DEFAULT_CHANNEL_WIDTH,
-							DEFAULT_TX_POWER,
-							dummyBssid,
-							DEFAULT_CHANNEL_2G,
-							DEFAULT_CHANNEL_WIDTH,
-							DEFAULT_TX_POWER,
-							dummyBssid
-						)
+				Arrays.asList(
+					TestUtils.createState(
+						DEFAULT_CHANNEL_2G,
+						DEFAULT_CHANNEL_WIDTH,
+						DEFAULT_TX_POWER,
+						dummyBssid,
+						DEFAULT_CHANNEL_2G,
+						DEFAULT_CHANNEL_WIDTH,
+						DEFAULT_TX_POWER,
+						dummyBssid
 					)
 				)
 			);

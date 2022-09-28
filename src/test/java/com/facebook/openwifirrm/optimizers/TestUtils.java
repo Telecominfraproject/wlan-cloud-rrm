@@ -23,7 +23,6 @@ import com.facebook.openwifirrm.ucentral.UCentralUtils;
 import com.facebook.openwifirrm.ucentral.WifiScanEntry;
 import com.facebook.openwifirrm.ucentral.models.AggregatedState;
 import com.facebook.openwifirrm.ucentral.models.State;
-import com.facebook.openwifirrm.ucentral.models.State.Radio;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -41,7 +40,10 @@ public class TestUtils {
 	/** Default tx power in dBm */
 	public static final int DEFAULT_TX_POWER = 20;
 
-	/** Default local time in sec*/
+	/**
+	 *  Default local time in unix time
+	 * 	GMT: Fri Sep 24 2021 23:47:55 GMT+0000
+	*/
 	public static final long DEFAULT_LOCAL_TIME = 1632527275;
 
 	/** Create a topology from the given devices in a single zone. */
@@ -433,7 +435,7 @@ public class TestUtils {
 		return radio;
 	}
 
-	/** Create a {@code State.Unit} with specifying localtime. */
+	/** Create a {@code State.Unit} with specifying localtime in unix timestamp. */
 	private static State.Unit createStateUnit(Long localtime) {
 		// @formatter:off
 		String jsonStr = String.format(
@@ -450,11 +452,11 @@ public class TestUtils {
 		"    },\n" +
 		"    \"uptime\": 684456\n" +
 		"  }\n", localtime);
+		// @formatter:on
 		return gson.fromJson(
 			jsonStr,
 			State.Unit.class
 		);
-		// @formatter:on
 	}
 
 	/**
@@ -472,7 +474,7 @@ public class TestUtils {
 	 * @param bssids array of BSSIDs
 	 * @param stations 2-D array of client station codes
 	 * @param clientRssis 2-D array of client RSSIs
-	 * @param local time
+	 * @param localtime
 	 * @return the state of an AP with radios described by the given parameters
 	 */
 	public static State createState(
@@ -709,7 +711,7 @@ public class TestUtils {
 		int[] clientRssi
 	) {
 		AggregatedState state = new AggregatedState();
-		state.radio = state.new Radio(channel, channelWidth, txPower);
+		state.radio = new AggregatedState.Radio(channel, channelWidth, txPower);
 		state.bssid = bssid;
 		state.station = station;
 		for (int rssi : clientRssi) {
@@ -723,12 +725,12 @@ public class TestUtils {
 	*
 	* @param channelA channel number
 	* @param channelWidthA channel width (MHz) of channelA
-	* @param txPowerA tx power for channelA
+	* @param txPowerA tx power (dB) for channelA
 	* @param bssidA bssid for radio on channelA
 	* @param clientRssisA array of client RSSIs for channelA
 	* @param channelB channel number
 	* @param channelWidthB channel width (MHz) of channelB
-	* @param txPowerB tx power for channelB
+	* @param txPowerB tx power (dB) for channelB
 	* @param bssidB bssid for radio on channelB
 	* @param clientRssisB array of client RSSIs for channelB
 	* @param localtime local time for the State
