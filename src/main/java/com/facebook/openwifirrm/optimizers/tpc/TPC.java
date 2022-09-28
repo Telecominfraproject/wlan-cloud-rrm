@@ -151,14 +151,13 @@ public abstract class TPC {
 	public abstract Map<String, Map<String, Integer>> computeTxPowerMap();
 
 	/**
-	 * Program the given tx power map into the AP config and notify the config
-	 * manager.
+	 * Program the given tx power map into the AP config.
 	 *
 	 * @param deviceDataManager the DeviceDataManager instance
 	 * @param configManager the ConfigManager instance
 	 * @param txPowerMap the map of devices (by serial number) to radio to tx power
 	 */
-	public void applyConfig(
+	public void updateDeviceApConfig(
 		DeviceDataManager deviceDataManager,
 		ConfigManager configManager,
 		Map<String, Map<String, Integer>> txPowerMap
@@ -176,9 +175,6 @@ public abstract class TPC {
 				deviceConfig.autoTxPowers = entry.getValue();
 			}
 		});
-
-		// Trigger config update now
-		configManager.wakeUp();
 	}
 
 	/**
