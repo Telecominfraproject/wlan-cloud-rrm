@@ -305,13 +305,18 @@ public class Modeler implements Runnable {
 				if (state != null) {
 					try {
 						State stateModel = gson.fromJson(state, State.class);
-						dataModel.latestStates
+						List<State> latestStatesList = dataModel.latestStates
 							.computeIfAbsent(
 								record.serialNumber,
 								k -> Collections
 									.synchronizedList(new ArrayList<>())
-							)
-							.add(stateModel);
+							);
+						if (latestStatesList.size() >= params.stateBufferSize) {
+							latestStatesList.remove(0);
+						}
+						latestStatesList.add(stateModel);
+						dataModel.latestStates
+							.put(record.serialNumber, latestStatesList);
 						stateUpdates.add(record.serialNumber);
 					} catch (JsonSyntaxException e) {
 						logger.error(
