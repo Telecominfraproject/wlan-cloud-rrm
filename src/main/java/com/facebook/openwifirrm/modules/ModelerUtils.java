@@ -510,7 +510,7 @@ public class ModelerUtils {
 			for (State state : states) {
 				if (refTimeMs - state.unit.localtime > obsoletionPeriodMs) {
 					// discard obsolete entries
-					continue;
+					break;
 				}
 
 				addStateToAggregation(bssidToAggregatedStates, state);
@@ -535,7 +535,10 @@ public class ModelerUtils {
 		) {
 			String key = stateEntry.getKey();
 			List<State> value = stateEntry.getValue();
-			latestState.put(key, value.get(value.size() - 1));
+			if(value.isEmpty()){
+				latestState.put(key, null);
+			}
+			else{latestState.put(key, value.get(value.size() - 1));}
 		}
 		return latestState;
 	}

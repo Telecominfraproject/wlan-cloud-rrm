@@ -36,9 +36,9 @@ public class ModelerUtilsTest {
 		double[][][] rxPower = ModelerUtils.generateRxPower(
 			500,
 			4,
-			new ArrayList<>(Arrays.asList(408.0, 507.0, 64.0, 457.0)),
-			new ArrayList<>(Arrays.asList(317.0, 49.0, 140.0, 274.0)),
-			new ArrayList<>(Arrays.asList(20.0, 20.0, 20.0, 20.0))
+			Arrays.asList(408.0, 507.0, 64.0, 457.0),
+			Arrays.asList(317.0, 49.0, 140.0, 274.0),
+			Arrays.asList(20.0, 20.0, 20.0, 20.0)
 		);
 		assertNull(rxPower);
 	}
@@ -48,9 +48,9 @@ public class ModelerUtilsTest {
 		double[][][] rxPower = ModelerUtils.generateRxPower(
 			500,
 			4,
-			new ArrayList<>(Arrays.asList(408.0, 453.0, 64.0, 457.0)),
-			new ArrayList<>(Arrays.asList(317.0, 49.0, 140.0, 274.0)),
-			new ArrayList<>(Arrays.asList(20.0, 20.0, 20.0, 20.0))
+			Arrays.asList(408.0, 453.0, 64.0, 457.0),
+			Arrays.asList(317.0, 49.0, 140.0, 274.0),
+			Arrays.asList(20.0, 20.0, 20.0, 20.0)
 		);
 		assertEquals(-108.529, rxPower[0][0][0], 0.001);
 		double[][] heatMap = ModelerUtils.generateHeatMap(
@@ -78,9 +78,9 @@ public class ModelerUtilsTest {
 		double[][][] rxPower = ModelerUtils.generateRxPower(
 			500,
 			4,
-			new ArrayList<>(Arrays.asList(408.0, 453.0, 64.0, 457.0)),
-			new ArrayList<>(Arrays.asList(317.0, 49.0, 140.0, 274.0)),
-			new ArrayList<>(Arrays.asList(30.0, 30.0, 30.0, 30.0))
+			Arrays.asList(408.0, 453.0, 64.0, 457.0),
+			Arrays.asList(317.0, 49.0, 140.0, 274.0),
+			Arrays.asList(30.0, 30.0, 30.0, 30.0)
 		);
 		assertEquals(-98.529, rxPower[0][0][0], 0.001);
 		double[][] heatMap = ModelerUtils.generateHeatMap(
@@ -599,20 +599,20 @@ public class ModelerUtilsTest {
 			new HashMap<>();
 		bssidToAggregatedStates.put(
 			TestUtils.getBssidStationKeyPair(bssidA, stationA1),
-			new ArrayList<>(Arrays.asList(aggStateA1))
+			Arrays.asList(aggStateA1)
 		);
 
 		bssidToAggregatedStates.put(
 			TestUtils.getBssidStationKeyPair(bssidA, stationA2),
-			new ArrayList<>(Arrays.asList(aggStateA2))
+			Arrays.asList(aggStateA2)
 		);
 		bssidToAggregatedStates.put(
 			TestUtils.getBssidStationKeyPair(bssidB, stationB),
-			new ArrayList<>(Arrays.asList(aggStateB))
+			Arrays.asList(aggStateB)
 		);
 		bssidToAggregatedStates.put(
 			TestUtils.getBssidStationKeyPair(bssidC, stationC),
-			new ArrayList<>(Arrays.asList(aggStateC))
+			Arrays.asList(aggStateC)
 		);
 
 		State toBeAggregated1 = TestUtils.createState(
@@ -632,20 +632,20 @@ public class ModelerUtilsTest {
 			bssidToAggregatedStates
 				.get(TestUtils.getBssidStationKeyPair(bssidA, stationA1))
 				.get(0).rssi,
-			new ArrayList<>(Arrays.asList(10, 20, 30))
+			Arrays.asList(10, 20, 30)
 		);
 
 		assertEquals(
 			bssidToAggregatedStates
 				.get(TestUtils.getBssidStationKeyPair(bssidA, stationA1))
 				.get(1).rssi,
-			new ArrayList<>(Arrays.asList(40, 50))
+			Arrays.asList(40, 50)
 		);
 		assertEquals(
 			bssidToAggregatedStates
 				.get(TestUtils.getBssidStationKeyPair(bssidA, stationA2))
 				.get(0).rssi,
-			new ArrayList<>(Arrays.asList(20, 30, 40, 60))
+			Arrays.asList(20, 30, 40, 60)
 		);
 
 		State toBeAggregated2 = TestUtils.createState(
@@ -663,9 +663,8 @@ public class ModelerUtilsTest {
 			bssidToAggregatedStates
 				.get(TestUtils.getBssidStationKeyPair(bssidB, stationB))
 				.get(0).rssi,
-			new ArrayList<>(Arrays.asList(10, 20, 30, 40))
+			Arrays.asList(10, 20, 30, 40)
 		);
-
 	}
 
 	@Test

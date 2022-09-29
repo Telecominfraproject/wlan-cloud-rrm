@@ -134,18 +134,16 @@ public class LocationBasedOptimalTPCTest {
 			);
 			dataModel.latestStates.put(
 				device,
-				new ArrayList<>(
-					Arrays.asList(
-						TestUtils.createState(
-							DEFAULT_CHANNEL_2G,
-							DEFAULT_CHANNEL_WIDTH,
-							DEFAULT_TX_POWER,
-							dummyBssid,
-							DEFAULT_CHANNEL_5G,
-							DEFAULT_CHANNEL_WIDTH,
-							DEFAULT_TX_POWER,
-							dummyBssid
-						)
+				Arrays.asList(
+					TestUtils.createState(
+						DEFAULT_CHANNEL_2G,
+						DEFAULT_CHANNEL_WIDTH,
+						DEFAULT_TX_POWER,
+						dummyBssid,
+						DEFAULT_CHANNEL_5G,
+						DEFAULT_CHANNEL_WIDTH,
+						DEFAULT_TX_POWER,
+						dummyBssid
 					)
 				)
 			);
