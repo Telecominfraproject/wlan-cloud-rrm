@@ -17,7 +17,7 @@ import org.apache.commons.codec.binary.Base64;
  * High Throughput (HT) Operation Element, which is potentially present in
  * wifiscan entries. Introduced in 802.11n (2009).
  */
-public class HTOperationElement {
+public class HTOperation {
 
 	/** Channel number of the primary channel. */
 	public final byte primaryChannel;
@@ -78,7 +78,7 @@ public class HTOperationElement {
 	 * For details about the parameters, see the javadocs for the corresponding
 	 * member variables.
 	 */
-	public HTOperationElement(
+	public HTOperation(
 		byte primaryChannel,
 		byte secondaryChannelOffset,
 		boolean staChannelWidth,
@@ -114,7 +114,7 @@ public class HTOperationElement {
 	}
 
 	/** Constructor with the most used parameters. */
-	public HTOperationElement(
+	public HTOperation(
 		byte primaryChannel,
 		byte secondaryChannelOffset,
 		boolean staChannelWidth,
@@ -141,7 +141,7 @@ public class HTOperationElement {
 	 * @param htOper a base64 encoded properly formatted HT operation element (see
 	 *               802.11)
 	 */
-	public HTOperationElement(String htOper) {
+	public HTOperation(String htOper) {
 		byte[] bytes = Base64.decodeBase64(htOper);
 		/*
 		 * Note that the code here may seem to read "reversed" compared to 802.11. This
@@ -182,7 +182,7 @@ public class HTOperationElement {
 	 * @return true if the the operation elements "match" for the purpose of
 	 *         aggregating statistics; false otherwise.
 	 */
-	public boolean matchesForAggregation(HTOperationElement other) {
+	public boolean matchesForAggregation(HTOperation other) {
 		return other != null && primaryChannel == other.primaryChannel &&
 			secondaryChannelOffset == other.secondaryChannelOffset &&
 			staChannelWidth == other.staChannelWidth &&
@@ -211,8 +211,8 @@ public class HTOperationElement {
 		if (htOper1 == null || htOper2 == null) {
 			return false; // false if exactly one is null
 		}
-		HTOperationElement htOperObj1 = new HTOperationElement(htOper1);
-		HTOperationElement htOperObj2 = new HTOperationElement(htOper2);
+		HTOperation htOperObj1 = new HTOperation(htOper1);
+		HTOperation htOperObj2 = new HTOperation(htOper2);
 		return htOperObj1.matchesForAggregation(htOperObj2);
 	}
 
@@ -248,7 +248,7 @@ public class HTOperationElement {
 		if (getClass() != obj.getClass()) {
 			return false;
 		}
-		HTOperationElement other = (HTOperationElement) obj;
+		HTOperation other = (HTOperation) obj;
 		return Arrays.equals(basicHtMcsSet, other.basicHtMcsSet) &&
 			channelCenterFrequencySegment2 ==
 				other.channelCenterFrequencySegment2 &&

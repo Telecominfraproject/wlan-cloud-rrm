@@ -17,7 +17,7 @@ import org.apache.commons.codec.binary.Base64;
  * Very High Throughput (VHT) Operation Element, which is potentially present in
  * wifiscan entries. Introduced in 802.11ac (2013).
  */
-public class VHTOperationElement {
+public class VHTOperation {
 
 	/**
 	 * This field is 0 if the channel width is 20 MHz or 40 MHz, and 1 otherwise.
@@ -65,7 +65,7 @@ public class VHTOperationElement {
 	 * @param vhtOper a base64 encoded properly formatted VHT operation element (see
 	 *                802.11 standard)
 	 */
-	public VHTOperationElement(String vhtOper) {
+	public VHTOperation(String vhtOper) {
 		byte[] bytes = Base64.decodeBase64(vhtOper);
 		this.channelWidth = bytes[0];
 		this.channel1 = (short) (bytes[1] & 0xff); // read as unsigned value
@@ -89,7 +89,7 @@ public class VHTOperationElement {
 	 * For details about the parameters, see the javadocs for the corresponding
 	 * member variables.
 	 */
-	public VHTOperationElement(
+	public VHTOperation(
 		byte channelWidth,
 		short channel1,
 		short channel2,
@@ -114,7 +114,7 @@ public class VHTOperationElement {
 	 * @return true if the the operation elements "match" for the purpose of
 	 *         aggregating statistics; false otherwise.
 	 */
-	public boolean matchesForAggregation(VHTOperationElement other) {
+	public boolean matchesForAggregation(VHTOperation other) {
 		// check everything except vhtMcsForNss
 		return other != null && channel1 == other.channel1 &&
 			channel2 == other.channel2 && channelWidth == other.channelWidth;
@@ -142,8 +142,8 @@ public class VHTOperationElement {
 		if (vhtOper1 == null || vhtOper2 == null) {
 			return false; // false if exactly one is null
 		}
-		VHTOperationElement vhtOperObj1 = new VHTOperationElement(vhtOper1);
-		VHTOperationElement vhtOperObj2 = new VHTOperationElement(vhtOper2);
+		VHTOperation vhtOperObj1 = new VHTOperation(vhtOper1);
+		VHTOperation vhtOperObj2 = new VHTOperation(vhtOper2);
 		return vhtOperObj1.matchesForAggregation(vhtOperObj2);
 	}
 
@@ -168,7 +168,7 @@ public class VHTOperationElement {
 		if (getClass() != obj.getClass()) {
 			return false;
 		}
-		VHTOperationElement other = (VHTOperationElement) obj;
+		VHTOperation other = (VHTOperation) obj;
 		return channel1 == other.channel1 && channel2 == other.channel2 &&
 			channelWidth == other.channelWidth &&
 			Arrays.equals(vhtMcsForNss, other.vhtMcsForNss);
