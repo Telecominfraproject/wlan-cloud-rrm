@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -529,16 +530,17 @@ public class ModelerUtils {
 	public static Map<String, State> getLatestState(
 		Map<String, List<State>> latestStates
 	) {
-		Map<String, State> latestState = new HashMap<>();
+		Map<String, State> latestState = new ConcurrentHashMap<>();
 		for (
 			Map.Entry<String, List<State>> stateEntry : latestStates.entrySet()
 		) {
 			String key = stateEntry.getKey();
 			List<State> value = stateEntry.getValue();
-			if(value.isEmpty()){
+			if (value.isEmpty()) {
 				latestState.put(key, null);
+			} else {
+				latestState.put(key, value.get(value.size() - 1));
 			}
-			else{latestState.put(key, value.get(value.size() - 1));}
 		}
 		return latestState;
 	}

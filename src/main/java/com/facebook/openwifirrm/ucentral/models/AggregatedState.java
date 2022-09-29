@@ -66,8 +66,7 @@ public class AggregatedState {
 		public int channelWidth;
 		public int txPower;
 
-		public Radio() {
-		}
+		public Radio() {}
 
 		public Radio(int channel, int channelWidth, int txPower) {
 			this.channel = channel;
@@ -99,9 +98,8 @@ public class AggregatedState {
 			}
 
 			Radio other = (Radio) obj;
-			return channel == other.channel
-					&& channelWidth == other.channelWidth
-					&& txPower == other.txPower;
+			return channel == other.channel &&
+				channelWidth == other.channelWidth && txPower == other.txPower;
 		}
 	}
 
@@ -140,8 +138,10 @@ public class AggregatedState {
 	}
 
 	/** Construct from Association and radio */
-	public AggregatedState(Association association,
-			Map<String, Integer> radioInfo) {
+	public AggregatedState(
+		Association association,
+		Map<String, Integer> radioInfo
+	) {
 		this.rxRate = new AggregatedRate();
 		this.txRate = new AggregatedRate();
 		this.rssi = new ArrayList<>();
@@ -184,21 +184,20 @@ public class AggregatedState {
 
 		AggregatedState other = (AggregatedState) obj;
 
-		return bssid == other.bssid && station == other.station
-				&& connected == other.connected && inactive == other.inactive
-				&& rssi.equals(other.rssi) && rxBytes == other.rxBytes
-				&& rxBytes == other.rxPackets
-				&& rxRate.bitRate == other.rxRate.bitRate
-				&& rxRate.chWidth == other.rxRate.chWidth
-				&& rxRate.mcs.equals(other.rxRate.mcs)
-				&& txBytes == other.txBytes && txDuration == other.txDuration
-				&& txFailed == other.txFailed && txPackets == other.txPackets
-				&& txRate.bitRate == other.txRate.bitRate
-				&& txRate.chWidth == other.txRate.chWidth
-				&& txRate.mcs.equals(other.txRate.mcs)
-				&& txRetries == other.txRetries && ackSignal == other.ackSignal
-				&& ackSignalAvg == other.ackSignalAvg
-				&& radio.equals(other.radio);
+		return bssid == other.bssid && station == other.station &&
+			connected == other.connected && inactive == other.inactive && rssi
+				.equals(other.rssi) &&
+			rxBytes == other.rxBytes && rxBytes == other.rxPackets &&
+			rxRate.bitRate == other.rxRate.bitRate &&
+			rxRate.chWidth == other.rxRate.chWidth && rxRate.mcs
+				.equals(other.rxRate.mcs) &&
+			txBytes == other.txBytes && txDuration == other.txDuration &&
+			txFailed == other.txFailed && txPackets == other.txPackets &&
+			txRate.bitRate == other.txRate.bitRate &&
+			txRate.chWidth == other.txRate.chWidth && txRate.mcs
+				.equals(other.txRate.mcs) &&
+			txRetries == other.txRetries && ackSignal == other.ackSignal &&
+			ackSignalAvg == other.ackSignalAvg && radio.equals(other.radio);
 	}
 
 	/**
@@ -210,7 +209,10 @@ public class AggregatedState {
 	 *         channel_width and tx_power
 	 */
 	public boolean add(AggregatedState state) {
-		if ((bssid == null && station == null && radio == null) || hashCode() == state.hashCode()) {
+		if (
+			(bssid == null && station == null && radio == null) ||
+				hashCode() == state.hashCode()
+		) {
 			this.bssid = state.bssid;
 			this.station = state.station;
 			this.connected = state.connected;
@@ -227,8 +229,11 @@ public class AggregatedState {
 			this.txRetries = state.txRetries;
 			this.ackSignal = state.ackSignal;
 			this.ackSignalAvg = state.ackSignalAvg;
-			this.radio = new Radio(state.radio.channel,
-					state.radio.channelWidth, state.radio.txPower);
+			this.radio = new Radio(
+				state.radio.channel,
+				state.radio.channelWidth,
+				state.radio.txPower
+			);
 			return true;
 		}
 		return false;

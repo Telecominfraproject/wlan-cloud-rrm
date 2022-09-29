@@ -599,20 +599,20 @@ public class ModelerUtilsTest {
 			new HashMap<>();
 		bssidToAggregatedStates.put(
 			TestUtils.getBssidStationKeyPair(bssidA, stationA1),
-			Arrays.asList(aggStateA1)
+			new ArrayList<>(Arrays.asList(aggStateA1))
 		);
 
 		bssidToAggregatedStates.put(
 			TestUtils.getBssidStationKeyPair(bssidA, stationA2),
-			Arrays.asList(aggStateA2)
+			new ArrayList<>(Arrays.asList(aggStateA2))
 		);
 		bssidToAggregatedStates.put(
 			TestUtils.getBssidStationKeyPair(bssidB, stationB),
-			Arrays.asList(aggStateB)
+			new ArrayList<>(Arrays.asList(aggStateB))
 		);
 		bssidToAggregatedStates.put(
 			TestUtils.getBssidStationKeyPair(bssidC, stationC),
-			Arrays.asList(aggStateC)
+			new ArrayList<>(Arrays.asList(aggStateC))
 		);
 
 		State toBeAggregated1 = TestUtils.createState(
