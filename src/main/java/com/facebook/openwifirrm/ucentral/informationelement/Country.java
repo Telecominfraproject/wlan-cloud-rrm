@@ -125,8 +125,8 @@ public class Country {
 		if (constraintsObject != null) {
 			for (JsonElement jsonElement : constraintsObject.getAsJsonArray()) {
 				try {
-					constraints
-						.add(CountryInfo.parse(jsonElement.getAsJsonObject()));
+					CountryInfo countryInfo = CountryInfo.parse(jsonElement.getAsJsonObject());
+					constraints.add(countryInfo);
 				} catch (NullPointerException e) {
 					logger.debug(
 						"Skipping invalid constraint encountered in Country IE.",
