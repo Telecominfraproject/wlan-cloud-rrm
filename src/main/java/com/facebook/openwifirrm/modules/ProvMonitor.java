@@ -174,7 +174,7 @@ public class ProvMonitor implements Runnable {
 		}
 
 		RRMSchedule schedule = new RRMSchedule();
-		schedule.cron = Arrays.asList(crons);
+		schedule.crons = Arrays.asList(crons);
 
 		if (details.rrm.algorithms != null) {
 			schedule.algorithms =

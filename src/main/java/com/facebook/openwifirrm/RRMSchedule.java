@@ -21,7 +21,7 @@ public class RRMSchedule {
 	 * Scheduler (CronTrigger):
 	 * https://www.quartz-scheduler.org/documentation/quartz-2.4.0/tutorials/crontrigger.html
 	 */
-	public List<String> cron;
+	public List<String> crons;
 
 	/**
 	 * The list of RRM algorithms to run.

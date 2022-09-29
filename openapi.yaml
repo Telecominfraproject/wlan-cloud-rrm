@@ -478,7 +478,7 @@ components:
     RRMSchedule:
       type: object
       properties:
-        cron:
+        crons:
           type: array
           items:
             type: string

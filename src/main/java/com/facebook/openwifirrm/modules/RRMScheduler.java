@@ -261,14 +261,14 @@ public class RRMScheduler {
 			DeviceConfig config = deviceDataManager.getZoneConfig(zone);
 			RRMSchedule schedule = config.schedule;
 			if (
-				schedule == null || schedule.cron == null ||
-					schedule.cron.isEmpty()
+				schedule == null || schedule.crons == null ||
+					schedule.crons.isEmpty()
 			) {
 				continue; // RRM not scheduled
 			}
 
-			for (int i = 0; i < schedule.cron.size(); i++) {
-				String cron = schedule.cron.get(i);
+			for (int i = 0; i < schedule.crons.size(); i++) {
+				String cron = schedule.crons.get(i);
 				// if even one schedule has invalid cron, the whole thing is probably wrong
 				if (cron == null || cron.isEmpty()) {
 					logger.error("There was an invalid cron in the schedule");
@@ -281,7 +281,7 @@ public class RRMScheduler {
 					logger.error(
 						String.format(
 							"Invalid cron expression (%s) for zone %s",
-							schedule.cron,
+							cron,
 							zone
 						),
 						e
