@@ -22,8 +22,8 @@ import com.facebook.openwifirrm.aggregators.Aggregator;
 import com.facebook.openwifirrm.aggregators.MeanAggregator;
 import com.facebook.openwifirrm.modules.Modeler.DataModel;
 import com.facebook.openwifirrm.ucentral.WifiScanEntry;
-import com.facebook.openwifirrm.ucentral.operationelement.HTOperationElement;
-import com.facebook.openwifirrm.ucentral.operationelement.VHTOperationElement;
+import com.facebook.openwifirrm.ucentral.informationelement.HTOperationElement;
+import com.facebook.openwifirrm.ucentral.informationelement.VHTOperationElement;
 
 /**
  * Modeler utilities.

@@ -10,9 +10,11 @@ package com.facebook.openwifirrm.ucentral.models;
 
 import java.util.Objects;
 
-import com.google.gson.JsonArray;
-
-/** Represents a single entry in wifi scan results. */
+/**
+ * Represents a single entry in wifi scan results.
+ * ies[] array is not stored directly, but parsed into WifiScanEntry fields
+ *
+ */
 public class WifiScanEntryResult {
 	public int channel;
 	public long last_seen;
@@ -50,8 +52,6 @@ public class WifiScanEntryResult {
 	public String vht_oper;
 	public int capability;
 	public int frequency;
-	/** IE = information element */
-	public JsonArray ies;
 
 	/** Default Constructor. */
 	public WifiScanEntryResult() {}
@@ -68,7 +68,6 @@ public class WifiScanEntryResult {
 		this.vht_oper = o.vht_oper;
 		this.capability = o.capability;
 		this.frequency = o.frequency;
-		this.ies = o.ies;
 	}
 
 	@Override
@@ -79,7 +78,6 @@ public class WifiScanEntryResult {
 			channel,
 			frequency,
 			ht_oper,
-			ies,
 			last_seen,
 			signal,
 			ssid,
@@ -104,7 +102,9 @@ public class WifiScanEntryResult {
 			capability == other.capability && channel == other.channel &&
 			frequency == other.frequency && Objects
 				.equals(ht_oper, other.ht_oper) &&
-			Objects.equals(ies, other.ies) && last_seen == other.last_seen && signal == other.signal && Objects.equals(ssid, other.ssid) && tsf == other.tsf && Objects.equals(vht_oper, other.vht_oper);
+			last_seen == other.last_seen &&
+			Objects.equals(ssid, other.ssid) && tsf == other.tsf &&
+			Objects.equals(vht_oper, other.vht_oper);
 	}
 
 	@Override
