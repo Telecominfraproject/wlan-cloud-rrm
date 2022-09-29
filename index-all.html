@@ -300,6 +300,12 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Map of channel width (MHz) to available (primary) channels</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/informationelement/QbssLoad.html#availableAdmissionCapacity">availableAdmissionCapacity</a></span> - Variable in class com.facebook.openwifirrm.ucentral.informationelement.<a href="com/facebook/openwifirrm/ucentral/informationelement/QbssLoad.html" title="class in com.facebook.openwifirrm.ucentral.informationelement">QbssLoad</a></dt>
+<dd>
+<div class="block">The Available Admission Capacity field contains an unsigned integer that
+ specifies the remaining amount of medium time available via explicit
+ admission control, in units of 32 miscrosecond/second.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/gw/models/UserInfo.html#avatar">avatar</a></span> - Variable in class com.facebook.openwifirrm.ucentral.gw.models.<a href="com/facebook/openwifirrm/ucentral/gw/models/UserInfo.html" title="class in com.facebook.openwifirrm.ucentral.gw.models">UserInfo</a></dt>
 <dd>&nbsp;</dd>
 </dl>
@@ -320,7 +326,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">List of all bands</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/operationelement/HTOperationElement.html#basicHtMcsSet">basicHtMcsSet</a></span> - Variable in class com.facebook.openwifirrm.ucentral.operationelement.<a href="com/facebook/openwifirrm/ucentral/operationelement/HTOperationElement.html" title="class in com.facebook.openwifirrm.ucentral.operationelement">HTOperationElement</a></dt>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/informationelement/HTOperationElement.html#basicHtMcsSet">basicHtMcsSet</a></span> - Variable in class com.facebook.openwifirrm.ucentral.informationelement.<a href="com/facebook/openwifirrm/ucentral/informationelement/HTOperationElement.html" title="class in com.facebook.openwifirrm.ucentral.informationelement">HTOperationElement</a></dt>
 <dd>
 <div class="block">Indicates the HT-MCS values that are supported by all HT STAs in the BSS.</div>
 </dd>
@@ -401,16 +407,16 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/models/State.Radio.html#channel_width">channel_width</a></span> - Variable in class com.facebook.openwifirrm.ucentral.models.<a href="com/facebook/openwifirrm/ucentral/models/State.Radio.html" title="class in com.facebook.openwifirrm.ucentral.models">State.Radio</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/operationelement/VHTOperationElement.html#channel1">channel1</a></span> - Variable in class com.facebook.openwifirrm.ucentral.operationelement.<a href="com/facebook/openwifirrm/ucentral/operationelement/VHTOperationElement.html" title="class in com.facebook.openwifirrm.ucentral.operationelement">VHTOperationElement</a></dt>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/informationelement/VHTOperationElement.html#channel1">channel1</a></span> - Variable in class com.facebook.openwifirrm.ucentral.informationelement.<a href="com/facebook/openwifirrm/ucentral/informationelement/VHTOperationElement.html" title="class in com.facebook.openwifirrm.ucentral.informationelement">VHTOperationElement</a></dt>
 <dd>
 <div class="block">If the channel is 20 MHz, 40 MHz, or 80 MHz wide, this parameter is the
  channel number.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/operationelement/VHTOperationElement.html#channel2">channel2</a></span> - Variable in class com.facebook.openwifirrm.ucentral.operationelement.<a href="com/facebook/openwifirrm/ucentral/operationelement/VHTOperationElement.html" title="class in com.facebook.openwifirrm.ucentral.operationelement">VHTOperationElement</a></dt>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/informationelement/VHTOperationElement.html#channel2">channel2</a></span> - Variable in class com.facebook.openwifirrm.ucentral.informationelement.<a href="com/facebook/openwifirrm/ucentral/informationelement/VHTOperationElement.html" title="class in com.facebook.openwifirrm.ucentral.informationelement">VHTOperationElement</a></dt>
 <dd>
 <div class="block">This should be zero unless the channel is 160MHz or 80+80 MHz wide.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/operationelement/HTOperationElement.html#channelCenterFrequencySegment2">channelCenterFrequencySegment2</a></span> - Variable in class com.facebook.openwifirrm.ucentral.operationelement.<a href="com/facebook/openwifirrm/ucentral/operationelement/HTOperationElement.html" title="class in com.facebook.openwifirrm.ucentral.operationelement">HTOperationElement</a></dt>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/informationelement/HTOperationElement.html#channelCenterFrequencySegment2">channelCenterFrequencySegment2</a></span> - Variable in class com.facebook.openwifirrm.ucentral.informationelement.<a href="com/facebook/openwifirrm/ucentral/informationelement/HTOperationElement.html" title="class in com.facebook.openwifirrm.ucentral.informationelement">HTOperationElement</a></dt>
 <dd>
 <div class="block">Defines the channel center frequency for a 160 or 80+80 MHz BSS bandwidth
  with NSS support less than Max VHT NSS.</div>
@@ -431,7 +437,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Converts channel number to that channel's center frequency in MHz.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/operationelement/VHTOperationElement.html#channelWidth">channelWidth</a></span> - Variable in class com.facebook.openwifirrm.ucentral.operationelement.<a href="com/facebook/openwifirrm/ucentral/operationelement/VHTOperationElement.html" title="class in com.facebook.openwifirrm.ucentral.operationelement">VHTOperationElement</a></dt>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/informationelement/QbssLoad.html#channelUtilization">channelUtilization</a></span> - Variable in class com.facebook.openwifirrm.ucentral.informationelement.<a href="com/facebook/openwifirrm/ucentral/informationelement/QbssLoad.html" title="class in com.facebook.openwifirrm.ucentral.informationelement">QbssLoad</a></dt>
+<dd>
+<div class="block">The Channel Utilization field is defined as the percentage of time,
+ linearly scaled with 255 representing 100%, that the AP sensed the
+ medium was busy, as indicated by either the physical or virtual carrier
+ sense (CS) mechanism.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/informationelement/VHTOperationElement.html#channelWidth">channelWidth</a></span> - Variable in class com.facebook.openwifirrm.ucentral.informationelement.<a href="com/facebook/openwifirrm/ucentral/informationelement/VHTOperationElement.html" title="class in com.facebook.openwifirrm.ucentral.informationelement">VHTOperationElement</a></dt>
 <dd>
 <div class="block">This field is 0 if the channel width is 20 MHz or 40 MHz, and 1 otherwise.</div>
 </dd>
@@ -477,9 +490,9 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><a href="com/facebook/openwifirrm/ucentral/gw/models/package-summary.html">com.facebook.openwifirrm.ucentral.gw.models</a> - package com.facebook.openwifirrm.ucentral.gw.models</dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/facebook/openwifirrm/ucentral/models/package-summary.html">com.facebook.openwifirrm.ucentral.models</a> - package com.facebook.openwifirrm.ucentral.models</dt>
+<dt><a href="com/facebook/openwifirrm/ucentral/informationelement/package-summary.html">com.facebook.openwifirrm.ucentral.informationelement</a> - package com.facebook.openwifirrm.ucentral.informationelement</dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/facebook/openwifirrm/ucentral/operationelement/package-summary.html">com.facebook.openwifirrm.ucentral.operationelement</a> - package com.facebook.openwifirrm.ucentral.operationelement</dt>
+<dt><a href="com/facebook/openwifirrm/ucentral/models/package-summary.html">com.facebook.openwifirrm.ucentral.models</a> - package com.facebook.openwifirrm.ucentral.models</dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/facebook/openwifirrm/ucentral/prov/models/package-summary.html">com.facebook.openwifirrm.ucentral.prov.models</a> - package com.facebook.openwifirrm.ucentral.prov.models</dt>
 <dd>&nbsp;</dd>
@@ -580,6 +593,11 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Connection timeout for all requests, in ms
  (<code>UCENTRALSOCKETPARAMS_CONNECTTIMEOUTMS</code>)</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/informationelement/Country.html#constraints">constraints</a></span> - Variable in class com.facebook.openwifirrm.ucentral.informationelement.<a href="com/facebook/openwifirrm/ucentral/informationelement/Country.html" title="class in com.facebook.openwifirrm.ucentral.informationelement">Country</a></dt>
+<dd>
+<div class="block">Each constraint is a CountryInfo describing tx power constraints on
+ one or more channels, for the current country.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/prov/models/InventoryTag.html#contact">contact</a></span> - Variable in class com.facebook.openwifirrm.ucentral.prov.models.<a href="com/facebook/openwifirrm/ucentral/prov/models/InventoryTag.html" title="class in com.facebook.openwifirrm.ucentral.prov.models">InventoryTag</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/prov/models/Entity.html#contacts">contacts</a></span> - Variable in class com.facebook.openwifirrm.ucentral.prov.models.<a href="com/facebook/openwifirrm/ucentral/prov/models/Entity.html" title="class in com.facebook.openwifirrm.ucentral.prov.models">Entity</a></dt>
@@ -599,6 +617,22 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/models/State.Interface.Counters.html#%3Cinit%3E()">Counters()</a></span> - Constructor for class com.facebook.openwifirrm.ucentral.models.<a href="com/facebook/openwifirrm/ucentral/models/State.Interface.Counters.html" title="class in com.facebook.openwifirrm.ucentral.models">State.Interface.Counters</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/WifiScanEntry.html#country">country</a></span> - Variable in class com.facebook.openwifirrm.ucentral.<a href="com/facebook/openwifirrm/ucentral/WifiScanEntry.html" title="class in com.facebook.openwifirrm.ucentral">WifiScanEntry</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/facebook/openwifirrm/ucentral/informationelement/Country.html" title="class in com.facebook.openwifirrm.ucentral.informationelement"><span class="typeNameLink">Country</span></a> - Class in <a href="com/facebook/openwifirrm/ucentral/informationelement/package-summary.html">com.facebook.openwifirrm.ucentral.informationelement</a></dt>
+<dd>
+<div class="block">This information element (IE) appears in wifiscan entries.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/informationelement/Country.html#%3Cinit%3E(java.util.List)">Country(List&lt;Country.CountryInfo&gt;)</a></span> - Constructor for class com.facebook.openwifirrm.ucentral.informationelement.<a href="com/facebook/openwifirrm/ucentral/informationelement/Country.html" title="class in com.facebook.openwifirrm.ucentral.informationelement">Country</a></dt>
+<dd>
+<div class="block">Constructor</div>
+</dd>
+<dt><a href="com/facebook/openwifirrm/ucentral/informationelement/Country.CountryInfo.html" title="class in com.facebook.openwifirrm.ucentral.informationelement"><span class="typeNameLink">Country.CountryInfo</span></a> - Class in <a href="com/facebook/openwifirrm/ucentral/informationelement/package-summary.html">com.facebook.openwifirrm.ucentral.informationelement</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/informationelement/Country.CountryInfo.html#%3Cinit%3E(int,int,int)">CountryInfo(int, int, int)</a></span> - Constructor for class com.facebook.openwifirrm.ucentral.informationelement.<a href="com/facebook/openwifirrm/ucentral/informationelement/Country.CountryInfo.html" title="class in com.facebook.openwifirrm.ucentral.informationelement">Country.CountryInfo</a></dt>
+<dd>
+<div class="block">Constructor.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/gw/models/NoteInfo.html#created">created</a></span> - Variable in class com.facebook.openwifirrm.ucentral.gw.models.<a href="com/facebook/openwifirrm/ucentral/gw/models/NoteInfo.html" title="class in com.facebook.openwifirrm.ucentral.gw.models">NoteInfo</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/gw/models/UserInfo.html#created">created</a></span> - Variable in class com.facebook.openwifirrm.ucentral.gw.models.<a href="com/facebook/openwifirrm/ucentral/gw/models/UserInfo.html" title="class in com.facebook.openwifirrm.ucentral.gw.models">UserInfo</a></dt>
@@ -883,11 +917,11 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">If set, do not apply any changes from scheduled algorithms
  (<code>SCHEDULERPARAMS_DRYRUN</code>)</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/operationelement/HTOperationElement.html#dualBeacon">dualBeacon</a></span> - Variable in class com.facebook.openwifirrm.ucentral.operationelement.<a href="com/facebook/openwifirrm/ucentral/operationelement/HTOperationElement.html" title="class in com.facebook.openwifirrm.ucentral.operationelement">HTOperationElement</a></dt>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/informationelement/HTOperationElement.html#dualBeacon">dualBeacon</a></span> - Variable in class com.facebook.openwifirrm.ucentral.informationelement.<a href="com/facebook/openwifirrm/ucentral/informationelement/HTOperationElement.html" title="class in com.facebook.openwifirrm.ucentral.informationelement">HTOperationElement</a></dt>
 <dd>
 <div class="block">False if no STBC beacon is transmitted; true otherwise.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/operationelement/HTOperationElement.html#dualCtsProtection">dualCtsProtection</a></span> - Variable in class com.facebook.openwifirrm.ucentral.operationelement.<a href="com/facebook/openwifirrm/ucentral/operationelement/HTOperationElement.html" title="class in com.facebook.openwifirrm.ucentral.operationelement">HTOperationElement</a></dt>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/informationelement/HTOperationElement.html#dualCtsProtection">dualCtsProtection</a></span> - Variable in class com.facebook.openwifirrm.ucentral.informationelement.<a href="com/facebook/openwifirrm/ucentral/informationelement/HTOperationElement.html" title="class in com.facebook.openwifirrm.ucentral.informationelement">HTOperationElement</a></dt>
 <dd>
 <div class="block">False if dual CTS protection is not required; true otherwise.</div>
 </dd>
@@ -929,11 +963,21 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/prov/models/EntityList.html#%3Cinit%3E()">EntityList()</a></span> - Constructor for class com.facebook.openwifirrm.ucentral.prov.models.<a href="com/facebook/openwifirrm/ucentral/prov/models/EntityList.html" title="class in com.facebook.openwifirrm.ucentral.prov.models">EntityList</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/informationelement/Country.CountryInfo.html#equals(java.lang.Object)">equals(Object)</a></span> - Method in class com.facebook.openwifirrm.ucentral.informationelement.<a href="com/facebook/openwifirrm/ucentral/informationelement/Country.CountryInfo.html" title="class in com.facebook.openwifirrm.ucentral.informationelement">Country.CountryInfo</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/informationelement/Country.html#equals(java.lang.Object)">equals(Object)</a></span> - Method in class com.facebook.openwifirrm.ucentral.informationelement.<a href="com/facebook/openwifirrm/ucentral/informationelement/Country.html" title="class in com.facebook.openwifirrm.ucentral.informationelement">Country</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/informationelement/HTOperationElement.html#equals(java.lang.Object)">equals(Object)</a></span> - Method in class com.facebook.openwifirrm.ucentral.informationelement.<a href="com/facebook/openwifirrm/ucentral/informationelement/HTOperationElement.html" title="class in com.facebook.openwifirrm.ucentral.informationelement">HTOperationElement</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/informationelement/LocalPowerConstraint.html#equals(java.lang.Object)">equals(Object)</a></span> - Method in class com.facebook.openwifirrm.ucentral.informationelement.<a href="com/facebook/openwifirrm/ucentral/informationelement/LocalPowerConstraint.html" title="class in com.facebook.openwifirrm.ucentral.informationelement">LocalPowerConstraint</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/informationelement/QbssLoad.html#equals(java.lang.Object)">equals(Object)</a></span> - Method in class com.facebook.openwifirrm.ucentral.informationelement.<a href="com/facebook/openwifirrm/ucentral/informationelement/QbssLoad.html" title="class in com.facebook.openwifirrm.ucentral.informationelement">QbssLoad</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/informationelement/TxPwrInfo.html#equals(java.lang.Object)">equals(Object)</a></span> - Method in class com.facebook.openwifirrm.ucentral.informationelement.<a href="com/facebook/openwifirrm/ucentral/informationelement/TxPwrInfo.html" title="class in com.facebook.openwifirrm.ucentral.informationelement">TxPwrInfo</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/informationelement/VHTOperationElement.html#equals(java.lang.Object)">equals(Object)</a></span> - Method in class com.facebook.openwifirrm.ucentral.informationelement.<a href="com/facebook/openwifirrm/ucentral/informationelement/VHTOperationElement.html" title="class in com.facebook.openwifirrm.ucentral.informationelement">VHTOperationElement</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/models/WifiScanEntryResult.html#equals(java.lang.Object)">equals(Object)</a></span> - Method in class com.facebook.openwifirrm.ucentral.models.<a href="com/facebook/openwifirrm/ucentral/models/WifiScanEntryResult.html" title="class in com.facebook.openwifirrm.ucentral.models">WifiScanEntryResult</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/operationelement/HTOperationElement.html#equals(java.lang.Object)">equals(Object)</a></span> - Method in class com.facebook.openwifirrm.ucentral.operationelement.<a href="com/facebook/openwifirrm/ucentral/operationelement/HTOperationElement.html" title="class in com.facebook.openwifirrm.ucentral.operationelement">HTOperationElement</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/operationelement/VHTOperationElement.html#equals(java.lang.Object)">equals(Object)</a></span> - Method in class com.facebook.openwifirrm.ucentral.operationelement.<a href="com/facebook/openwifirrm/ucentral/operationelement/VHTOperationElement.html" title="class in com.facebook.openwifirrm.ucentral.operationelement">VHTOperationElement</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/WifiScanEntry.html#equals(java.lang.Object)">equals(Object)</a></span> - Method in class com.facebook.openwifirrm.ucentral.<a href="com/facebook/openwifirrm/ucentral/WifiScanEntry.html" title="class in com.facebook.openwifirrm.ucentral">WifiScanEntry</a></dt>
 <dd>&nbsp;</dd>
@@ -983,6 +1027,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/prov/models/DeviceRules.html#firmwareUpgrade">firmwareUpgrade</a></span> - Variable in class com.facebook.openwifirrm.ucentral.prov.models.<a href="com/facebook/openwifirrm/ucentral/prov/models/DeviceRules.html" title="class in com.facebook.openwifirrm.ucentral.prov.models">DeviceRules</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/informationelement/Country.CountryInfo.html#firstChannelNumber">firstChannelNumber</a></span> - Variable in class com.facebook.openwifirrm.ucentral.informationelement.<a href="com/facebook/openwifirrm/ucentral/informationelement/Country.CountryInfo.html" title="class in com.facebook.openwifirrm.ucentral.informationelement">Country.CountryInfo</a></dt>
+<dd>
+<div class="block">The lowest channel number in the CountryInfo.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/gw/models/DeviceCapabilities.html#firstUpdate">firstUpdate</a></span> - Variable in class com.facebook.openwifirrm.ucentral.gw.models.<a href="com/facebook/openwifirrm/ucentral/gw/models/DeviceCapabilities.html" title="class in com.facebook.openwifirrm.ucentral.gw.models">DeviceCapabilities</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/models/State.Unit.Memory.html#free">free</a></span> - Variable in class com.facebook.openwifirrm.ucentral.models.<a href="com/facebook/openwifirrm/ucentral/models/State.Unit.Memory.html" title="class in com.facebook.openwifirrm.ucentral.models">State.Unit.Memory</a></dt>
@@ -1303,11 +1351,21 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Handle a list of wifi scan records.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/informationelement/Country.CountryInfo.html#hashCode()">hashCode()</a></span> - Method in class com.facebook.openwifirrm.ucentral.informationelement.<a href="com/facebook/openwifirrm/ucentral/informationelement/Country.CountryInfo.html" title="class in com.facebook.openwifirrm.ucentral.informationelement">Country.CountryInfo</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/informationelement/Country.html#hashCode()">hashCode()</a></span> - Method in class com.facebook.openwifirrm.ucentral.informationelement.<a href="com/facebook/openwifirrm/ucentral/informationelement/Country.html" title="class in com.facebook.openwifirrm.ucentral.informationelement">Country</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/informationelement/HTOperationElement.html#hashCode()">hashCode()</a></span> - Method in class com.facebook.openwifirrm.ucentral.informationelement.<a href="com/facebook/openwifirrm/ucentral/informationelement/HTOperationElement.html" title="class in com.facebook.openwifirrm.ucentral.informationelement">HTOperationElement</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/informationelement/LocalPowerConstraint.html#hashCode()">hashCode()</a></span> - Method in class com.facebook.openwifirrm.ucentral.informationelement.<a href="com/facebook/openwifirrm/ucentral/informationelement/LocalPowerConstraint.html" title="class in com.facebook.openwifirrm.ucentral.informationelement">LocalPowerConstraint</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/informationelement/QbssLoad.html#hashCode()">hashCode()</a></span> - Method in class com.facebook.openwifirrm.ucentral.informationelement.<a href="com/facebook/openwifirrm/ucentral/informationelement/QbssLoad.html" title="class in com.facebook.openwifirrm.ucentral.informationelement">QbssLoad</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/informationelement/TxPwrInfo.html#hashCode()">hashCode()</a></span> - Method in class com.facebook.openwifirrm.ucentral.informationelement.<a href="com/facebook/openwifirrm/ucentral/informationelement/TxPwrInfo.html" title="class in com.facebook.openwifirrm.ucentral.informationelement">TxPwrInfo</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/informationelement/VHTOperationElement.html#hashCode()">hashCode()</a></span> - Method in class com.facebook.openwifirrm.ucentral.informationelement.<a href="com/facebook/openwifirrm/ucentral/informationelement/VHTOperationElement.html" title="class in com.facebook.openwifirrm.ucentral.informationelement">VHTOperationElement</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/models/WifiScanEntryResult.html#hashCode()">hashCode()</a></span> - Method in class com.facebook.openwifirrm.ucentral.models.<a href="com/facebook/openwifirrm/ucentral/models/WifiScanEntryResult.html" title="class in com.facebook.openwifirrm.ucentral.models">WifiScanEntryResult</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/operationelement/HTOperationElement.html#hashCode()">hashCode()</a></span> - Method in class com.facebook.openwifirrm.ucentral.operationelement.<a href="com/facebook/openwifirrm/ucentral/operationelement/HTOperationElement.html" title="class in com.facebook.openwifirrm.ucentral.operationelement">HTOperationElement</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/operationelement/VHTOperationElement.html#hashCode()">hashCode()</a></span> - Method in class com.facebook.openwifirrm.ucentral.operationelement.<a href="com/facebook/openwifirrm/ucentral/operationelement/VHTOperationElement.html" title="class in com.facebook.openwifirrm.ucentral.operationelement">VHTOperationElement</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/WifiScanEntry.html#hashCode()">hashCode()</a></span> - Method in class com.facebook.openwifirrm.ucentral.<a href="com/facebook/openwifirrm/ucentral/WifiScanEntry.html" title="class in com.facebook.openwifirrm.ucentral">WifiScanEntry</a></dt>
 <dd>&nbsp;</dd>
@@ -1327,24 +1385,24 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">ht_oper is short for "high throughput operation element".</div>
 </dd>
-<dt><a href="com/facebook/openwifirrm/ucentral/operationelement/HTOperationElement.html" title="class in com.facebook.openwifirrm.ucentral.operationelement"><span class="typeNameLink">HTOperationElement</span></a> - Class in <a href="com/facebook/openwifirrm/ucentral/operationelement/package-summary.html">com.facebook.openwifirrm.ucentral.operationelement</a></dt>
+<dt><a href="com/facebook/openwifirrm/ucentral/informationelement/HTOperationElement.html" title="class in com.facebook.openwifirrm.ucentral.informationelement"><span class="typeNameLink">HTOperationElement</span></a> - Class in <a href="com/facebook/openwifirrm/ucentral/informationelement/package-summary.html">com.facebook.openwifirrm.ucentral.informationelement</a></dt>
 <dd>
 <div class="block">High Throughput (HT) Operation Element, which is potentially present in
  wifiscan entries.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/operationelement/HTOperationElement.html#%3Cinit%3E(byte,byte,boolean,boolean,byte,boolean,boolean,byte,boolean,boolean,boolean)">HTOperationElement(byte, byte, boolean, boolean, byte, boolean, boolean, byte, boolean, boolean, boolean)</a></span> - Constructor for class com.facebook.openwifirrm.ucentral.operationelement.<a href="com/facebook/openwifirrm/ucentral/operationelement/HTOperationElement.html" title="class in com.facebook.openwifirrm.ucentral.operationelement">HTOperationElement</a></dt>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/informationelement/HTOperationElement.html#%3Cinit%3E(byte,byte,boolean,boolean,byte,boolean,boolean,byte,boolean,boolean,boolean)">HTOperationElement(byte, byte, boolean, boolean, byte, boolean, boolean, byte, boolean, boolean, boolean)</a></span> - Constructor for class com.facebook.openwifirrm.ucentral.informationelement.<a href="com/facebook/openwifirrm/ucentral/informationelement/HTOperationElement.html" title="class in com.facebook.openwifirrm.ucentral.informationelement">HTOperationElement</a></dt>
 <dd>
 <div class="block">Constructs an <code>HTOperationElement</code> using the given field values.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/operationelement/HTOperationElement.html#%3Cinit%3E(byte,byte,boolean,byte)">HTOperationElement(byte, byte, boolean, byte)</a></span> - Constructor for class com.facebook.openwifirrm.ucentral.operationelement.<a href="com/facebook/openwifirrm/ucentral/operationelement/HTOperationElement.html" title="class in com.facebook.openwifirrm.ucentral.operationelement">HTOperationElement</a></dt>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/informationelement/HTOperationElement.html#%3Cinit%3E(byte,byte,boolean,byte)">HTOperationElement(byte, byte, boolean, byte)</a></span> - Constructor for class com.facebook.openwifirrm.ucentral.informationelement.<a href="com/facebook/openwifirrm/ucentral/informationelement/HTOperationElement.html" title="class in com.facebook.openwifirrm.ucentral.informationelement">HTOperationElement</a></dt>
 <dd>
 <div class="block">Constructor with the most used parameters.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/operationelement/HTOperationElement.html#%3Cinit%3E(java.lang.String)">HTOperationElement(String)</a></span> - Constructor for class com.facebook.openwifirrm.ucentral.operationelement.<a href="com/facebook/openwifirrm/ucentral/operationelement/HTOperationElement.html" title="class in com.facebook.openwifirrm.ucentral.operationelement">HTOperationElement</a></dt>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/informationelement/HTOperationElement.html#%3Cinit%3E(java.lang.String)">HTOperationElement(String)</a></span> - Constructor for class com.facebook.openwifirrm.ucentral.informationelement.<a href="com/facebook/openwifirrm/ucentral/informationelement/HTOperationElement.html" title="class in com.facebook.openwifirrm.ucentral.informationelement">HTOperationElement</a></dt>
 <dd>
 <div class="block">Constructs an <code>HTOperationElement</code> by decoding <code>htOper</code>.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/operationelement/HTOperationElement.html#htProtection">htProtection</a></span> - Variable in class com.facebook.openwifirrm.ucentral.operationelement.<a href="com/facebook/openwifirrm/ucentral/operationelement/HTOperationElement.html" title="class in com.facebook.openwifirrm.ucentral.operationelement">HTOperationElement</a></dt>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/informationelement/HTOperationElement.html#htProtection">htProtection</a></span> - Variable in class com.facebook.openwifirrm.ucentral.informationelement.<a href="com/facebook/openwifirrm/ucentral/informationelement/HTOperationElement.html" title="class in com.facebook.openwifirrm.ucentral.informationelement">HTOperationElement</a></dt>
 <dd>
 <div class="block">A 0 indicates no protection mode.</div>
 </dd>
@@ -1382,10 +1440,6 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/gw/models/WifiScanRequest.html#ies">ies</a></span> - Variable in class com.facebook.openwifirrm.ucentral.gw.models.<a href="com/facebook/openwifirrm/ucentral/gw/models/WifiScanRequest.html" title="class in com.facebook.openwifirrm.ucentral.gw.models">WifiScanRequest</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/models/WifiScanEntryResult.html#ies">ies</a></span> - Variable in class com.facebook.openwifirrm.ucentral.models.<a href="com/facebook/openwifirrm/ucentral/models/WifiScanEntryResult.html" title="class in com.facebook.openwifirrm.ucentral.models">WifiScanEntryResult</a></dt>
-<dd>
-<div class="block">IE = information element</div>
-</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/models/State.Interface.SSID.html#iface">iface</a></span> - Variable in class com.facebook.openwifirrm.ucentral.models.<a href="com/facebook/openwifirrm/ucentral/models/State.Interface.SSID.html" title="class in com.facebook.openwifirrm.ucentral.models">State.Interface.SSID</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/models/State.Interface.SSID.Association.html#inactive">inactive</a></span> - Variable in class com.facebook.openwifirrm.ucentral.models.<a href="com/facebook/openwifirrm/ucentral/models/State.Interface.SSID.Association.html" title="class in com.facebook.openwifirrm.ucentral.models">State.Interface.SSID.Association</a></dt>
@@ -1556,6 +1610,36 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/prov/models/InventoryTag.html#locale">locale</a></span> - Variable in class com.facebook.openwifirrm.ucentral.prov.models.<a href="com/facebook/openwifirrm/ucentral/prov/models/InventoryTag.html" title="class in com.facebook.openwifirrm.ucentral.prov.models">InventoryTag</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/informationelement/TxPwrInfo.html#localMaxTxPwrConstraint160MHz">localMaxTxPwrConstraint160MHz</a></span> - Variable in class com.facebook.openwifirrm.ucentral.informationelement.<a href="com/facebook/openwifirrm/ucentral/informationelement/TxPwrInfo.html" title="class in com.facebook.openwifirrm.ucentral.informationelement">TxPwrInfo</a></dt>
+<dd>
+<div class="block">Local maximum transmit power for both 160 MHz and 80+80 MHz.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/informationelement/TxPwrInfo.html#localMaxTxPwrConstraint20MHz">localMaxTxPwrConstraint20MHz</a></span> - Variable in class com.facebook.openwifirrm.ucentral.informationelement.<a href="com/facebook/openwifirrm/ucentral/informationelement/TxPwrInfo.html" title="class in com.facebook.openwifirrm.ucentral.informationelement">TxPwrInfo</a></dt>
+<dd>
+<div class="block">Local maximum transmit power for 20 MHz.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/informationelement/TxPwrInfo.html#localMaxTxPwrConstraint40MHz">localMaxTxPwrConstraint40MHz</a></span> - Variable in class com.facebook.openwifirrm.ucentral.informationelement.<a href="com/facebook/openwifirrm/ucentral/informationelement/TxPwrInfo.html" title="class in com.facebook.openwifirrm.ucentral.informationelement">TxPwrInfo</a></dt>
+<dd>
+<div class="block">Local maximum transmit power for 40 MHz.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/informationelement/TxPwrInfo.html#localMaxTxPwrConstraint80MHz">localMaxTxPwrConstraint80MHz</a></span> - Variable in class com.facebook.openwifirrm.ucentral.informationelement.<a href="com/facebook/openwifirrm/ucentral/informationelement/TxPwrInfo.html" title="class in com.facebook.openwifirrm.ucentral.informationelement">TxPwrInfo</a></dt>
+<dd>
+<div class="block">Local maximum transmit power for 80 MHz.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/informationelement/LocalPowerConstraint.html#localPowerConstraint">localPowerConstraint</a></span> - Variable in class com.facebook.openwifirrm.ucentral.informationelement.<a href="com/facebook/openwifirrm/ucentral/informationelement/LocalPowerConstraint.html" title="class in com.facebook.openwifirrm.ucentral.informationelement">LocalPowerConstraint</a></dt>
+<dd>
+<div class="block">Units are dB.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/WifiScanEntry.html#localPowerConstraint">localPowerConstraint</a></span> - Variable in class com.facebook.openwifirrm.ucentral.<a href="com/facebook/openwifirrm/ucentral/WifiScanEntry.html" title="class in com.facebook.openwifirrm.ucentral">WifiScanEntry</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/facebook/openwifirrm/ucentral/informationelement/LocalPowerConstraint.html" title="class in com.facebook.openwifirrm.ucentral.informationelement"><span class="typeNameLink">LocalPowerConstraint</span></a> - Class in <a href="com/facebook/openwifirrm/ucentral/informationelement/package-summary.html">com.facebook.openwifirrm.ucentral.informationelement</a></dt>
+<dd>
+<div class="block">This information element (IE) appears in wifiscan entries.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/informationelement/LocalPowerConstraint.html#%3Cinit%3E(int)">LocalPowerConstraint(int)</a></span> - Constructor for class com.facebook.openwifirrm.ucentral.informationelement.<a href="com/facebook/openwifirrm/ucentral/informationelement/LocalPowerConstraint.html" title="class in com.facebook.openwifirrm.ucentral.informationelement">LocalPowerConstraint</a></dt>
+<dd>
+<div class="block">Constructor</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/models/State.Unit.html#localtime">localtime</a></span> - Variable in class com.facebook.openwifirrm.ucentral.models.<a href="com/facebook/openwifirrm/ucentral/models/State.Unit.html" title="class in com.facebook.openwifirrm.ucentral.models">State.Unit</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/DeviceConfig.html#location">location</a></span> - Variable in class com.facebook.openwifirrm.<a href="com/facebook/openwifirrm/DeviceConfig.html" title="class in com.facebook.openwifirrm">DeviceConfig</a></dt>
@@ -1675,22 +1759,22 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/prov/models/Venue.html#maps">maps</a></span> - Variable in class com.facebook.openwifirrm.ucentral.prov.models.<a href="com/facebook/openwifirrm/ucentral/prov/models/Venue.html" title="class in com.facebook.openwifirrm.ucentral.prov.models">Venue</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/operationelement/HTOperationElement.html#matchesForAggregation(com.facebook.openwifirrm.ucentral.operationelement.HTOperationElement)">matchesForAggregation(HTOperationElement)</a></span> - Method in class com.facebook.openwifirrm.ucentral.operationelement.<a href="com/facebook/openwifirrm/ucentral/operationelement/HTOperationElement.html" title="class in com.facebook.openwifirrm.ucentral.operationelement">HTOperationElement</a></dt>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/informationelement/HTOperationElement.html#matchesForAggregation(com.facebook.openwifirrm.ucentral.informationelement.HTOperationElement)">matchesForAggregation(HTOperationElement)</a></span> - Method in class com.facebook.openwifirrm.ucentral.informationelement.<a href="com/facebook/openwifirrm/ucentral/informationelement/HTOperationElement.html" title="class in com.facebook.openwifirrm.ucentral.informationelement">HTOperationElement</a></dt>
 <dd>
 <div class="block">Determine whether <code>this</code> and <code>other</code> "match" for the purpose of
  aggregating statistics.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/operationelement/VHTOperationElement.html#matchesForAggregation(com.facebook.openwifirrm.ucentral.operationelement.VHTOperationElement)">matchesForAggregation(VHTOperationElement)</a></span> - Method in class com.facebook.openwifirrm.ucentral.operationelement.<a href="com/facebook/openwifirrm/ucentral/operationelement/VHTOperationElement.html" title="class in com.facebook.openwifirrm.ucentral.operationelement">VHTOperationElement</a></dt>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/informationelement/VHTOperationElement.html#matchesForAggregation(com.facebook.openwifirrm.ucentral.informationelement.VHTOperationElement)">matchesForAggregation(VHTOperationElement)</a></span> - Method in class com.facebook.openwifirrm.ucentral.informationelement.<a href="com/facebook/openwifirrm/ucentral/informationelement/VHTOperationElement.html" title="class in com.facebook.openwifirrm.ucentral.informationelement">VHTOperationElement</a></dt>
 <dd>
 <div class="block">Determine whether <code>this</code> and <code>other</code> "match" for the purpose of
  aggregating statistics.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/operationelement/HTOperationElement.html#matchesHtForAggregation(java.lang.String,java.lang.String)">matchesHtForAggregation(String, String)</a></span> - Static method in class com.facebook.openwifirrm.ucentral.operationelement.<a href="com/facebook/openwifirrm/ucentral/operationelement/HTOperationElement.html" title="class in com.facebook.openwifirrm.ucentral.operationelement">HTOperationElement</a></dt>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/informationelement/HTOperationElement.html#matchesHtForAggregation(java.lang.String,java.lang.String)">matchesHtForAggregation(String, String)</a></span> - Static method in class com.facebook.openwifirrm.ucentral.informationelement.<a href="com/facebook/openwifirrm/ucentral/informationelement/HTOperationElement.html" title="class in com.facebook.openwifirrm.ucentral.informationelement">HTOperationElement</a></dt>
 <dd>
 <div class="block">Determines whether two HT operation elements should have their statistics
  aggregated.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/operationelement/VHTOperationElement.html#matchesVhtForAggregation(java.lang.String,java.lang.String)">matchesVhtForAggregation(String, String)</a></span> - Static method in class com.facebook.openwifirrm.ucentral.operationelement.<a href="com/facebook/openwifirrm/ucentral/operationelement/VHTOperationElement.html" title="class in com.facebook.openwifirrm.ucentral.operationelement">VHTOperationElement</a></dt>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/informationelement/VHTOperationElement.html#matchesVhtForAggregation(java.lang.String,java.lang.String)">matchesVhtForAggregation(String, String)</a></span> - Static method in class com.facebook.openwifirrm.ucentral.informationelement.<a href="com/facebook/openwifirrm/ucentral/informationelement/VHTOperationElement.html" title="class in com.facebook.openwifirrm.ucentral.informationelement">VHTOperationElement</a></dt>
 <dd>
 <div class="block">Determines whether two VHT operation elements should have their statistics
  aggregated.</div>
@@ -1698,6 +1782,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/optimizers/tpc/TPC.html#MAX_TX_POWER">MAX_TX_POWER</a></span> - Static variable in class com.facebook.openwifirrm.optimizers.tpc.<a href="com/facebook/openwifirrm/optimizers/tpc/TPC.html" title="class in com.facebook.openwifirrm.optimizers.tpc">TPC</a></dt>
 <dd>
 <div class="block">Maximum supported tx power (dBm), inclusive.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/informationelement/Country.CountryInfo.html#maximumTransmitPowerLevel">maximumTransmitPowerLevel</a></span> - Variable in class com.facebook.openwifirrm.ucentral.informationelement.<a href="com/facebook/openwifirrm/ucentral/informationelement/Country.CountryInfo.html" title="class in com.facebook.openwifirrm.ucentral.informationelement">Country.CountryInfo</a></dt>
+<dd>
+<div class="block">The maximum power, in dBm, allowed to be transmitted.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/models/State.Interface.SSID.Association.Rate.html#mcs">mcs</a></span> - Variable in class com.facebook.openwifirrm.ucentral.models.<a href="com/facebook/openwifirrm/ucentral/models/State.Interface.SSID.Association.Rate.html" title="class in com.facebook.openwifirrm.ucentral.models">State.Interface.SSID.Association.Rate</a></dt>
 <dd>&nbsp;</dd>
@@ -1870,7 +1958,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/models/State.Radio.html#noise">noise</a></span> - Variable in class com.facebook.openwifirrm.ucentral.models.<a href="com/facebook/openwifirrm/ucentral/models/State.Radio.html" title="class in com.facebook.openwifirrm.ucentral.models">State.Radio</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/operationelement/HTOperationElement.html#nongreenfieldHtStasPresent">nongreenfieldHtStasPresent</a></span> - Variable in class com.facebook.openwifirrm.ucentral.operationelement.<a href="com/facebook/openwifirrm/ucentral/operationelement/HTOperationElement.html" title="class in com.facebook.openwifirrm.ucentral.operationelement">HTOperationElement</a></dt>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/informationelement/HTOperationElement.html#nongreenfieldHtStasPresent">nongreenfieldHtStasPresent</a></span> - Variable in class com.facebook.openwifirrm.ucentral.informationelement.<a href="com/facebook/openwifirrm/ucentral/informationelement/HTOperationElement.html" title="class in com.facebook.openwifirrm.ucentral.informationelement">HTOperationElement</a></dt>
 <dd>
 <div class="block">False if all HT STAs that are associated are HT-greenfield capable or all HT
  peer mesh STAs are HT-greenfield capable; true otherwise.</div>
@@ -1899,6 +1987,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/gw/models/MobilePhoneNumber.html#number">number</a></span> - Variable in class com.facebook.openwifirrm.ucentral.gw.models.<a href="com/facebook/openwifirrm/ucentral/gw/models/MobilePhoneNumber.html" title="class in com.facebook.openwifirrm.ucentral.gw.models">MobilePhoneNumber</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/informationelement/Country.CountryInfo.html#numberOfChannels">numberOfChannels</a></span> - Variable in class com.facebook.openwifirrm.ucentral.informationelement.<a href="com/facebook/openwifirrm/ucentral/informationelement/Country.CountryInfo.html" title="class in com.facebook.openwifirrm.ucentral.informationelement">Country.CountryInfo</a></dt>
+<dd>
+<div class="block">Number of channels this CountryInfo applies to.</div>
+</dd>
 </dl>
 <a id="I:O">
 <!--   -->
@@ -1909,7 +2001,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/gw/models/UserInfo.html#oauthUserInfo">oauthUserInfo</a></span> - Variable in class com.facebook.openwifirrm.ucentral.gw.models.<a href="com/facebook/openwifirrm/ucentral/gw/models/UserInfo.html" title="class in com.facebook.openwifirrm.ucentral.gw.models">UserInfo</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/operationelement/HTOperationElement.html#obssNonHtStasPresent">obssNonHtStasPresent</a></span> - Variable in class com.facebook.openwifirrm.ucentral.operationelement.<a href="com/facebook/openwifirrm/ucentral/operationelement/HTOperationElement.html" title="class in com.facebook.openwifirrm.ucentral.operationelement">HTOperationElement</a></dt>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/informationelement/HTOperationElement.html#obssNonHtStasPresent">obssNonHtStasPresent</a></span> - Variable in class com.facebook.openwifirrm.ucentral.informationelement.<a href="com/facebook/openwifirrm/ucentral/informationelement/HTOperationElement.html" title="class in com.facebook.openwifirrm.ucentral.informationelement">HTOperationElement</a></dt>
 <dd>
 <div class="block">Indicates if the use of protection for non-HT STAs by overlapping BSSs is
  determined to be desirable.</div>
@@ -1957,6 +2049,26 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/prov/models/Venue.html#parent">parent</a></span> - Variable in class com.facebook.openwifirrm.ucentral.prov.models.<a href="com/facebook/openwifirrm/ucentral/prov/models/Venue.html" title="class in com.facebook.openwifirrm.ucentral.prov.models">Venue</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/informationelement/Country.CountryInfo.html#parse(com.google.gson.JsonObject)">parse(JsonObject)</a></span> - Static method in class com.facebook.openwifirrm.ucentral.informationelement.<a href="com/facebook/openwifirrm/ucentral/informationelement/Country.CountryInfo.html" title="class in com.facebook.openwifirrm.ucentral.informationelement">Country.CountryInfo</a></dt>
+<dd>
+<div class="block">Parse CountryInfo from the appropriate Json object.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/informationelement/Country.html#parse(com.google.gson.JsonObject)">parse(JsonObject)</a></span> - Static method in class com.facebook.openwifirrm.ucentral.informationelement.<a href="com/facebook/openwifirrm/ucentral/informationelement/Country.html" title="class in com.facebook.openwifirrm.ucentral.informationelement">Country</a></dt>
+<dd>
+<div class="block">Parse Country IE from the appropriate Json object.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/informationelement/LocalPowerConstraint.html#parse(com.google.gson.JsonObject)">parse(JsonObject)</a></span> - Static method in class com.facebook.openwifirrm.ucentral.informationelement.<a href="com/facebook/openwifirrm/ucentral/informationelement/LocalPowerConstraint.html" title="class in com.facebook.openwifirrm.ucentral.informationelement">LocalPowerConstraint</a></dt>
+<dd>
+<div class="block">Parse LocalPowerConstraint IE from appropriate Json object.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/informationelement/QbssLoad.html#parse(com.google.gson.JsonObject)">parse(JsonObject)</a></span> - Static method in class com.facebook.openwifirrm.ucentral.informationelement.<a href="com/facebook/openwifirrm/ucentral/informationelement/QbssLoad.html" title="class in com.facebook.openwifirrm.ucentral.informationelement">QbssLoad</a></dt>
+<dd>
+<div class="block">Parse QbssLoad IE from appropriate Json object.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/informationelement/TxPwrInfo.html#parse(com.google.gson.JsonObject)">parse(JsonObject)</a></span> - Static method in class com.facebook.openwifirrm.ucentral.informationelement.<a href="com/facebook/openwifirrm/ucentral/informationelement/TxPwrInfo.html" title="class in com.facebook.openwifirrm.ucentral.informationelement">TxPwrInfo</a></dt>
+<dd>
+<div class="block">Parse TxPwrInfo IE from appropriate Json object.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/RRMAlgorithm.html#parse(java.lang.String,java.lang.String)">parse(String, String)</a></span> - Static method in class com.facebook.openwifirrm.<a href="com/facebook/openwifirrm/RRMAlgorithm.html" title="class in com.facebook.openwifirrm">RRMAlgorithm</a></dt>
 <dd>
 <div class="block">Construct an RRMAlgorithm with a raw arguments string.</div>
@@ -2023,7 +2135,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/gw/models/MobilePhoneNumber.html#primary">primary</a></span> - Variable in class com.facebook.openwifirrm.ucentral.gw.models.<a href="com/facebook/openwifirrm/ucentral/gw/models/MobilePhoneNumber.html" title="class in com.facebook.openwifirrm.ucentral.gw.models">MobilePhoneNumber</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/operationelement/HTOperationElement.html#primaryChannel">primaryChannel</a></span> - Variable in class com.facebook.openwifirrm.ucentral.operationelement.<a href="com/facebook/openwifirrm/ucentral/operationelement/HTOperationElement.html" title="class in com.facebook.openwifirrm.ucentral.operationelement">HTOperationElement</a></dt>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/informationelement/HTOperationElement.html#primaryChannel">primaryChannel</a></span> - Variable in class com.facebook.openwifirrm.ucentral.informationelement.<a href="com/facebook/openwifirrm/ucentral/informationelement/HTOperationElement.html" title="class in com.facebook.openwifirrm.ucentral.informationelement">HTOperationElement</a></dt>
 <dd>
 <div class="block">Channel number of the primary channel.</div>
 </dd>
@@ -2085,6 +2197,16 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </a>
 <h2 class="title">Q</h2>
 <dl>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/WifiScanEntry.html#qbssLoad">qbssLoad</a></span> - Variable in class com.facebook.openwifirrm.ucentral.<a href="com/facebook/openwifirrm/ucentral/WifiScanEntry.html" title="class in com.facebook.openwifirrm.ucentral">WifiScanEntry</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/facebook/openwifirrm/ucentral/informationelement/QbssLoad.html" title="class in com.facebook.openwifirrm.ucentral.informationelement"><span class="typeNameLink">QbssLoad</span></a> - Class in <a href="com/facebook/openwifirrm/ucentral/informationelement/package-summary.html">com.facebook.openwifirrm.ucentral.informationelement</a></dt>
+<dd>
+<div class="block">This information element (IE) appears in wifiscan entries.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/informationelement/QbssLoad.html#%3Cinit%3E(int,int,int)">QbssLoad(int, int, int)</a></span> - Constructor for class com.facebook.openwifirrm.ucentral.informationelement.<a href="com/facebook/openwifirrm/ucentral/informationelement/QbssLoad.html" title="class in com.facebook.openwifirrm.ucentral.informationelement">QbssLoad</a></dt>
+<dd>
+<div class="block">Constructor</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/prov/models/InventoryTag.html#qrCode">qrCode</a></span> - Variable in class com.facebook.openwifirrm.ucentral.prov.models.<a href="com/facebook/openwifirrm/ucentral/prov/models/InventoryTag.html" title="class in com.facebook.openwifirrm.ucentral.prov.models">InventoryTag</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/modules/ConfigManager.html#queueAllZonesAndWakeUp()">queueAllZonesAndWakeUp()</a></span> - Method in class com.facebook.openwifirrm.modules.<a href="com/facebook/openwifirrm/modules/ConfigManager.html" title="class in com.facebook.openwifirrm.modules">ConfigManager</a></dt>
@@ -2201,7 +2323,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Revalidate the data model to remove any non-RRM-enabled devices.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/operationelement/HTOperationElement.html#rifsMode">rifsMode</a></span> - Variable in class com.facebook.openwifirrm.ucentral.operationelement.<a href="com/facebook/openwifirrm/ucentral/operationelement/HTOperationElement.html" title="class in com.facebook.openwifirrm.ucentral.operationelement">HTOperationElement</a></dt>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/informationelement/HTOperationElement.html#rifsMode">rifsMode</a></span> - Variable in class com.facebook.openwifirrm.ucentral.informationelement.<a href="com/facebook/openwifirrm/ucentral/informationelement/HTOperationElement.html" title="class in com.facebook.openwifirrm.ucentral.informationelement">HTOperationElement</a></dt>
 <dd>
 <div class="block">True if RIFS is permitted; false otherwise.</div>
 </dd>
@@ -2383,7 +2505,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">RRMScheduler parameters.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/operationelement/HTOperationElement.html#secondaryChannelOffset">secondaryChannelOffset</a></span> - Variable in class com.facebook.openwifirrm.ucentral.operationelement.<a href="com/facebook/openwifirrm/ucentral/operationelement/HTOperationElement.html" title="class in com.facebook.openwifirrm.ucentral.operationelement">HTOperationElement</a></dt>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/informationelement/HTOperationElement.html#secondaryChannelOffset">secondaryChannelOffset</a></span> - Variable in class com.facebook.openwifirrm.ucentral.informationelement.<a href="com/facebook/openwifirrm/ucentral/informationelement/HTOperationElement.html" title="class in com.facebook.openwifirrm.ucentral.informationelement">HTOperationElement</a></dt>
 <dd>
 <div class="block">Indicates the offset of the secondary channel relative to the primary
  channel.</div>
@@ -2532,7 +2654,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/models/State.Interface.html#ssids">ssids</a></span> - Variable in class com.facebook.openwifirrm.ucentral.models.<a href="com/facebook/openwifirrm/ucentral/models/State.Interface.html" title="class in com.facebook.openwifirrm.ucentral.models">State.Interface</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/operationelement/HTOperationElement.html#staChannelWidth">staChannelWidth</a></span> - Variable in class com.facebook.openwifirrm.ucentral.operationelement.<a href="com/facebook/openwifirrm/ucentral/operationelement/HTOperationElement.html" title="class in com.facebook.openwifirrm.ucentral.operationelement">HTOperationElement</a></dt>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/informationelement/HTOperationElement.html#staChannelWidth">staChannelWidth</a></span> - Variable in class com.facebook.openwifirrm.ucentral.informationelement.<a href="com/facebook/openwifirrm/ucentral/informationelement/HTOperationElement.html" title="class in com.facebook.openwifirrm.ucentral.informationelement">HTOperationElement</a></dt>
 <dd>
 <div class="block">Defines the channel widths that can be used to transmit to the STA.</div>
 </dd>
@@ -2591,6 +2713,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/models/State.Interface.SSID.Association.html#station">station</a></span> - Variable in class com.facebook.openwifirrm.ucentral.models.<a href="com/facebook/openwifirrm/ucentral/models/State.Interface.SSID.Association.html" title="class in com.facebook.openwifirrm.ucentral.models">State.Interface.SSID.Association</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/informationelement/QbssLoad.html#stationCount">stationCount</a></span> - Variable in class com.facebook.openwifirrm.ucentral.informationelement.<a href="com/facebook/openwifirrm/ucentral/informationelement/QbssLoad.html" title="class in com.facebook.openwifirrm.ucentral.informationelement">QbssLoad</a></dt>
+<dd>
+<div class="block">The total number of STAs currently associated with the BSS.</div>
+</dd>
 <dt><a href="com/facebook/openwifirrm/ucentral/gw/models/StatisticsDetails.html" title="class in com.facebook.openwifirrm.ucentral.gw.models"><span class="typeNameLink">StatisticsDetails</span></a> - Class in <a href="com/facebook/openwifirrm/ucentral/gw/models/package-summary.html">com.facebook.openwifirrm.ucentral.gw.models</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/gw/models/StatisticsDetails.html#%3Cinit%3E()">StatisticsDetails()</a></span> - Constructor for class com.facebook.openwifirrm.ucentral.gw.models.<a href="com/facebook/openwifirrm/ucentral/gw/models/StatisticsDetails.html" title="class in com.facebook.openwifirrm.ucentral.gw.models">StatisticsDetails</a></dt>
@@ -2601,7 +2727,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/gw/models/CommandInfo.html#status">status</a></span> - Variable in class com.facebook.openwifirrm.ucentral.gw.models.<a href="com/facebook/openwifirrm/ucentral/gw/models/CommandInfo.html" title="class in com.facebook.openwifirrm.ucentral.gw.models">CommandInfo</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/operationelement/HTOperationElement.html#stbcBeacon">stbcBeacon</a></span> - Variable in class com.facebook.openwifirrm.ucentral.operationelement.<a href="com/facebook/openwifirrm/ucentral/operationelement/HTOperationElement.html" title="class in com.facebook.openwifirrm.ucentral.operationelement">HTOperationElement</a></dt>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/informationelement/HTOperationElement.html#stbcBeacon">stbcBeacon</a></span> - Variable in class com.facebook.openwifirrm.ucentral.informationelement.<a href="com/facebook/openwifirrm/ucentral/informationelement/HTOperationElement.html" title="class in com.facebook.openwifirrm.ucentral.informationelement">HTOperationElement</a></dt>
 <dd>
 <div class="block">False in a primary beacon.</div>
 </dd>
@@ -2687,6 +2813,16 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/mysql/StateRecord.html#toString()">toString()</a></span> - Method in class com.facebook.openwifirrm.mysql.<a href="com/facebook/openwifirrm/mysql/StateRecord.html" title="class in com.facebook.openwifirrm.mysql">StateRecord</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/informationelement/Country.CountryInfo.html#toString()">toString()</a></span> - Method in class com.facebook.openwifirrm.ucentral.informationelement.<a href="com/facebook/openwifirrm/ucentral/informationelement/Country.CountryInfo.html" title="class in com.facebook.openwifirrm.ucentral.informationelement">Country.CountryInfo</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/informationelement/Country.html#toString()">toString()</a></span> - Method in class com.facebook.openwifirrm.ucentral.informationelement.<a href="com/facebook/openwifirrm/ucentral/informationelement/Country.html" title="class in com.facebook.openwifirrm.ucentral.informationelement">Country</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/informationelement/LocalPowerConstraint.html#toString()">toString()</a></span> - Method in class com.facebook.openwifirrm.ucentral.informationelement.<a href="com/facebook/openwifirrm/ucentral/informationelement/LocalPowerConstraint.html" title="class in com.facebook.openwifirrm.ucentral.informationelement">LocalPowerConstraint</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/informationelement/QbssLoad.html#toString()">toString()</a></span> - Method in class com.facebook.openwifirrm.ucentral.informationelement.<a href="com/facebook/openwifirrm/ucentral/informationelement/QbssLoad.html" title="class in com.facebook.openwifirrm.ucentral.informationelement">QbssLoad</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/informationelement/TxPwrInfo.html#toString()">toString()</a></span> - Method in class com.facebook.openwifirrm.ucentral.informationelement.<a href="com/facebook/openwifirrm/ucentral/informationelement/TxPwrInfo.html" title="class in com.facebook.openwifirrm.ucentral.informationelement">TxPwrInfo</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/models/WifiScanEntryResult.html#toString()">toString()</a></span> - Method in class com.facebook.openwifirrm.ucentral.models.<a href="com/facebook/openwifirrm/ucentral/models/WifiScanEntryResult.html" title="class in com.facebook.openwifirrm.ucentral.models">WifiScanEntryResult</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/UCentralApConfiguration.html#toString()">toString()</a></span> - Method in class com.facebook.openwifirrm.ucentral.<a href="com/facebook/openwifirrm/ucentral/UCentralApConfiguration.html" title="class in com.facebook.openwifirrm.ucentral">UCentralApConfiguration</a></dt>
@@ -2745,10 +2881,36 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Computed tx power assignments.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/WifiScanEntry.html#txPwrInfo">txPwrInfo</a></span> - Variable in class com.facebook.openwifirrm.ucentral.<a href="com/facebook/openwifirrm/ucentral/WifiScanEntry.html" title="class in com.facebook.openwifirrm.ucentral">WifiScanEntry</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/facebook/openwifirrm/ucentral/informationelement/TxPwrInfo.html" title="class in com.facebook.openwifirrm.ucentral.informationelement"><span class="typeNameLink">TxPwrInfo</span></a> - Class in <a href="com/facebook/openwifirrm/ucentral/informationelement/package-summary.html">com.facebook.openwifirrm.ucentral.informationelement</a></dt>
+<dd>
+<div class="block">This information element (IE) appears in wifiscan entries.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/informationelement/TxPwrInfo.html#%3Cinit%3E(int,int,int,int)">TxPwrInfo(int, int, int, int)</a></span> - Constructor for class com.facebook.openwifirrm.ucentral.informationelement.<a href="com/facebook/openwifirrm/ucentral/informationelement/TxPwrInfo.html" title="class in com.facebook.openwifirrm.ucentral.informationelement">TxPwrInfo</a></dt>
+<dd>
+<div class="block">Constructor</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/gw/models/ServiceEvent.html#type">type</a></span> - Variable in class com.facebook.openwifirrm.ucentral.gw.models.<a href="com/facebook/openwifirrm/ucentral/gw/models/ServiceEvent.html" title="class in com.facebook.openwifirrm.ucentral.gw.models">ServiceEvent</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/prov/models/Entity.html#type">type</a></span> - Variable in class com.facebook.openwifirrm.ucentral.prov.models.<a href="com/facebook/openwifirrm/ucentral/prov/models/Entity.html" title="class in com.facebook.openwifirrm.ucentral.prov.models">Entity</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/informationelement/Country.html#TYPE">TYPE</a></span> - Static variable in class com.facebook.openwifirrm.ucentral.informationelement.<a href="com/facebook/openwifirrm/ucentral/informationelement/Country.html" title="class in com.facebook.openwifirrm.ucentral.informationelement">Country</a></dt>
+<dd>
+<div class="block">Defined in 802.11</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/informationelement/LocalPowerConstraint.html#TYPE">TYPE</a></span> - Static variable in class com.facebook.openwifirrm.ucentral.informationelement.<a href="com/facebook/openwifirrm/ucentral/informationelement/LocalPowerConstraint.html" title="class in com.facebook.openwifirrm.ucentral.informationelement">LocalPowerConstraint</a></dt>
+<dd>
+<div class="block">Defined in 802.11</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/informationelement/QbssLoad.html#TYPE">TYPE</a></span> - Static variable in class com.facebook.openwifirrm.ucentral.informationelement.<a href="com/facebook/openwifirrm/ucentral/informationelement/QbssLoad.html" title="class in com.facebook.openwifirrm.ucentral.informationelement">QbssLoad</a></dt>
+<dd>
+<div class="block">Defined in 802.11</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/informationelement/TxPwrInfo.html#TYPE">TYPE</a></span> - Static variable in class com.facebook.openwifirrm.ucentral.informationelement.<a href="com/facebook/openwifirrm/ucentral/informationelement/TxPwrInfo.html" title="class in com.facebook.openwifirrm.ucentral.informationelement">TxPwrInfo</a></dt>
+<dd>
+<div class="block">Defined in 802.11</div>
+</dd>
 </dl>
 <a id="I:U">
 <!--   -->
@@ -3108,20 +3270,20 @@ the order they are declared.</div>
 <dd>
 <div class="block">vht_oper is short for "very high throughput operation element".</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/operationelement/VHTOperationElement.html#vhtMcsForNss">vhtMcsForNss</a></span> - Variable in class com.facebook.openwifirrm.ucentral.operationelement.<a href="com/facebook/openwifirrm/ucentral/operationelement/VHTOperationElement.html" title="class in com.facebook.openwifirrm.ucentral.operationelement">VHTOperationElement</a></dt>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/informationelement/VHTOperationElement.html#vhtMcsForNss">vhtMcsForNss</a></span> - Variable in class com.facebook.openwifirrm.ucentral.informationelement.<a href="com/facebook/openwifirrm/ucentral/informationelement/VHTOperationElement.html" title="class in com.facebook.openwifirrm.ucentral.informationelement">VHTOperationElement</a></dt>
 <dd>
 <div class="block">An 8-element array where each element is between 0 and 4 inclusive.</div>
 </dd>
-<dt><a href="com/facebook/openwifirrm/ucentral/operationelement/VHTOperationElement.html" title="class in com.facebook.openwifirrm.ucentral.operationelement"><span class="typeNameLink">VHTOperationElement</span></a> - Class in <a href="com/facebook/openwifirrm/ucentral/operationelement/package-summary.html">com.facebook.openwifirrm.ucentral.operationelement</a></dt>
+<dt><a href="com/facebook/openwifirrm/ucentral/informationelement/VHTOperationElement.html" title="class in com.facebook.openwifirrm.ucentral.informationelement"><span class="typeNameLink">VHTOperationElement</span></a> - Class in <a href="com/facebook/openwifirrm/ucentral/informationelement/package-summary.html">com.facebook.openwifirrm.ucentral.informationelement</a></dt>
 <dd>
 <div class="block">Very High Throughput (VHT) Operation Element, which is potentially present in
  wifiscan entries.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/operationelement/VHTOperationElement.html#%3Cinit%3E(byte,short,short,byte%5B%5D)">VHTOperationElement(byte, short, short, byte[])</a></span> - Constructor for class com.facebook.openwifirrm.ucentral.operationelement.<a href="com/facebook/openwifirrm/ucentral/operationelement/VHTOperationElement.html" title="class in com.facebook.openwifirrm.ucentral.operationelement">VHTOperationElement</a></dt>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/informationelement/VHTOperationElement.html#%3Cinit%3E(byte,short,short,byte%5B%5D)">VHTOperationElement(byte, short, short, byte[])</a></span> - Constructor for class com.facebook.openwifirrm.ucentral.informationelement.<a href="com/facebook/openwifirrm/ucentral/informationelement/VHTOperationElement.html" title="class in com.facebook.openwifirrm.ucentral.informationelement">VHTOperationElement</a></dt>
 <dd>
 <div class="block">Constructs an <code>HTOperationElement</code> using the given field values.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/operationelement/VHTOperationElement.html#%3Cinit%3E(java.lang.String)">VHTOperationElement(String)</a></span> - Constructor for class com.facebook.openwifirrm.ucentral.operationelement.<a href="com/facebook/openwifirrm/ucentral/operationelement/VHTOperationElement.html" title="class in com.facebook.openwifirrm.ucentral.operationelement">VHTOperationElement</a></dt>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifirrm/ucentral/informationelement/VHTOperationElement.html#%3Cinit%3E(java.lang.String)">VHTOperationElement(String)</a></span> - Constructor for class com.facebook.openwifirrm.ucentral.informationelement.<a href="com/facebook/openwifirrm/ucentral/informationelement/VHTOperationElement.html" title="class in com.facebook.openwifirrm.ucentral.informationelement">VHTOperationElement</a></dt>
 <dd>
 <div class="block">Constructs a <code>VHTOperationElement</code> by decoding <code>vhtOper</code>.</div>
 </dd>

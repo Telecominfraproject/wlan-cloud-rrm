@@ -137,7 +137,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <hr>
 <pre>public class <span class="typeNameLabel">WifiScanEntryResult</span>
 extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a></pre>
-<div class="block">Represents a single entry in wifi scan results.</div>
+<div class="block">Represents a single entry in wifi scan results.
+ ies[] array is not stored directly, but parsed into WifiScanEntry fields</div>
 </li>
 </ul>
 </div>
@@ -188,35 +189,28 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 </td>
 </tr>
 <tr class="rowColor">
-<td class="colFirst"><code>com.google.gson.JsonArray</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#ies">ies</a></span></code></th>
-<td class="colLast">
-<div class="block">IE = information element</div>
-</td>
-</tr>
-<tr class="altColor">
 <td class="colFirst"><code>long</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#last_seen">last_seen</a></span></code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>int</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#signal">signal</a></span></code></th>
 <td class="colLast">
 <div class="block">Signal strength measured in dBm</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#ssid">ssid</a></span></code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>long</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#tsf">tsf</a></span></code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#vht_oper">vht_oper</a></span></code></th>
 <td class="colLast">
@@ -415,20 +409,10 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <a id="frequency">
 <!--   -->
 </a>
-<ul class="blockList">
+<ul class="blockListLast">
 <li class="blockList">
 <h4>frequency</h4>
 <pre>public&nbsp;int frequency</pre>
-</li>
-</ul>
-<a id="ies">
-<!--   -->
-</a>
-<ul class="blockListLast">
-<li class="blockList">
-<h4>ies</h4>
-<pre>public&nbsp;com.google.gson.JsonArray ies</pre>
-<div class="block">IE = information element</div>
 </li>
 </ul>
 </li>

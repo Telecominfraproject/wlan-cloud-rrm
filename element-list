@@ -6,7 +6,7 @@ com.facebook.openwifirrm.optimizers.channel
 com.facebook.openwifirrm.optimizers.tpc
 com.facebook.openwifirrm.ucentral
 com.facebook.openwifirrm.ucentral.gw.models
+com.facebook.openwifirrm.ucentral.informationelement
 com.facebook.openwifirrm.ucentral.models
-com.facebook.openwifirrm.ucentral.operationelement
 com.facebook.openwifirrm.ucentral.prov.models
 com.facebook.openwifirrm.ucentral.prov.rrm.models
