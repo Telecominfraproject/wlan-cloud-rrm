@@ -8,6 +8,7 @@
 
 package com.facebook.openwifirrm.modules;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -159,7 +160,6 @@ public class ProvMonitor implements Runnable {
 			return null;
 		}
 
-		// RRMScheduler.parseIntoQuartzCron will only return an array of length 1 or 2
 		String[] crons = RRMScheduler
 			.parseIntoQuartzCron(details.rrm.schedule);
 		if (crons == null || crons.length == 0) {
@@ -174,7 +174,7 @@ public class ProvMonitor implements Runnable {
 		}
 
 		RRMSchedule schedule = new RRMSchedule();
-		schedule.cron = crons;
+		schedule.cron = Arrays.asList(crons);
 
 		if (details.rrm.algorithms != null) {
 			schedule.algorithms =

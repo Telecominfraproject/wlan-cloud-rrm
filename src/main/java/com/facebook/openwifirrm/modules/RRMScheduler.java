@@ -77,10 +77,9 @@ public class RRMScheduler {
 
 	/**
 	 * The job keys with active triggers scheduled. Job keys take the format of
-	 * <zone>:<index>, where index applies only if there are multiple schedules for
-	 * one zone
+	 * {@code <zone>:<index>}
 	 *
-	 * @see RRMScheduler.parseIntoQuartzCron
+	 * @see #parseIntoQuartzCron(String)
 	 * */
 	private Set<String> scheduledJobKeys;
 
@@ -134,8 +133,7 @@ public class RRMScheduler {
 		final int DAY_OF_MONTH_INDEX = 3;
 		final int DAY_OF_WEEK_INDEX = 5;
 
-		// make a copy since it's possible it'll be used below
-		String dayOfMonth = new String(split[DAY_OF_MONTH_INDEX]);
+		String dayOfMonth = split[DAY_OF_MONTH_INDEX];
 		String dayOfWeek = split[DAY_OF_WEEK_INDEX];
 
 		// Quartz uses 1-7, while standard cron expects 0-6 so replace all
@@ -168,6 +166,10 @@ public class RRMScheduler {
 				!CronExpression.isValidExpression(dayOfWeekCron) ||
 					!CronExpression.isValidExpression(dayOfMonthCron)
 			) {
+				logger.error(
+					"Unable to parse cron {} into valid crons",
+					linuxCron
+				);
 				return null;
 			}
 
@@ -260,23 +262,16 @@ public class RRMScheduler {
 			RRMSchedule schedule = config.schedule;
 			if (
 				schedule == null || schedule.cron == null ||
-					schedule.cron.length == 0
+					schedule.cron.isEmpty()
 			) {
 				continue; // RRM not scheduled
 			}
 
-			if (
-				schedule.cron == null ||
-					schedule.cron.length == 0
-			) {
-				continue;
-			}
-
-			for (int i = 0; i < schedule.cron.length; i++) {
-				String cron = schedule.cron[i];
-
+			for (int i = 0; i < schedule.cron.size(); i++) {
+				String cron = schedule.cron.get(i);
 				// if even one schedule has invalid cron, the whole thing is probably wrong
 				if (cron == null || cron.isEmpty()) {
+					logger.error("There was an invalid cron in the schedule");
 					break;
 				}
 
