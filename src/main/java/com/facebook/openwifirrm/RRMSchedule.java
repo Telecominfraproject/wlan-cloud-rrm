@@ -19,9 +19,9 @@ public class RRMSchedule {
 	 *
 	 * This field expects a cron-like format as defined by the Quartz Job
 	 * Scheduler (CronTrigger):
-	 * https://www.quartz-scheduler.org/documentation/quartz-2.3.0/tutorials/crontrigger.html
+	 * https://www.quartz-scheduler.org/documentation/quartz-2.4.0/tutorials/crontrigger.html
 	 */
-	public String cron;
+	public List<String> crons;
 
 	/**
 	 * The list of RRM algorithms to run.

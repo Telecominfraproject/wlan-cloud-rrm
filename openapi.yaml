@@ -478,8 +478,10 @@ components:
     RRMSchedule:
       type: object
       properties:
-        cron:
-          type: string
+        crons:
+          type: array
+          items:
+            type: string
         algorithms:
           type: array
           items:

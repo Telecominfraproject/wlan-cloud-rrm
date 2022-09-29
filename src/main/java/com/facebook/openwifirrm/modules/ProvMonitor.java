@@ -8,6 +8,7 @@
 
 package com.facebook.openwifirrm.modules;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -159,12 +160,21 @@ public class ProvMonitor implements Runnable {
 			return null;
 		}
 
-		RRMSchedule schedule = new RRMSchedule();
-		schedule.cron = RRMScheduler
+		String[] crons = RRMScheduler
 			.parseIntoQuartzCron(details.rrm.schedule);
-		if (schedule.cron == null || schedule.cron.isEmpty()) {
+		if (crons == null || crons.length == 0) {
 			return null;
 		}
+		// if ANY crons are invalid throw it out since it doesn't make sense to
+		// schedule partial jobs
+		for (String cron : crons) {
+			if (cron == null || cron.isEmpty()) {
+				return null;
+			}
+		}
+
+		RRMSchedule schedule = new RRMSchedule();
+		schedule.crons = Arrays.asList(crons);
 
 		if (details.rrm.algorithms != null) {
 			schedule.algorithms =
@@ -175,6 +185,7 @@ public class ProvMonitor implements Runnable {
 					)
 					.collect(Collectors.toList());
 		}
+
 		return schedule;
 	}
 
