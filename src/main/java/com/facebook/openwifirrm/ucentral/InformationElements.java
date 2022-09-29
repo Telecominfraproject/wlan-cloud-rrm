@@ -40,10 +40,11 @@ public final class InformationElements {
 			return false;
 		}
 		InformationElements other = (InformationElements) obj;
-		return Objects.equals(country, other.country)
-			&& Objects.equals(localPowerConstraint, other.localPowerConstraint)
-			&& Objects.equals(qbssLoad, other.qbssLoad)
-			&& Objects.equals(txPwrInfo, other.txPwrInfo);
+		return Objects.equals(country, other.country) && Objects.equals(
+			localPowerConstraint,
+			other.localPowerConstraint
+		) && Objects.equals(qbssLoad, other.qbssLoad) &&
+			Objects.equals(txPwrInfo, other.txPwrInfo);
 	}
 
 }
