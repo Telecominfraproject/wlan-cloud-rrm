@@ -204,7 +204,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr id="i0" class="altColor">
-<td class="colFirst"><code>static <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
+<td class="colFirst"><code>static <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>[]</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#parseIntoQuartzCron(java.lang.String)">parseIntoQuartzCron</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;linuxCron)</code></th>
 <td class="colLast">
 <div class="block">Parses Linux cron spec (with seconds) into Quartz compatible cron spec.</div>
@@ -291,7 +291,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <ul class="blockList">
 <li class="blockList">
 <h4>parseIntoQuartzCron</h4>
-<pre class="methodSignature">public static&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;parseIntoQuartzCron&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;linuxCron)</pre>
+<pre class="methodSignature">public static&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>[]&nbsp;parseIntoQuartzCron&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;linuxCron)</pre>
 <div class="block">Parses Linux cron spec (with seconds) into Quartz compatible cron spec.
  Quartz does not allow setting both day of week and day of month. If valid
  Quartz cron already we don't need to do anything. Otherwise we can't use
@@ -302,10 +302,11 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <dd><code>linuxCron</code> - Linux cron with seconds
         (seconds minutes hours day_of_month month day_of_week [year])</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>String a Quartz supported cron</dd>
+<dd>String[] an array of length 1 or 2 of Quartz supported cron that's
+         equivalent to the original linux cron</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/IllegalArgumentException.html?is-external=true" title="class or interface in java.lang" class="externalLink">IllegalArgumentException</a></code> - when a linux cron cannot be parsed
-         into a valid Quartz spec</dd>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/IllegalArgumentException.html?is-external=true" title="class or interface in java.lang" class="externalLink">IllegalArgumentException</a></code> - when a linux cron cannot be parsed into a
+         valid Quartz spec</dd>
 </dl>
 </li>
 </ul>
@@ -338,7 +339,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <h4>syncTriggers</h4>
 <pre class="methodSignature">public&nbsp;void&nbsp;syncTriggers()</pre>
 <div class="block">Synchronize triggers to the current topology, adding/updating/deleting
- them as necessary. This updates <a href="#scheduledZones"><code>scheduledZones</code></a>.</div>
+ them as necessary. This updates <a href="#scheduledJobKeys"><code>scheduledJobKeys</code></a>.</div>
 </li>
 </ul>
 <a id="performRRM(java.lang.String)">
