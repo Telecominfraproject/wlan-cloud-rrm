@@ -10,10 +10,6 @@ package com.facebook.openwifirrm.ucentral;
 
 import java.util.Objects;
 
-import com.facebook.openwifirrm.ucentral.informationelement.Country;
-import com.facebook.openwifirrm.ucentral.informationelement.LocalPowerConstraint;
-import com.facebook.openwifirrm.ucentral.informationelement.QbssLoad;
-import com.facebook.openwifirrm.ucentral.informationelement.TxPwrInfo;
 import com.facebook.openwifirrm.ucentral.models.WifiScanEntryResult;
 
 /**
@@ -26,10 +22,7 @@ public class WifiScanEntry extends WifiScanEntryResult {
 	 * time reference.
 	 */
 	public long unixTimeMs;
-	public Country country;
-	public QbssLoad qbssLoad;
-	public LocalPowerConstraint localPowerConstraint;
-	public TxPwrInfo txPwrInfo;
+	public InformationElements ies;
 
 	/** Default Constructor. */
 	public WifiScanEntry() {}
@@ -38,23 +31,14 @@ public class WifiScanEntry extends WifiScanEntryResult {
 	public WifiScanEntry(WifiScanEntry o) {
 		super(o);
 		this.unixTimeMs = o.unixTimeMs;
-		this.country = o.country;
-		this.qbssLoad = o.qbssLoad;
-		this.localPowerConstraint = o.localPowerConstraint;
-		this.txPwrInfo = o.txPwrInfo;
+		this.ies = o.ies; // TODO deep copy?
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + Objects.hash(
-			country,
-			localPowerConstraint,
-			qbssLoad,
-			txPwrInfo,
-			unixTimeMs
-		);
+		result = prime * result + Objects.hash(ies, unixTimeMs);
 		return result;
 	}
 
@@ -70,12 +54,7 @@ public class WifiScanEntry extends WifiScanEntryResult {
 			return false;
 		}
 		WifiScanEntry other = (WifiScanEntry) obj;
-		return Objects.equals(country, other.country) && Objects.equals(
-			localPowerConstraint,
-			other.localPowerConstraint
-		) && Objects.equals(qbssLoad, other.qbssLoad) && Objects
-			.equals(txPwrInfo, other.txPwrInfo) &&
-			unixTimeMs == other.unixTimeMs;
+		return Objects.equals(ies, other.ies) && unixTimeMs == other.unixTimeMs;
 	}
 
 	@Override
@@ -87,5 +66,4 @@ public class WifiScanEntry extends WifiScanEntryResult {
 			unixTimeMs
 		);
 	}
-
 }
