@@ -142,7 +142,7 @@ public class UCentralClient {
 	 */
 	private WebTokenResult accessToken;
 
-	/** Time window to refresh token in seconds. */
+	/** Time window before expiry (6 hours) in secondes */
 	private final int TOKEN_REFRESH_WINDOW_S = 21600;
 
 	/**
@@ -210,9 +210,9 @@ public class UCentralClient {
 			logger.debug("Response body: {}", response.getBody());
 			return false;
 		}
-		if (token.access_token == null || token.access_token.isEmpty()) {
+		if (token == null || token.access_token == null || token.access_token.isEmpty()) {
 			logger.error("Login failed: Missing access token");
-			logger.debug("Response body: {}", token.toString());
+			logger.debug("Response body: {}", response.toString());
 			return false;
 		}
 		this.accessToken = token;
@@ -224,22 +224,24 @@ public class UCentralClient {
 		return loadSystemEndpoints();
 	}
 
+	/** 
+	 * when use public endpoints, refresh the access token if it's expired. 
+	 */
+	public synchronized void refreshAccessToken(){
+		if(usePublicEndpoints){
+			accessToken = getAccessToken();
+		}
+	}
+
 	/**
 	 * Check if an access token is expired.
 	 *
 	 * @return true if the access token is expired
 	 */
 	private boolean isAccessTokenExpired() {
-		return accessToken.created + accessToken.idle_timeout <
-			Instant.now().getEpochSecond();
-	}
-
-	/**
-	 * Check if the refresh token is expired.
-	 *
-	 * @return true if the refresh token is expired
-	 */
-	private boolean isRefreshTokenExpired() {
+		if(accessToken == null){
+			return true;
+		}
 		return accessToken.created + TOKEN_REFRESH_WINDOW_S <
 			Instant.now().getEpochSecond();
 	}
@@ -252,8 +254,11 @@ public class UCentralClient {
 	 * @return a valid access token ({@code WebTokenResult})
 	 */
 	private WebTokenResult getAccessToken() {
-		if (isRefreshTokenExpired()) {
-			logger.info("Refresh token is expired, login again");
+		if (!usePublicEndpoints){
+			return null;
+		}
+		if (accessToken == null) {
+			logger.info("Token is expired, login again");
 			if (login()) {
 				return accessToken;
 			}
@@ -280,18 +285,21 @@ public class UCentralClient {
 	 * @return valid access token if success, otherwise return null.
 	 */
 	private WebTokenResult refreshToken() {
+		if(accessToken == null){
+			return null;
+		}
 		WebTokenRefreshRequest refreshRequest = new WebTokenRefreshRequest();
 		refreshRequest.userId = username;
 		refreshRequest.refreshToken = accessToken.refresh_token;
 		logger.debug("refresh token: {}", accessToken.refresh_token);
-		Map<String, Object> query =
+		Map<String, Object> parameters =
 			Collections.singletonMap("grant_type", "refresh_token");
 		HttpResponse<String> response =
 			httpPost(
 				"oauth2",
 				OWSEC_SERVICE,
 				refreshRequest,
-				query
+				parameters
 			);
 		if (!response.isSuccess()) {
 			logger.error(
@@ -353,6 +361,7 @@ public class UCentralClient {
 			logger.debug("Response body: {}", respBody.toString());
 			return false;
 		}
+		refreshAccessToken();
 		return true;
 	}
 
@@ -367,7 +376,6 @@ public class UCentralClient {
 		) {
 			return false;
 		}
-		accessToken = getAccessToken();
 		if (usePublicEndpoints && accessToken == null) {
 			return false;
 		}
@@ -382,7 +390,6 @@ public class UCentralClient {
 		if (!serviceEndpoints.containsKey(OWPROV_SERVICE)) {
 			return false;
 		}
-		accessToken = getAccessToken();
 		if (usePublicEndpoints && accessToken == null) {
 			return false;
 		}
@@ -446,13 +453,13 @@ public class UCentralClient {
 		String endpoint,
 		String service,
 		Object body,
-		Map<String, Object> query
+		Map<String, Object> parameters
 	) {
 		return httpPost(
 			endpoint,
 			service,
 			body,
-			query,
+			parameters,
 			socketParams.connectTimeoutMs,
 			socketParams.socketTimeoutMs
 		);
@@ -463,7 +470,7 @@ public class UCentralClient {
 		String endpoint,
 		String service,
 		Object body,
-		Map<String, Object> query,
+		Map<String, Object> parameters,
 		int connectTimeoutMs,
 		int socketTimeoutMs
 	) {
@@ -472,8 +479,8 @@ public class UCentralClient {
 			.header("accept", "application/json")
 			.connectTimeout(connectTimeoutMs)
 			.socketTimeout(socketTimeoutMs);
-		if (query != null && !query.isEmpty()) {
-			req.queryString(query);
+		if (parameters != null && !parameters.isEmpty()) {
+			req.queryString(parameters);
 		}
 		if (usePublicEndpoints) {
 			if (accessToken != null) {

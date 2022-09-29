@@ -218,7 +218,8 @@ public class DataCollector implements Runnable {
 				return;
 			}
 		}
-
+		client.refreshAccessToken();
+		
 		// Fetch device list
 		List<DeviceWithStatus> devices = client.getDevices();
 		if (devices == null) {

@@ -103,6 +103,7 @@ public class ProvMonitor implements Runnable {
 				return;
 			}
 		}
+		client.refreshAccessToken();
 
 		// Fetch data from owprov
 		// TODO: this may change later - for now, we only fetch inventory and

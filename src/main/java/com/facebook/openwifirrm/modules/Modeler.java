@@ -238,7 +238,8 @@ public class Modeler implements Runnable {
 				return;
 			}
 		}
-
+		client.refreshAccessToken();
+		
 		// TODO: backfill data from database?
 
 		// Fetch state from uCentralGw
