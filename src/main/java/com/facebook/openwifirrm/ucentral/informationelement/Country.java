@@ -30,6 +30,7 @@ public class Country {
 	/** Defined in 802.11 */
 	public static final int TYPE = 7;
 
+	/** Constraints for a subset of channels in the AP's country */
 	public static class CountryInfo {
 		/**
 		 * The lowest channel number in the CountryInfo.
@@ -124,15 +125,9 @@ public class Country {
 		JsonElement constraintsObject = contents.get("constraints");
 		if (constraintsObject != null) {
 			for (JsonElement jsonElement : constraintsObject.getAsJsonArray()) {
-				try {
-					constraints
-						.add(CountryInfo.parse(jsonElement.getAsJsonObject()));
-				} catch (NullPointerException e) {
-					logger.debug(
-						"Skipping invalid constraint encountered in Country IE.",
-						e
-					);
-				}
+				CountryInfo countryInfo =
+					CountryInfo.parse(jsonElement.getAsJsonObject());
+				constraints.add(countryInfo);
 			}
 		}
 		return new Country(constraints);

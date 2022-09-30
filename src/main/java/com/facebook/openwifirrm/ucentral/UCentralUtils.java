@@ -111,8 +111,9 @@ public class UCentralUtils {
 			logger.debug("Wifiscan entry does not contain 'ies' field.");
 			return;
 		}
-		JsonArray ies = iesJsonElement.getAsJsonArray();
-		for (JsonElement ie : ies) {
+		JsonArray iesJsonArray = iesJsonElement.getAsJsonArray();
+		InformationElements ieContainer = new InformationElements();
+		for (JsonElement ie : iesJsonArray) {
 			JsonElement typeElement = ie.getAsJsonObject().get("type");
 			if (typeElement == null) {
 				continue;
@@ -122,23 +123,25 @@ public class UCentralUtils {
 			try {
 				switch (typeElement.getAsInt()) {
 				case Country.TYPE:
-					entry.country = Country.parse(contents);
+					ieContainer.country = Country.parse(contents);
 					break;
 				case QbssLoad.TYPE:
-					entry.qbssLoad = QbssLoad.parse(contents);
+					ieContainer.qbssLoad = QbssLoad.parse(contents);
 					break;
 				case LocalPowerConstraint.TYPE:
-					entry.localPowerConstraint =
+					ieContainer.localPowerConstraint =
 						LocalPowerConstraint.parse(contents);
 					break;
 				case TxPwrInfo.TYPE:
-					entry.txPwrInfo = TxPwrInfo.parse(contents);
+					ieContainer.txPwrInfo = TxPwrInfo.parse(contents);
 					break;
 				}
-			} catch (NullPointerException e) {
+			} catch (Exception e) {
 				logger.debug("Skipping invalid IE.", e);
+				continue;
 			}
 		}
+		entry.ieContainer = ieContainer;
 	}
 
 	/**

@@ -10,6 +10,7 @@ package com.facebook.openwifirrm.ucentral.informationelement;
 
 import java.util.Objects;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 /**
@@ -61,9 +62,14 @@ public class QbssLoad {
 		this.availableAdmissionCapacity = availableAdmissionCapacity;
 	}
 
-	/** Parse QbssLoad IE from appropriate Json object. */
+	/** Parse QbssLoad IE from appropriate Json object; return null if invalid. */
 	public static QbssLoad parse(JsonObject contents) {
-		contents = contents.get("802.11e CCA Version").getAsJsonObject();
+		// unclear why there is this additional nested layer
+		JsonElement ccaContentJsonElement = contents.get("802.11e CCA Version");
+		if (ccaContentJsonElement == null) {
+			return null;
+		}
+		contents = ccaContentJsonElement.getAsJsonObject();
 		final int stationCount = contents.get("Station Count").getAsInt();
 		final int channelUtilization =
 			contents.get("Channel Utilization").getAsInt();
