@@ -193,8 +193,8 @@ public class UCentralUtils {
 			) {
 				currentValue = fieldValue.getAsInt();
 			} else {
-				logger.error(
-					"Unable to get field {} as int, value was {}",
+				logger.debug(
+					"Unable to get field '{}' as int, value was {}",
 					fieldName,
 					fieldValue.toString()
 				);
