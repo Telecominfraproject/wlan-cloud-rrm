@@ -183,9 +183,23 @@ public class UCentralUtils {
 				continue;
 			}
 
-			// Compare vs. existing value
-			int currentValue = radioConfig.get(fieldName).getAsInt();
-			if (currentValue == newValue) {
+			// Compare vs. existing value.
+			// not all values are int so override those values
+			Integer currentValue = null;
+			JsonElement fieldValue = radioConfig.get(fieldName);
+			try {
+				currentValue = fieldValue.getAsInt();
+			} catch (NumberFormatException e) {
+				logger.error(
+					String.format(
+						"Unable to get field %s as int, value was %s",
+						fieldName,
+						fieldValue.toString()
+					),
+					e
+				);
+			}
+			if (currentValue != null && currentValue == newValue) {
 				logger.info(
 					"Device {}: {} {} is already {}",
 					serialNumber,
@@ -203,7 +217,7 @@ public class UCentralUtils {
 					operationalBand,
 					fieldName,
 					newValue,
-					currentValue
+					currentValue != null ? currentValue : fieldValue.toString()
 				);
 				wasModified = true;
 			}
