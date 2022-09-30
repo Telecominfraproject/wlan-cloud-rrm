@@ -22,8 +22,8 @@ import com.facebook.openwifirrm.aggregators.Aggregator;
 import com.facebook.openwifirrm.aggregators.MeanAggregator;
 import com.facebook.openwifirrm.modules.Modeler.DataModel;
 import com.facebook.openwifirrm.ucentral.WifiScanEntry;
-import com.facebook.openwifirrm.ucentral.informationelement.HTOperationElement;
-import com.facebook.openwifirrm.ucentral.informationelement.VHTOperationElement;
+import com.facebook.openwifirrm.ucentral.informationelement.HTOperation;
+import com.facebook.openwifirrm.ucentral.informationelement.VHTOperation;
 
 /**
  * Modeler utilities.
@@ -239,9 +239,9 @@ public class ModelerUtils {
 		return Objects.equals(entry1.bssid, entry2.bssid) &&
 			entry1.frequency == entry2.frequency &&
 			entry1.channel == entry2.channel &&
-			HTOperationElement
+			HTOperation
 				.matchesHtForAggregation(entry1.ht_oper, entry2.ht_oper) &&
-			VHTOperationElement
+			VHTOperation
 				.matchesVhtForAggregation(entry1.vht_oper, entry2.vht_oper);
 	}
 

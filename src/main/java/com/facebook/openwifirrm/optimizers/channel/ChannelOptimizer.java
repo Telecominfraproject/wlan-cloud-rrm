@@ -25,8 +25,8 @@ import com.facebook.openwifirrm.modules.Modeler.DataModel;
 import com.facebook.openwifirrm.ucentral.UCentralConstants;
 import com.facebook.openwifirrm.ucentral.UCentralUtils;
 import com.facebook.openwifirrm.ucentral.WifiScanEntry;
-import com.facebook.openwifirrm.ucentral.informationelement.HTOperationElement;
-import com.facebook.openwifirrm.ucentral.informationelement.VHTOperationElement;
+import com.facebook.openwifirrm.ucentral.informationelement.HTOperation;
+import com.facebook.openwifirrm.ucentral.informationelement.VHTOperation;
 import com.facebook.openwifirrm.ucentral.models.State;
 
 /**
@@ -208,13 +208,13 @@ public abstract class ChannelOptimizer {
 			return MIN_CHANNEL_WIDTH;
 		}
 
-		HTOperationElement htOperObj = new HTOperationElement(htOper);
+		HTOperation htOperObj = new HTOperation(htOper);
 		if (vhtOper == null) {
 			// HT mode only supports 20/40 MHz
 			return htOperObj.staChannelWidth ? 40 : 20;
 		} else {
 			// VHT/HE mode supports 20/40/160/80+80 MHz
-			VHTOperationElement vhtOperObj = new VHTOperationElement(vhtOper);
+			VHTOperation vhtOperObj = new VHTOperation(vhtOper);
 			if (!htOperObj.staChannelWidth && vhtOperObj.channelWidth == 0) {
 				return 20;
 			} else if (

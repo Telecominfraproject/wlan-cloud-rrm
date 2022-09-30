@@ -12,11 +12,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
 
-public class HTOperationElementTest {
+public class HTOperationTest {
 	@Test
 	void testGetHtOper() {
 		String htOper = "AQAEAAAAAAAAAAAAAAAAAAAAAAAAAA==";
-		HTOperationElement htOperObj = new HTOperationElement(htOper);
+		HTOperation htOperObj = new HTOperation(htOper);
 		byte expectedPrimaryChannel = 1;
 		byte expectedSecondaryChannelOffset = 0;
 		boolean expectedStaChannelWidth = false;
@@ -28,7 +28,7 @@ public class HTOperationElementTest {
 		boolean expectedDualBeacon = false;
 		boolean expectedDualCtsProtection = false;
 		boolean expectedStbcBeacon = false;
-		HTOperationElement expectedHtOperObj = new HTOperationElement(
+		HTOperation expectedHtOperObj = new HTOperation(
 			expectedPrimaryChannel,
 			expectedSecondaryChannelOffset,
 			expectedStaChannelWidth,
@@ -44,11 +44,11 @@ public class HTOperationElementTest {
 		assertEquals(expectedHtOperObj, htOperObj);
 
 		htOper = "JAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==";
-		htOperObj = new HTOperationElement(htOper);
+		htOperObj = new HTOperation(htOper);
 		// all fields except the primary channel and nongreenfield field are the same
 		expectedPrimaryChannel = 36;
 		expectedNongreenfieldHtStasPresent = false;
-		expectedHtOperObj = new HTOperationElement(
+		expectedHtOperObj = new HTOperation(
 			expectedPrimaryChannel,
 			expectedSecondaryChannelOffset,
 			expectedStaChannelWidth,
