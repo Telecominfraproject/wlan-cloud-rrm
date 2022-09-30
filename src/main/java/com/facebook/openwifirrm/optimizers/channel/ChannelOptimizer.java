@@ -234,8 +234,9 @@ public abstract class ChannelOptimizer {
 				// the difference of 8 means it is consecutive
 				int channelDiff =
 					Math.abs(vhtOperObj.channel1 - vhtOperObj.channel2);
-				// the "8080" below does not mean 8080 MHz wide, it refers to 80+80 MHz channel
-				return channelDiff == 8 ? 160 : 8080;
+				// TODO it will currently return just 80 for 80p80 - it should be dealt
+				// with properly.
+				return channelDiff == 8 ? 160 : 80;
 			} else {
 				return MIN_CHANNEL_WIDTH;
 			}
