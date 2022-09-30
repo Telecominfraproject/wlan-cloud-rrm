@@ -26,7 +26,7 @@ public class UCentralUtilsTest {
 	@Test
 	void test_setRadioConfigFieldChannel() throws Exception {
 		final String serialNumber = "aaaaaaaaaaaa";
-		final int expectedChannel = 10;
+		final int expectedChannel = 1;
 		final Map<String, Integer> newValueList = Collections
 			.singletonMap(UCentralConstants.BAND_5G, expectedChannel);
 
@@ -56,7 +56,7 @@ public class UCentralUtilsTest {
 
 		// normal field, not modified
 		config = new UCentralApConfiguration(
-			"{\"interfaces\": [], \"radios\": [{\"band\": \"5G\", \"channel\": 10}]}"
+			"{\"interfaces\": [], \"radios\": [{\"band\": \"5G\", \"channel\": 1}]}"
 		);
 		modified = UCentralUtils
 			.setRadioConfigField(serialNumber, config, "channel", newValueList);

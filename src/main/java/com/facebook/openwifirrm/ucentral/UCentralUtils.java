@@ -187,18 +187,19 @@ public class UCentralUtils {
 			// not all values are int so override those values
 			Integer currentValue = null;
 			JsonElement fieldValue = radioConfig.get(fieldName);
-			try {
+			if (
+				fieldValue.isJsonPrimitive() &&
+					fieldValue.getAsJsonPrimitive().isNumber()
+			) {
 				currentValue = fieldValue.getAsInt();
-			} catch (NumberFormatException e) {
+			} else {
 				logger.error(
-					String.format(
-						"Unable to get field %s as int, value was %s",
-						fieldName,
-						fieldValue.toString()
-					),
-					e
+					"Unable to get field {} as int, value was {}",
+					fieldName,
+					fieldValue.toString()
 				);
 			}
+
 			if (currentValue != null && currentValue == newValue) {
 				logger.info(
 					"Device {}: {} {} is already {}",
