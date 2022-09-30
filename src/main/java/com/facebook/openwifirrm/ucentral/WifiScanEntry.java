@@ -55,7 +55,8 @@ public class WifiScanEntry extends WifiScanEntryResult {
 			return false;
 		}
 		WifiScanEntry other = (WifiScanEntry) obj;
-		return Objects.equals(ieContainer, other.ieContainer) && unixTimeMs == other.unixTimeMs;
+		return Objects.equals(ieContainer, other.ieContainer) &&
+			unixTimeMs == other.unixTimeMs;
 	}
 
 	@Override

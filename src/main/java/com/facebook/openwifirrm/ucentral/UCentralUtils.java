@@ -112,7 +112,7 @@ public class UCentralUtils {
 			return;
 		}
 		JsonArray iesJsonArray = iesJsonElement.getAsJsonArray();
-		InformationElements ies = new InformationElements();
+		InformationElements ieContainer = new InformationElements();
 		for (JsonElement ie : iesJsonArray) {
 			JsonElement typeElement = ie.getAsJsonObject().get("type");
 			if (typeElement == null) {
@@ -123,17 +123,17 @@ public class UCentralUtils {
 			try {
 				switch (typeElement.getAsInt()) {
 				case Country.TYPE:
-					ies.country = Country.parse(contents);
+					ieContainer.country = Country.parse(contents);
 					break;
 				case QbssLoad.TYPE:
-					ies.qbssLoad = QbssLoad.parse(contents);
+					ieContainer.qbssLoad = QbssLoad.parse(contents);
 					break;
 				case LocalPowerConstraint.TYPE:
-					ies.localPowerConstraint =
+					ieContainer.localPowerConstraint =
 						LocalPowerConstraint.parse(contents);
 					break;
 				case TxPwrInfo.TYPE:
-					ies.txPwrInfo = TxPwrInfo.parse(contents);
+					ieContainer.txPwrInfo = TxPwrInfo.parse(contents);
 					break;
 				}
 			} catch (Exception e) {
@@ -141,7 +141,7 @@ public class UCentralUtils {
 				continue;
 			}
 		}
-		entry.ieContainer = ies;
+		entry.ieContainer = ieContainer;
 	}
 
 	/**
