@@ -120,23 +120,28 @@ public class UCentralUtils {
 			}
 			JsonObject contents =
 				ie.getAsJsonObject().get(IE_CONTENT_FIELD_KEY).getAsJsonObject();
-			switch (typeElement.getAsInt()) {
-			case Country.TYPE:
-				ies.country = Country.parse(contents);
-				break;
-			case QbssLoad.TYPE:
-				ies.qbssLoad = QbssLoad.parse(contents);
-				break;
-			case LocalPowerConstraint.TYPE:
-				ies.localPowerConstraint =
-					LocalPowerConstraint.parse(contents);
-				break;
-			case TxPwrInfo.TYPE:
-				ies.txPwrInfo = TxPwrInfo.parse(contents);
-				break;
+			try {
+				switch (typeElement.getAsInt()) {
+				case Country.TYPE:
+					ies.country = Country.parse(contents);
+					break;
+				case QbssLoad.TYPE:
+					ies.qbssLoad = QbssLoad.parse(contents);
+					break;
+				case LocalPowerConstraint.TYPE:
+					ies.localPowerConstraint =
+						LocalPowerConstraint.parse(contents);
+					break;
+				case TxPwrInfo.TYPE:
+					ies.txPwrInfo = TxPwrInfo.parse(contents);
+					break;
+				}
+			} catch (Exception e) {
+				logger.debug("Skipping invalid IE.", e);
+				continue;
 			}
 		}
-		entry.ies = ies;
+		entry.ieContainer = ies;
 	}
 
 	/**

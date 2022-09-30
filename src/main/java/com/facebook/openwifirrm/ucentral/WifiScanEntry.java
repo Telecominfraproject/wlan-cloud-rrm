@@ -22,7 +22,8 @@ public class WifiScanEntry extends WifiScanEntryResult {
 	 * time reference.
 	 */
 	public long unixTimeMs;
-	public InformationElements ies;
+	/** Stores Information Elements (IEs) from the wifiscan entry. */
+	public InformationElements ieContainer;
 
 	/** Default Constructor. */
 	public WifiScanEntry() {}
@@ -31,14 +32,14 @@ public class WifiScanEntry extends WifiScanEntryResult {
 	public WifiScanEntry(WifiScanEntry o) {
 		super(o);
 		this.unixTimeMs = o.unixTimeMs;
-		this.ies = o.ies; // TODO deep copy?
+		this.ieContainer = o.ieContainer;
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + Objects.hash(ies, unixTimeMs);
+		result = prime * result + Objects.hash(ieContainer, unixTimeMs);
 		return result;
 	}
 
@@ -54,7 +55,7 @@ public class WifiScanEntry extends WifiScanEntryResult {
 			return false;
 		}
 		WifiScanEntry other = (WifiScanEntry) obj;
-		return Objects.equals(ies, other.ies) && unixTimeMs == other.unixTimeMs;
+		return Objects.equals(ieContainer, other.ieContainer) && unixTimeMs == other.unixTimeMs;
 	}
 
 	@Override
