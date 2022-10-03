@@ -124,12 +124,11 @@ public class UCentralUtils {
 				continue;
 			}
 			JsonObject ie = ieJsonElement.getAsJsonObject();
-			if (!ie.has(IE_CONTENT_FIELD_KEY)) {
-				// the IEs we are interested in have the content field
-				continue;
-			}
 			JsonElement contentsJsonElement = ie.get(IE_CONTENT_FIELD_KEY);
-			if (!contentsJsonElement.isJsonObject()) {
+			if (
+				contentsJsonElement == null ||
+					!contentsJsonElement.isJsonObject()
+			) {
 				continue;
 			}
 			JsonObject contents = contentsJsonElement.getAsJsonObject();
