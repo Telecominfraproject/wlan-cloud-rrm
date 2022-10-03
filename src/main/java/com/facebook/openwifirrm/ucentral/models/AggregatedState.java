@@ -23,24 +23,32 @@ import com.facebook.openwifirrm.ucentral.models.State.Interface.SSID.Association
 public class AggregatedState {
 
 	public static class AggregatedRate {
+		/**
+		 * This is the common bitRate for all the aggregated fields.
+		 */
 		public long bitRate;
+
+		/**
+		 * This is the common channel width for all the aggregated fields.
+		 */
 		public int chWidth;
-		public List<Integer> mcs;
+
+		/**
+		 * Aggregated fields mcs
+		 */
+		public List<Integer> mcs = new ArrayList<>();
 
 		/** Constructor with no args */
-		public AggregatedRate() {
-			mcs = new ArrayList<>();
-		}
+		public AggregatedRate() {}
 
 		/** Add a Rate to the AggregatedRate */
 		public void add(Rate rate) {
 			if (rate == null) {
 				return;
 			}
-			if (mcs == null || mcs.isEmpty()) {
+			if (mcs.isEmpty()) {
 				bitRate = rate.bitrate;
 				chWidth = rate.chwidth;
-				mcs = new ArrayList<>();
 			}
 			mcs.add(rate.mcs);
 		}
@@ -50,10 +58,10 @@ public class AggregatedState {
 		 * AggregatedRate
 		 */
 		public void add(AggregatedRate rate) {
-			if (rate.chWidth != chWidth) {
+			if (rate == null || rate.chWidth != chWidth) {
 				return;
 			}
-			if (mcs == null || mcs.isEmpty()) {
+			if (mcs.isEmpty()) {
 				bitRate = rate.bitRate;
 				chWidth = rate.chWidth;
 			}
@@ -129,14 +137,6 @@ public class AggregatedState {
 		this.radio = new Radio();
 	}
 
-	/** Construct from Aggregatedstate */
-	public AggregatedState(AggregatedState state) {
-		this.rxRate = new AggregatedRate();
-		this.txRate = new AggregatedRate();
-		this.rssi = new ArrayList<>();
-		add(state);
-	}
-
 	/** Construct from Association and radio */
 	public AggregatedState(
 		Association association,
@@ -188,16 +188,13 @@ public class AggregatedState {
 			connected == other.connected && inactive == other.inactive && rssi
 				.equals(other.rssi) &&
 			rxBytes == other.rxBytes && rxBytes == other.rxPackets &&
-			rxRate.bitRate == other.rxRate.bitRate &&
-			rxRate.chWidth == other.rxRate.chWidth && rxRate.mcs
-				.equals(other.rxRate.mcs) &&
+			Objects.equals(rxRate, other.rxRate) &&
 			txBytes == other.txBytes && txDuration == other.txDuration &&
 			txFailed == other.txFailed && txPackets == other.txPackets &&
-			txRate.bitRate == other.txRate.bitRate &&
-			txRate.chWidth == other.txRate.chWidth && txRate.mcs
-				.equals(other.txRate.mcs) &&
+			Objects.equals(txRate, other.txRate) &&
 			txRetries == other.txRetries && ackSignal == other.ackSignal &&
-			ackSignalAvg == other.ackSignalAvg && radio.equals(other.radio);
+			ackSignalAvg == other.ackSignalAvg &&
+			Objects.equals(radio, other.radio);
 	}
 
 	/**
@@ -209,10 +206,7 @@ public class AggregatedState {
 	 *         channel_width and tx_power
 	 */
 	public boolean add(AggregatedState state) {
-		if (
-			(bssid == null && station == null && radio == null) ||
-				hashCode() == state.hashCode()
-		) {
+		if (hashCode() == state.hashCode()) {
 			this.bssid = state.bssid;
 			this.station = state.station;
 			this.connected = state.connected;

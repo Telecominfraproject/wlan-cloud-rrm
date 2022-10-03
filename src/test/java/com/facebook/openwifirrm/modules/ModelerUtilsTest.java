@@ -598,20 +598,20 @@ public class ModelerUtilsTest {
 		Map<String, List<AggregatedState>> bssidToAggregatedStates =
 			new HashMap<>();
 		bssidToAggregatedStates.put(
-			TestUtils.getBssidStationKeyPair(bssidA, stationA1),
+			ModelerUtils.getBssidStationKeyPair(bssidA, stationA1),
 			new ArrayList<>(Arrays.asList(aggStateA1))
 		);
 
 		bssidToAggregatedStates.put(
-			TestUtils.getBssidStationKeyPair(bssidA, stationA2),
+			ModelerUtils.getBssidStationKeyPair(bssidA, stationA2),
 			new ArrayList<>(Arrays.asList(aggStateA2))
 		);
 		bssidToAggregatedStates.put(
-			TestUtils.getBssidStationKeyPair(bssidB, stationB),
+			ModelerUtils.getBssidStationKeyPair(bssidB, stationB),
 			new ArrayList<>(Arrays.asList(aggStateB))
 		);
 		bssidToAggregatedStates.put(
-			TestUtils.getBssidStationKeyPair(bssidC, stationC),
+			ModelerUtils.getBssidStationKeyPair(bssidC, stationC),
 			new ArrayList<>(Arrays.asList(aggStateC))
 		);
 
@@ -630,20 +630,20 @@ public class ModelerUtilsTest {
 
 		assertEquals(
 			bssidToAggregatedStates
-				.get(TestUtils.getBssidStationKeyPair(bssidA, stationA1))
+				.get(ModelerUtils.getBssidStationKeyPair(bssidA, stationA1))
 				.get(0).rssi,
 			Arrays.asList(10, 20, 30)
 		);
 
 		assertEquals(
 			bssidToAggregatedStates
-				.get(TestUtils.getBssidStationKeyPair(bssidA, stationA1))
+				.get(ModelerUtils.getBssidStationKeyPair(bssidA, stationA1))
 				.get(1).rssi,
 			Arrays.asList(40, 50)
 		);
 		assertEquals(
 			bssidToAggregatedStates
-				.get(TestUtils.getBssidStationKeyPair(bssidA, stationA2))
+				.get(ModelerUtils.getBssidStationKeyPair(bssidA, stationA2))
 				.get(0).rssi,
 			Arrays.asList(20, 30, 40, 60)
 		);
@@ -661,7 +661,7 @@ public class ModelerUtilsTest {
 			.addStateToAggregation(bssidToAggregatedStates, toBeAggregated2);
 		assertEquals(
 			bssidToAggregatedStates
-				.get(TestUtils.getBssidStationKeyPair(bssidB, stationB))
+				.get(ModelerUtils.getBssidStationKeyPair(bssidB, stationB))
 				.get(0).rssi,
 			Arrays.asList(10, 20, 30, 40)
 		);
@@ -748,47 +748,47 @@ public class ModelerUtilsTest {
 				.getAggregatedStates(dataModel, obsoletionPeriodMs, refTimeMs);
 
 		assertEquals(
-			aggregatedMap.get(serialNumberA).get(TestUtils.getBssidStationKeyPair(bssidA, "stationA1")).size(),
+			aggregatedMap.get(serialNumberA).get(ModelerUtils.getBssidStationKeyPair(bssidA, "stationA1")).size(),
 			2
 		);
 		assertEquals(
-			aggregatedMap.get(serialNumberA).get(TestUtils.getBssidStationKeyPair(bssidA, "stationA1")).get(0).radio,
+			aggregatedMap.get(serialNumberA).get(ModelerUtils.getBssidStationKeyPair(bssidA, "stationA1")).get(0).radio,
 			new AggregatedState.Radio(1, 80, 1000)
 		);
 		assertEquals(
-			aggregatedMap.get(serialNumberA).get(TestUtils.getBssidStationKeyPair(bssidA, "stationA1")).get(0).rssi,
+			aggregatedMap.get(serialNumberA).get(ModelerUtils.getBssidStationKeyPair(bssidA, "stationA1")).get(0).rssi,
 			Arrays.asList(-84, 27)
 		);
 		assertEquals(
-			aggregatedMap.get(serialNumberA).get(TestUtils.getBssidStationKeyPair(bssidA, "stationA1")).get(1).radio,
+			aggregatedMap.get(serialNumberA).get(ModelerUtils.getBssidStationKeyPair(bssidA, "stationA1")).get(1).radio,
 			new AggregatedState.Radio(2, 40, 2000)
 		);
 		assertEquals(
-			aggregatedMap.get(serialNumberA).get(TestUtils.getBssidStationKeyPair(bssidA, "stationA1")).get(1).rssi,
+			aggregatedMap.get(serialNumberA).get(ModelerUtils.getBssidStationKeyPair(bssidA, "stationA1")).get(1).rssi,
 			Arrays.asList(-80)
 		);
 		assertEquals(
-			aggregatedMap.get(serialNumberA).get(TestUtils.getBssidStationKeyPair(bssidA, "stationA2")).get(0).radio,
+			aggregatedMap.get(serialNumberA).get(ModelerUtils.getBssidStationKeyPair(bssidA, "stationA2")).get(0).radio,
 			new AggregatedState.Radio(1, 80, 1000)
 		);
 		assertEquals(
-			aggregatedMap.get(serialNumberA).get(TestUtils.getBssidStationKeyPair(bssidA, "stationA2")).get(0).rssi,
+			aggregatedMap.get(serialNumberA).get(ModelerUtils.getBssidStationKeyPair(bssidA, "stationA2")).get(0).rssi,
 			Arrays.asList(-67, -67)
 		);
 		assertEquals(
-			aggregatedMap.get(serialNumberA).get(TestUtils.getBssidStationKeyPair(bssidA, "stationA2")).get(1).radio,
+			aggregatedMap.get(serialNumberA).get(ModelerUtils.getBssidStationKeyPair(bssidA, "stationA2")).get(1).radio,
 			new AggregatedState.Radio(2, 40, 2000)
 		);
 		assertEquals(
-			aggregatedMap.get(serialNumberA).get(TestUtils.getBssidStationKeyPair(bssidA, "stationA2")).get(1).rssi,
+			aggregatedMap.get(serialNumberA).get(ModelerUtils.getBssidStationKeyPair(bssidA, "stationA2")).get(1).rssi,
 			Arrays.asList(180, 67)
 		);
 		assertEquals(
-			aggregatedMap.get(serialNumberA).get(TestUtils.getBssidStationKeyPair(bssidA, "stationA3")).get(0).radio,
+			aggregatedMap.get(serialNumberA).get(ModelerUtils.getBssidStationKeyPair(bssidA, "stationA3")).get(0).radio,
 			new AggregatedState.Radio(1, 80, 1000)
 		);
 		assertEquals(
-			aggregatedMap.get(serialNumberA).get(TestUtils.getBssidStationKeyPair(bssidA, "stationA3")).get(0).rssi,
+			aggregatedMap.get(serialNumberA).get(ModelerUtils.getBssidStationKeyPair(bssidA, "stationA3")).get(0).rssi,
 			Arrays.asList(10, 100)
 		);
 
@@ -824,16 +824,16 @@ public class ModelerUtilsTest {
 				.getAggregatedStates(dataModel, obsoletionPeriodMs, refTimeMs);
 
 		assertEquals(
-			aggregatedMap2.get(serialNumberB).get(TestUtils.getBssidStationKeyPair(bssidB, "stationB")).get(0).rssi, Arrays.asList(-30)
+			aggregatedMap2.get(serialNumberB).get(ModelerUtils.getBssidStationKeyPair(bssidB, "stationB")).get(0).rssi, Arrays.asList(-30)
 		);
 
 		assertEquals(
-			aggregatedMap2.get(serialNumberC).get(TestUtils.getBssidStationKeyPair(bssidC, "stationC")).get(0).rssi, Arrays.asList(-100)
+			aggregatedMap2.get(serialNumberC).get(ModelerUtils.getBssidStationKeyPair(bssidC, "stationC")).get(0).rssi, Arrays.asList(-100)
 		);
 
 		assertEquals(
-			aggregatedMap2.get(serialNumberA).get(TestUtils.getBssidStationKeyPair(bssidA, "stationA1")).size(),
-			aggregatedMap.get(serialNumberA).get(TestUtils.getBssidStationKeyPair(bssidA, "stationA1")).size()
+			aggregatedMap2.get(serialNumberA).get(ModelerUtils.getBssidStationKeyPair(bssidA, "stationA1")).size(),
+			aggregatedMap.get(serialNumberA).get(ModelerUtils.getBssidStationKeyPair(bssidA, "stationA1")).size()
 		);
 	}
 }

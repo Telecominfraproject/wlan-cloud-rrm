@@ -423,8 +423,7 @@ public class ModelerUtils {
 					if (association == null) {
 						continue;
 					}
-					String key = String.format(
-						"bssid: %s, station: %s",
+					String key = getBssidStationKeyPair(
 						association.bssid,
 						association.station
 					);
@@ -434,16 +433,21 @@ public class ModelerUtils {
 					AggregatedState aggState =
 						new AggregatedState(association, radioInfo);
 
-					boolean toBeAggregated = false;
+					/**
+					 * Indicate if the aggState can be merged into some old AggregatedState.
+					 * If true, it will be merged by appending its mcs/rssi field to the old one.
+					 * If false, it will be added to the list aggregatedStates.
+					*/
+					boolean canBeMergedToOldAggregatedState = false;
 					for (
 						AggregatedState oldAggregatedState : aggregatedStates
 					) {
 						if (oldAggregatedState.add(aggState)) {
-							toBeAggregated = true;
+							canBeMergedToOldAggregatedState = true;
 							break;
 						}
 					}
-					if (!toBeAggregated) {
+					if (!canBeMergedToOldAggregatedState) {
 						aggregatedStates.add(aggState);
 					}
 					bssidToAggregatedStates.put(key, aggregatedStates);
@@ -517,7 +521,6 @@ public class ModelerUtils {
 				addStateToAggregation(bssidToAggregatedStates, state);
 			}
 		}
-
 		return aggregatedStates;
 	}
 
@@ -543,5 +546,14 @@ public class ModelerUtils {
 			}
 		}
 		return latestState;
+	}
+
+	/**  Create a key pair consisted of bssid and station string */
+	public static String getBssidStationKeyPair(String bssid, String station) {
+		return String.format(
+			"bssid: %s, station: %s",
+			bssid,
+			station
+		);
 	}
 }

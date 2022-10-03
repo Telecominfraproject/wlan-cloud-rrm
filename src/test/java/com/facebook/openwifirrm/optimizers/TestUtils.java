@@ -41,9 +41,9 @@ public class TestUtils {
 	public static final int DEFAULT_TX_POWER = 20;
 
 	/**
-	 *  Default local time in unix time
+	 *  Default local time in unix timestamps in seconds
 	 * 	GMT: Fri Sep 24 2021 23:47:55 GMT+0000
-	*/
+	 */
 	public static final long DEFAULT_LOCAL_TIME = 1632527275;
 
 	/** Create a topology from the given devices in a single zone. */
@@ -435,7 +435,7 @@ public class TestUtils {
 		return radio;
 	}
 
-	/** Create a {@code State.Unit} with specifying localtime in unix timestamp. */
+	/** Create a {@code State.Unit} with specifying localtime in unix timestamp in seconds. */
 	private static State.Unit createStateUnit(Long localtime) {
 		// @formatter:off
 		String jsonStr = String.format(
@@ -536,7 +536,7 @@ public class TestUtils {
 	 * @param bssid bssid
 	 * @param stations array of station codes
 	 * @param clientRssis array of client RSSIs
-	 * @param localtime local time
+	 * @param localtime unix timestamp in seconds.
 	 * @return the state of an AP with one radio
 	 */
 	public static State createState(
@@ -762,11 +762,4 @@ public class TestUtils {
 		);
 	}
 
-	public static String getBssidStationKeyPair(String bssid, String station) {
-		return String.format(
-			"bssid: %s, station: %s",
-			bssid,
-			station
-		);
-	}
 }
