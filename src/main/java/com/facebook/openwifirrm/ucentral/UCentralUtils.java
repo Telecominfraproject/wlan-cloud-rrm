@@ -113,13 +113,26 @@ public class UCentralUtils {
 		}
 		JsonArray iesJsonArray = iesJsonElement.getAsJsonArray();
 		InformationElements ieContainer = new InformationElements();
-		for (JsonElement ie : iesJsonArray) {
-			JsonElement typeElement = ie.getAsJsonObject().get("type");
-			if (typeElement == null) {
+		for (JsonElement ieJsonElement : iesJsonArray) {
+			JsonElement typeElement =
+				ieJsonElement.getAsJsonObject().get("type");
+			if (typeElement == null) { // shouldn't happen
 				continue;
 			}
-			JsonObject contents =
-				ie.getAsJsonObject().get(IE_CONTENT_FIELD_KEY).getAsJsonObject();
+			if (!ieJsonElement.isJsonObject()) {
+				// the IEs we are interested in are Json objects
+				continue;
+			}
+			JsonObject ie = ieJsonElement.getAsJsonObject();
+			if (!ie.has(IE_CONTENT_FIELD_KEY)) {
+				// the IEs we are interested in have the content field
+				continue;
+			}
+			JsonElement contentsJsonElement = ie.get(IE_CONTENT_FIELD_KEY);
+			if (!contentsJsonElement.isJsonObject()) {
+				continue;
+			}
+			JsonObject contents = contentsJsonElement.getAsJsonObject();
 			try {
 				switch (typeElement.getAsInt()) {
 				case Country.TYPE:
@@ -137,7 +150,7 @@ public class UCentralUtils {
 					break;
 				}
 			} catch (Exception e) {
-				logger.debug("Skipping invalid IE.", e);
+				logger.debug("Skipping invalid IE {}", ie);
 				continue;
 			}
 		}
