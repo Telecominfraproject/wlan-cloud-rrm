@@ -22,6 +22,7 @@ import com.facebook.openwifirrm.ucentral.models.State.Interface.SSID.Association
  */
 public class AggregatedState {
 
+	/** Rate information with aggregated fields. */
 	public static class AggregatedRate {
 		/**
 		 * This is the common bitRate for all the aggregated fields.
@@ -68,7 +69,10 @@ public class AggregatedState {
 			mcs.addAll(rate.mcs);
 		}
 	}
-
+	
+	/**
+	 * Radio information with channel, channel_width and tx_power.
+	 */
 	public static class Radio {
 		public int channel;
 		public int channelWidth;
