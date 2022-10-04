@@ -489,7 +489,9 @@ public class TestUtils {
 		if (
 			!(channels.length == channelWidths.length &&
 				channelWidths.length == txPowers.length &&
-				txPowers.length == bssids.length)
+				txPowers.length == bssids.length &&
+				channels.length == stations.length &&
+				stations.length == clientRssis.length)
 		) {
 			throw new IllegalArgumentException(
 				"All arguments must have the same length."
@@ -696,12 +698,24 @@ public class TestUtils {
 			new int[] { channelWidthA, channelWidthB },
 			new int[] { txPowerA, txPowerB },
 			new String[] { bssidA, bssidB },
-			new String[][] {},
+			new String[][] { new String[clientRssisA.length],
+				new String[clientRssisB.length] },
 			new int[][] { clientRssisA, clientRssisB },
 			DEFAULT_LOCAL_TIME
 		);
 	}
 
+	/**
+	 * Create an AggregatedState from given radio info.
+	 *
+	 * @param channel channel number
+	 * @param channelWidth channel width (MHz) of channelA
+	 * @param txPower tx power (db) for this channel
+	 * @param bssid bssid for radio on this channel
+	 * @param station station string for radio on this channel
+	 * @param clientRssi array of client RSSIs.
+	 * @return AggregatedState creating from the given radio.
+	 */
 	public static AggregatedState createAggregatedState(
 		int channel,
 		int channelWidth,

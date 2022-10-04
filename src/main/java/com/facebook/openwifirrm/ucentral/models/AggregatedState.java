@@ -69,7 +69,7 @@ public class AggregatedState {
 			mcs.addAll(rate.mcs);
 		}
 	}
-	
+
 	/**
 	 * Radio information with channel, channel_width and tx_power.
 	 */
