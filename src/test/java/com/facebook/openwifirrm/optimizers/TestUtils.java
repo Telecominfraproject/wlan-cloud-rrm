@@ -474,7 +474,7 @@ public class TestUtils {
 	 * @param bssids array of BSSIDs
 	 * @param stations 2-D array of client station codes
 	 * @param clientRssis 2-D array of client RSSIs
-	 * @param localtime
+	 * @param localtime unix timestamp in seconds.
 	 * @return the state of an AP with radios described by the given parameters
 	 */
 	public static State createState(
@@ -490,7 +490,7 @@ public class TestUtils {
 			!(channels.length == channelWidths.length &&
 				channelWidths.length == txPowers.length &&
 				txPowers.length == bssids.length &&
-				channels.length == stations.length &&
+				bssids.length == stations.length &&
 				stations.length == clientRssis.length)
 		) {
 			throw new IllegalArgumentException(
@@ -706,35 +706,6 @@ public class TestUtils {
 	}
 
 	/**
-	 * Create an AggregatedState from given radio info.
-	 *
-	 * @param channel channel number
-	 * @param channelWidth channel width (MHz) of channelA
-	 * @param txPower tx power (db) for this channel
-	 * @param bssid bssid for radio on this channel
-	 * @param station station string for radio on this channel
-	 * @param clientRssi array of client RSSIs.
-	 * @return AggregatedState creating from the given radio.
-	 */
-	public static AggregatedState createAggregatedState(
-		int channel,
-		int channelWidth,
-		int txPower,
-		String bssid,
-		String station,
-		int[] clientRssi
-	) {
-		AggregatedState state = new AggregatedState();
-		state.radio = new AggregatedState.Radio(channel, channelWidth, txPower);
-		state.bssid = bssid;
-		state.station = station;
-		for (int rssi : clientRssi) {
-			state.rssi.add(rssi);
-		}
-		return state;
-	}
-
-	/**
 	* Create a device state object with two radios.
 	*
 	* @param channelA channel number
@@ -775,5 +746,33 @@ public class TestUtils {
 			localtime
 		);
 	}
-
+	
+	/**
+	 * Create an AggregatedState from given radio info.
+	 *
+	 * @param channel channel number
+	 * @param channelWidth channel width (MHz) of channelA
+	 * @param txPower tx power (db) for this channel
+	 * @param bssid bssid for radio on this channel
+	 * @param station station string for radio on this channel
+	 * @param clientRssi array of client RSSIs.
+	 * @return AggregatedState creating from the given radio.
+	 */
+	public static AggregatedState createAggregatedState(
+		int channel,
+		int channelWidth,
+		int txPower,
+		String bssid,
+		String station,
+		int[] clientRssi
+	) {
+		AggregatedState state = new AggregatedState();
+		state.radio = new AggregatedState.Radio(channel, channelWidth, txPower);
+		state.bssid = bssid;
+		state.station = station;
+		for (int rssi : clientRssi) {
+			state.rssi.add(rssi);
+		}
+		return state;
+	}
 }
