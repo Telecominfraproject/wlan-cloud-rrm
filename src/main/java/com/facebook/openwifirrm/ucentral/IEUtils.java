@@ -23,6 +23,17 @@ public abstract class IEUtils {
 		return element.getAsByte();
 	}
 
+	public static Short parseOptionalShortField(
+		JsonObject contents,
+		String fieldName
+	) {
+		JsonElement element = contents.get(fieldName);
+		if (element == null) {
+			return null;
+		}
+		return element.getAsShort();
+	}
+
 	public static Integer parseOptionalIntField(
 		JsonObject contents,
 		String fieldName
