@@ -15,9 +15,12 @@ import org.apache.commons.codec.binary.Base64;
 
 /**
  * Very High Throughput (VHT) Operation Element, which is potentially present in
- * wifiscan entries. Introduced in 802.11ac (2013).
+ * wifiscan entries. Introduced in 802.11ac (2013). Refer to the 802.11
+ * specification (section 9.4.2.158)
  */
 public class VHTOperation {
+	/** Defined in 802.11 table 9-92 */
+	public static final int TYPE = 192;
 
 	/**
 	 * This field is 0 if the channel width is 20 MHz or 40 MHz, and 1 otherwise.
