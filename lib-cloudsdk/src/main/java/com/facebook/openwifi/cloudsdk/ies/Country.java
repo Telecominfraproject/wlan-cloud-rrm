@@ -19,8 +19,7 @@ import com.google.gson.JsonObject;
 /**
  * This information element (IE) appears in wifiscan entries.
  * Refer to the 802.11 specification (section 9.4.2.8) for more details.
- * Language in
- * javadocs is taken from the specification.
+ * Language in javadocs is taken from the specification.
  */
 public class Country {
 	/** Defined in 802.11 table 9-92 */
