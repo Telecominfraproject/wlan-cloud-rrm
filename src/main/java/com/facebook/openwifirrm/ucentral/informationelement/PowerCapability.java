@@ -23,17 +23,15 @@ public class PowerCapability {
 	public static final int TYPE = 33;
 
 	/**
-	 * nominal minimum transmit power with which the STA is capable of transmitting
-	 * in the current channel, with a tolerance ± 5 dB. The field is coded as a 2s
-	 * complement signed integer in units of decibels relative to 1 mW. Required
-	 * field
+	 * signed 8 bits units of dB relative to 1mW - nominal minimum transmit power
+	 * with which the STA is capable of transmitting in the current channel, with a
+	 * tolerance ± 5 dB.
 	 */
 	public final byte minimumTxPowerCapability;
 	/**
-	 * nominal maximum transmit power with which the STA is capable of transmitting
-	 * in the current channel, with a tolerance ± 5 dB. The field is coded as a 2s
-	 * complement signed integer in units of decibels relative to 1 mW. Required
-	 * field.
+	 * signed 8 bits units of dB relative to 1mW - nominal maximum transmit power
+	 * with which the STA is capable of transmitting in the current channel, with a
+	 * tolerance ± 5 dB.
 	 */
 	public final byte maximumTxPowerCapability;
 
