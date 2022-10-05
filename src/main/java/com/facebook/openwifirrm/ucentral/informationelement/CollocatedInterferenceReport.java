@@ -23,13 +23,21 @@ public class CollocatedInterferenceReport {
 	public static final int TYPE = 96;
 
 	public static class InterferenceAccuracyAndIndex {
-		public final short expectedAccuracy;
-		public final short interferenceIndex;
+		/**
+		 * unsigned int (4 bits) representing expected accuracy of the estimate of
+		 * interference in dB with 95% confidence interval
+		 */
+		public final byte expectedAccuracy;
+		/**
+		 * unsigned int (4 bits) indicating the interference index that is unique for
+		 * each type of interference source
+		 */
+		public final byte interferenceIndex;
 
 		/** Constructor */
 		public InterferenceAccuracyAndIndex(
-			short expectedAccuracy,
-			short interferenceIndex
+			byte expectedAccuracy,
+			byte interferenceIndex
 		) {
 			this.expectedAccuracy = expectedAccuracy;
 			this.interferenceIndex = interferenceIndex;
@@ -39,8 +47,8 @@ public class CollocatedInterferenceReport {
 		// TODO rename fields as necessary - we don't know how the data format yet
 		public static InterferenceAccuracyAndIndex parse(JsonObject contents) {
 			return new InterferenceAccuracyAndIndex(
-				contents.get("Expected Accuracy").getAsShort(),
-				contents.get("Interference Index").getAsShort()
+				contents.get("Expected Accuracy").getAsByte(),
+				contents.get("Interference Index").getAsByte()
 			);
 		}
 
@@ -77,24 +85,54 @@ public class CollocatedInterferenceReport {
 		}
 	}
 
-	public final byte reportPeriod;
+	/** unsigned 8 bits representing when the report is generated */
+	public final short reportPeriod;
+	/**
+	 * signed 8 bits representing the maximum level of the collocated
+	 * interference power in units of dBm over all receive chains averaged over a
+	 * 4 microsecond period during an interference period and across interference
+	 * bandwidth
+	 */
 	public final byte interferenceLevel;
+	/** Subfield for interference level accuracy and index - 8 bits */
 	public final InterferenceAccuracyAndIndex interferenceAccuracyAndIndex;
-	public final int interferenceInterval;
-	public final int interferenceBurstLength;
-	public final int interferenceStartTimeDutyCycle;
-	public final int interferenceCenterFrequency;
+	/**
+	 * unsigned 32 bits representing the interval between two successibe periods
+	 * of interference in microseconds
+	 */
+	public final long interferenceInterval;
+	/**
+	 * unsigned 32 bits representing the duration of each period of interference in
+	 * microseconds
+	 */
+	public final long interferenceBurstLength;
+	/**
+	 * unsigned 32 bits contains the least significant 4 octets (i.e., B0–B31) of
+	 * the TSF timer at the start of the interference burst. When either the
+	 * Interference Interval or the Interference Burst Length fields are set to
+	 * 2^32 – 1, this field indicates the average duty cycle
+	 */
+	public final long interferenceStartTimeDutyCycle;
+	/**
+	 * unsigned 32 bits representing indicates the center frequency of interference
+	 * in units of 5 kHz
+	 */
+	public final long interferenceCenterFrequency;
+	/**
+	 * unsigned 16 bits representing the bandwidth in units of 5 kHz at the –3 dB
+	 * roll-off point of the interference signal
+	 */
 	public final short interferenceBandwidth;
 
 	/** Constructor */
 	public CollocatedInterferenceReport(
-		byte reportPeriod,
+		short reportPeriod,
 		byte interferenceLevel,
 		InterferenceAccuracyAndIndex interferenceAccuracyAndIndex,
-		int interferenceInterval,
-		int interferenceBurstLength,
-		int interferenceStartTimeDutyCycle,
-		int interferenceCenterFrequency,
+		long interferenceInterval,
+		long interferenceBurstLength,
+		long interferenceStartTimeDutyCycle,
+		long interferenceCenterFrequency,
 		short interferenceBandwidth
 	) {
 		this.reportPeriod = reportPeriod;
@@ -111,16 +149,16 @@ public class CollocatedInterferenceReport {
 	// TODO rename fields as necessary - we don't know how the data format yet
 	public static CollocatedInterferenceReport parse(JsonObject contents) {
 		return new CollocatedInterferenceReport(
-			contents.get("Report Period").getAsByte(),
+			contents.get("Report Period").getAsShort(),
 			contents.get("Intereference Level").getAsByte(),
 			InterferenceAccuracyAndIndex
 				.parse(
 					contents.get("Interference Level Accuracy/Inteference Index").getAsJsonObject()
 				),
-			contents.get("Interference Interval").getAsInt(),
-			contents.get("Interference Burst Length").getAsInt(),
-			contents.get("Interference Start Time/Duty Cycle").getAsInt(),
-			contents.get("Interference Center Frequency").getAsInt(),
+			contents.get("Interference Interval").getAsLong(),
+			contents.get("Interference Burst Length").getAsLong(),
+			contents.get("Interference Start Time/Duty Cycle").getAsLong(),
+			contents.get("Interference Center Frequency").getAsLong(),
 			contents.get("Interference Bandwidth").getAsShort()
 		);
 	}
