@@ -8,6 +8,9 @@
 
 package com.facebook.openwifirrm.ucentral.informationelement;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
 import com.google.gson.JsonObject;
@@ -23,14 +26,23 @@ public class NeighborReport {
 	/** Defined in 802.11 table 9-92 */
 	public static final int TYPE = 52;
 
+	/**
+	 * The BSSID Information field can be used to help determine neighbor service
+	 * set transition candidates
+	 */
 	public static class BssidInfo {
 		/**
-		 * The capability subelement
+		 * The capability subelement containing selected capability information for
+		 * the AP indicated by this BSSID.
 		 */
 		public static class Capabilities {
+			/** dot11SpectrumManagementRequired */
 			public final boolean spectrumManagement;
+			/** dot11QosOptionImplemented */
 			public final boolean qos;
+			/** dot11APSDOptionImplemented */
 			public final boolean apsd;
+			/** dot11RadioMeasurementActivated */
 			public final boolean radioMeasurement;
 
 			/** Constructor */
@@ -95,13 +107,51 @@ public class NeighborReport {
 			}
 		}
 
-		public final short apReachability;
+		/**
+		 * 2 unsigned bits - whether the AP identified by this BSSID is reachable by
+		 * the STA that requested the neighbor report
+		 */
+		public final byte apReachability;
+		/**
+		 * if 1, indicates that the AP identified by this BSSID supports the same
+		 * security provisioning as used by the STA in its current association. If the
+		 * bit is 0, it indicates either that the AP does not support the same
+		 * security provisioning or that the security information is not available at
+		 * this time.
+		 */
 		public final boolean security;
+		/**
+		 * indicates the AP indicated by this BSSID has the same authenticator as
+		 * the AP sending the report. If this bit is 0, it indicates a distinct
+		 * authenticator or the information is not available.
+		 */
 		public final boolean keyScope;
+		/**
+		 * @see Capabilities
+		 */
 		public final Capabilities capabilities;
+		/**
+		 * set to 1 to indicate that the AP represented by this BSSID is including
+		 * an MDE in its Beacon frames and that the contents of that MDE are identical
+		 * to the MDE advertised by the AP sending the report
+		 */
 		public final boolean mobilityDomain;
+		/**
+		 * High throughput or not, if true the contents of the HT Capabilities in the
+		 * Beacon frame should be identical to the HT Capabilities advertised by the
+		 * AP sending the report
+		 */
 		public final boolean highThroughput;
+		/**
+		 * Very High throughput or not, if true the contents of the VHT Capabilities
+		 * in the Beacon frame should be identical to the VHT Capabilities advertised
+		 * by the AP sending the report
+		 */
 		public final boolean veryHighThroughput;
+		/**
+		 * indicate that the AP represented by this BSSID is an AP that has set the Fine
+		 * Timing Measurement Responder field of the Extended Capabilities element
+		 */
 		public final boolean ftm;
 
 		/** Constructor */
@@ -192,42 +242,66 @@ public class NeighborReport {
 		}
 	}
 
+	/** BSSID */
 	public final String bssid;
+	/**
+	 * @see BssidInfo
+	 */
 	public final BssidInfo bssidInfo;
-	public final byte operatingClass;
-	public final byte channelNumber;
-	public final byte phyType;
+	/**
+	 * unsigned 8 bits - indicates the channel set of the AP indicated by this BSSID
+	 */
+	public final short operatingClass;
+	/**
+	 * unsigned 8 bits - channel number
+	 */
+	public final short channelNumber;
+	/**
+	 * unsigned 8 bits - PHY type
+	 */
+	public final short phyType;
+	// TODO do we want to support the subelements?
+	/**
+	 * Optional subelements
+	 */
+	public final List<JsonObject> subelements;
 
 	/** Constructor */
 	public NeighborReport(
 		String bssid,
 		BssidInfo bssidInfo,
-		byte operatingClass,
-		byte channelNumber,
-		byte phyType
+		short operatingClass,
+		short channelNumber,
+		short phyType,
+		List<JsonObject> subelements
 	) {
 		this.bssid = bssid;
 		this.bssidInfo = bssidInfo;
 		this.operatingClass = operatingClass;
 		this.channelNumber = channelNumber;
 		this.phyType = phyType;
+		this.subelements = Collections.unmodifiableList(subelements);
 	}
 
 	/** Parse NeighborReport from JSON object */
 	// TODO rename fields as necessary - we don't know how the data format yet
 	public static NeighborReport parse(JsonObject contents) {
-		JsonElement bssidInfoJson = contents.get("BSSID Info");
-		if (bssidInfoJson == null) {
-			return null;
+		List<JsonObject> subelements = null;
+		JsonElement subelementsObj = contents.get("Subelements");
+		if (subelementsObj != null) {
+			subelements = new ArrayList<JsonObject>();
+			for (JsonElement elem : subelementsObj.getAsJsonArray()) {
+				subelements.add(elem.getAsJsonObject());
+			}
 		}
 
-		BssidInfo bssidInfo = BssidInfo.parse(bssidInfoJson.getAsJsonObject());
 		return new NeighborReport(
 			contents.get("BSSID").getAsString(),
-			bssidInfo,
-			contents.get("Operating Class").getAsByte(),
-			contents.get("Channel Number").getAsByte(),
-			contents.get("Phy Type").getAsByte()
+			BssidInfo.parse(contents.get("BSSID Info").getAsJsonObject()),
+			contents.get("Operating Class").getAsShort(),
+			contents.get("Channel Number").getAsShort(),
+			contents.get("Phy Type").getAsShort(),
+			subelements
 		);
 	}
 
