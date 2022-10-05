@@ -30,7 +30,7 @@ public class BssAvgAccessDelay {
 		this.apAvgAccessDelay = apAvgAccessDelay;
 	}
 
-	/** Parse BSSAvgAccessDelay from JSON object */
+	/** Parse BssAvgAccessDelay from JSON object */
 	// TODO rename fields as necessary - we don't know how the data format yet
 	public static BssAvgAccessDelay parse(JsonObject contents) {
 		return new BssAvgAccessDelay(
@@ -64,7 +64,7 @@ public class BssAvgAccessDelay {
 	@Override
 	public String toString() {
 		return String.format(
-			"BSSAvgAccessDelay[apAvgAccessDelay=%d]",
+			"BssAvgAccessDelay[apAvgAccessDelay=%d]",
 			apAvgAccessDelay
 		);
 	}
