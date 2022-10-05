@@ -212,7 +212,7 @@ public class UCentralClient {
 				token.access_token.isEmpty()
 		) {
 			logger.error("Login failed: Missing access token");
-			logger.debug("Response body: {}", response.toString());
+			logger.debug("Response body: {}", response.getBody());
 			return false;
 		}
 		this.accessToken = token;
@@ -225,11 +225,11 @@ public class UCentralClient {
 	}
 
 	/**
-	 * when use public endpoints, refresh the access token if it's expired.
+	 * when using public endpoints, refresh the access token if it's expired.
 	 */
 	public synchronized void refreshAccessToken() {
 		if (usePublicEndpoints) {
-			accessToken = getAccessToken();
+			refreshAccessTokenImpl();
 		}
 	}
 
@@ -239,7 +239,7 @@ public class UCentralClient {
 	 *
 	 * @return true if the refresh token is expired
 	 */
-	private boolean isRefreshTokenExpired() {
+	private boolean isAccessTokenExpired() {
 		if (accessToken == null) {
 			return true;
 		}
@@ -252,7 +252,7 @@ public class UCentralClient {
 	 *
 	 * @return true if the access token is expired
 	 */
-	private boolean isAccessTokenExpired() {
+	private boolean isAccessTokenTimedOut() {
 		if (accessToken == null) {
 			return true;
 		}
@@ -261,36 +261,36 @@ public class UCentralClient {
 	}
 
 	/**
-	 * Get access token. If the refresh token is expired, login again.
+	 * Refresh the access toke when time out. If the refresh token is expired, login again.
 	 * If the access token is expired, POST a WebTokenRefreshRequest to refresh token.
-	 * Otherwise return the current access token.
-	 *
-	 * @return a valid access token ({@code WebTokenResult})
 	 */
-	private WebTokenResult getAccessToken() {
+	private void refreshAccessTokenImpl() {
 		if (!usePublicEndpoints) {
-			return null;
+			return;
 		}
-		if (isRefreshTokenExpired()) {
-			logger.info("Token is expired, login again");
-			if (login()) {
-				return accessToken;
+		if (isAccessTokenExpired()) {
+			synchronized (this) {			
+				if (isAccessTokenExpired()) {
+					logger.info("Token is expired, login again");
+					login();
+				}
 			}
-			return null;
-		} else if (isAccessTokenExpired()) {
-			logger.debug("Access token is expired, start refreshing a token.");
-			WebTokenResult refreshToken = refreshToken();
-			if (refreshToken != null) {
-				logger.debug("Successfully refresh token.");
-				return refreshToken;
+		} else if (isAccessTokenTimedOut()) {
+			synchronized (this) {
+				if (isAccessTokenTimedOut()) {
+					logger.debug("Access token timed out, refreshing the token");
+					accessToken = refreshToken();
+					if (accessToken != null) {
+						logger.debug("Successfully refresh token.");
+					}else{
+						logger.error(
+							"Fail to refresh token with access token: {}",
+							accessToken.access_token
+						);
+					}
+				}
 			}
-			logger.error(
-				"Fail to refresh token with access token: {}",
-				accessToken.access_token
-			);
-			return null;
 		}
-		return accessToken;
 	}
 
 	/**
@@ -375,7 +375,6 @@ public class UCentralClient {
 			logger.debug("Response body: {}", respBody.toString());
 			return false;
 		}
-		refreshAccessToken();
 		return true;
 	}
 
@@ -444,7 +443,7 @@ public class UCentralClient {
 			.connectTimeout(connectTimeoutMs)
 			.socketTimeout(socketTimeoutMs);
 		if (usePublicEndpoints) {
-			if (!isRefreshTokenExpired()) {
+			if (!isAccessTokenExpired()) {
 				req.header(
 					"Authorization",
 					"Bearer " + accessToken.access_token
@@ -497,7 +496,7 @@ public class UCentralClient {
 			req.queryString(parameters);
 		}
 		if (usePublicEndpoints) {
-			if (!isRefreshTokenExpired()) {
+			if (!isAccessTokenExpired()) {
 				req.header(
 					"Authorization",
 					"Bearer " + accessToken.access_token
