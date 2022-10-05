@@ -22,11 +22,15 @@ public class BssAvgAccessDelay {
 	/** Defined in 802.11 table 9-92 */
 	public static final int TYPE = 63;
 
-	/** number of channels in a subband of supported channels */
-	public final byte apAvgAccessDelay;
+	/**
+	 * Unsigned int representing a scaled average medium access delay for all DCF
+	 * and EDCAF frames transmitted, measured from the time it's ready for
+	 * transmission to actual transmission start time.
+	 */
+	public final short apAvgAccessDelay;
 
 	/** Constructor */
-	public BssAvgAccessDelay(byte apAvgAccessDelay) {
+	public BssAvgAccessDelay(short apAvgAccessDelay) {
 		this.apAvgAccessDelay = apAvgAccessDelay;
 	}
 
@@ -34,7 +38,7 @@ public class BssAvgAccessDelay {
 	// TODO rename fields as necessary - we don't know how the data format yet
 	public static BssAvgAccessDelay parse(JsonObject contents) {
 		return new BssAvgAccessDelay(
-			contents.get("AP Average Access Delay").getAsByte()
+			contents.get("AP Average Access Delay").getAsShort()
 		);
 	}
 
