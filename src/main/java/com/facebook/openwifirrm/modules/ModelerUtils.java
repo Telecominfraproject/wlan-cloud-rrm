@@ -525,7 +525,7 @@ public class ModelerUtils {
 	}
 
 	/**
-	 * This method gets the most latest State from latestStates per device.
+	 * This method gets the most recent State from latestStates per device.
 	 *
 	 * @param latestStates list of latest States per device.
 	 * @return Map<String, State> a map from device String to latest State.

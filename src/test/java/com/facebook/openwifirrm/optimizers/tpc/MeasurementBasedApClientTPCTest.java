@@ -174,12 +174,10 @@ public class MeasurementBasedApClientTPCTest {
 					20,
 					20,
 					null,
-					new int[] {},
 					36,
 					20,
 					20,
-					null,
-					new int[] {}
+					null
 				)
 			)
 		);
