@@ -29,22 +29,22 @@ public class BssAcAccessDelay {
 	 */
 	public static class AccessCategoryAccessDelay {
 		/**
-		 * Unsigned int that represents a scaled representation of best effort AC
+		 * Unsigned 8 bits that represents a scaled representation of best effort AC
 		 * access delay
 		 */
 		public final short averageAccessDelayForBestEffort;
 		/**
-		 * Unsigned int that represents a scaled representation of background AC
+		 * Unsigned 8 bits that represents a scaled representation of background AC
 		 * access delay
 		 */
 		public final short averageAccessDelayForBackground;
 		/**
-		 * Unsigned int that represents a scaled representation of video AC access
+		 * Unsigned 8 bits that represents a scaled representation of video AC access
 		 * delay
 		 */
 		public final short averageAccessDelayForVideo;
 		/**
-		 * Unsigned int that represents a scaled representation of voice AC access
+		 * Unsigned 8 bits that represents a scaled representation of voice AC access
 		 * delay
 		 */
 		public final short averageAccessDelayForVoice;
@@ -121,7 +121,7 @@ public class BssAcAccessDelay {
 		}
 	}
 
-	/** Holds AccessCategoryAccessDelay subfield */
+	/** 32 bits - Holds AccessCategoryAccessDelay subfield */
 	public final AccessCategoryAccessDelay accessCategoryAccessDelay;
 
 	/** Constructor */

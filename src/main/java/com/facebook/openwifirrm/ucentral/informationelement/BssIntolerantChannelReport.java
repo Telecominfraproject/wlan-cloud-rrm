@@ -26,11 +26,11 @@ public class BssIntolerantChannelReport {
 	/** Defined in 802.11 table 9-92 */
 	public static final int TYPE = 73;
 
-	/** unsigned int representing the operating class in which the channel list is
+	/** unsigned 8 bits representing the operating class in which the channel list is
 	 * valid
 	 */
 	public final short operatingClass;
-	/** List of unsigned ints, representing the channel numbers */
+	/** List of unsigned 8 bits, representing the channel numbers */
 	public final List<Short> channelList;
 
 	/** Constructor */

@@ -23,7 +23,7 @@ public class BssAvgAccessDelay {
 	public static final int TYPE = 63;
 
 	/**
-	 * Unsigned int representing a scaled average medium access delay for all DCF
+	 * Unsigned 8 bits representing a scaled average medium access delay for all DCF
 	 * and EDCAF frames transmitted, measured from the time it's ready for
 	 * transmission to actual transmission start time.
 	 */
