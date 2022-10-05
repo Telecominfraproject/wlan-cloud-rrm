@@ -22,13 +22,13 @@ public class SupportedChannels {
 	/** Defined in 802.11 table 9-92 */
 	public static final int TYPE = 36;
 
-	/** first channel in a subband of supported channels */
-	public final byte firstChannelNumber;
-	/** number of channels in a subband of supported channels */
-	public final byte numberOfChannels;
+	/** unsigned 8 bits - first channel in a subband of supported channels */
+	public final short firstChannelNumber;
+	/** unsigned 8 bits - number of channels in a subband of supported channels */
+	public final short numberOfChannels;
 
 	/** Constructor */
-	public SupportedChannels(byte firstChannelNumber, byte numberOfChannels) {
+	public SupportedChannels(short firstChannelNumber, short numberOfChannels) {
 		this.firstChannelNumber = firstChannelNumber;
 		this.numberOfChannels = numberOfChannels;
 	}
@@ -37,8 +37,8 @@ public class SupportedChannels {
 	// TODO rename fields as necessary - we don't know how the data format yet
 	public static SupportedChannels parse(JsonObject contents) {
 		return new SupportedChannels(
-			contents.get("First Channel Number").getAsByte(),
-			contents.get("Number of Channels").getAsByte()
+			contents.get("First Channel Number").getAsShort(),
+			contents.get("Number of Channels").getAsShort()
 		);
 	}
 
