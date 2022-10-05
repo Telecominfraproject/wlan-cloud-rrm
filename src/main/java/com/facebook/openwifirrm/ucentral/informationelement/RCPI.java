@@ -22,10 +22,14 @@ public class RCPI {
 	/** Defined in 802.11 table 9-92 */
 	public static final int TYPE = 53;
 
-	public final byte rcpi;
+	/**
+	 * unsigned 8 bits - indication of the received RF power in the selected
+	 * channel for a received frame
+	 */
+	public final short rcpi;
 
 	/** Constructor */
-	public RCPI(byte rcpi) {
+	public RCPI(short rcpi) {
 		this.rcpi = rcpi;
 	}
 
@@ -33,7 +37,7 @@ public class RCPI {
 	// TODO rename fields as necessary - we don't know how the data format yet
 	public static RCPI parse(JsonObject contents) {
 		return new RCPI(
-			contents.get("RCPI").getAsByte()
+			contents.get("RCPI").getAsShort()
 		);
 	}
 
