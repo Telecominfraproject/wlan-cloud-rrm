@@ -26,13 +26,17 @@ public class BssIntolerantChannelReport {
 	/** Defined in 802.11 table 9-92 */
 	public static final int TYPE = 73;
 
-	public final byte operatingClass;
-	public final List<Byte> channelList;
+	/** unsigned int representing the operating class in which the channel list is
+	 * valid
+	 */
+	public final short operatingClass;
+	/** List of unsigned ints, representing the channel numbers */
+	public final List<Short> channelList;
 
 	/** Constructor */
 	public BssIntolerantChannelReport(
-		byte operatingClass,
-		List<Byte> channelList
+		short operatingClass,
+		List<Short> channelList
 	) {
 		this.operatingClass = operatingClass;
 		this.channelList = Collections.unmodifiableList(channelList);
@@ -41,16 +45,16 @@ public class BssIntolerantChannelReport {
 	/** Parse BssIntolerantChannelReport from JSON object */
 	// TODO rename fields as necessary - we don't know how the data format yet
 	public static BssIntolerantChannelReport parse(JsonObject contents) {
-		List<Byte> channelList = new ArrayList<>();
+		List<Short> channelList = new ArrayList<>();
 		JsonElement channelListJson = contents.get("Channel List");
 		if (channelListJson != null) {
 			for (JsonElement elem : channelListJson.getAsJsonArray()) {
-				channelList.add(elem.getAsByte());
+				channelList.add(elem.getAsShort());
 			}
 		}
 
 		return new BssIntolerantChannelReport(
-			contents.get("Operating Class").getAsByte(),
+			contents.get("Operating Class").getAsShort(),
 			channelList
 		);
 	}
