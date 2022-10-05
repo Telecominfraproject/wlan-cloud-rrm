@@ -29,20 +29,42 @@ public class ReducedNeighborReport {
 	/** Defined in 802.11 table 9-92 */
 	public static final int TYPE = 201;
 
+	/**
+	 * The Neighbor AP Information field specifies TBTT and other information
+	 * related to a group of neighbor APs on one channel.
+	 */
 	public static class NeighborApInformation {
-
+		/**
+		 * Subfield for TBTT Information header
+		 */
 		public static class TbttInformationHeader {
+			/**
+			 * unsigned 2 bits -  identifies, together with the TBTT Information Length
+			 * subfield, the format of the TBTT Information field
+			 */
 			public final byte tbttInformationType;
+			/**
+			 * 1 bit - reserved except when the Reduced Neighbor Report element is
+			 * carried in a Probe Response frame transmitted by a TVHT AP
+			 */
 			public final boolean filteredNeighborAp;
+			/**
+			 * unsigned 4 bits - number of TBTT Information fields included in the TBTT
+			 * Information Set field of the Neighbor AP Information field, minus one
+			 */
 			public final byte tbttInformationCount;
-			public final byte tbttInformationLength;
+			/**
+			 * unsigned 8 bits - the length of each TBTT Information field included in
+			 * the TBTT Information Set field of the Neighbor AP Information field
+			 */
+			public final short tbttInformationLength;
 
 			/** Constructor */
 			public TbttInformationHeader(
 				byte tbttInformationType,
 				boolean filteredNeighborAp,
 				byte tbttInformationCount,
-				byte tbttInformationLength
+				short tbttInformationLength
 			) {
 				this.tbttInformationType = tbttInformationType;
 				this.filteredNeighborAp = filteredNeighborAp;
@@ -57,7 +79,7 @@ public class ReducedNeighborReport {
 					contents.get("TBTT Information Type").getAsByte(),
 					contents.get("Filtered Neighbor Map").getAsBoolean(),
 					contents.get("TBTT Information Count").getAsByte(),
-					contents.get("TBTT Information Length").getAsByte()
+					contents.get("TBTT Information Length").getAsShort()
 				);
 			}
 
@@ -104,8 +126,16 @@ public class ReducedNeighborReport {
 			}
 		}
 
+		/**
+		 * Subfield for TBTT Information
+		 */
 		public static class TbttInformation {
-			public final byte neighborApTbttOffset;
+			/**
+			 * unsigned 8 bits - offset in TUs, rounded down to nearest TU, to the next
+			 * TBTT of an AP’s BSS from the immediately prior TBTT of the AP that
+			 * transmits this element
+			 */
+			public final short neighborApTbttOffset;
 			/** BSSID of neighbor, optional */
 			public final String bssid;
 			/** Short SSID of neighbor, optional */
@@ -113,7 +143,7 @@ public class ReducedNeighborReport {
 
 			/** Constructor */
 			public TbttInformation(
-				byte neighborApTbttOffset,
+				short neighborApTbttOffset,
 				String bssid,
 				String shortSsid
 			) {
@@ -126,7 +156,7 @@ public class ReducedNeighborReport {
 			// TODO rename fields as necessary - we don't know how the data format yet
 			public static TbttInformation parse(JsonObject contents) {
 				return new TbttInformation(
-					contents.get("Neighbor AP TBTT Offset").getAsByte(),
+					contents.get("Neighbor AP TBTT Offset").getAsShort(),
 					IEUtils.parseOptionalStringField(contents, "BSSID"),
 					IEUtils.parseOptionalStringField(contents, "Short SSID")
 				);
@@ -168,16 +198,31 @@ public class ReducedNeighborReport {
 			}
 		}
 
+		/**
+		 * @see TbttInformationHeader
+		 */
 		public final TbttInformationHeader tbttInformationHeader;
-		public final byte operatingClass;
-		public final byte channelNumber;
+		/**
+		 * unsigned 8 bits - channel starting frequency that, together with the
+		 * Channel Number field, indicates the primary channel of the BSSs of the APs
+		 * in this Neighbor AP Information field
+		 */
+		public final short operatingClass;
+		/**
+		 * unsigned 8 bits - the last known primary channel of the APs in this
+		 * Neighbor AP Information field.
+		 */
+		public final short channelNumber;
+		/**
+		 * @see TbttInformation
+		 */
 		public final TbttInformation tbttInformation;
 
 		/** Constructor */
 		public NeighborApInformation(
 			TbttInformationHeader tbttInformationHeader,
-			byte operatingClass,
-			byte channelNumber,
+			short operatingClass,
+			short channelNumber,
 			TbttInformation tbttInformation
 		) {
 			this.tbttInformationHeader = tbttInformationHeader;
@@ -193,8 +238,8 @@ public class ReducedNeighborReport {
 				TbttInformationHeader.parse(
 					contents.get("TBTT Information Header").getAsJsonObject()
 				),
-				contents.get("Operating Class").getAsByte(),
-				contents.get("Channel Number").getAsByte(),
+				contents.get("Operating Class").getAsShort(),
+				contents.get("Channel Number").getAsShort(),
 				TbttInformation.parse(contents.get("TBTT Information").getAsJsonObject())
 			);
 		}
