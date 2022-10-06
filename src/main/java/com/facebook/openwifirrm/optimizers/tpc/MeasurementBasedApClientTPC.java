@@ -291,10 +291,10 @@ public class MeasurementBasedApClientTPC extends TPC {
 	public Map<String, Map<String, Integer>> computeTxPowerMap() {
 		Map<String, Map<String, Integer>> txPowerMap = new TreeMap<>();
 
-		for (Map.Entry<String, State> e : model.latestState.entrySet()) {
+		for (Map.Entry<String, List<State>> e : model.latestStates.entrySet()) {
 			String serialNumber = e.getKey();
-			State state = e.getValue();
-
+			List<State> states = e.getValue();
+			State state = states.get(states.size() - 1);
 			if (state.radios == null || state.radios.length == 0) {
 				logger.debug(
 					"Device {}: No radios found, skipping...",

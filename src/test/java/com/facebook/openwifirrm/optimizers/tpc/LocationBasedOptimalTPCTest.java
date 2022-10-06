@@ -132,17 +132,19 @@ public class LocationBasedOptimalTPCTest {
 				device,
 				TestUtils.createDeviceStatus(UCentralConstants.BANDS)
 			);
-			dataModel.latestState.put(
+			dataModel.latestStates.put(
 				device,
-				TestUtils.createState(
-					DEFAULT_CHANNEL_2G,
-					DEFAULT_CHANNEL_WIDTH,
-					DEFAULT_TX_POWER,
-					dummyBssid,
-					DEFAULT_CHANNEL_5G,
-					DEFAULT_CHANNEL_WIDTH,
-					DEFAULT_TX_POWER,
-					dummyBssid
+				Arrays.asList(
+					TestUtils.createState(
+						DEFAULT_CHANNEL_2G,
+						DEFAULT_CHANNEL_WIDTH,
+						DEFAULT_TX_POWER,
+						dummyBssid,
+						DEFAULT_CHANNEL_5G,
+						DEFAULT_CHANNEL_WIDTH,
+						DEFAULT_TX_POWER,
+						dummyBssid
+					)
 				)
 			);
 		}
@@ -199,17 +201,19 @@ public class LocationBasedOptimalTPCTest {
 				device,
 				TestUtils.createDeviceStatus(UCentralConstants.BANDS)
 			);
-			dataModel2.latestState.put(
+			dataModel2.latestStates.put(
 				device,
-				TestUtils.createState(
-					DEFAULT_CHANNEL_2G,
-					DEFAULT_CHANNEL_WIDTH,
-					DEFAULT_TX_POWER,
-					dummyBssid,
-					DEFAULT_CHANNEL_5G,
-					DEFAULT_CHANNEL_WIDTH,
-					DEFAULT_TX_POWER,
-					dummyBssid
+				Arrays.asList(
+					TestUtils.createState(
+						DEFAULT_CHANNEL_2G,
+						DEFAULT_CHANNEL_WIDTH,
+						DEFAULT_TX_POWER,
+						dummyBssid,
+						DEFAULT_CHANNEL_5G,
+						DEFAULT_CHANNEL_WIDTH,
+						DEFAULT_TX_POWER,
+						dummyBssid
+					)
 				)
 			);
 		}
@@ -220,13 +224,15 @@ public class LocationBasedOptimalTPCTest {
 					Arrays.asList(UCentralConstants.BAND_5G)
 				)
 			);
-		dataModel2.latestState.put(
+		dataModel2.latestStates.put(
 			deviceC,
-			TestUtils.createState(
-				DEFAULT_CHANNEL_5G,
-				DEFAULT_CHANNEL_WIDTH,
-				DEFAULT_TX_POWER,
-				dummyBssid
+			Arrays.asList(
+				TestUtils.createState(
+					DEFAULT_CHANNEL_5G,
+					DEFAULT_CHANNEL_WIDTH,
+					DEFAULT_TX_POWER,
+					dummyBssid
+				)
 			)
 		);
 
@@ -308,17 +314,19 @@ public class LocationBasedOptimalTPCTest {
 				device,
 				TestUtils.createDeviceStatus(UCentralConstants.BANDS)
 			);
-			dataModel2.latestState.put(
+			dataModel2.latestStates.put(
 				device,
-				TestUtils.createState(
-					DEFAULT_CHANNEL_2G,
-					DEFAULT_CHANNEL_WIDTH,
-					DEFAULT_TX_POWER,
-					dummyBssid,
-					DEFAULT_CHANNEL_5G,
-					DEFAULT_CHANNEL_WIDTH,
-					DEFAULT_TX_POWER,
-					dummyBssid
+				Arrays.asList(
+					TestUtils.createState(
+						DEFAULT_CHANNEL_2G,
+						DEFAULT_CHANNEL_WIDTH,
+						DEFAULT_TX_POWER,
+						dummyBssid,
+						DEFAULT_CHANNEL_5G,
+						DEFAULT_CHANNEL_WIDTH,
+						DEFAULT_TX_POWER,
+						dummyBssid
+					)
 				)
 			);
 		}
@@ -367,17 +375,19 @@ public class LocationBasedOptimalTPCTest {
 				device,
 				TestUtils.createDeviceStatus(UCentralConstants.BANDS)
 			);
-			dataModel3.latestState.put(
+			dataModel3.latestStates.put(
 				device,
-				TestUtils.createState(
-					DEFAULT_CHANNEL_2G,
-					DEFAULT_CHANNEL_WIDTH,
-					DEFAULT_TX_POWER,
-					dummyBssid,
-					DEFAULT_CHANNEL_5G,
-					DEFAULT_CHANNEL_WIDTH,
-					DEFAULT_TX_POWER,
-					dummyBssid
+				Arrays.asList(
+					TestUtils.createState(
+						DEFAULT_CHANNEL_2G,
+						DEFAULT_CHANNEL_WIDTH,
+						DEFAULT_TX_POWER,
+						dummyBssid,
+						DEFAULT_CHANNEL_5G,
+						DEFAULT_CHANNEL_WIDTH,
+						DEFAULT_TX_POWER,
+						dummyBssid
+					)
 				)
 			);
 		}
@@ -416,17 +426,19 @@ public class LocationBasedOptimalTPCTest {
 				device,
 				TestUtils.createDeviceStatus(UCentralConstants.BANDS)
 			);
-			dataModel4.latestState.put(
+			dataModel4.latestStates.put(
 				device,
-				TestUtils.createState(
-					DEFAULT_CHANNEL_2G,
-					DEFAULT_CHANNEL_WIDTH,
-					DEFAULT_TX_POWER,
-					dummyBssid,
-					DEFAULT_CHANNEL_2G,
-					DEFAULT_CHANNEL_WIDTH,
-					DEFAULT_TX_POWER,
-					dummyBssid
+				Arrays.asList(
+					TestUtils.createState(
+						DEFAULT_CHANNEL_2G,
+						DEFAULT_CHANNEL_WIDTH,
+						DEFAULT_TX_POWER,
+						dummyBssid,
+						DEFAULT_CHANNEL_2G,
+						DEFAULT_CHANNEL_WIDTH,
+						DEFAULT_TX_POWER,
+						dummyBssid
+					)
 				)
 			);
 		}

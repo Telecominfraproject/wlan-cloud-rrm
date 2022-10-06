@@ -11,6 +11,7 @@ package com.facebook.openwifirrm.optimizers.channel;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
+import java.util.Arrays;
 import java.util.Map;
 import java.util.Random;
 
@@ -46,13 +47,17 @@ public class RandomChannelInitializerTest {
 
 		// A and B will be assigned to the same channel
 		DataModel dataModel = new DataModel();
-		dataModel.latestState.put(
+		dataModel.latestStates.put(
 			deviceA,
-			TestUtils.createState(6, channelWidth, deviceABssid)
+			Arrays.asList(
+				TestUtils.createState(6, channelWidth, deviceABssid)
+			)
 		);
-		dataModel.latestState.put(
+		dataModel.latestStates.put(
 			deviceB,
-			TestUtils.createState(11, channelWidth, deviceBBssid)
+			Arrays.asList(
+				TestUtils.createState(11, channelWidth, deviceBBssid)
+			)
 		);
 		dataModel.latestDeviceStatusRadios.put(
 			deviceA,
@@ -91,13 +96,17 @@ public class RandomChannelInitializerTest {
 
 		// A and B will be assigned to the same channel
 		DataModel dataModel = new DataModel();
-		dataModel.latestState.put(
+		dataModel.latestStates.put(
 			deviceA,
-			TestUtils.createState(6, channelWidth, deviceABssid)
+			Arrays.asList(
+				TestUtils.createState(6, channelWidth, deviceABssid)
+			)
 		);
-		dataModel.latestState.put(
+		dataModel.latestStates.put(
 			deviceB,
-			TestUtils.createState(11, channelWidth, deviceBBssid)
+			Arrays.asList(
+				TestUtils.createState(11, channelWidth, deviceBBssid)
+			)
 		);
 		dataModel.latestDeviceStatusRadios.put(
 			deviceA,

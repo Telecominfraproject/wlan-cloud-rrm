@@ -309,6 +309,12 @@ public class RRMConfig {
 			 * ({@code MODELERPARAMS_WIFISCANBUFFERSIZE})
 			 */
 			public int wifiScanBufferSize = 10;
+
+			/**
+			 * Maximum rounds of States to store per device
+			 * ({@code MODELERPARAMS_STATEBUFFERSIZE})
+			 */
+			public int stateBufferSize = 10;
 		}
 
 		/** Modeler parameters. */
@@ -531,6 +537,9 @@ public class RRMConfig {
 			config.moduleConfig.modelerParams;
 		if ((v = env.get("MODELERPARAMS_WIFISCANBUFFERSIZE")) != null) {
 			modelerParams.wifiScanBufferSize = Integer.parseInt(v);
+		}
+		if ((v = env.get("MODELERPARAMS_STATEBUFFERSIZE")) != null) {
+			modelerParams.stateBufferSize = Integer.parseInt(v);
 		}
 		ModuleConfig.ApiServerParams apiServerParams =
 			config.moduleConfig.apiServerParams;

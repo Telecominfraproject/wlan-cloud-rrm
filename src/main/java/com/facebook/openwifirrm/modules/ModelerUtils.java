@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -24,6 +25,11 @@ import com.facebook.openwifirrm.modules.Modeler.DataModel;
 import com.facebook.openwifirrm.ucentral.WifiScanEntry;
 import com.facebook.openwifirrm.ucentral.informationelement.HTOperation;
 import com.facebook.openwifirrm.ucentral.informationelement.VHTOperation;
+import com.facebook.openwifirrm.ucentral.models.AggregatedState;
+import com.facebook.openwifirrm.ucentral.models.State;
+import com.facebook.openwifirrm.ucentral.models.State.Interface;
+import com.facebook.openwifirrm.ucentral.models.State.Interface.SSID;
+import com.facebook.openwifirrm.ucentral.models.State.Interface.SSID.Association;
 
 /**
  * Modeler utilities.
@@ -380,5 +386,174 @@ public class ModelerUtils {
 			}
 		}
 		return aggregatedWifiScans;
+	}
+
+	/**
+	 * This method converts the input State info to an AggregatedState
+	 * and adds it to the bssidToAggregatedStates map. If the bssid&station
+	 * of the input State does not exist in the map, create a new
+	 * AggregatedState list. If the bssid&station of the input State exists,
+	 * then convert State to AggregatedState and check if there exits an
+	 * AggregatedState of the same radio. If there does, append the value
+	 * of aggregation field to the existing AggregatedState, if not, create
+	 * a new AggregatedState and add it to the list.
+	 *
+	 * @param bssidToAggregatedStates map from bssid&station to a list of AggregatedState.
+	 * @param state the state that is to be added.
+	 */
+	static void addStateToAggregation(
+		Map<String, List<AggregatedState>> bssidToAggregatedStates,
+		State state
+	) {
+		for (Interface stateInterface : state.interfaces) {
+			if (stateInterface.ssids == null) {
+				continue;
+			}
+			for (SSID ssid : stateInterface.ssids) {
+				Map<String, Integer> radioInfo = new HashMap<>();
+				radioInfo.put("channel", ssid.radio.get("channel").getAsInt());
+				radioInfo.put(
+					"channel_width",
+					ssid.radio.get("channel_width").getAsInt()
+				);
+				radioInfo
+					.put("tx_power", ssid.radio.get("tx_power").getAsInt());
+
+				for (Association association : ssid.associations) {
+					if (association == null) {
+						continue;
+					}
+					String key = getBssidStationKeyPair(
+						association.bssid,
+						association.station
+					);
+					List<AggregatedState> aggregatedStates =
+						bssidToAggregatedStates
+							.computeIfAbsent(key, k -> new ArrayList<>());
+					AggregatedState aggState =
+						new AggregatedState(association, radioInfo);
+
+					/**
+					 * Indicate if the aggState can be merged into some old AggregatedState.
+					 * If true, it will be merged by appending its mcs/rssi field to the old one.
+					 * If false, it will be added to the list aggregatedStates.
+					*/
+					boolean canBeMergedToOldAggregatedState = false;
+					for (
+						AggregatedState oldAggregatedState : aggregatedStates
+					) {
+						if (oldAggregatedState.add(aggState)) {
+							canBeMergedToOldAggregatedState = true;
+							break;
+						}
+					}
+					if (!canBeMergedToOldAggregatedState) {
+						aggregatedStates.add(aggState);
+					}
+					bssidToAggregatedStates.put(key, aggregatedStates);
+				}
+			}
+		}
+	}
+
+	/**
+	 * This method aggregates States by bssid&station key pair and radio info.
+	 * if two States of the same bssid&station match in channel, channel width and tx_power
+	 * need to be aggregated to one {@code AggregatedState}. Currently only mcs and
+	 * rssi fields are being aggregated. They are of List<Integer> type in AggregatedState,
+	 * which list all the values over the time.
+	 *
+	 * @param dataModel the data model which includes the latest recorded States.
+	 * @param obsoletionPeriodMs the maximum amount of time (in milliseconds) it
+	 *                           is worth aggregating over, starting from the
+	 *                           most recent States and working backwards in time.
+	 * 							 A State exactly {@code obsoletionPeriodMs} ms earlier
+	 * 							 than the most recent State is considered non-obsolete
+	 *                           (i.e., the "non-obsolete" window is inclusive).
+	 *                           Must be non-negative.
+	 * @param refTimeMs	the reference time were passed to make testing easier
+	 * @return  Map<String, Map<String, List<AggregatedState>>> A map from serial number to
+	 * 							a map from bssid_station String pair to a list of AggregatedState.
+	 */
+	public static Map<String, Map<String, List<AggregatedState>>> getAggregatedStates(
+		Modeler.DataModel dataModel,
+		long obsoletionPeriodMs,
+		long refTimeMs
+	) {
+		if (obsoletionPeriodMs < 0) {
+			throw new IllegalArgumentException(
+				"obsoletionPeriodMs must be non-negative."
+			);
+		}
+		Map<String, Map<String, List<AggregatedState>>> aggregatedStates =
+			new HashMap<>();
+
+		for (
+			Map.Entry<String, List<State>> deviceToStateList : dataModel.latestStates
+				.entrySet()
+		) {
+			String serialNumber = deviceToStateList.getKey();
+			List<State> states = deviceToStateList.getValue();
+
+			if (states.isEmpty()) {
+				continue;
+			}
+
+			/**
+			 * Sort in reverse chronological order. Sorting is done just in case the
+			 * States in the original list are not chronological already - although
+			 * they are inserted chronologically, perhaps latency, synchronization, etc.
+			 */
+			states.sort(
+				(state1, state2) -> -Long.compare(state1.unit.localtime, state2.unit.localtime)
+			);
+
+			Map<String, List<AggregatedState>> bssidToAggregatedStates =
+				aggregatedStates
+					.computeIfAbsent(serialNumber, k -> new HashMap<>());
+
+			for (State state : states) {
+				if (refTimeMs - state.unit.localtime > obsoletionPeriodMs) {
+					// discard obsolete entries
+					break;
+				}
+
+				addStateToAggregation(bssidToAggregatedStates, state);
+			}
+		}
+		return aggregatedStates;
+	}
+
+	/**
+	 * This method gets the most recent State from latestStates per device.
+	 *
+	 * @param latestStates list of latest States per device.
+	 * @return Map<String, State> a map from device String to latest State.
+	 */
+	public static Map<String, State> getLatestState(
+		Map<String, List<State>> latestStates
+	) {
+		Map<String, State> latestState = new ConcurrentHashMap<>();
+		for (
+			Map.Entry<String, List<State>> stateEntry : latestStates.entrySet()
+		) {
+			String key = stateEntry.getKey();
+			List<State> value = stateEntry.getValue();
+			if (value.isEmpty()) {
+				latestState.put(key, null);
+			} else {
+				latestState.put(key, value.get(value.size() - 1));
+			}
+		}
+		return latestState;
+	}
+
+	/**  Create a key pair consisted of bssid and station string */
+	public static String getBssidStationKeyPair(String bssid, String station) {
+		return String.format(
+			"bssid: %s, station: %s",
+			bssid,
+			station
+		);
 	}
 }

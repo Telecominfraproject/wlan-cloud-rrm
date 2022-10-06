@@ -154,7 +154,7 @@ public abstract class ChannelOptimizer {
 		// Remove model entries not in the given zone
 		this.model.latestWifiScans.keySet()
 			.removeIf(serialNumber -> !deviceConfigs.containsKey(serialNumber));
-		this.model.latestState.keySet()
+		this.model.latestStates.keySet()
 			.removeIf(serialNumber -> !deviceConfigs.containsKey(serialNumber));
 		this.model.latestDeviceStatusRadios.keySet()
 			.removeIf(serialNumber -> !deviceConfigs.containsKey(serialNumber));

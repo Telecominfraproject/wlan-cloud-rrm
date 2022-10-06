@@ -70,7 +70,7 @@ public abstract class TPC {
 		this.model.latestWifiScans.keySet()
 			.removeIf(serialNumber -> !deviceConfigs.containsKey(serialNumber)
 			);
-		this.model.latestState.keySet()
+		this.model.latestStates.keySet()
 			.removeIf(serialNumber -> !deviceConfigs.containsKey(serialNumber)
 			);
 		this.model.latestDeviceStatusRadios.keySet()
@@ -184,9 +184,10 @@ public abstract class TPC {
 	 */
 	protected Map<Integer, List<String>> getApsPerChannel() {
 		Map<Integer, List<String>> apsPerChannel = new TreeMap<>();
-		for (Map.Entry<String, State> e : model.latestState.entrySet()) {
+		for (Map.Entry<String, List<State>> e : model.latestStates.entrySet()) {
 			String serialNumber = e.getKey();
-			State state = e.getValue();
+			List<State> states = e.getValue();
+			State state = states.get(states.size() - 1);
 
 			if (state.radios == null || state.radios.length == 0) {
 				logger.debug(

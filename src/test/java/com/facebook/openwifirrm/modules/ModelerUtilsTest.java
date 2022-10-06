@@ -15,7 +15,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import org.junit.jupiter.api.Test;
@@ -24,6 +26,8 @@ import com.facebook.openwifirrm.aggregators.MeanAggregator;
 import com.facebook.openwifirrm.modules.Modeler.DataModel;
 import com.facebook.openwifirrm.optimizers.TestUtils;
 import com.facebook.openwifirrm.ucentral.WifiScanEntry;
+import com.facebook.openwifirrm.ucentral.models.AggregatedState;
+import com.facebook.openwifirrm.ucentral.models.State;
 
 public class ModelerUtilsTest {
 	@Test
@@ -32,9 +36,9 @@ public class ModelerUtilsTest {
 		double[][][] rxPower = ModelerUtils.generateRxPower(
 			500,
 			4,
-			new ArrayList<>(Arrays.asList(408.0, 507.0, 64.0, 457.0)),
-			new ArrayList<>(Arrays.asList(317.0, 49.0, 140.0, 274.0)),
-			new ArrayList<>(Arrays.asList(20.0, 20.0, 20.0, 20.0))
+			Arrays.asList(408.0, 507.0, 64.0, 457.0),
+			Arrays.asList(317.0, 49.0, 140.0, 274.0),
+			Arrays.asList(20.0, 20.0, 20.0, 20.0)
 		);
 		assertNull(rxPower);
 	}
@@ -44,9 +48,9 @@ public class ModelerUtilsTest {
 		double[][][] rxPower = ModelerUtils.generateRxPower(
 			500,
 			4,
-			new ArrayList<>(Arrays.asList(408.0, 453.0, 64.0, 457.0)),
-			new ArrayList<>(Arrays.asList(317.0, 49.0, 140.0, 274.0)),
-			new ArrayList<>(Arrays.asList(20.0, 20.0, 20.0, 20.0))
+			Arrays.asList(408.0, 453.0, 64.0, 457.0),
+			Arrays.asList(317.0, 49.0, 140.0, 274.0),
+			Arrays.asList(20.0, 20.0, 20.0, 20.0)
 		);
 		assertEquals(-108.529, rxPower[0][0][0], 0.001);
 		double[][] heatMap = ModelerUtils.generateHeatMap(
@@ -74,9 +78,9 @@ public class ModelerUtilsTest {
 		double[][][] rxPower = ModelerUtils.generateRxPower(
 			500,
 			4,
-			new ArrayList<>(Arrays.asList(408.0, 453.0, 64.0, 457.0)),
-			new ArrayList<>(Arrays.asList(317.0, 49.0, 140.0, 274.0)),
-			new ArrayList<>(Arrays.asList(30.0, 30.0, 30.0, 30.0))
+			Arrays.asList(408.0, 453.0, 64.0, 457.0),
+			Arrays.asList(317.0, 49.0, 140.0, 274.0),
+			Arrays.asList(30.0, 30.0, 30.0, 30.0)
 		);
 		assertEquals(-98.529, rxPower[0][0][0], 0.001);
 		double[][] heatMap = ModelerUtils.generateHeatMap(
@@ -545,6 +549,297 @@ public class ModelerUtilsTest {
 		assertEquals(
 			expectedAggregatedEntryAToB,
 			aggregateMap.get(apB).get(bssidA)
+		);
+	}
+
+	@Test
+	void testAddStateToAggregation() {
+		final String bssidA = "aa:aa:aa:aa:aa:a";
+		final String stationA1 = "stationA1";
+		final String stationA2 = "stationA2";
+		final String bssidB = "bb:bb:bb:bb:bb:bb";
+		final String stationB = "stationB";
+		final String stationC = "stationC";
+		final String bssidC = "cc:cc:cc:cc:cc:cc";
+
+		AggregatedState aggStateA1 = TestUtils.createAggregatedState(
+			1,
+			20,
+			10,
+			bssidA,
+			stationA1,
+			new int[] { 10, 20, 30 }
+		);
+		AggregatedState aggStateA2 = TestUtils.createAggregatedState(
+			6,
+			20,
+			10,
+			bssidA,
+			stationA2,
+			new int[] { 20, 30, 40 }
+		);
+		AggregatedState aggStateB = TestUtils.createAggregatedState(
+			11,
+			20,
+			20,
+			bssidB,
+			stationB,
+			new int[] { 10, 20, 30 }
+		);
+		AggregatedState aggStateC = TestUtils.createAggregatedState(
+			1,
+			20,
+			10,
+			bssidC,
+			stationC,
+			new int[] { 100, 200, 300 }
+		);
+
+		Map<String, List<AggregatedState>> bssidToAggregatedStates =
+			new HashMap<>();
+		bssidToAggregatedStates.put(
+			ModelerUtils.getBssidStationKeyPair(bssidA, stationA1),
+			new ArrayList<>(Arrays.asList(aggStateA1))
+		);
+
+		bssidToAggregatedStates.put(
+			ModelerUtils.getBssidStationKeyPair(bssidA, stationA2),
+			new ArrayList<>(Arrays.asList(aggStateA2))
+		);
+		bssidToAggregatedStates.put(
+			ModelerUtils.getBssidStationKeyPair(bssidB, stationB),
+			new ArrayList<>(Arrays.asList(aggStateB))
+		);
+		bssidToAggregatedStates.put(
+			ModelerUtils.getBssidStationKeyPair(bssidC, stationC),
+			new ArrayList<>(Arrays.asList(aggStateC))
+		);
+
+		State toBeAggregated1 = TestUtils.createState(
+			6,
+			20,
+			10,
+			bssidA,
+			new String[] { stationA1, stationA1, stationA2 },
+			new int[] { 40, 50, 60 },
+			1
+		);
+
+		ModelerUtils
+			.addStateToAggregation(bssidToAggregatedStates, toBeAggregated1);
+
+		assertEquals(
+			bssidToAggregatedStates
+				.get(ModelerUtils.getBssidStationKeyPair(bssidA, stationA1))
+				.get(0).rssi,
+			Arrays.asList(10, 20, 30)
+		);
+
+		assertEquals(
+			bssidToAggregatedStates
+				.get(ModelerUtils.getBssidStationKeyPair(bssidA, stationA1))
+				.get(1).rssi,
+			Arrays.asList(40, 50)
+		);
+		assertEquals(
+			bssidToAggregatedStates
+				.get(ModelerUtils.getBssidStationKeyPair(bssidA, stationA2))
+				.get(0).rssi,
+			Arrays.asList(20, 30, 40, 60)
+		);
+
+		State toBeAggregated2 = TestUtils.createState(
+			11,
+			20,
+			20,
+			bssidB,
+			new String[] { stationB },
+			new int[] { 40 },
+			1
+		);
+		ModelerUtils
+			.addStateToAggregation(bssidToAggregatedStates, toBeAggregated2);
+		assertEquals(
+			bssidToAggregatedStates
+				.get(ModelerUtils.getBssidStationKeyPair(bssidB, stationB))
+				.get(0).rssi,
+			Arrays.asList(10, 20, 30, 40)
+		);
+	}
+
+	@Test
+	void testGetAggregatedStates() {
+		final long obsoletionPeriodMs = 60000000;
+		final String serialNumberA = "aaaaaaaaaaaa";
+		final String bssidA = "aa:aa:aa:aa:aa:a";
+		final String serialNumberB = "bbbbbbbbbbbb";
+		final String bssidB = "bb:bb:bb:bb:bb:bb";
+		final String serialNumberC = "cccccccccccc";
+		final String bssidC = "cc:cc:cc:cc:cc:cc";
+		final String stationA1 = "stationA1";
+		final String stationA2 = "stationA2";
+		final String stationA3 = "stationA3";
+		final String stationA4 = "stationA4";
+		final String stationB = "stationB";
+		final String stationC = "stationC";
+
+		final long refTimeMs = TestUtils.DEFAULT_LOCAL_TIME;
+
+		DataModel dataModel = new DataModel();
+
+		// This serie of StateA is used to test a valid input states.
+		State time1StateA = TestUtils.createState(
+			1,
+			80,
+			10,
+			bssidA,
+			new String[] { stationA1, stationA2, stationA2, stationA3 },
+			new int[] { -84, -67, -67, 10 },
+			6,
+			40,
+			20,
+			bssidA,
+			new String[] { stationA1 },
+			new int[] { -80 },
+			TestUtils.DEFAULT_LOCAL_TIME
+		);
+
+		State time2StateA = TestUtils.createState(
+			1,
+			80,
+			10,
+			bssidA,
+			new String[] { stationA1, stationA3 },
+			new int[] { 27, 100 },
+			6,
+			40,
+			20,
+			bssidA,
+			new String[] { stationA2, stationA2 },
+			new int[] { 180, 67 },
+			TestUtils.DEFAULT_LOCAL_TIME - 800
+		);
+
+		//As State time3StateA is obsolete, it should not be aggregated.
+		State time3StateA = TestUtils.createState(
+			1,
+			80,
+			10,
+			bssidA,
+			new String[] { stationA1, stationA2, stationA4 },
+			new int[] { 24, 27, 1000 },
+			6,
+			40,
+			20,
+			bssidA,
+			new String[] { stationA1, stationA2 },
+			new int[] { 180, 180 },
+			// Set the localtime exactly obsolete
+			TestUtils.DEFAULT_LOCAL_TIME - obsoletionPeriodMs - 1
+		);
+
+		dataModel.latestStates.put(
+			serialNumberA,
+			new ArrayList<>(
+				Arrays.asList(
+					time1StateA,
+					time2StateA,
+					time3StateA
+				)
+			)
+		);
+
+		Map<String, Map<String, List<AggregatedState>>> aggregatedMap =
+			ModelerUtils
+				.getAggregatedStates(dataModel, obsoletionPeriodMs, refTimeMs);
+
+		assertEquals(
+			aggregatedMap.get(serialNumberA).get(ModelerUtils.getBssidStationKeyPair(bssidA, stationA1)).size(),
+			2
+		);
+		assertEquals(
+			aggregatedMap.get(serialNumberA).get(ModelerUtils.getBssidStationKeyPair(bssidA, stationA1)).get(0).radio,
+			new AggregatedState.Radio(1, 80, 10)
+		);
+		assertEquals(
+			aggregatedMap.get(serialNumberA).get(ModelerUtils.getBssidStationKeyPair(bssidA, stationA1)).get(0).rssi,
+			Arrays.asList(-84, 27)
+		);
+		assertEquals(
+			aggregatedMap.get(serialNumberA).get(ModelerUtils.getBssidStationKeyPair(bssidA, stationA1)).get(1).radio,
+			new AggregatedState.Radio(6, 40, 20)
+		);
+		assertEquals(
+			aggregatedMap.get(serialNumberA).get(ModelerUtils.getBssidStationKeyPair(bssidA, stationA1)).get(1).rssi,
+			Arrays.asList(-80)
+		);
+		assertEquals(
+			aggregatedMap.get(serialNumberA).get(ModelerUtils.getBssidStationKeyPair(bssidA, stationA2)).get(0).radio,
+			new AggregatedState.Radio(1, 80, 10)
+		);
+		assertEquals(
+			aggregatedMap.get(serialNumberA).get(ModelerUtils.getBssidStationKeyPair(bssidA, stationA2)).get(0).rssi,
+			Arrays.asList(-67, -67)
+		);
+		assertEquals(
+			aggregatedMap.get(serialNumberA).get(ModelerUtils.getBssidStationKeyPair(bssidA, stationA2)).get(1).radio,
+			new AggregatedState.Radio(6, 40, 20)
+		);
+		assertEquals(
+			aggregatedMap.get(serialNumberA).get(ModelerUtils.getBssidStationKeyPair(bssidA, stationA2)).get(1).rssi,
+			Arrays.asList(180, 67)
+		);
+		assertEquals(
+			aggregatedMap.get(serialNumberA).get(ModelerUtils.getBssidStationKeyPair(bssidA, stationA3)).get(0).radio,
+			new AggregatedState.Radio(1, 80, 10)
+		);
+		assertEquals(
+			aggregatedMap.get(serialNumberA).get(ModelerUtils.getBssidStationKeyPair(bssidA, stationA3)).get(0).rssi,
+			Arrays.asList(10, 100)
+		);
+
+		// Test more clients operate on the same channel (stationB and stationA)
+		State time1StateB = TestUtils.createState(
+			1,
+			80,
+			10,
+			bssidB,
+			new String[] { stationB },
+			new int[] { -30 },
+			TestUtils.DEFAULT_LOCAL_TIME
+		);
+		dataModel.latestStates
+			.computeIfAbsent(serialNumberB, k -> new ArrayList<>())
+			.add(time1StateB);
+
+		State time1StateC = TestUtils.createState(
+			6,
+			40,
+			20,
+			bssidC,
+			new String[] { stationC },
+			new int[] { -100 },
+			TestUtils.DEFAULT_LOCAL_TIME
+		);
+		dataModel.latestStates
+			.computeIfAbsent(serialNumberC, k -> new ArrayList<>())
+			.add(time1StateC);
+
+		Map<String, Map<String, List<AggregatedState>>> aggregatedMap2 =
+			ModelerUtils
+				.getAggregatedStates(dataModel, obsoletionPeriodMs, refTimeMs);
+
+		assertEquals(
+			aggregatedMap2.get(serialNumberB).get(ModelerUtils.getBssidStationKeyPair(bssidB, stationB)).get(0).rssi, Arrays.asList(-30)
+		);
+
+		assertEquals(
+			aggregatedMap2.get(serialNumberC).get(ModelerUtils.getBssidStationKeyPair(bssidC, stationC)).get(0).rssi, Arrays.asList(-100)
+		);
+
+		assertEquals(
+			aggregatedMap2.get(serialNumberA).get(ModelerUtils.getBssidStationKeyPair(bssidA, stationA1)).size(),
+			aggregatedMap.get(serialNumberA).get(ModelerUtils.getBssidStationKeyPair(bssidA, stationA1)).size()
 		);
 	}
 }

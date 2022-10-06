@@ -63,26 +63,30 @@ public class RandomTxPowerInitializerTest {
 	 */
 	private static DataModel createModel() {
 		DataModel dataModel = new DataModel();
-		dataModel.latestState.put(
+		dataModel.latestStates.put(
 			DEVICE_A,
-			TestUtils.createState(
-				36,
-				DEFAULT_CHANNEL_WIDTH,
-				DEFAULT_TX_POWER,
-				BSSID_A,
-				2,
-				DEFAULT_CHANNEL_WIDTH,
-				DEFAULT_TX_POWER,
-				BSSID_A
+			Arrays.asList(
+				TestUtils.createState(
+					36,
+					DEFAULT_CHANNEL_WIDTH,
+					DEFAULT_TX_POWER,
+					BSSID_A,
+					2,
+					DEFAULT_CHANNEL_WIDTH,
+					DEFAULT_TX_POWER,
+					BSSID_A
+				)
 			)
 		);
-		dataModel.latestState.put(
+		dataModel.latestStates.put(
 			DEVICE_B,
-			TestUtils.createState(
-				2,
-				DEFAULT_CHANNEL_WIDTH,
-				DEFAULT_TX_POWER,
-				BSSID_B
+			Arrays.asList(
+				TestUtils.createState(
+					2,
+					DEFAULT_CHANNEL_WIDTH,
+					DEFAULT_TX_POWER,
+					BSSID_B
+				)
 			)
 		);
 		return dataModel;
