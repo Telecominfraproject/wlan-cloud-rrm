@@ -8,7 +8,6 @@
 
 package com.facebook.openwifirrm.modules;
 
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -271,7 +270,7 @@ public class Modeler implements Runnable {
 					State stateModel = gson.fromJson(state, State.class);
 					dataModel.latestStates.computeIfAbsent(
 						device.serialNumber,
-						k -> Collections.synchronizedList(new LinkedList<>())
+						k -> new LinkedList<>()
 					).add(stateModel);
 					logger.debug(
 						"Device {}: added initial state from uCentralGw",
@@ -307,10 +306,11 @@ public class Modeler implements Runnable {
 						List<State> latestStatesList = dataModel.latestStates
 							.computeIfAbsent(
 								record.serialNumber,
-								k -> Collections
-									.synchronizedList(new LinkedList<>())
+								k -> new LinkedList<>()
 							);
-						if (latestStatesList.size() >= params.stateBufferSize) {
+						while (
+							latestStatesList.size() >= params.stateBufferSize
+						) {
 							latestStatesList.remove(0);
 						}
 						latestStatesList.add(stateModel);

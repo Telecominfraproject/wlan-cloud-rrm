@@ -170,11 +170,6 @@ public class AggregatedState {
 	}
 
 	@Override
-	public int hashCode() {
-		return Objects.hash(bssid, station, radio);
-	}
-
-	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
 			return true;
@@ -202,15 +197,27 @@ public class AggregatedState {
 	}
 
 	/**
+	 * Check whether some other AggregatedState and this one are matached for aggregation.
+	 * If the two match in bssid, station and radio. Then they could be aggregated to one.
+	 *
+	 * @param state
+	 * @return boolean
+	 */
+	public boolean ifMatchForAggregation(AggregatedState state) {
+		return bssid == state.bssid && station == state.station &&
+			Objects.equals(radio, state.radio);
+	}
+
+	/**
 	 * Add an AggregatedState to this AggregatedState. Succeed only when the two
-	 * matches in hashCode.
+	 * match for aggregation.
 	 *
 	 * @param state input AggregatedState
-	 * @return boolean true if the two matches in bssid, station, channel,
+	 * @return boolean true if the two match in bssid, station, channel,
 	 *         channel_width and tx_power
 	 */
 	public boolean add(AggregatedState state) {
-		if (hashCode() == state.hashCode()) {
+		if (ifMatchForAggregation(state)) {
 			this.rssi.addAll(state.rssi);
 			this.rxRate.add(state.rxRate);
 			this.txRate.add(state.txRate);
