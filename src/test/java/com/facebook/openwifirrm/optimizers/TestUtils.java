@@ -436,7 +436,7 @@ public class TestUtils {
 	}
 
 	/** Create a {@code State.Unit} with specifying localtime in unix timestamp in seconds. */
-	private static State.Unit createStateUnit(Long localtime) {
+	private static State.Unit createStateUnit(long localtime) {
 		// @formatter:off
 		String jsonStr = String.format(
 		"  {\n" +
