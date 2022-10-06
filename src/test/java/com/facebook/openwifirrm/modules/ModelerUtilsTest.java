@@ -565,7 +565,7 @@ public class ModelerUtilsTest {
 		AggregatedState aggStateA1 = TestUtils.createAggregatedState(
 			1,
 			20,
-			100,
+			10,
 			bssidA,
 			stationA1,
 			new int[] { 10, 20, 30 }
@@ -573,7 +573,7 @@ public class ModelerUtilsTest {
 		AggregatedState aggStateA2 = TestUtils.createAggregatedState(
 			2,
 			20,
-			100,
+			10,
 			bssidA,
 			stationA2,
 			new int[] { 20, 30, 40 }
@@ -581,7 +581,7 @@ public class ModelerUtilsTest {
 		AggregatedState aggStateB = TestUtils.createAggregatedState(
 			3,
 			20,
-			200,
+			20,
 			bssidB,
 			stationB,
 			new int[] { 10, 20, 30 }
@@ -589,7 +589,7 @@ public class ModelerUtilsTest {
 		AggregatedState aggStateC = TestUtils.createAggregatedState(
 			1,
 			20,
-			100,
+			10,
 			bssidC,
 			stationC,
 			new int[] { 100, 200, 300 }
@@ -618,7 +618,7 @@ public class ModelerUtilsTest {
 		State toBeAggregated1 = TestUtils.createState(
 			2,
 			20,
-			100,
+			10,
 			bssidA,
 			new String[] { stationA1, stationA1, stationA2 },
 			new int[] { 40, 50, 60 },
@@ -651,7 +651,7 @@ public class ModelerUtilsTest {
 		State toBeAggregated2 = TestUtils.createState(
 			3,
 			20,
-			200,
+			20,
 			bssidB,
 			new String[] { stationB },
 			new int[] { 40 },
