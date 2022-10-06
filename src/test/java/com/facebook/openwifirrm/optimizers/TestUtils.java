@@ -494,7 +494,7 @@ public class TestUtils {
 				stations.length == clientRssis.length)
 		) {
 			throw new IllegalArgumentException(
-				"All arguments must have the same length."
+				"All array-type arguments must have the same length."
 			);
 		}
 		final int numRadios = channels.length;
@@ -657,8 +657,8 @@ public class TestUtils {
 			new int[] { channelWidthA, channelWidthB },
 			new int[] { txPowerA, txPowerB },
 			new String[] { bssidA, bssidB },
-			new String[][] {new String[]{}, new String[]{}},
-			new int[][] {new int[]{}, new int[]{}},
+			new String[][] { new String[] {}, new String[] {} },
+			new int[][] { new int[] {}, new int[] {} },
 			DEFAULT_LOCAL_TIME
 		);
 	}
@@ -704,7 +704,7 @@ public class TestUtils {
 			localtime
 		);
 	}
-	
+
 	/**
 	 * Create an AggregatedState from given radio info.
 	 *

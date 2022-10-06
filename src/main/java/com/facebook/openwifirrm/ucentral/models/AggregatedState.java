@@ -40,10 +40,10 @@ public class AggregatedState {
 		public List<Integer> mcs = new ArrayList<>();
 
 		/** Constructor with no args */
-		public AggregatedRate() {}
+		private AggregatedRate() {}
 
 		/** Add a Rate to the AggregatedRate */
-		public void add(Rate rate) {
+		private void add(Rate rate) {
 			if (rate == null) {
 				return;
 			}
@@ -58,7 +58,7 @@ public class AggregatedState {
 		 * Add an AggregatedRate with the same channel_width to the
 		 * AggregatedRate
 		 */
-		public void add(AggregatedRate rate) {
+		private void add(AggregatedRate rate) {
 			if (rate == null || rate.chWidth != chWidth) {
 				return;
 			}
@@ -78,7 +78,7 @@ public class AggregatedState {
 		public int channelWidth;
 		public int txPower;
 
-		public Radio() {}
+		private Radio() {}
 
 		public Radio(int channel, int channelWidth, int txPower) {
 			this.channel = channel;
@@ -86,7 +86,7 @@ public class AggregatedState {
 			this.txPower = txPower;
 		}
 
-		public Radio(Map<String, Integer> radioInfo) {
+		private Radio(Map<String, Integer> radioInfo) {
 			channel = radioInfo.getOrDefault("channel", -1);
 			channelWidth = radioInfo.getOrDefault("channel_width", -1);
 			txPower = radioInfo.getOrDefault("tx_power", -1);
@@ -211,27 +211,9 @@ public class AggregatedState {
 	 */
 	public boolean add(AggregatedState state) {
 		if (hashCode() == state.hashCode()) {
-			this.bssid = state.bssid;
-			this.station = state.station;
-			this.connected = state.connected;
-			this.inactive = state.inactive;
 			this.rssi.addAll(state.rssi);
-			this.rxBytes = state.rxBytes;
-			this.rxPackets = state.rxPackets;
 			this.rxRate.add(state.rxRate);
-			this.txBytes = state.txBytes;
-			this.txDuration = state.txDuration;
-			this.txFailed = state.txFailed;
-			this.txPackets = state.txPackets;
 			this.txRate.add(state.txRate);
-			this.txRetries = state.txRetries;
-			this.ackSignal = state.ackSignal;
-			this.ackSignalAvg = state.ackSignalAvg;
-			this.radio = new Radio(
-				state.radio.channel,
-				state.radio.channelWidth,
-				state.radio.txPower
-			);
 			return true;
 		}
 		return false;
