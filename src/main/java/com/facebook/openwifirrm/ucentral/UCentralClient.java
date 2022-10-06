@@ -143,6 +143,17 @@ public class UCentralClient {
 	private WebTokenResult accessToken;
 
 	/**
+	 * The unix timestamp (in seconds) keeps track of when the accessToken is created.
+	 */
+	private long created;
+
+	/**
+	 * The unix timestamp (in seconds) keeps track of last time when the accessToken 
+	 * is accessed.
+	 */
+	private long lastAccess;
+
+	/**
 	 * Constructor.
 	 * @param rrmEndpoint advertise this RRM endpoint to the SDK
 	 * @param usePublicEndpoints whether to use public or private endpoints
@@ -216,6 +227,8 @@ public class UCentralClient {
 			return false;
 		}
 		this.accessToken = token;
+		this.created = accessToken.created;
+		this.lastAccess = accessToken.created;
 		logger.info("Login successful as user: {}", username);
 		logger.debug("Access token: {}", accessToken.access_token);
 		logger.debug("Refresh token: {}", accessToken.refresh_token);
@@ -243,7 +256,7 @@ public class UCentralClient {
 		if (accessToken == null) {
 			return true;
 		}
-		return accessToken.created + accessToken.expires_in <
+		return created + accessToken.expires_in <
 			Instant.now().getEpochSecond();
 	}
 
@@ -256,7 +269,7 @@ public class UCentralClient {
 		if (accessToken == null) {
 			return true;
 		}
-		return accessToken.created + accessToken.idle_timeout <
+		return lastAccess + accessToken.idle_timeout <
 			Instant.now().getEpochSecond();
 	}
 
@@ -280,6 +293,8 @@ public class UCentralClient {
 				if (isAccessTokenTimedOut()) {
 					logger.debug("Access token timed out, refreshing the token");
 					accessToken = refreshToken();
+					created = Instant.now().getEpochSecond();
+					lastAccess = created;
 					if (accessToken != null) {
 						logger.debug("Successfully refresh token.");
 					}else{
@@ -448,6 +463,7 @@ public class UCentralClient {
 					"Authorization",
 					"Bearer " + accessToken.access_token
 				);
+				lastAccess = Instant.now().getEpochSecond();
 			}
 		} else {
 			req
@@ -501,6 +517,7 @@ public class UCentralClient {
 					"Authorization",
 					"Bearer " + accessToken.access_token
 				);
+				lastAccess = Instant.now().getEpochSecond();
 			}
 		} else {
 			req
