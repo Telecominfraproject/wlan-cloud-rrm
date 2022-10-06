@@ -16,18 +16,21 @@ import java.util.List;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+// NOTE: From what I can see it currently does not appear in the list of IEs,
+// although it's possible it'll be there in the future.
 /**
- * This information element (IE) appears in wifiscan entries. It currently does
- * not appear in these entries AFAICT. It's called "20/40 BSS Intolerant Channel
- * Report" in 802.11 specs (section 9.4.2.57). Refer to the specification for
- * more details. Language in javadocs is taken from the specification.
+ * This information element (IE) appears in wifiscan entries. It's called "20/40
+ * BSS Intolerant Channel Report" in 802.11 specs (section 9.4.2.57). Refer to
+ * the specification for more details. Language in javadocs is taken from the
+ * specification.
  */
 public class BssIntolerantChannelReport {
 	/** Defined in 802.11 table 9-92 */
 	public static final int TYPE = 73;
 
-	/** unsigned 8 bits representing the operating class in which the channel list is
-	 * valid
+	/**
+	 * Unsigned 8 bits representing the operating class in which the channel list
+	 * is valid
 	 */
 	public final short operatingClass;
 	/** List of unsigned 8 bits, representing the channel numbers */
@@ -81,14 +84,5 @@ public class BssIntolerantChannelReport {
 		BssIntolerantChannelReport other = (BssIntolerantChannelReport) obj;
 		return operatingClass == other.operatingClass &&
 			channelList.equals(other.channelList);
-	}
-
-	@Override
-	public String toString() {
-		return String.format(
-			"BssIntolerantChannelReport[operatingClass=%d, channelList=%s]",
-			operatingClass,
-			channelList.toString()
-		);
 	}
 }

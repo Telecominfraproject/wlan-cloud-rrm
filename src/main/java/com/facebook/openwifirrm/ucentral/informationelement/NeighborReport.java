@@ -16,11 +16,13 @@ import java.util.Objects;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonElement;
 
+// NOTE: From what I can see it currently does not appear in the list of IEs,
+// although it's possible it'll be there in the future.
 /**
- * This information element (IE) appears in wifiscan entries. It currently does
- * not appear in these entries AFAICT. It's called "Neighbor Report" in
- * 802.11 specs (section 9.4.2.36). Refer to the specification for more details.
- * Language in javadocs is taken from the specification.
+ * This information element (IE) appears in wifiscan entries. It's called
+ * "Neighbor Report" in 802.11 specs (section 9.4.2.36). Refer to the
+ * specification for more details. Language in javadocs is taken from the
+ * specification.
  */
 public class NeighborReport {
 	/** Defined in 802.11 table 9-92 */
@@ -59,7 +61,8 @@ public class NeighborReport {
 			}
 
 			/** Parse Capabilities from JSON object */
-			// TODO rename fields as necessary - we don't know how the data format yet
+			// TODO modify this method as necessary - since the IE doesn't seem to be
+			// present, we have no idea what the format looks like
 			public static Capabilities parse(JsonObject contents) {
 				return new Capabilities(
 					contents.get("Spectrum Management").getAsBoolean(),
@@ -94,17 +97,6 @@ public class NeighborReport {
 					qos == other.qos && apsd == other.apsd &&
 					radioMeasurement == other.radioMeasurement;
 			}
-
-			@Override
-			public String toString() {
-				return String.format(
-					"Capabilities[spectrumManagement=%d, qos=%d, apsd=%d, radioMeasurement=%d]",
-					spectrumManagement,
-					qos,
-					apsd,
-					radioMeasurement
-				);
-			}
 		}
 
 		/**
@@ -113,16 +105,16 @@ public class NeighborReport {
 		 */
 		public final byte apReachability;
 		/**
-		 * if 1, indicates that the AP identified by this BSSID supports the same
+		 * If true, indicates that the AP identified by this BSSID supports the same
 		 * security provisioning as used by the STA in its current association. If the
-		 * bit is 0, it indicates either that the AP does not support the same
+		 * bit is false, it indicates either that the AP does not support the same
 		 * security provisioning or that the security information is not available at
 		 * this time.
 		 */
 		public final boolean security;
 		/**
-		 * indicates the AP indicated by this BSSID has the same authenticator as
-		 * the AP sending the report. If this bit is 0, it indicates a distinct
+		 * Indicates the AP indicated by this BSSID has the same authenticator as
+		 * the AP sending the report. If this bit is false, it indicates a distinct
 		 * authenticator or the information is not available.
 		 */
 		public final boolean keyScope;
@@ -131,7 +123,7 @@ public class NeighborReport {
 		 */
 		public final Capabilities capabilities;
 		/**
-		 * set to 1 to indicate that the AP represented by this BSSID is including
+		 * Set to true to indicate that the AP represented by this BSSID is including
 		 * an MDE in its Beacon frames and that the contents of that MDE are identical
 		 * to the MDE advertised by the AP sending the report
 		 */
@@ -149,7 +141,7 @@ public class NeighborReport {
 		 */
 		public final boolean veryHighThroughput;
 		/**
-		 * indicate that the AP represented by this BSSID is an AP that has set the Fine
+		 * Indicate that the AP represented by this BSSID is an AP that has set the Fine
 		 * Timing Measurement Responder field of the Extended Capabilities element
 		 */
 		public final boolean ftm;
@@ -233,13 +225,6 @@ public class NeighborReport {
 				veryHighThroughput == other.veryHighThroughput &&
 				ftm == other.ftm;
 		}
-
-		@Override
-		public String toString() {
-			return String.format(
-				"BssidInfo[apReachability=%d, security=%d, keyScope=%d, mobilityDomain=%d, highThroughput=%d, veryHighThroughput=%d, ftm=%d]"
-			);
-		}
 	}
 
 	/** BSSID */
@@ -249,15 +234,15 @@ public class NeighborReport {
 	 */
 	public final BssidInfo bssidInfo;
 	/**
-	 * unsigned 8 bits - indicates the channel set of the AP indicated by this BSSID
+	 * Unsigned 8 bits - indicates the channel set of the AP indicated by this BSSID
 	 */
 	public final short operatingClass;
 	/**
-	 * unsigned 8 bits - channel number
+	 * Unsigned 8 bits - channel number
 	 */
 	public final short channelNumber;
 	/**
-	 * unsigned 8 bits - PHY type
+	 * Unsigned 8 bits - PHY type
 	 */
 	public final short phyType;
 	// TODO do we want to support the subelements?
@@ -284,7 +269,8 @@ public class NeighborReport {
 	}
 
 	/** Parse NeighborReport from JSON object */
-	// TODO rename fields as necessary - we don't know how the data format yet
+	// TODO modify this method as necessary - since the IE doesn't seem to be
+	// present, we have no idea what the format looks like
 	public static NeighborReport parse(JsonObject contents) {
 		List<JsonObject> subelements = null;
 		JsonElement subelementsObj = contents.get("Subelements");
@@ -329,16 +315,5 @@ public class NeighborReport {
 		return bssid == other.bssid && bssidInfo == other.bssidInfo &&
 			operatingClass == other.operatingClass &&
 			channelNumber == other.channelNumber && phyType == other.phyType;
-	}
-
-	@Override
-	public String toString() {
-		return String.format(
-			"NeighborReport[bssid=%s, operatingClass=%d, channelNumber=%d, phyType=%d]",
-			bssid,
-			operatingClass,
-			channelNumber,
-			phyType
-		);
 	}
 }

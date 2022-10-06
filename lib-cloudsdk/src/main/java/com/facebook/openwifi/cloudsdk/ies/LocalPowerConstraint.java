@@ -23,7 +23,7 @@ public class LocalPowerConstraint {
 	public static final int TYPE = 32;
 
 	/**
-	 * unsigned 8 bits - units are dB.
+	 * Unsigned 8 bits - units are dB.
 	 * <p>
 	 * The local maximum transmit power for a channel is defined as the maximum
 	 * transmit power level specified for the channel in the Country IE minus
@@ -61,13 +61,5 @@ public class LocalPowerConstraint {
 		}
 		LocalPowerConstraint other = (LocalPowerConstraint) obj;
 		return localPowerConstraint == other.localPowerConstraint;
-	}
-
-	@Override
-	public String toString() {
-		return String.format(
-			"LocalPowerConstraint [localPowerConstraint=%d]",
-			localPowerConstraint
-		);
 	}
 }

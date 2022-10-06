@@ -12,24 +12,25 @@ import java.util.Objects;
 
 import com.google.gson.JsonObject;
 
+// NOTE: From what I can see it currently does not appear in the list of IEs,
+// although it's possible it'll be there in the future.
 /**
- * This information element (IE) appears in wifiscan entries. It currently does
- * not appear in these entries AFAICT. It's called "Power Capability" in 802.11
- * specs (section 9.4.2.14). Refer to the specification for more details.
- * Language in javadocs is taken from the specification.
+ * This information element (IE) appears in wifiscan entries. It's called "Power
+ * Capability" in 802.11 specs (section 9.4.2.14). Refer to the specification
+ * for more details. Language in javadocs is taken from the specification.
  */
 public class PowerCapability {
 	/** Defined in 802.11 table 9-92 */
 	public static final int TYPE = 33;
 
 	/**
-	 * signed 8 bits units of dB relative to 1mW - nominal minimum transmit power
+	 * Signed 8 bits units of dB relative to 1mW - nominal minimum transmit power
 	 * with which the STA is capable of transmitting in the current channel, with a
 	 * tolerance ± 5 dB.
 	 */
 	public final byte minimumTxPowerCapability;
 	/**
-	 * signed 8 bits units of dB relative to 1mW - nominal maximum transmit power
+	 * Signed 8 bits units of dB relative to 1mW - nominal maximum transmit power
 	 * with which the STA is capable of transmitting in the current channel, with a
 	 * tolerance ± 5 dB.
 	 */
@@ -45,7 +46,8 @@ public class PowerCapability {
 	}
 
 	/** Parse PowerCapability from JSON object */
-	// TODO rename fields as necessary - we don't know how the data format yet
+	// TODO modify this method as necessary - since the IE doesn't seem to be
+	// present, we have no idea what the format looks like
 	public static PowerCapability parse(JsonObject contents) {
 		return new PowerCapability(
 			contents.get("Minimum Tx Power Capability").getAsByte(),
@@ -75,14 +77,5 @@ public class PowerCapability {
 		PowerCapability other = (PowerCapability) obj;
 		return minimumTxPowerCapability == other.minimumTxPowerCapability &&
 			maximumTxPowerCapability == other.maximumTxPowerCapability;
-	}
-
-	@Override
-	public String toString() {
-		return String.format(
-			"PowerCapability[minimumTxPowerCapability=%d, maximumTxPowerCapability=%d]",
-			minimumTxPowerCapability,
-			maximumTxPowerCapability
-		);
 	}
 }

@@ -12,9 +12,10 @@ import java.util.Objects;
 
 import com.google.gson.JsonObject;
 
+// NOTE: From what I can see it currently does not appear in the list of IEs,
+// although it's possible it'll be there in the future.
 /**
- * This information element (IE) appears in wifiscan entries. It currently does
- * not appear in these entries AFAICT. It's called "BSS Average Access Delay" in
+ * This information element (IE) appears in wifiscan entries. It's called "BSS Average Access Delay" in
  * 802.11 specs (section 9.4.2.38). Refer to the specification for more details.
  * Language in javadocs is taken from the specification.
  */
@@ -35,7 +36,8 @@ public class BssAvgAccessDelay {
 	}
 
 	/** Parse BssAvgAccessDelay from JSON object */
-	// TODO rename fields as necessary - we don't know how the data format yet
+	// TODO modify this method as necessary - since the IE doesn't seem to be
+	// present, we have no idea what the format looks like
 	public static BssAvgAccessDelay parse(JsonObject contents) {
 		return new BssAvgAccessDelay(
 			contents.get("AP Average Access Delay").getAsShort()
@@ -63,13 +65,5 @@ public class BssAvgAccessDelay {
 
 		BssAvgAccessDelay other = (BssAvgAccessDelay) obj;
 		return apAvgAccessDelay == other.apAvgAccessDelay;
-	}
-
-	@Override
-	public String toString() {
-		return String.format(
-			"BssAvgAccessDelay[apAvgAccessDelay=%d]",
-			apAvgAccessDelay
-		);
 	}
 }

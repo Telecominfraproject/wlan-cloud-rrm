@@ -12,11 +12,13 @@ import java.util.Objects;
 
 import com.google.gson.JsonObject;
 
+// NOTE: From what I can see it currently does not appear in the list of IEs,
+// although it's possible it'll be there in the future.
 /**
- * This information element (IE) appears in wifiscan entries. It currently does
- * not appear in these entries AFAICT. It's called "Collocated Interference
- * Report" in 802.11 specs (section 9.4.2.84). Refer to the specification for
- * more details. Language in javadocs is taken from the specification.
+ * This information element (IE) appears in wifiscan entries. It's called
+ * "Collocated Interference Report" in 802.11 specs (section 9.4.2.84). Refer to
+ * the specification for more details. Language in javadocs is taken from the
+ * specification.
  */
 public class CollocatedInterferenceReport {
 	/** Defined in 802.11 table 9-92 */
@@ -24,12 +26,12 @@ public class CollocatedInterferenceReport {
 
 	public static class InterferenceAccuracyAndIndex {
 		/**
-		 * unsigned int (4 bits) representing expected accuracy of the estimate of
+		 * Unsigned int (4 bits) representing expected accuracy of the estimate of
 		 * interference in dB with 95% confidence interval
 		 */
 		public final byte expectedAccuracy;
 		/**
-		 * unsigned int (4 bits) indicating the interference index that is unique for
+		 * Unsigned int (4 bits) indicating the interference index that is unique for
 		 * each type of interference source
 		 */
 		public final byte interferenceIndex;
@@ -44,7 +46,8 @@ public class CollocatedInterferenceReport {
 		}
 
 		/** Parse InterferenceAccuracyAndIndex from JSON object */
-		// TODO rename fields as necessary - we don't know how the data format yet
+		// TODO modify this method as necessary - since the IE doesn't seem to be
+		// present, we have no idea what the format looks like
 		public static InterferenceAccuracyAndIndex parse(JsonObject contents) {
 			return new InterferenceAccuracyAndIndex(
 				contents.get("Expected Accuracy").getAsByte(),
@@ -76,16 +79,9 @@ public class CollocatedInterferenceReport {
 			return expectedAccuracy == other.expectedAccuracy &&
 				interferenceIndex == other.interferenceIndex;
 		}
-
-		@Override
-		public String toString() {
-			return String.format(
-				"InterferenceAccuracyAndIndex[expectedAccuracy=%d, interferenceIndex=%d]"
-			);
-		}
 	}
 
-	/** unsigned 8 bits representing when the report is generated */
+	/** Unsigned 8 bits representing when the report is generated */
 	public final short reportPeriod;
 	/**
 	 * signed 8 bits representing the maximum level of the collocated
@@ -97,29 +93,29 @@ public class CollocatedInterferenceReport {
 	/** Subfield for interference level accuracy and index - 8 bits */
 	public final InterferenceAccuracyAndIndex interferenceAccuracyAndIndex;
 	/**
-	 * unsigned 32 bits representing the interval between two successibe periods
+	 * Unsigned 32 bits representing the interval between two successibe periods
 	 * of interference in microseconds
 	 */
 	public final long interferenceInterval;
 	/**
-	 * unsigned 32 bits representing the duration of each period of interference in
+	 * Unsigned 32 bits representing the duration of each period of interference in
 	 * microseconds
 	 */
 	public final long interferenceBurstLength;
 	/**
-	 * unsigned 32 bits contains the least significant 4 octets (i.e., B0–B31) of
+	 * Unsigned 32 bits contains the least significant 4 octets (i.e., B0–B31) of
 	 * the TSF timer at the start of the interference burst. When either the
 	 * Interference Interval or the Interference Burst Length fields are set to
 	 * 2^32 – 1, this field indicates the average duty cycle
 	 */
 	public final long interferenceStartTimeDutyCycle;
 	/**
-	 * unsigned 32 bits representing indicates the center frequency of interference
+	 * Unsigned 32 bits representing indicates the center frequency of interference
 	 * in units of 5 kHz
 	 */
 	public final long interferenceCenterFrequency;
 	/**
-	 * unsigned 16 bits representing the bandwidth in units of 5 kHz at the –3 dB
+	 * Unsigned 16 bits representing the bandwidth in units of 5 kHz at the –3 dB
 	 * roll-off point of the interference signal
 	 */
 	public final short interferenceBandwidth;
@@ -202,20 +198,5 @@ public class CollocatedInterferenceReport {
 				other.interferenceStartTimeDutyCycle &&
 			interferenceCenterFrequency == other.interferenceCenterFrequency &&
 			interferenceBandwidth == other.interferenceBandwidth;
-	}
-
-	@Override
-	public String toString() {
-		return String.format(
-			"CollocatedInterferenceReport[reportPeriod=%d, interferenceLevel=%d, interferenceAccuracyAndIndex=%s, interferenceInterval=%d, interferenceBurstLength=%d, interferenceStartTimeDutyCycle=%d, interferenceCenterFrequency=%d, interferenceBandwidth=%d]",
-			reportPeriod,
-			interferenceLevel,
-			interferenceAccuracyAndIndex.toString(),
-			interferenceInterval,
-			interferenceBurstLength,
-			interferenceStartTimeDutyCycle,
-			interferenceCenterFrequency,
-			interferenceBandwidth
-		);
 	}
 }

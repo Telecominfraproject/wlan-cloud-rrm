@@ -12,18 +12,19 @@ import java.util.Objects;
 
 import com.google.gson.JsonObject;
 
+// NOTE: From what I can see it currently does not appear in the list of IEs,
+// although it's possible it'll be there in the future.
 /**
- * This information element (IE) appears in wifiscan entries. It currently does
- * not appear in these entries AFAICT. It's called "RCPI" in 802.11 specs
- * (section 9.4.2.37). Refer to the specification for more details.
- * Language in javadocs is taken from the specification.
+ * This information element (IE) appears in wifiscan entries. It's called "RCPI"
+ * in 802.11 specs (section 9.4.2.37). Refer to the specification for more
+ * details. Language in javadocs is taken from the specification.
  */
 public class RCPI {
 	/** Defined in 802.11 table 9-92 */
 	public static final int TYPE = 53;
 
 	/**
-	 * unsigned 8 bits - indication of the received RF power in the selected
+	 * Unsigned 8 bits - indication of the received RF power in the selected
 	 * channel for a received frame
 	 */
 	public final short rcpi;
@@ -34,7 +35,8 @@ public class RCPI {
 	}
 
 	/** Parse RCPI from JSON object */
-	// TODO rename fields as necessary - we don't know how the data format yet
+	// TODO modify this method as necessary - since the IE doesn't seem to be
+	// present, we have no idea what the format looks like
 	public static RCPI parse(JsonObject contents) {
 		return new RCPI(
 			contents.get("RCPI").getAsShort()
@@ -62,13 +64,5 @@ public class RCPI {
 
 		RCPI other = (RCPI) obj;
 		return rcpi == other.rcpi;
-	}
-
-	@Override
-	public String toString() {
-		return String.format(
-			"RCPI[rcpi=%d]",
-			rcpi
-		);
 	}
 }

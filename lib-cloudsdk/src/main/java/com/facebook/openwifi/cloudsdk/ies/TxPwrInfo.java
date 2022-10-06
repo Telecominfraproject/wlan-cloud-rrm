@@ -24,19 +24,19 @@ public class TxPwrInfo {
 	public static final int TYPE = 195;
 
 	/**
-	 * unsigned 8 bits - Local maximum transmit power for 20 MHz. Required field.
+	 * Unsigned 8 bits - Local maximum transmit power for 20 MHz. Required field.
 	 */
 	public final Short localMaxTxPwrConstraint20MHz;
 	/**
-	 * unsigned 8 bits - Local maximum transmit power for 40 MHz. Optional field.
+	 * Unsigned 8 bits - Local maximum transmit power for 40 MHz. Optional field.
 	 */
 	public final Short localMaxTxPwrConstraint40MHz;
 	/**
-	 * unsigned 8 bits - Local maximum transmit power for 80 MHz. Optional field.
+	 * Unsigned 8 bits - Local maximum transmit power for 80 MHz. Optional field.
 	 */
 	public final Short localMaxTxPwrConstraint80MHz;
 	/**
-	 * unsigned 8 bits - Local maximum transmit power for both 160 MHz and 80+80 MHz. Optional field.
+	 * Unsigned 8 bits - Local maximum transmit power for both 160 MHz and 80+80 MHz. Optional field.
 	 */
 	public final Short localMaxTxPwrConstraint160MHz;
 
@@ -112,14 +112,5 @@ public class TxPwrInfo {
 			localMaxTxPwrConstraint40MHz ==
 				other.localMaxTxPwrConstraint40MHz &&
 			localMaxTxPwrConstraint80MHz == other.localMaxTxPwrConstraint80MHz;
-	}
-
-	@Override
-	public String toString() {
-		return "TxPwrInfo [localMaxTxPwrConstraint20MHz=" +
-			localMaxTxPwrConstraint20MHz + ", localMaxTxPwrConstraint40MHz=" +
-			localMaxTxPwrConstraint40MHz + ", localMaxTxPwrConstraint80MHz=" +
-			localMaxTxPwrConstraint80MHz + ", localMaxTxPwrConstraint160MHz=" +
-			localMaxTxPwrConstraint160MHz + "]";
 	}
 }

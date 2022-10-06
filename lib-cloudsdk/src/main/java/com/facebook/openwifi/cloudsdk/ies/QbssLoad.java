@@ -24,11 +24,11 @@ public class QbssLoad {
 	public static final int TYPE = 11;
 
 	/**
-	 * unsigned 16 bits - The total number of STAs currently associated with the BSS.
+	 * Unsigned 16 bits - The total number of STAs currently associated with the BSS.
 	 */
 	public final short stationCount;
 	/**
-	 * unsigned 8 bits - The Channel Utilization field is defined as the percentage
+	 * Unsigned 8 bits - The Channel Utilization field is defined as the percentage
 	 * of time, linearly scaled with 255 representing 100%, that the AP sensed the
 	 * medium was busy, as indicated by either the physical or virtual carrier
 	 * sense (CS) mechanism. When more than one channel is in use for the BSS,
@@ -41,7 +41,7 @@ public class QbssLoad {
 	 */
 	public final short channelUtilization;
 	/**
-	 * unsigned 16 bits - The Available Admission Capacity field contains an
+	 * Unsigned 16 bits - The Available Admission Capacity field contains an
 	 * unsigned integer that specifies the remaining amount of medium time
 	 * available via explicit admission control, in units of 32
 	 * miscrosecond/second. The field is helpful for roaming STAs to select an AP
@@ -105,12 +105,5 @@ public class QbssLoad {
 		return availableAdmissionCapacity == other.availableAdmissionCapacity &&
 			channelUtilization == other.channelUtilization &&
 			stationCount == other.stationCount;
-	}
-
-	@Override
-	public String toString() {
-		return "QbssLoad [stationCount=" + stationCount +
-			", channelUtilization=" + channelUtilization +
-			", availableAdmissionCapacity=" + availableAdmissionCapacity + "]";
 	}
 }

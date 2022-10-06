@@ -12,9 +12,10 @@ import java.util.Objects;
 
 import com.google.gson.JsonObject;
 
+// NOTE: From what I can see it currently does not appear in the list of IEs,
+// although it's possible it'll be there in the future.
 /**
- * This information element (IE) appears in wifiscan entries. It currently does
- * not appear in these entries AFAICT. It's called "BSS AC Access Delay" in
+ * This information element (IE) appears in wifiscan entries. It's called "BSS AC Access Delay" in
  * 802.11 specs (section 9.4.2.43). Refer to the specification for more details.
  * Language in javadocs is taken from the specification.
  */
@@ -108,17 +109,6 @@ public class BssAcAccessDelay {
 					other.averageAccessDelayForVideo &&
 				averageAccessDelayForVoice == other.averageAccessDelayForVoice;
 		}
-
-		@Override
-		public String toString() {
-			return String.format(
-				"AccessCategoryAccessDelay[averageAccessDelayForBestEffort=%d, averageAccessDelayForBackground=%d, averageAccessDelayForVideo=%d, averageAccessDelayForVoice=%d]",
-				averageAccessDelayForBestEffort,
-				averageAccessDelayForBackground,
-				averageAccessDelayForVideo,
-				averageAccessDelayForVoice
-			);
-		}
 	}
 
 	/** 32 bits - Holds AccessCategoryAccessDelay subfield */
@@ -162,13 +152,5 @@ public class BssAcAccessDelay {
 
 		BssAcAccessDelay other = (BssAcAccessDelay) obj;
 		return accessCategoryAccessDelay == other.accessCategoryAccessDelay;
-	}
-
-	@Override
-	public String toString() {
-		return String.format(
-			"BssAcAccessDelay[accessCategoryAccessDelay=%s]",
-			accessCategoryAccessDelay
-		);
 	}
 }

@@ -12,19 +12,21 @@ import java.util.Objects;
 
 import com.google.gson.JsonObject;
 
+// NOTE: From what I can see it currently does not appear in the list of IEs,
+// although it's possible it'll be there in the future.
 /**
- * This information element (IE) appears in wifiscan entries. It currently does
- * not appear in these entries AFAICT. It's called "Supported Channels" in
- * 802.11 specs (section 9.4.2.17). Refer to the specification for more details.
- * Language in javadocs is taken from the specification.
+ * This information element (IE) appears in wifiscan entries. It's called
+ * "Supported Channels" in 802.11 specs (section 9.4.2.17). Refer to the
+ * specification for more details. Language in javadocs is taken from the
+ * specification.
  */
 public class SupportedChannels {
 	/** Defined in 802.11 table 9-92 */
 	public static final int TYPE = 36;
 
-	/** unsigned 8 bits - first channel in a subband of supported channels */
+	/** Unsigned 8 bits - first channel in a subband of supported channels */
 	public final short firstChannelNumber;
-	/** unsigned 8 bits - number of channels in a subband of supported channels */
+	/** Unsigned 8 bits - number of channels in a subband of supported channels */
 	public final short numberOfChannels;
 
 	/** Constructor */
@@ -34,7 +36,8 @@ public class SupportedChannels {
 	}
 
 	/** Parse SupportedChannels from JSON object */
-	// TODO rename fields as necessary - we don't know how the data format yet
+	// TODO modify this method as necessary - since the IE doesn't seem to be
+	// present, we have no idea what the format looks like
 	public static SupportedChannels parse(JsonObject contents) {
 		return new SupportedChannels(
 			contents.get("First Channel Number").getAsShort(),
@@ -64,14 +67,5 @@ public class SupportedChannels {
 		SupportedChannels other = (SupportedChannels) obj;
 		return firstChannelNumber == other.firstChannelNumber &&
 			numberOfChannels == other.numberOfChannels;
-	}
-
-	@Override
-	public String toString() {
-		return String.format(
-			"SupportedChannels[firstChannelNumber=%d, numberOfChannels=%d]",
-			firstChannelNumber,
-			numberOfChannels
-		);
 	}
 }

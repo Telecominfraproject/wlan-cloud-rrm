@@ -18,12 +18,13 @@ import com.facebook.openwifirrm.ucentral.IEUtils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+// NOTE: From what I can see it currently does not appear in the list of IEs,
+// although it's possible it'll be there in the future.
 /**
- * This information element (IE) appears in wifiscan entries. It currently does
- * not appear in these entries AFAICT. It's called "Reduced Neighbor Report" in
- * 802.11 specs (section 9.4.2.170). Refer to the specification for more
- * details.
- * Language in javadocs is taken from the specification.
+ * This information element (IE) appears in wifiscan entries. It's called
+ * "Reduced Neighbor Report" in 802.11 specs (section 9.4.2.170). Refer to the
+ * specification for more details. Language in javadocs is taken from the
+ * specification.
  */
 public class ReducedNeighborReport {
 	/** Defined in 802.11 table 9-92 */
@@ -39,7 +40,7 @@ public class ReducedNeighborReport {
 		 */
 		public static class TbttInformationHeader {
 			/**
-			 * unsigned 2 bits -  identifies, together with the TBTT Information Length
+			 * Unsigned 2 bits -  identifies, together with the TBTT Information Length
 			 * subfield, the format of the TBTT Information field
 			 */
 			public final byte tbttInformationType;
@@ -49,12 +50,12 @@ public class ReducedNeighborReport {
 			 */
 			public final boolean filteredNeighborAp;
 			/**
-			 * unsigned 4 bits - number of TBTT Information fields included in the TBTT
+			 * Unsigned 4 bits - number of TBTT Information fields included in the TBTT
 			 * Information Set field of the Neighbor AP Information field, minus one
 			 */
 			public final byte tbttInformationCount;
 			/**
-			 * unsigned 8 bits - the length of each TBTT Information field included in
+			 * Unsigned 8 bits - the length of each TBTT Information field included in
 			 * the TBTT Information Set field of the Neighbor AP Information field
 			 */
 			public final short tbttInformationLength;
@@ -73,7 +74,8 @@ public class ReducedNeighborReport {
 			}
 
 			/** Parse TbttInformationHeader from JSON object */
-			// TODO rename fields as necessary - we don't know how the data format yet
+			// TODO modify this method as necessary - since the IE doesn't seem to be
+			// present, we have no idea what the format looks like
 			public static TbttInformationHeader parse(JsonObject contents) {
 				return new TbttInformationHeader(
 					contents.get("TBTT Information Type").getAsByte(),
@@ -113,17 +115,6 @@ public class ReducedNeighborReport {
 					tbttInformationCount == other.tbttInformationCount &&
 					tbttInformationLength == other.tbttInformationLength;
 			}
-
-			@Override
-			public String toString() {
-				return String.format(
-					"TbttInformationHeader[tbttInformationType=%d, filteredNeighborAp=%b, tbttInformationCount=%d, tbttInformationLength=%d]",
-					tbttInformationType,
-					filteredNeighborAp,
-					tbttInformationCount,
-					tbttInformationLength
-				);
-			}
 		}
 
 		/**
@@ -131,7 +122,7 @@ public class ReducedNeighborReport {
 		 */
 		public static class TbttInformation {
 			/**
-			 * unsigned 8 bits - offset in TUs, rounded down to nearest TU, to the next
+			 * Unsigned 8 bits - offset in TUs, rounded down to nearest TU, to the next
 			 * TBTT of an AP’s BSS from the immediately prior TBTT of the AP that
 			 * transmits this element
 			 */
@@ -153,7 +144,8 @@ public class ReducedNeighborReport {
 			}
 
 			/** Parse TbttInformation from JSON object */
-			// TODO rename fields as necessary - we don't know how the data format yet
+			// TODO modify this method as necessary - since the IE doesn't seem to be
+			// present, we have no idea what the format looks like
 			public static TbttInformation parse(JsonObject contents) {
 				return new TbttInformation(
 					contents.get("Neighbor AP TBTT Offset").getAsShort(),
@@ -186,16 +178,6 @@ public class ReducedNeighborReport {
 					other.neighborApTbttOffset && bssid.equals(other.bssid) &&
 					Objects.equals(shortSsid, other.shortSsid);
 			}
-
-			@Override
-			public String toString() {
-				return String.format(
-					"TbttInformation[neighborApTbttOffset=%d, bssid=%s, shortSsid=%s]",
-					neighborApTbttOffset,
-					bssid,
-					shortSsid
-				);
-			}
 		}
 
 		/**
@@ -203,13 +185,13 @@ public class ReducedNeighborReport {
 		 */
 		public final TbttInformationHeader tbttInformationHeader;
 		/**
-		 * unsigned 8 bits - channel starting frequency that, together with the
+		 * Unsigned 8 bits - channel starting frequency that, together with the
 		 * Channel Number field, indicates the primary channel of the BSSs of the APs
 		 * in this Neighbor AP Information field
 		 */
 		public final short operatingClass;
 		/**
-		 * unsigned 8 bits - the last known primary channel of the APs in this
+		 * Unsigned 8 bits - the last known primary channel of the APs in this
 		 * Neighbor AP Information field.
 		 */
 		public final short channelNumber;
@@ -232,7 +214,8 @@ public class ReducedNeighborReport {
 		}
 
 		/** Parse NeighborApInformation from JSON object */
-		// TODO rename fields as necessary - we don't know how the data format yet
+		// TODO modify this method as necessary - since the IE doesn't seem to be
+		// present, we have no idea what the format looks like
 		public static NeighborApInformation parse(JsonObject contents) {
 			return new NeighborApInformation(
 				TbttInformationHeader.parse(
@@ -274,17 +257,6 @@ public class ReducedNeighborReport {
 				channelNumber == other.channelNumber &&
 				Objects.equals(tbttInformation, other.tbttInformation);
 		}
-
-		@Override
-		public String toString() {
-			return String.format(
-				"NeighborApInformation[tbttInformationHeader=%s, operatingClass=%d, channelNumber=%d, tbttInformation=%s]",
-				tbttInformationHeader,
-				operatingClass,
-				channelNumber,
-				tbttInformation
-			);
-		}
 	}
 
 	/** number of channels in a subband of supported channels */
@@ -299,7 +271,8 @@ public class ReducedNeighborReport {
 	}
 
 	/** Parse ReducedNeighborReport from JSON object */
-	// TODO rename fields as necessary - we don't know how the data format yet
+	// TODO modify this method as necessary - since the IE doesn't seem to be
+	// present, we have no idea what the format looks like
 	public static ReducedNeighborReport parse(JsonObject contents) {
 		List<NeighborApInformation> neighborApInformations = new ArrayList<>();
 
@@ -338,13 +311,5 @@ public class ReducedNeighborReport {
 
 		ReducedNeighborReport other = (ReducedNeighborReport) obj;
 		return neighborApInformations.equals(other.neighborApInformations);
-	}
-
-	@Override
-	public String toString() {
-		return String.format(
-			"ReducedNeighborReport[neighborApInformations=%s]",
-			neighborApInformations
-		);
 	}
 }

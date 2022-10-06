@@ -94,21 +94,9 @@ public class Country {
 				maximumTransmitPowerLevel == other.maximumTransmitPowerLevel &&
 				numberOfChannels == other.numberOfChannels;
 		}
-
-		@Override
-		public String toString() {
-			return String.format(
-				"CountryInfo [firstChannelNumber=%d, maximumTransmitPowerLevel=%d, numberOfChannels=%d]",
-				firstChannelNumber,
-				maximumTransmitPowerLevel,
-				numberOfChannels
-			);
-		}
 	}
 
-	/**
-	 * Conuntry
-	 */
+	/** Country */
 	public final String country;
 	/**
 	 * Each constraint is a CountryInfo describing tx power constraints on
@@ -161,14 +149,5 @@ public class Country {
 		}
 		Country other = (Country) obj;
 		return Objects.equals(constraints, other.constraints);
-	}
-
-	@Override
-	public String toString() {
-		return String.format(
-			"Country [country=%s, constraints=%s]",
-			country,
-			constraints
-		);
 	}
 }
