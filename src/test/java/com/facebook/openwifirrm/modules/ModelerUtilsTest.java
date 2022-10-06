@@ -571,7 +571,7 @@ public class ModelerUtilsTest {
 			new int[] { 10, 20, 30 }
 		);
 		AggregatedState aggStateA2 = TestUtils.createAggregatedState(
-			2,
+			6,
 			20,
 			10,
 			bssidA,
@@ -579,7 +579,7 @@ public class ModelerUtilsTest {
 			new int[] { 20, 30, 40 }
 		);
 		AggregatedState aggStateB = TestUtils.createAggregatedState(
-			3,
+			11,
 			20,
 			20,
 			bssidB,
@@ -616,7 +616,7 @@ public class ModelerUtilsTest {
 		);
 
 		State toBeAggregated1 = TestUtils.createState(
-			2,
+			6,
 			20,
 			10,
 			bssidA,
@@ -649,7 +649,7 @@ public class ModelerUtilsTest {
 		);
 
 		State toBeAggregated2 = TestUtils.createState(
-			3,
+			11,
 			20,
 			20,
 			bssidB,
