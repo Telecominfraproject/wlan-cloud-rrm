@@ -240,6 +240,13 @@ public class ApiServer implements Runnable {
 			logger.info("External API server is disabled");
 		}
 
+		if (params.internalHttpPort == params.externalHttpPort) {
+			logger.error(
+				"Internal and external port cannot be the same - not starting API server"
+			);
+			return;
+		}
+
 		EmbeddedServers.add(
 			SPARK_EMBEDDED_SERVER_IDENTIFIER,
 			new EmbeddedJettyFactory(
