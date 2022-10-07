@@ -149,7 +149,7 @@ public class UCentralUtils {
 					break;
 				}
 			} catch (Exception e) {
-				logger.debug("Skipping invalid IE {}", ie);
+				logger.error(String.format("Skipping invalid IE %s", ie), e);
 				continue;
 			}
 		}
