@@ -25,7 +25,7 @@ public class TxPwrInfo {
 	public static final int TYPE = 195;
 
 	/** Local maximum transmit power for 20 MHz. Required field. */
-	public final Integer localMaxTxPwrConstraint20MHz;
+	public final int localMaxTxPwrConstraint20MHz;
 	/** Local maximum transmit power for 40 MHz. Optional field. */
 	public final Integer localMaxTxPwrConstraint40MHz;
 	/** Local maximum transmit power for 80 MHz. Optional field. */
@@ -36,9 +36,9 @@ public class TxPwrInfo {
 	/** Constructor */
 	public TxPwrInfo(
 		int localMaxTxPwrConstraint20MHz,
-		int localMaxTxPwrConstraint40MHz,
-		int localMaxTxPwrConstraint80MHz,
-		int localMaxTxPwrConstraint160MHz
+		Integer localMaxTxPwrConstraint40MHz,
+		Integer localMaxTxPwrConstraint80MHz,
+		Integer localMaxTxPwrConstraint160MHz
 	) {
 		this.localMaxTxPwrConstraint20MHz = localMaxTxPwrConstraint20MHz;
 		this.localMaxTxPwrConstraint40MHz = localMaxTxPwrConstraint40MHz;
@@ -48,16 +48,17 @@ public class TxPwrInfo {
 
 	/** Parse TxPwrInfo IE from appropriate Json object. */
 	public static TxPwrInfo parse(JsonObject contents) {
+		JsonObject innerObj = contents.get("Tx Pwr Info").getAsJsonObject();
 		// required field
 		int localMaxTxPwrConstraint20MHz =
-			contents.get("Local Max Tx Pwr Constraint 20MHz").getAsInt();
+			innerObj.get("Local Max Tx Pwr Constraint 20MHz").getAsInt();
 		// optional field
 		Integer localMaxTxPwrConstraint40MHz =
-			parseOptionalField(contents, "Local Max Tx Pwr Constraint 40MHz");
+			parseOptionalField(innerObj, "Local Max Tx Pwr Constraint 40MHz");
 		Integer localMaxTxPwrConstraint80MHz =
-			parseOptionalField(contents, "Local Max Tx Pwr Constraint 40MHz");
+			parseOptionalField(innerObj, "Local Max Tx Pwr Constraint 80MHz");
 		Integer localMaxTxPwrConstraint160MHz =
-			parseOptionalField(contents, "Local Max Tx Pwr Constraint 40MHz");
+			parseOptionalField(innerObj, "Local Max Tx Pwr Constraint 160MHz");
 		return new TxPwrInfo(
 			localMaxTxPwrConstraint20MHz,
 			localMaxTxPwrConstraint40MHz,

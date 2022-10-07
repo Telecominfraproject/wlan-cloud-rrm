@@ -125,8 +125,9 @@ public class Country {
 		JsonElement constraintsObject = contents.get("constraints");
 		if (constraintsObject != null) {
 			for (JsonElement jsonElement : constraintsObject.getAsJsonArray()) {
+				JsonObject innerElem = jsonElement.getAsJsonObject();
 				CountryInfo countryInfo =
-					CountryInfo.parse(jsonElement.getAsJsonObject());
+					CountryInfo.parse(innerElem.get("Country Info").getAsJsonObject());
 				constraints.add(countryInfo);
 			}
 		}
