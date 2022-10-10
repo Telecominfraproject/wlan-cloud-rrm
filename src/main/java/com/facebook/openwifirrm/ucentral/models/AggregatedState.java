@@ -169,41 +169,14 @@ public class AggregatedState {
 		this.radio = new Radio(radioInfo);
 	}
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
-			return false;
-		}
-
-		AggregatedState other = (AggregatedState) obj;
-
-		return bssid == other.bssid && station == other.station &&
-			connected == other.connected && inactive == other.inactive && rssi
-				.equals(other.rssi) &&
-			rxBytes == other.rxBytes && rxBytes == other.rxPackets &&
-			Objects.equals(rxRate, other.rxRate) &&
-			txBytes == other.txBytes && txDuration == other.txDuration &&
-			txFailed == other.txFailed && txPackets == other.txPackets &&
-			Objects.equals(txRate, other.txRate) &&
-			txRetries == other.txRetries && ackSignal == other.ackSignal &&
-			ackSignalAvg == other.ackSignalAvg &&
-			Objects.equals(radio, other.radio);
-	}
-
 	/**
-	 * Check whether some other AggregatedState and this one are matached for aggregation.
-	 * If the two match in bssid, station and radio. Then they could be aggregated to one.
+	 * Check whether the passed-in AggregatedState and this one match for aggregation.
+	 * If the two match in bssid, station and radio. Then they could be aggregated.
 	 *
-	 * @param state
-	 * @return boolean
+	 * @param state the reference AggregatedState with which to check with.
+	 * @return boolean return true if the two matches for aggregation.
 	 */
-	public boolean ifMatchForAggregation(AggregatedState state) {
+	public boolean matchesForAggregation(AggregatedState state) {
 		return bssid == state.bssid && station == state.station &&
 			Objects.equals(radio, state.radio);
 	}
@@ -217,7 +190,7 @@ public class AggregatedState {
 	 *         channel_width and tx_power
 	 */
 	public boolean add(AggregatedState state) {
-		if (ifMatchForAggregation(state)) {
+		if (matchesForAggregation(state)) {
 			this.rssi.addAll(state.rssi);
 			this.rxRate.add(state.rxRate);
 			this.txRate.add(state.txRate);
