@@ -29,8 +29,8 @@ services:
         targetPort: 16789
         protocol: TCP
       restapiinternal:
-        servicePort: 17007
-        targetPort: 17007
+        servicePort: 16790
+        targetPort: 16790
         protocol: TCP
 
 checks:
