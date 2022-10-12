@@ -21,6 +21,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
 import com.facebook.openwifi.cloudsdk.UCentralConstants;
+import com.facebook.openwifi.cloudsdk.UCentralUtils;
 import com.facebook.openwifi.rrm.DeviceConfig;
 import com.facebook.openwifi.rrm.DeviceDataManager;
 import com.facebook.openwifi.rrm.modules.Modeler.DataModel;
@@ -74,7 +75,7 @@ public class LeastUsedChannelOptimizerTest {
 
 		// B -> Assign to only free channel (165)
 		LinkedList<Integer> channelsB = new LinkedList<>();
-		channelsB.addAll(ChannelOptimizer.AVAILABLE_CHANNELS_BAND.get(band));
+		channelsB.addAll(UCentralUtils.AVAILABLE_CHANNELS_BAND.get(band));
 		int bExpectedChannel = channelsB.removeLast();
 		dataModel.latestDeviceStatusRadios.put(
 			deviceB,
@@ -94,8 +95,8 @@ public class LeastUsedChannelOptimizerTest {
 
 		// C -> No free channels, assign to least occupied (36)
 		LinkedList<Integer> channelsC = new LinkedList<>();
-		channelsC.addAll(ChannelOptimizer.AVAILABLE_CHANNELS_BAND.get(band));
-		channelsC.addAll(ChannelOptimizer.AVAILABLE_CHANNELS_BAND.get(band));
+		channelsC.addAll(UCentralUtils.AVAILABLE_CHANNELS_BAND.get(band));
+		channelsC.addAll(UCentralUtils.AVAILABLE_CHANNELS_BAND.get(band));
 		int cExpectedChannel = channelsC.removeFirst();
 		dataModel.latestDeviceStatusRadios.put(
 			deviceC,
@@ -166,7 +167,7 @@ public class LeastUsedChannelOptimizerTest {
 
 		// B -> No free channels, assign to least occupied (11)
 		LinkedList<Integer> channelsB = new LinkedList<>();
-		channelsB.addAll(ChannelOptimizer.AVAILABLE_CHANNELS_BAND.get(band));
+		channelsB.addAll(UCentralUtils.AVAILABLE_CHANNELS_BAND.get(band));
 		int bExpectedChannel = channelsB.removeLast();
 		dataModel.latestDeviceStatusRadios.put(
 			deviceB,
@@ -261,7 +262,7 @@ public class LeastUsedChannelOptimizerTest {
 		expected.put(deviceA, radioMapA);
 
 		LinkedList<Integer> channelsB = new LinkedList<>();
-		channelsB.addAll(ChannelOptimizer.AVAILABLE_CHANNELS_BAND.get(band));
+		channelsB.addAll(UCentralUtils.AVAILABLE_CHANNELS_BAND.get(band));
 		channelsB.removeLast();
 		dataModel.latestDeviceStatusRadios.put(
 			deviceB,
@@ -280,8 +281,8 @@ public class LeastUsedChannelOptimizerTest {
 		expected.put(deviceB, radioMapB);
 
 		LinkedList<Integer> channelsC = new LinkedList<>();
-		channelsC.addAll(ChannelOptimizer.AVAILABLE_CHANNELS_BAND.get(band));
-		channelsC.addAll(ChannelOptimizer.AVAILABLE_CHANNELS_BAND.get(band));
+		channelsC.addAll(UCentralUtils.AVAILABLE_CHANNELS_BAND.get(band));
+		channelsC.addAll(UCentralUtils.AVAILABLE_CHANNELS_BAND.get(band));
 		channelsC.removeFirst();
 		dataModel.latestDeviceStatusRadios.put(
 			deviceC,
@@ -361,7 +362,7 @@ public class LeastUsedChannelOptimizerTest {
 		// B -> Assign to only free channel and
 		// the free channel is in allowedChannels (165)
 		LinkedList<Integer> channelsB = new LinkedList<>();
-		channelsB.addAll(ChannelOptimizer.AVAILABLE_CHANNELS_BAND.get(band));
+		channelsB.addAll(UCentralUtils.AVAILABLE_CHANNELS_BAND.get(band));
 		channelsB.removeLast();
 		dataModel.latestDeviceStatusRadios.put(
 			deviceB,
@@ -381,8 +382,8 @@ public class LeastUsedChannelOptimizerTest {
 
 		// C -> No free channels, assign to least occupied in allowedChannels (48)
 		LinkedList<Integer> channelsC = new LinkedList<>();
-		channelsC.addAll(ChannelOptimizer.AVAILABLE_CHANNELS_BAND.get(band));
-		channelsC.addAll(ChannelOptimizer.AVAILABLE_CHANNELS_BAND.get(band));
+		channelsC.addAll(UCentralUtils.AVAILABLE_CHANNELS_BAND.get(band));
+		channelsC.addAll(UCentralUtils.AVAILABLE_CHANNELS_BAND.get(band));
 		channelsC.removeFirst();
 		dataModel.latestDeviceStatusRadios.put(
 			deviceC,
@@ -477,8 +478,8 @@ public class LeastUsedChannelOptimizerTest {
 
 		// C -> No free channels, assign to least occupied (36)
 		LinkedList<Integer> channelsC = new LinkedList<>();
-		channelsC.addAll(ChannelOptimizer.AVAILABLE_CHANNELS_BAND.get(band));
-		channelsC.addAll(ChannelOptimizer.AVAILABLE_CHANNELS_BAND.get(band));
+		channelsC.addAll(UCentralUtils.AVAILABLE_CHANNELS_BAND.get(band));
+		channelsC.addAll(UCentralUtils.AVAILABLE_CHANNELS_BAND.get(band));
 		int cExpectedChannel = channelsC.removeFirst();
 		dataModel.latestDeviceStatusRadios.put(
 			deviceC,
@@ -598,8 +599,8 @@ public class LeastUsedChannelOptimizerTest {
 
 		// C -> No free channels, assign to least occupied (36)
 		LinkedList<Integer> channelsC = new LinkedList<>();
-		channelsC.addAll(ChannelOptimizer.AVAILABLE_CHANNELS_BAND.get(band));
-		channelsC.addAll(ChannelOptimizer.AVAILABLE_CHANNELS_BAND.get(band));
+		channelsC.addAll(UCentralUtils.AVAILABLE_CHANNELS_BAND.get(band));
+		channelsC.addAll(UCentralUtils.AVAILABLE_CHANNELS_BAND.get(band));
 		int cExpectedChannel = channelsC.removeFirst();
 		dataModel.latestDeviceStatusRadios.put(
 			deviceC,
@@ -752,7 +753,7 @@ public class LeastUsedChannelOptimizerTest {
 		// C -> No free channels, assign to least occupied (36)
 		LinkedList<Integer> channelsC1 = new LinkedList<>(); // bandwidth-agnostic
 		LinkedList<Integer> channelsC2 = new LinkedList<>(); // bandwidth-aware
-		channelsC1.addAll(ChannelOptimizer.AVAILABLE_CHANNELS_BAND.get(band));
+		channelsC1.addAll(UCentralUtils.AVAILABLE_CHANNELS_BAND.get(band));
 		channelsC2.addAll(Arrays.asList(36, 157, 165));
 		int cExpectedChannel = channelsC1.removeFirst();
 		dataModel.latestDeviceStatusRadios.put(

@@ -126,7 +126,7 @@ public class RandomChannelInitializer extends ChannelOptimizer {
 			UCentralUtils.getDeviceAvailableChannels(
 				model.latestDeviceStatusRadios,
 				model.latestDeviceCapabilities,
-				AVAILABLE_CHANNELS_BAND
+				UCentralUtils.AVAILABLE_CHANNELS_BAND
 			);
 
 		Map<String, State> latestState =
@@ -152,7 +152,7 @@ public class RandomChannelInitializer extends ChannelOptimizer {
 			// to get the valid result for single channel assignment
 			// If the intersection is empty, then turn back to the default channels list
 			List<Integer> availableChannelsList = new ArrayList<>(
-				AVAILABLE_CHANNELS_BAND.get(band)
+				UCentralUtils.AVAILABLE_CHANNELS_BAND.get(band)
 			);
 			for (String serialNumber : entry.getValue()) {
 				List<Integer> deviceChannelsList = deviceAvailableChannels
@@ -161,14 +161,14 @@ public class RandomChannelInitializer extends ChannelOptimizer {
 				if (
 					deviceChannelsList == null || deviceChannelsList.isEmpty()
 				) {
-					deviceChannelsList = AVAILABLE_CHANNELS_BAND.get(band);
+					deviceChannelsList = UCentralUtils.AVAILABLE_CHANNELS_BAND.get(band);
 				}
 				availableChannelsList.retainAll(deviceChannelsList);
 			}
 			if (
 				availableChannelsList == null || availableChannelsList.isEmpty()
 			) {
-				availableChannelsList = AVAILABLE_CHANNELS_BAND.get(band);
+				availableChannelsList = UCentralUtils.AVAILABLE_CHANNELS_BAND.get(band);
 				logger.debug(
 					"The intersection of the device channels lists is empty!!! " +
 						"Fall back to the default channels list"
