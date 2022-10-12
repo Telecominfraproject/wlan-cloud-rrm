@@ -25,8 +25,8 @@ import com.facebook.openwifi.cloudsdk.UCentralUtils;
 import com.facebook.openwifi.cloudsdk.WifiScanEntry;
 import com.facebook.openwifi.cloudsdk.models.ap.State;
 import com.facebook.openwifi.rrm.DeviceDataManager;
-import com.facebook.openwifi.rrm.modules.ModelerUtils;
 import com.facebook.openwifi.rrm.modules.Modeler.DataModel;
+import com.facebook.openwifi.rrm.modules.ModelerUtils;
 
 /**
  * Least used channel optimizer.
@@ -90,10 +90,10 @@ public class LeastUsedChannelOptimizer extends ChannelOptimizer {
 	protected static Map<Integer, Integer> getOccupiedOverlapChannels(
 		Map<Integer, Integer> occupiedChannels
 	) {
-		int maxChannel =
-			UCentralUtils.UPPER_CHANNEL_LIMIT.get(UCentralConstants.BAND_2G);
-		int minChannel =
-			UCentralUtils.LOWER_CHANNEL_LIMIT.get(UCentralConstants.BAND_2G);
+		final int maxChannel =
+			UCentralUtils.getUpperChannelLimit(UCentralConstants.BAND_2G);
+		final int minChannel =
+			UCentralUtils.getLowerChannelLimit(UCentralConstants.BAND_2G);
 		Map<Integer, Integer> occupiedOverlapChannels = new TreeMap<>();
 		for (
 			int overlapChannel : UCentralUtils.AVAILABLE_CHANNELS_BAND

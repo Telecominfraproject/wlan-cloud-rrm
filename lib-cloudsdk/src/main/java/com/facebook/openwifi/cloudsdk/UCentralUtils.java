@@ -44,29 +44,17 @@ public class UCentralUtils {
 	/** The Gson instance. */
 	private static final Gson gson = new Gson();
 
-	/** Map of band to the band-specific lowest available channel*/
-	public static final Map<String, Integer> LOWER_CHANNEL_LIMIT =
-		new HashMap<>();
-	static {
-		UCentralUtils.LOWER_CHANNEL_LIMIT.put(UCentralConstants.BAND_2G, 1);
-		UCentralUtils.LOWER_CHANNEL_LIMIT.put(UCentralConstants.BAND_5G, 36);
-	}
-
-	/** Map of band to the band-specific highest available channel*/
-	public static final Map<String, Integer> UPPER_CHANNEL_LIMIT =
-		new HashMap<>();
-	static {
-		UCentralUtils.UPPER_CHANNEL_LIMIT.put(UCentralConstants.BAND_2G, 11);
-		UCentralUtils.UPPER_CHANNEL_LIMIT.put(UCentralConstants.BAND_5G, 165);
-	}
-
-	/** List of available channels per band for use. */
-	public static final Map<String, List<Integer>> AVAILABLE_CHANNELS_BAND = Collections
-		.unmodifiableMap(buildBandToChannelsMap());
+	/** Map from band to ordered (increasing) list of available channels */
+	public static final Map<String, List<Integer>> AVAILABLE_CHANNELS_BAND =
+		Collections
+			.unmodifiableMap(buildBandToChannelsMap());
 
 	// This class should not be instantiated.
 	private UCentralUtils() {}
-	
+
+	/**
+	 * Builds map from band to ordered (increasing) list of available channels.
+	 */
 	private static Map<String, List<Integer>> buildBandToChannelsMap() {
 		Map<String, List<Integer>> bandToChannelsMap = new HashMap<>();
 		bandToChannelsMap.put(
@@ -82,6 +70,17 @@ public class UCentralUtils {
 			)
 		);
 		return bandToChannelsMap;
+	}
+
+	/** Return the lowest available channel for the given band */
+	public static int getLowerChannelLimit(String band) {
+		return AVAILABLE_CHANNELS_BAND.get(band).get(0);
+	}
+
+	/** Return the lowest available channel for the given band */
+	public static int getUpperChannelLimit(String band) {
+		List<Integer> channels = AVAILABLE_CHANNELS_BAND.get(band);
+		return channels.get(channels.size() - 1);
 	}
 
 	/**
@@ -442,8 +441,7 @@ public class UCentralUtils {
 	 * @return true if the given channel is in the given band; false otherwise
 	 */
 	public static boolean isChannelInBand(int channel, String band) {
-		return LOWER_CHANNEL_LIMIT.get(band) <= channel &&
-			channel <= UPPER_CHANNEL_LIMIT.get(band);
+		return AVAILABLE_CHANNELS_BAND.get(band).contains(channel);
 	}
 
 	/**

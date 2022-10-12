@@ -39,12 +39,10 @@ public class LocationBasedOptimalTPCTest {
 	private static final int DEFAULT_TX_POWER = 20;
 	/** Default 2G channel. */
 	private static final int DEFAULT_CHANNEL_2G =
-		UCentralUtils.LOWER_CHANNEL_LIMIT
-			.get(UCentralConstants.BAND_2G);
+		UCentralUtils.getLowerChannelLimit(UCentralConstants.BAND_2G);
 	/** Default 5G channel. */
 	private static final int DEFAULT_CHANNEL_5G =
-		UCentralUtils.LOWER_CHANNEL_LIMIT
-			.get(UCentralConstants.BAND_5G);
+		UCentralUtils.getLowerChannelLimit(UCentralConstants.BAND_5G);
 
 	@Test
 	@Order(1)
