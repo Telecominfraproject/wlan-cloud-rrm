@@ -1,12 +1,9 @@
-/target
-/*.log*
-/device_config.json
-/settings.json
-/topology.json
+/target/
+*/target/
 
 # Eclipse
-/.settings/
-/bin/
+*/.settings/
+*/bin/
 .metadata
 .classpath
 .project
