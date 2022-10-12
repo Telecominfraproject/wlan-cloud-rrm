@@ -18,7 +18,7 @@ jobs:
           distribution: 'adopt'
           cache: maven
       - name: Build with Maven
-        run: mvn javadoc:javadoc
+        run: mvn javadoc:aggregate
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
