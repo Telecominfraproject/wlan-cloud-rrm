@@ -390,16 +390,16 @@ public class ModelerUtils {
 
 	/**
 	 * This method converts the input State info to an AggregatedState
-	 * and adds it to the bssidToAggregatedStates map. If the bssid&station
+	 * and adds it to the bssidToAggregatedStates map. If the bssid/station
 	 * of the input State does not exist in the map, create a new
-	 * AggregatedState list. If the bssid&station of the input State exists,
+	 * AggregatedState list. If the bssid/station of the input State exists,
 	 * then convert State to AggregatedState and check if there exits an
 	 * AggregatedState of the same radio. If there does, append the value
 	 * of aggregation field to the existing AggregatedState, if not, create
 	 * a new AggregatedState and add it to the list.
 	 *
-	 * @param bssidToAggregatedStates map from bssid&station to a list of AggregatedState.
-	 * @param state the state that is to be added.
+	 * @param bssidToAggregatedStates map from bssid/station to a list of AggregatedState
+	 * @param state the state that is to be added
 	 */
 	static void addStateToAggregation(
 		Map<String, List<AggregatedState>> bssidToAggregatedStates,
@@ -457,13 +457,13 @@ public class ModelerUtils {
 	}
 
 	/**
-	 * This method aggregates States by bssid&station key pair and radio info.
-	 * if two States of the same bssid&station match in channel, channel width and tx_power
+	 * This method aggregates States by bssid/station key pair and radio info.
+	 * if two States of the same bssid/station match in channel, channel width and tx_power
 	 * need to be aggregated to one {@code AggregatedState}. Currently only mcs and
-	 * rssi fields are being aggregated. They are of List<Integer> type in AggregatedState,
+	 * rssi fields are being aggregated. They are of {@code List<Integer>} type in AggregatedState,
 	 * which list all the values over the time.
 	 *
-	 * @param dataModel the data model which includes the latest recorded States.
+	 * @param dataModel the data model which includes the latest recorded States
 	 * @param obsoletionPeriodMs the maximum amount of time (in milliseconds) it
 	 *                           is worth aggregating over, starting from the
 	 *                           most recent States and working backwards in time.
@@ -472,8 +472,7 @@ public class ModelerUtils {
 	 *                           (i.e., the "non-obsolete" window is inclusive).
 	 *                           Must be non-negative.
 	 * @param refTimeMs	the reference time were passed to make testing easier
-	 * @return  Map<String, Map<String, List<AggregatedState>>> A map from serial number to
-	 * 							a map from bssid_station String pair to a list of AggregatedState.
+	 * @return map from serial number to a map from bssid_station String pair to a list of AggregatedState
 	 */
 	public static Map<String, Map<String, List<AggregatedState>>> getAggregatedStates(
 		Modeler.DataModel dataModel,
@@ -527,8 +526,8 @@ public class ModelerUtils {
 	/**
 	 * This method gets the most recent State from latestStates per device.
 	 *
-	 * @param latestStates list of latest States per device.
-	 * @return Map<String, State> a map from device String to latest State.
+	 * @param latestStates list of latest States per device
+	 * @return map from device String to latest State
 	 */
 	public static Map<String, State> getLatestState(
 		Map<String, List<State>> latestStates
@@ -548,7 +547,7 @@ public class ModelerUtils {
 		return latestState;
 	}
 
-	/**  Create a key pair consisted of bssid and station string */
+	/** Create a key pair consisted of bssid and station string */
 	public static String getBssidStationKeyPair(String bssid, String station) {
 		return String.format(
 			"bssid: %s, station: %s",
