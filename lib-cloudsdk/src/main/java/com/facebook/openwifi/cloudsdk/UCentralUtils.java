@@ -61,25 +61,28 @@ public class UCentralUtils {
 	}
 
 	/** List of available channels per band for use. */
-	public static final Map<String, List<Integer>> AVAILABLE_CHANNELS_BAND =
-		new HashMap<>();
-	static {
-		AVAILABLE_CHANNELS_BAND.put(
+	public static final Map<String, List<Integer>> AVAILABLE_CHANNELS_BAND = Collections
+		.unmodifiableMap(buildBandToChannelsMap());
+
+	// This class should not be instantiated.
+	private UCentralUtils() {}
+	
+	private static Map<String, List<Integer>> buildBandToChannelsMap() {
+		Map<String, List<Integer>> bandToChannelsMap = new HashMap<>();
+		bandToChannelsMap.put(
 			UCentralConstants.BAND_5G,
 			Collections.unmodifiableList(
 				Arrays.asList(36, 40, 44, 48, 149, 153, 157, 161, 165)
 			)
 		);
-		AVAILABLE_CHANNELS_BAND.put(
+		bandToChannelsMap.put(
 			UCentralConstants.BAND_2G,
 			Collections.unmodifiableList(
 				Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11)
 			)
 		);
+		return bandToChannelsMap;
 	}
-
-	// This class should not be instantiated.
-	private UCentralUtils() {}
 
 	/**
 	 * Parse a JSON wifi scan result into a list of WifiScanEntry objects.
