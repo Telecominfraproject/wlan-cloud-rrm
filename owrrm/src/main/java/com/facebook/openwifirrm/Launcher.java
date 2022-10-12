@@ -265,7 +265,7 @@ public class Launcher implements Callable<Integer> {
 			.setPrettyPrinting()
 			.serializeNulls() // for here only!!
 			.create();
-		logger.info(gson.toJson(DeviceConfig.createDefault()));
+		System.out.println(gson.toJson(DeviceConfig.createDefault()));
 		return 0;
 	}
 
