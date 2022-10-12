@@ -21,6 +21,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
 import com.facebook.openwifi.cloudsdk.UCentralConstants;
+import com.facebook.openwifi.cloudsdk.UCentralUtils;
 import com.facebook.openwifi.rrm.DeviceDataManager;
 import com.facebook.openwifi.rrm.modules.Modeler.DataModel;
 import com.facebook.openwifi.rrm.optimizers.TestUtils;
@@ -78,7 +79,7 @@ public class UnmanagedApAwareChannelOptimizerTest {
 
 		// B -> Assign to only free channel (165)
 		LinkedList<Integer> channelsB = new LinkedList<>();
-		channelsB.addAll(ChannelOptimizer.AVAILABLE_CHANNELS_BAND.get(band));
+		channelsB.addAll(UCentralUtils.AVAILABLE_CHANNELS_BAND.get(band));
 		int bExpectedChannel = channelsB.removeLast();
 		dataModel.latestDeviceStatusRadios.put(
 			deviceB,
@@ -99,7 +100,7 @@ public class UnmanagedApAwareChannelOptimizerTest {
 		// C -> No free channels, assign to the channel with the least weight (48)
 		// since A is on 48, the weight of channel 48 is lower than the other channels
 		LinkedList<Integer> channelsC = new LinkedList<>();
-		channelsC.addAll(ChannelOptimizer.AVAILABLE_CHANNELS_BAND.get(band));
+		channelsC.addAll(UCentralUtils.AVAILABLE_CHANNELS_BAND.get(band));
 		LinkedList<String> bssidsC = new LinkedList<>(
 			Arrays.asList(
 				"dd:dd:dd:dd:dd:dd",
@@ -184,7 +185,7 @@ public class UnmanagedApAwareChannelOptimizerTest {
 
 		// B -> No free channels, assign to least occupied (11)
 		LinkedList<Integer> channelsB = new LinkedList<>();
-		channelsB.addAll(ChannelOptimizer.AVAILABLE_CHANNELS_BAND.get(band));
+		channelsB.addAll(UCentralUtils.AVAILABLE_CHANNELS_BAND.get(band));
 		int bExpectedChannel = channelsB.removeLast();
 		dataModel.latestDeviceStatusRadios.put(
 			deviceB,

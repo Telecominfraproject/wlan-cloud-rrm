@@ -39,24 +39,6 @@ public abstract class ChannelOptimizer {
 	/** Minimum supported channel width (MHz), inclusive. */
 	public static final int MIN_CHANNEL_WIDTH = 20;
 
-	/** List of available channels per band for use. */
-	public static final Map<String, List<Integer>> AVAILABLE_CHANNELS_BAND =
-		new HashMap<>();
-	static {
-		AVAILABLE_CHANNELS_BAND.put(
-			UCentralConstants.BAND_5G,
-			Collections.unmodifiableList(
-				Arrays.asList(36, 40, 44, 48, 149, 153, 157, 161, 165)
-			)
-		);
-		AVAILABLE_CHANNELS_BAND.put(
-			UCentralConstants.BAND_2G,
-			Collections.unmodifiableList(
-				Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11)
-			)
-		);
-	}
-
 	/** Map of channel width (MHz) to available (primary) channels */
 	protected static final Map<Integer, List<Integer>> AVAILABLE_CHANNELS_WIDTH =
 		new HashMap<>();
@@ -197,7 +179,7 @@ public abstract class ChannelOptimizer {
 		String vhtOper
 	) {
 		if (
-			AVAILABLE_CHANNELS_BAND.get(UCentralConstants.BAND_2G)
+			UCentralUtils.AVAILABLE_CHANNELS_BAND.get(UCentralConstants.BAND_2G)
 				.contains(channel)
 		) {
 			// 2.4G, it only supports 20 MHz

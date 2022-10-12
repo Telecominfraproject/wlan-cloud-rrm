@@ -96,7 +96,7 @@ public class LeastUsedChannelOptimizer extends ChannelOptimizer {
 			UCentralUtils.LOWER_CHANNEL_LIMIT.get(UCentralConstants.BAND_2G);
 		Map<Integer, Integer> occupiedOverlapChannels = new TreeMap<>();
 		for (
-			int overlapChannel : AVAILABLE_CHANNELS_BAND
+			int overlapChannel : UCentralUtils.AVAILABLE_CHANNELS_BAND
 				.get(UCentralConstants.BAND_2G)
 		) {
 			int occupancy = 0;
@@ -338,7 +338,7 @@ public class LeastUsedChannelOptimizer extends ChannelOptimizer {
 			UCentralUtils.getDeviceAvailableChannels(
 				model.latestDeviceStatusRadios,
 				model.latestDeviceCapabilities,
-				AVAILABLE_CHANNELS_BAND
+				UCentralUtils.AVAILABLE_CHANNELS_BAND
 			);
 
 		Map<String, State> latestState =
@@ -372,7 +372,8 @@ public class LeastUsedChannelOptimizer extends ChannelOptimizer {
 					availableChannelsList == null ||
 						availableChannelsList.isEmpty()
 				) {
-					availableChannelsList = AVAILABLE_CHANNELS_BAND.get(band);
+					availableChannelsList =
+						UCentralUtils.AVAILABLE_CHANNELS_BAND.get(band);
 				}
 
 				// Get current channel of the device
