@@ -19,7 +19,6 @@ import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.util.thread.QueuedThreadPool;
 import org.eclipse.jetty.util.thread.ThreadPool;
 import spark.embeddedserver.jetty.JettyServerFactory;
-import spark.embeddedserver.jetty.SocketConnectorFactory;
 import spark.utils.Assert;
 
 /**

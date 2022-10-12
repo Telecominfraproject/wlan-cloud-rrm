@@ -29,6 +29,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.TestMethodOrder;
 
+import com.facebook.openwifi.cloudsdk.models.gw.ServiceEvent;
 import com.facebook.openwifi.cloudsdk.UCentralClient;
 import com.facebook.openwifi.cloudsdk.UCentralConstants;
 import com.facebook.openwifi.cloudsdk.kafka.UCentralKafkaConsumer;
@@ -41,6 +42,7 @@ import com.facebook.openwifi.rrm.RRMConfig;
 import com.facebook.openwifi.rrm.VersionProvider;
 import com.facebook.openwifi.rrm.mysql.DatabaseManager;
 import com.facebook.openwifi.rrm.services.MockOWSecService;
+import com.facebook.openwifi.rrm.Utils;
 import com.google.gson.Gson;
 
 import kong.unirest.HttpResponse;
@@ -130,7 +132,9 @@ public class ApiServerTest {
 				null,
 				null,
 				null,
-				rrmConfig.uCentralConfig.uCentralSocketParams
+				rrmConfig.uCentralConfig.uCentralSocketParams.connectTimeoutMs,
+				rrmConfig.uCentralConfig.uCentralSocketParams.socketTimeoutMs,
+				rrmConfig.uCentralConfig.uCentralSocketParams.wifiScanTimeoutMs
 			);
 			ServiceEvent owsecServiceEvent = new ServiceEvent();
 			owsecServiceEvent.type = "owsec";
@@ -803,7 +807,7 @@ public class ApiServerTest {
 			.header("X-INTERNAL-NAME", "internal_name")
 			.header(
 				"X-API-KEY",
-				UCentralUtils.generateServiceKey(rrmConfig.serviceConfig)
+				Utils.generateServiceKey(rrmConfig.serviceConfig)
 			)
 			.asString();
 		assertEquals(200, resp.getStatus());

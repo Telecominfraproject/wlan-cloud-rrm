@@ -12,9 +12,9 @@ import java.util.Map;
 import java.util.HashMap;
 import java.time.Instant;
 
-import com.facebook.openwifirrm.ucentral.gw.models.TokenValidationResult;
-import com.facebook.openwifirrm.ucentral.gw.models.UserInfo;
-import com.facebook.openwifirrm.ucentral.gw.models.WebTokenResult;
+import com.facebook.openwifi.cloudsdk.models.gw.TokenValidationResult;
+import com.facebook.openwifi.cloudsdk.models.gw.UserInfo;
+import com.facebook.openwifi.cloudsdk.models.gw.WebTokenResult;
 
 import com.google.gson.Gson;
 import spark.Service;
