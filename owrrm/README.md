@@ -11,21 +11,6 @@ algorithms are run (manually or periodically).
 See [IMPLEMENTATION.md](IMPLEMENTATION.md) for service architecture details and
 [ALGORITHMS.md](ALGORITHMS.md) for descriptions of the RRM algorithms.
 
-## Building
-```
-$ mvn package [-DskipTests]
-```
-This will build a runnable JAR located at `target/openwifi-rrm.jar`.
-
-Alternatively, Docker builds can be launched using the provided
-[Dockerfile](Dockerfile).
-
-## Testing
-```
-$ mvn test
-```
-Unit tests are written using [JUnit 5].
-
 ## Usage
 ```
 $ java -jar openwifi-rrm.jar [-h]
