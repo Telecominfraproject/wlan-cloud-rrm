@@ -13,11 +13,11 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 
+import com.facebook.openwifi.cloudsdk.UCentralClient;
+import com.facebook.openwifi.cloudsdk.kafka.UCentralKafkaConsumer;
 import com.facebook.openwifi.rrm.DeviceDataManager;
 import com.facebook.openwifi.rrm.RRMConfig;
 import com.facebook.openwifi.rrm.mysql.DatabaseManager;
-import com.facebook.openwifi.rrm.ucentral.UCentralClient;
-import com.facebook.openwifi.rrm.ucentral.UCentralKafkaConsumer;
 
 public class ProvMonitorTest {
 	/** Test device data manager. */

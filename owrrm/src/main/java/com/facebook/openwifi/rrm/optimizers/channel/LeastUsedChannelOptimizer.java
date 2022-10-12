@@ -20,13 +20,13 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.facebook.openwifi.cloudsdk.UCentralConstants;
+import com.facebook.openwifi.cloudsdk.UCentralUtils;
+import com.facebook.openwifi.cloudsdk.WifiScanEntry;
+import com.facebook.openwifi.cloudsdk.models.ap.State;
 import com.facebook.openwifi.rrm.DeviceDataManager;
 import com.facebook.openwifi.rrm.modules.ModelerUtils;
 import com.facebook.openwifi.rrm.modules.Modeler.DataModel;
-import com.facebook.openwifi.rrm.ucentral.UCentralConstants;
-import com.facebook.openwifi.rrm.ucentral.UCentralUtils;
-import com.facebook.openwifi.rrm.ucentral.WifiScanEntry;
-import com.facebook.openwifi.rrm.ucentral.models.State;
 
 /**
  * Least used channel optimizer.

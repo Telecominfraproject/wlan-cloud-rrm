@@ -22,12 +22,12 @@ import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 
+import com.facebook.openwifi.cloudsdk.WifiScanEntry;
+import com.facebook.openwifi.cloudsdk.models.ap.AggregatedState;
+import com.facebook.openwifi.cloudsdk.models.ap.State;
 import com.facebook.openwifi.rrm.aggregators.MeanAggregator;
 import com.facebook.openwifi.rrm.modules.Modeler.DataModel;
 import com.facebook.openwifi.rrm.optimizers.TestUtils;
-import com.facebook.openwifi.rrm.ucentral.WifiScanEntry;
-import com.facebook.openwifi.rrm.ucentral.models.AggregatedState;
-import com.facebook.openwifi.rrm.ucentral.models.State;
 
 public class ModelerUtilsTest {
 	@Test

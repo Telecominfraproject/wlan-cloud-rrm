@@ -17,12 +17,12 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
+import com.facebook.openwifi.cloudsdk.UCentralConstants;
+import com.facebook.openwifi.cloudsdk.UCentralUtils;
+import com.facebook.openwifi.cloudsdk.WifiScanEntry;
+import com.facebook.openwifi.cloudsdk.models.ap.AggregatedState;
+import com.facebook.openwifi.cloudsdk.models.ap.State;
 import com.facebook.openwifi.rrm.DeviceTopology;
-import com.facebook.openwifi.rrm.ucentral.UCentralConstants;
-import com.facebook.openwifi.rrm.ucentral.UCentralUtils;
-import com.facebook.openwifi.rrm.ucentral.WifiScanEntry;
-import com.facebook.openwifi.rrm.ucentral.models.AggregatedState;
-import com.facebook.openwifi.rrm.ucentral.models.State;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;

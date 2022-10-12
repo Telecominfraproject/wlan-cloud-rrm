@@ -18,10 +18,10 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.facebook.openwifi.cloudsdk.UCentralClient;
+import com.facebook.openwifi.cloudsdk.kafka.UCentralKafkaConsumer;
+import com.facebook.openwifi.cloudsdk.kafka.UCentralKafkaProducer;
 import com.facebook.openwifi.rrm.mysql.DatabaseManager;
-import com.facebook.openwifi.rrm.ucentral.UCentralClient;
-import com.facebook.openwifi.rrm.ucentral.UCentralKafkaConsumer;
-import com.facebook.openwifi.rrm.ucentral.UCentralKafkaProducer;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 

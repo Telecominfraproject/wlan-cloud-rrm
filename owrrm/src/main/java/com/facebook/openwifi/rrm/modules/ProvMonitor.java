@@ -18,19 +18,19 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.facebook.openwifi.cloudsdk.UCentralClient;
+import com.facebook.openwifi.cloudsdk.models.prov.InventoryTag;
+import com.facebook.openwifi.cloudsdk.models.prov.InventoryTagList;
+import com.facebook.openwifi.cloudsdk.models.prov.RRMDetails;
+import com.facebook.openwifi.cloudsdk.models.prov.SerialNumberList;
+import com.facebook.openwifi.cloudsdk.models.prov.Venue;
+import com.facebook.openwifi.cloudsdk.models.prov.VenueList;
 import com.facebook.openwifi.rrm.DeviceConfig;
 import com.facebook.openwifi.rrm.DeviceDataManager;
 import com.facebook.openwifi.rrm.DeviceTopology;
 import com.facebook.openwifi.rrm.RRMAlgorithm;
 import com.facebook.openwifi.rrm.RRMSchedule;
 import com.facebook.openwifi.rrm.RRMConfig.ModuleConfig.ProvMonitorParams;
-import com.facebook.openwifi.rrm.ucentral.UCentralClient;
-import com.facebook.openwifi.rrm.ucentral.prov.models.InventoryTag;
-import com.facebook.openwifi.rrm.ucentral.prov.models.InventoryTagList;
-import com.facebook.openwifi.rrm.ucentral.prov.models.RRMDetails;
-import com.facebook.openwifi.rrm.ucentral.prov.models.SerialNumberList;
-import com.facebook.openwifi.rrm.ucentral.prov.models.Venue;
-import com.facebook.openwifi.rrm.ucentral.prov.models.VenueList;
 
 /**
  * owprov monitor module.

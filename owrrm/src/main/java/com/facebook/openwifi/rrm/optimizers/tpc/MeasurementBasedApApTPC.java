@@ -20,11 +20,11 @@ import java.util.TreeMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.facebook.openwifi.cloudsdk.UCentralUtils;
+import com.facebook.openwifi.cloudsdk.WifiScanEntry;
+import com.facebook.openwifi.cloudsdk.models.ap.State;
 import com.facebook.openwifi.rrm.DeviceDataManager;
 import com.facebook.openwifi.rrm.modules.Modeler.DataModel;
-import com.facebook.openwifi.rrm.ucentral.UCentralUtils;
-import com.facebook.openwifi.rrm.ucentral.WifiScanEntry;
-import com.facebook.openwifi.rrm.ucentral.models.State;
 
 /**
  * Measurement-based AP-AP TPC algorithm.

@@ -21,11 +21,12 @@ import java.util.TreeSet;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
+
+import com.facebook.openwifi.cloudsdk.UCentralConstants;
+
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
-
-import com.facebook.openwifi.rrm.ucentral.UCentralConstants;
 
 @TestMethodOrder(OrderAnnotation.class)
 public class DeviceDataManagerTest {

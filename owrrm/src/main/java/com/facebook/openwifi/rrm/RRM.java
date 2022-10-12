@@ -18,6 +18,11 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.facebook.openwifi.cloudsdk.UCentralClient;
+import com.facebook.openwifi.cloudsdk.kafka.KafkaRunner;
+import com.facebook.openwifi.cloudsdk.kafka.UCentralKafkaConsumer;
+import com.facebook.openwifi.cloudsdk.kafka.UCentralKafkaProducer;
+import com.facebook.openwifi.cloudsdk.models.gw.SystemInfoResults;
 import com.facebook.openwifi.rrm.modules.ApiServer;
 import com.facebook.openwifi.rrm.modules.ConfigManager;
 import com.facebook.openwifi.rrm.modules.DataCollector;
@@ -25,11 +30,6 @@ import com.facebook.openwifi.rrm.modules.Modeler;
 import com.facebook.openwifi.rrm.modules.ProvMonitor;
 import com.facebook.openwifi.rrm.modules.RRMScheduler;
 import com.facebook.openwifi.rrm.mysql.DatabaseManager;
-import com.facebook.openwifi.rrm.ucentral.KafkaRunner;
-import com.facebook.openwifi.rrm.ucentral.UCentralClient;
-import com.facebook.openwifi.rrm.ucentral.UCentralKafkaConsumer;
-import com.facebook.openwifi.rrm.ucentral.UCentralKafkaProducer;
-import com.facebook.openwifi.rrm.ucentral.gw.models.SystemInfoResults;
 
 /**
  * RRM service runner.

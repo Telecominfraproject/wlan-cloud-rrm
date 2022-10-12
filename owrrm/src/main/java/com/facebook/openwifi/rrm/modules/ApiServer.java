@@ -35,6 +35,11 @@ import org.reflections.util.ConfigurationBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.facebook.openwifi.cloudsdk.UCentralClient;
+import com.facebook.openwifi.cloudsdk.models.gw.SystemInfoResults;
+import com.facebook.openwifi.cloudsdk.models.gw.TokenValidationResult;
+import com.facebook.openwifi.cloudsdk.models.prov.rrm.Algorithm;
+import com.facebook.openwifi.cloudsdk.models.prov.rrm.Provider;
 import com.facebook.openwifi.rrm.DeviceConfig;
 import com.facebook.openwifi.rrm.DeviceDataManager;
 import com.facebook.openwifi.rrm.DeviceLayeredConfig;
@@ -52,11 +57,6 @@ import com.facebook.openwifi.rrm.optimizers.tpc.LocationBasedOptimalTPC;
 import com.facebook.openwifi.rrm.optimizers.tpc.MeasurementBasedApApTPC;
 import com.facebook.openwifi.rrm.optimizers.tpc.MeasurementBasedApClientTPC;
 import com.facebook.openwifi.rrm.optimizers.tpc.RandomTxPowerInitializer;
-import com.facebook.openwifi.rrm.ucentral.UCentralClient;
-import com.facebook.openwifi.rrm.ucentral.gw.models.SystemInfoResults;
-import com.facebook.openwifi.rrm.ucentral.gw.models.TokenValidationResult;
-import com.facebook.openwifi.rrm.ucentral.prov.rrm.models.Algorithm;
-import com.facebook.openwifi.rrm.ucentral.prov.rrm.models.Provider;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 

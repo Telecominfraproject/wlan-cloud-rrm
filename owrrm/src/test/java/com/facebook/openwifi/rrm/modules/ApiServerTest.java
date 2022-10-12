@@ -28,6 +28,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.TestMethodOrder;
 
+import com.facebook.openwifi.cloudsdk.UCentralClient;
+import com.facebook.openwifi.cloudsdk.UCentralConstants;
+import com.facebook.openwifi.cloudsdk.kafka.UCentralKafkaConsumer;
 import com.facebook.openwifi.rrm.DeviceConfig;
 import com.facebook.openwifi.rrm.DeviceDataManager;
 import com.facebook.openwifi.rrm.DeviceLayeredConfig;
@@ -36,9 +39,6 @@ import com.facebook.openwifi.rrm.RRMAlgorithm;
 import com.facebook.openwifi.rrm.RRMConfig;
 import com.facebook.openwifi.rrm.VersionProvider;
 import com.facebook.openwifi.rrm.mysql.DatabaseManager;
-import com.facebook.openwifi.rrm.ucentral.UCentralClient;
-import com.facebook.openwifi.rrm.ucentral.UCentralConstants;
-import com.facebook.openwifi.rrm.ucentral.UCentralKafkaConsumer;
 import com.google.gson.Gson;
 
 import kong.unirest.HttpResponse;

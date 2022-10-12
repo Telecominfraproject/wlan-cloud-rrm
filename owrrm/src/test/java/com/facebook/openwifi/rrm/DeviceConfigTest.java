@@ -17,7 +17,7 @@ import java.util.HashMap;
 
 import org.junit.jupiter.api.Test;
 
-import com.facebook.openwifi.rrm.ucentral.UCentralConstants;
+import com.facebook.openwifi.cloudsdk.UCentralConstants;
 
 public class DeviceConfigTest {
 	@Test

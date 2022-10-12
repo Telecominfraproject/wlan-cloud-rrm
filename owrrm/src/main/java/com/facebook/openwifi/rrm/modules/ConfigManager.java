@@ -21,13 +21,13 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.facebook.openwifi.cloudsdk.UCentralApConfiguration;
+import com.facebook.openwifi.cloudsdk.UCentralClient;
+import com.facebook.openwifi.cloudsdk.UCentralUtils;
+import com.facebook.openwifi.cloudsdk.models.gw.DeviceWithStatus;
 import com.facebook.openwifi.rrm.DeviceConfig;
 import com.facebook.openwifi.rrm.DeviceDataManager;
 import com.facebook.openwifi.rrm.RRMConfig.ModuleConfig.ConfigManagerParams;
-import com.facebook.openwifi.rrm.ucentral.UCentralApConfiguration;
-import com.facebook.openwifi.rrm.ucentral.UCentralClient;
-import com.facebook.openwifi.rrm.ucentral.UCentralUtils;
-import com.facebook.openwifi.rrm.ucentral.gw.models.DeviceWithStatus;
 
 /**
  * Device configuration manager module.

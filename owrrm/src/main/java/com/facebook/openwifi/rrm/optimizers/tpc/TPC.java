@@ -20,11 +20,11 @@ import java.util.stream.IntStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.facebook.openwifi.cloudsdk.models.ap.State;
 import com.facebook.openwifi.rrm.DeviceConfig;
 import com.facebook.openwifi.rrm.DeviceDataManager;
 import com.facebook.openwifi.rrm.modules.ConfigManager;
 import com.facebook.openwifi.rrm.modules.Modeler.DataModel;
-import com.facebook.openwifi.rrm.ucentral.models.State;
 
 /**
  * TPC (Transmit Power Control) base class.

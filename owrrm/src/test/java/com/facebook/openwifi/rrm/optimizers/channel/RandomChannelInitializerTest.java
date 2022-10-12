@@ -20,10 +20,10 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
+import com.facebook.openwifi.cloudsdk.UCentralConstants;
 import com.facebook.openwifi.rrm.DeviceDataManager;
 import com.facebook.openwifi.rrm.modules.Modeler.DataModel;
 import com.facebook.openwifi.rrm.optimizers.TestUtils;
-import com.facebook.openwifi.rrm.ucentral.UCentralConstants;
 
 @TestMethodOrder(OrderAnnotation.class)
 public class RandomChannelInitializerTest {

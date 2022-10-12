@@ -19,17 +19,17 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.facebook.openwifi.cloudsdk.WifiScanEntry;
+import com.facebook.openwifi.cloudsdk.ies.HTOperation;
+import com.facebook.openwifi.cloudsdk.ies.VHTOperation;
+import com.facebook.openwifi.cloudsdk.models.ap.AggregatedState;
+import com.facebook.openwifi.cloudsdk.models.ap.State;
+import com.facebook.openwifi.cloudsdk.models.ap.State.Interface;
+import com.facebook.openwifi.cloudsdk.models.ap.State.Interface.SSID;
+import com.facebook.openwifi.cloudsdk.models.ap.State.Interface.SSID.Association;
 import com.facebook.openwifi.rrm.aggregators.Aggregator;
 import com.facebook.openwifi.rrm.aggregators.MeanAggregator;
 import com.facebook.openwifi.rrm.modules.Modeler.DataModel;
-import com.facebook.openwifi.rrm.ucentral.WifiScanEntry;
-import com.facebook.openwifi.rrm.ucentral.informationelement.HTOperation;
-import com.facebook.openwifi.rrm.ucentral.informationelement.VHTOperation;
-import com.facebook.openwifi.rrm.ucentral.models.AggregatedState;
-import com.facebook.openwifi.rrm.ucentral.models.State;
-import com.facebook.openwifi.rrm.ucentral.models.State.Interface;
-import com.facebook.openwifi.rrm.ucentral.models.State.Interface.SSID;
-import com.facebook.openwifi.rrm.ucentral.models.State.Interface.SSID.Association;
 
 /**
  * Modeler utilities.
