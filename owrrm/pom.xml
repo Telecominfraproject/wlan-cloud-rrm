@@ -11,7 +11,7 @@
   <properties>
     <!-- Hack for static files located in root project -->
     <myproject.root>${project.basedir}/..</myproject.root>
-    <mainClassName>com.facebook.openwifirrm.Launcher</mainClassName>
+    <mainClassName>com.facebook.openwifi.rrm.Launcher</mainClassName>
     <appendVersionString></appendVersionString>
   </properties>
   <build>
