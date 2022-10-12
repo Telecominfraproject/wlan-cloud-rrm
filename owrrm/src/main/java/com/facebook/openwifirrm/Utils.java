@@ -16,6 +16,8 @@ import java.io.InputStream;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Scanner;
@@ -23,6 +25,8 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -31,6 +35,8 @@ import com.google.gson.GsonBuilder;
  * Generic utility methods.
  */
 public class Utils {
+	private static final Logger logger = LoggerFactory.getLogger(Utils.class);
+
 	/** Hex value array for use in {@link #longToMac(long)}. */
 	private static final char[] HEX_VALUES = "0123456789abcdef".toCharArray();
 
@@ -192,5 +198,20 @@ public class Utils {
 	/** Return a deep copy using gson. DO NOT USE if performance is critical. */
 	public static <T> T deepCopy(T obj, Class<T> classOfT) {
 		return gson.fromJson(gson.toJson(obj), classOfT);
+	}
+
+	/** Generate the RRM service key. */
+	public static String generateServiceKey(
+		RRMConfig.ServiceConfig serviceConfig
+	) {
+		try {
+			MessageDigest sha256 = MessageDigest.getInstance("SHA-256");
+			sha256.update(serviceConfig.publicEndpoint.getBytes());
+			sha256.update(serviceConfig.privateEndpoint.getBytes());
+			return Utils.bytesToHex(sha256.digest());
+		} catch (NoSuchAlgorithmException e) {
+			logger.error("Unable to generate service key", e);
+			return "";
+		}
 	}
 }

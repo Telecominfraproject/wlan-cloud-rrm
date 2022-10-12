@@ -20,7 +20,6 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.facebook.openwifirrm.RRMConfig.UCentralConfig.UCentralSocketParams;
 import com.facebook.openwifirrm.ucentral.gw.models.CommandInfo;
 import com.facebook.openwifirrm.ucentral.gw.models.DeviceCapabilities;
 import com.facebook.openwifirrm.ucentral.gw.models.DeviceConfigureRequest;
@@ -127,8 +126,14 @@ public class UCentralClient {
 	/** uCentral password */
 	private final String password;
 
-	/** Socket parameters */
-	private final UCentralSocketParams socketParams;
+	/** Connection timeout for all requests, in ms */
+	private final int connectTimeoutMs;
+
+	/** Socket timeout for all requests, in ms */
+	private final int socketTimeoutMs;
+
+	/** Socket timeout for wifi scan requests, in ms */
+	private final int wifiScanTimeoutMs;
 
 	/** The learned service endpoints. */
 	private final Map<String, ServiceEvent> serviceEndpoints = new HashMap<>();
@@ -147,7 +152,9 @@ public class UCentralClient {
 	 *        (if needed)
 	 * @param username uCentral username (for public endpoints only)
 	 * @param password uCentral password (for public endpoints only)
-	 * @param socketParams Socket parameters
+	 * @param connectTimeoutMs connection timeout for all requests, in ms
+	 * @param socketTimeoutMs socket timeout for all requests, in ms
+	 * @param wifiScanTimeoutMs socket timeout for wifi scan requests, in ms
 	 */
 	public UCentralClient(
 		String rrmEndpoint,
@@ -155,13 +162,17 @@ public class UCentralClient {
 		String uCentralSecPublicEndpoint,
 		String username,
 		String password,
-		UCentralSocketParams socketParams
+		int connectTimeoutMs,
+		int socketTimeoutMs,
+		int wifiScanTimeoutMs
 	) {
 		this.rrmEndpoint = rrmEndpoint;
 		this.usePublicEndpoints = usePublicEndpoints;
 		this.username = username;
 		this.password = password;
-		this.socketParams = socketParams;
+		this.connectTimeoutMs = connectTimeoutMs;
+		this.socketTimeoutMs = socketTimeoutMs;
+		this.wifiScanTimeoutMs = wifiScanTimeoutMs;
 
 		if (usePublicEndpoints) {
 			setServicePublicEndpoint(OWSEC_SERVICE, uCentralSecPublicEndpoint);
@@ -302,11 +313,7 @@ public class UCentralClient {
 		Map<String, Object> parameters
 	) {
 		return httpGet(
-			endpoint,
-			service,
-			parameters,
-			socketParams.connectTimeoutMs,
-			socketParams.socketTimeoutMs
+			endpoint, service, parameters, connectTimeoutMs, socketTimeoutMs
 		);
 	}
 
@@ -346,11 +353,7 @@ public class UCentralClient {
 		Object body
 	) {
 		return httpPost(
-			endpoint,
-			service,
-			body,
-			socketParams.connectTimeoutMs,
-			socketParams.socketTimeoutMs
+			endpoint, service, body, connectTimeoutMs, socketTimeoutMs
 		);
 	}
 
@@ -454,8 +457,8 @@ public class UCentralClient {
 			String.format("device/%s/wifiscan", serialNumber),
 			OWGW_SERVICE,
 			req,
-			socketParams.connectTimeoutMs,
-			socketParams.wifiScanTimeoutMs
+			connectTimeoutMs,
+			wifiScanTimeoutMs
 		);
 		if (!response.isSuccess()) {
 			logger.error("Error: {}", response.getBody());

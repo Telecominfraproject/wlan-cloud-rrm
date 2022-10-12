@@ -8,8 +8,6 @@
 
 package com.facebook.openwifirrm.ucentral;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -21,9 +19,6 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.facebook.openwifirrm.RRMConfig;
-import com.facebook.openwifirrm.Utils;
-import com.facebook.openwifirrm.optimizers.channel.ChannelOptimizer;
 import com.facebook.openwifirrm.ucentral.informationelement.Country;
 import com.facebook.openwifirrm.ucentral.informationelement.LocalPowerConstraint;
 import com.facebook.openwifirrm.ucentral.informationelement.QbssLoad;
@@ -399,44 +394,20 @@ public class UCentralUtils {
 		return bssidMap;
 	}
 
-	/** Generate the RRM service key. */
-	public static String generateServiceKey(
-		RRMConfig.ServiceConfig serviceConfig
-	) {
-		try {
-			MessageDigest sha256 = MessageDigest.getInstance("SHA-256");
-			sha256.update(serviceConfig.publicEndpoint.getBytes());
-			sha256.update(serviceConfig.privateEndpoint.getBytes());
-			return Utils.bytesToHex(sha256.digest());
-		} catch (NoSuchAlgorithmException e) {
-			logger.error("Unable to generate service key", e);
-			return "";
-		}
-	}
-
 	/**
 	 * Converts channel number to that channel's center frequency in MHz.
 	 *
-	 * @param channel channel number. See
-	 *                {@link ChannelOptimizer#AVAILABLE_CHANNELS_BAND} for channels
-	 *                in each band.
+	 * @param channel channel number
 	 * @return the center frequency of the given channel in MHz
 	 */
 	public static int channelToFrequencyMHz(int channel) {
-		if (
-			ChannelOptimizer.AVAILABLE_CHANNELS_BAND
-				.get(UCentralConstants.BAND_2G)
-				.contains(channel)
-		) {
+		// TODO fixme
+		if (channel <= 14) {
+			// 2.4 GHz
 			return 2407 + 5 * channel;
-		} else if (
-			ChannelOptimizer.AVAILABLE_CHANNELS_BAND
-				.get(UCentralConstants.BAND_5G)
-				.contains(channel)
-		) {
-			return 5000 + channel;
 		} else {
-			throw new IllegalArgumentException("Must provide a valid channel.");
+			// 5 GHz
+			return 5000 + channel;
 		}
 	}
 

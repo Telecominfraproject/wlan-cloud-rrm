@@ -42,6 +42,7 @@ import com.facebook.openwifirrm.DeviceTopology;
 import com.facebook.openwifirrm.RRMAlgorithm;
 import com.facebook.openwifirrm.RRMConfig.ModuleConfig.ApiServerParams;
 import com.facebook.openwifirrm.RRMConfig.ServiceConfig;
+import com.facebook.openwifirrm.Utils;
 import com.facebook.openwifirrm.Utils.LruCache;
 import com.facebook.openwifirrm.VersionProvider;
 import com.facebook.openwifirrm.optimizers.channel.LeastUsedChannelOptimizer;
@@ -52,7 +53,6 @@ import com.facebook.openwifirrm.optimizers.tpc.MeasurementBasedApApTPC;
 import com.facebook.openwifirrm.optimizers.tpc.MeasurementBasedApClientTPC;
 import com.facebook.openwifirrm.optimizers.tpc.RandomTxPowerInitializer;
 import com.facebook.openwifirrm.ucentral.UCentralClient;
-import com.facebook.openwifirrm.ucentral.UCentralUtils;
 import com.facebook.openwifirrm.ucentral.gw.models.SystemInfoResults;
 import com.facebook.openwifirrm.ucentral.gw.models.TokenValidationResult;
 import com.facebook.openwifirrm.ucentral.prov.rrm.models.Algorithm;
@@ -166,7 +166,7 @@ public class ApiServer implements Runnable {
 	) {
 		this.params = params;
 		this.serviceConfig = serviceConfig;
-		this.serviceKey = UCentralUtils.generateServiceKey(serviceConfig);
+		this.serviceKey = Utils.generateServiceKey(serviceConfig);
 		this.deviceDataManager = deviceDataManager;
 		this.configManager = configManager;
 		this.modeler = modeler;

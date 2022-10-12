@@ -5,6 +5,11 @@
 * **Running:** JRE 11.
 * **Building:** JDK 11 and [Apache Maven].
 
+## Project Structure
+This is a Maven project with multiple modules:
+* `lib-cloudsdk` - OpenWiFi CloudSDK Java Library
+* `owrrm` - OpenWiFi RRM Service
+
 ## Code Style
 Code is auto-formatted using [Spotless] with a custom Eclipse style config (see
 [spotless/eclipse-java-formatter.xml](spotless/eclipse-java-formatter.xml)).

@@ -6,6 +6,7 @@
   <version>2.7.0</version>
   <packaging>pom</packaging>
   <modules>
+    <module>lib-cloudsdk</module>
     <module>owrrm</module>
   </modules>
   <properties>
