@@ -24,10 +24,12 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.TestMethodOrder;
 
+import com.facebook.openwifi.cloudsdk.models.gw.ServiceEvent;
 import com.facebook.openwifi.cloudsdk.UCentralClient;
 import com.facebook.openwifi.cloudsdk.UCentralConstants;
 import com.facebook.openwifi.cloudsdk.kafka.UCentralKafkaConsumer;
@@ -39,18 +41,33 @@ import com.facebook.openwifi.rrm.RRMAlgorithm;
 import com.facebook.openwifi.rrm.RRMConfig;
 import com.facebook.openwifi.rrm.VersionProvider;
 import com.facebook.openwifi.rrm.mysql.DatabaseManager;
+import com.facebook.openwifi.rrm.services.MockOWSecService;
+import com.facebook.openwifi.rrm.Utils;
 import com.google.gson.Gson;
 
 import kong.unirest.HttpResponse;
 import kong.unirest.JsonNode;
 import kong.unirest.Unirest;
 import kong.unirest.json.JSONObject;
-import spark.Spark;
 
+/**
+ * A class for testing ApiServer. In order to test auth logic, you must tag
+ * the test "auth". Doing so will spin up a mock ow security service and
+ * enable auth on the server.
+ */
 @TestMethodOrder(OrderAnnotation.class)
 public class ApiServerTest {
-	/** The test server port. */
-	private static final int TEST_PORT = spark.Service.SPARK_DEFAULT_PORT;
+	/** The test server port for external calls. */
+	private static final int TEST_EXTERNAL_PORT =
+		spark.Service.SPARK_DEFAULT_PORT;
+
+	/** The test server port for internal calls. */
+	private static final int TEST_INTERNAL_PORT =
+		TEST_EXTERNAL_PORT + 1;
+
+	/** The mock ow sec service port */
+	private static final int TEST_OWSEC_PORT =
+		TEST_INTERNAL_PORT + 1;
 
 	/** Test device data manager. */
 	private DeviceDataManager deviceDataManager;
@@ -61,15 +78,27 @@ public class ApiServerTest {
 	/** Test API server instance. */
 	private ApiServer server;
 
+	/** Mock OW sec service */
+	private MockOWSecService owSecService;
+
 	/** Test modeler instance. */
 	private Modeler modeler;
 
 	/** The Gson instance. */
 	private final Gson gson = new Gson();
 
-	/** Build an endpoint URL. */
+	/** Build an internal endpoint URL. */
 	private String endpoint(String path) {
-		return String.format("http://localhost:%d%s", TEST_PORT, path);
+		return endpoint(path, true);
+	}
+
+	/** Build an endpoint URL. */
+	private String endpoint(String path, boolean internal) {
+		return String.format(
+			"http://localhost:%d%s",
+			internal ? TEST_INTERNAL_PORT : TEST_EXTERNAL_PORT,
+			path
+		);
 	}
 
 	@BeforeEach
@@ -78,10 +107,43 @@ public class ApiServerTest {
 
 		// Create config
 		this.rrmConfig = new RRMConfig();
-		rrmConfig.moduleConfig.apiServerParams.httpPort = TEST_PORT;
+		rrmConfig.moduleConfig.apiServerParams.internalHttpPort =
+			TEST_INTERNAL_PORT;
+		rrmConfig.moduleConfig.apiServerParams.externalHttpPort =
+			TEST_EXTERNAL_PORT;
+
+		UCentralClient client = null;
+
+		boolean useAuth = testInfo.getTags().contains("auth");
+		if (useAuth) {
+			this.rrmConfig.moduleConfig.apiServerParams.useOpenWifiAuth = true;
+
+			// spin up mock owsec service
+			try {
+				owSecService = new MockOWSecService(TEST_OWSEC_PORT);
+			} catch (Exception e) {
+				fail("Could not instantiate OWSec.", e);
+			}
+
+			// Create uCentral client with mock services as necessary
+			client = new UCentralClient(
+				"rrm",
+				false,
+				null,
+				null,
+				null,
+				rrmConfig.uCentralConfig.uCentralSocketParams.connectTimeoutMs,
+				rrmConfig.uCentralConfig.uCentralSocketParams.socketTimeoutMs,
+				rrmConfig.uCentralConfig.uCentralSocketParams.wifiScanTimeoutMs
+			);
+			ServiceEvent owsecServiceEvent = new ServiceEvent();
+			owsecServiceEvent.type = "owsec";
+			owsecServiceEvent.privateEndPoint =
+				String.format("http://localhost:%d", owSecService.getPort());
+			client.setServiceEndpoint("owsec", owsecServiceEvent);
+		}
 
 		// Create clients (null for now)
-		UCentralClient client = null;
 		UCentralKafkaConsumer consumer = null;
 		DatabaseManager dbManager = null;
 
@@ -126,7 +188,7 @@ public class ApiServerTest {
 		);
 		try {
 			server.run();
-			Spark.awaitInitialization();
+			server.awaitInitialization();
 		} catch (Exception e) {
 			fail("Could not instantiate ApiServer.", e);
 		}
@@ -137,9 +199,15 @@ public class ApiServerTest {
 		// Destroy ApiServer
 		if (server != null) {
 			server.shutdown();
-			Spark.awaitStop();
+			server.awaitStop();
 		}
 		server = null;
+
+		// reset owsec server
+		if (owSecService != null) {
+			owSecService.stop();
+		}
+		owSecService = null;
 
 		// Reset Unirest client
 		// Without this, Unirest randomly throws:
@@ -511,7 +579,10 @@ public class ApiServerTest {
 	@Order(1000)
 	void testDocs() throws Exception {
 		// Index page paths
-		assertEquals(200, Unirest.get(endpoint("/")).asString().getStatus());
+		assertEquals(
+			200,
+			Unirest.get(endpoint("/")).asString().getStatus()
+		);
 		assertEquals(
 			200,
 			Unirest.get(endpoint("/index.html")).asString().getStatus()
@@ -688,5 +759,57 @@ public class ApiServerTest {
 			400,
 			Unirest.put(url + "?venue=asdf&algorithm=" + algorithms.get(0)).asString().getStatus()
 		);
+	}
+
+	@Test
+	@Tag("auth")
+	@Order(3000)
+	void test_publicEndpoint() throws Exception {
+		// no token
+		HttpResponse<String> resp =
+			Unirest.get(endpoint("/api/v1/getTopology", false)).asString();
+		assertEquals(403, resp.getStatus());
+
+		// bad token
+		resp = Unirest.get(endpoint("/api/v1/getTopology", false))
+			.header("Authorization", "Bearer some_bad_token")
+			.asString();
+		assertEquals(403, resp.getStatus());
+
+		// valid for 300 seconds (5 minutes)
+		String token = "this_is_a_good_token";
+		owSecService.addToken(token, 300);
+		// good token
+		resp = Unirest.get(endpoint("/api/v1/getTopology", false))
+			.header("Authorization", "Bearer " + token)
+			.asString();
+		assertEquals(200, resp.getStatus());
+	}
+
+	@Test
+	@Tag("auth")
+	@Order(3001)
+	void test_privateEndpoint() throws Exception {
+		// no headers
+		HttpResponse<String> resp =
+			Unirest.get(endpoint("/api/v1/getTopology", true)).asString();
+		assertEquals(403, resp.getStatus());
+
+		// bad headers
+		resp = Unirest.get(endpoint("/api/v1/getTopology", true))
+			.header("X-INTERNAL-NAME", "internal_name")
+			.header("X-API-KEY", "not_a_valid_key")
+			.asString();
+		assertEquals(403, resp.getStatus());
+
+		// good headers
+		resp = Unirest.get(endpoint("/api/v1/getTopology", true))
+			.header("X-INTERNAL-NAME", "internal_name")
+			.header(
+				"X-API-KEY",
+				Utils.generateServiceKey(rrmConfig.serviceConfig)
+			)
+			.asString();
+		assertEquals(200, resp.getStatus());
 	}
 }

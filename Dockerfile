@@ -11,7 +11,7 @@ RUN mkdir /owrrm-data
 WORKDIR /usr/src/java
 COPY docker-entrypoint.sh /
 COPY --from=build /usr/src/java/owrrm/target/openwifi-rrm.jar /usr/local/bin/
-EXPOSE 16789
+EXPOSE 16789 16790
 ENTRYPOINT ["/docker-entrypoint.sh"]
 CMD ["java", "-XX:+IdleTuningGcOnIdle", "-Xtune:virtualized", \
      "-jar", "/usr/local/bin/openwifi-rrm.jar", \

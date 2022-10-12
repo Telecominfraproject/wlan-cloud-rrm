@@ -313,7 +313,11 @@ public class UCentralClient {
 		Map<String, Object> parameters
 	) {
 		return httpGet(
-			endpoint, service, parameters, connectTimeoutMs, socketTimeoutMs
+			endpoint,
+			service,
+			parameters,
+			connectTimeoutMs,
+			socketTimeoutMs
 		);
 	}
 
@@ -353,7 +357,11 @@ public class UCentralClient {
 		Object body
 	) {
 		return httpPost(
-			endpoint, service, body, connectTimeoutMs, socketTimeoutMs
+			endpoint,
+			service,
+			body,
+			connectTimeoutMs,
+			socketTimeoutMs
 		);
 	}
 
