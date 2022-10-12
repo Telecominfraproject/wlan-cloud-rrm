@@ -22,8 +22,8 @@ import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 
+import com.facebook.openwifi.cloudsdk.AggregatedState;
 import com.facebook.openwifi.cloudsdk.WifiScanEntry;
-import com.facebook.openwifi.cloudsdk.models.ap.AggregatedState;
 import com.facebook.openwifi.cloudsdk.models.ap.State;
 import com.facebook.openwifi.rrm.aggregators.MeanAggregator;
 import com.facebook.openwifi.rrm.modules.Modeler.DataModel;

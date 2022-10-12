@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package com.facebook.openwifi.cloudsdk.models.ap;
+package com.facebook.openwifi.cloudsdk;
 
 import java.util.ArrayList;
 import java.util.List;

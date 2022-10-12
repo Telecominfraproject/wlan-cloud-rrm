@@ -19,10 +19,10 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.facebook.openwifi.cloudsdk.AggregatedState;
 import com.facebook.openwifi.cloudsdk.WifiScanEntry;
 import com.facebook.openwifi.cloudsdk.ies.HTOperation;
 import com.facebook.openwifi.cloudsdk.ies.VHTOperation;
-import com.facebook.openwifi.cloudsdk.models.ap.AggregatedState;
 import com.facebook.openwifi.cloudsdk.models.ap.State;
 import com.facebook.openwifi.cloudsdk.models.ap.State.Interface;
 import com.facebook.openwifi.cloudsdk.models.ap.State.Interface.SSID;
