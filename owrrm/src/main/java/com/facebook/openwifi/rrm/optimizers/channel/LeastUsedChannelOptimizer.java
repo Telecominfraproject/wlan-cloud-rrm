@@ -372,7 +372,8 @@ public class LeastUsedChannelOptimizer extends ChannelOptimizer {
 					availableChannelsList == null ||
 						availableChannelsList.isEmpty()
 				) {
-					availableChannelsList = UCentralUtils.AVAILABLE_CHANNELS_BAND.get(band);
+					availableChannelsList =
+						UCentralUtils.AVAILABLE_CHANNELS_BAND.get(band);
 				}
 
 				// Get current channel of the device

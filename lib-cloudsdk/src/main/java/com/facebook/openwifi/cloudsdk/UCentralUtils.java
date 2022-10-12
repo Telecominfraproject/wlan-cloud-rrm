@@ -64,12 +64,18 @@ public class UCentralUtils {
 	public static final Map<String, List<Integer>> AVAILABLE_CHANNELS_BAND =
 		new HashMap<>();
 	static {
-		AVAILABLE_CHANNELS_BAND.put(UCentralConstants.BAND_5G,
+		AVAILABLE_CHANNELS_BAND.put(
+			UCentralConstants.BAND_5G,
 			Collections.unmodifiableList(
-				Arrays.asList(36, 40, 44, 48, 149, 153, 157, 161, 165)));
-		AVAILABLE_CHANNELS_BAND.put(UCentralConstants.BAND_2G,
+				Arrays.asList(36, 40, 44, 48, 149, 153, 157, 161, 165)
+			)
+		);
+		AVAILABLE_CHANNELS_BAND.put(
+			UCentralConstants.BAND_2G,
 			Collections.unmodifiableList(
-				Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11)));
+				Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11)
+			)
+		);
 	}
 
 	// This class should not be instantiated.

@@ -161,14 +161,16 @@ public class RandomChannelInitializer extends ChannelOptimizer {
 				if (
 					deviceChannelsList == null || deviceChannelsList.isEmpty()
 				) {
-					deviceChannelsList = UCentralUtils.AVAILABLE_CHANNELS_BAND.get(band);
+					deviceChannelsList =
+						UCentralUtils.AVAILABLE_CHANNELS_BAND.get(band);
 				}
 				availableChannelsList.retainAll(deviceChannelsList);
 			}
 			if (
 				availableChannelsList == null || availableChannelsList.isEmpty()
 			) {
-				availableChannelsList = UCentralUtils.AVAILABLE_CHANNELS_BAND.get(band);
+				availableChannelsList =
+					UCentralUtils.AVAILABLE_CHANNELS_BAND.get(band);
 				logger.debug(
 					"The intersection of the device channels lists is empty!!! " +
 						"Fall back to the default channels list"
