@@ -26,7 +26,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":10,"i1":10};
+var data = {"i0":10,"i1":10,"i2":10,"i3":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -288,10 +288,24 @@ implements <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#awaitInitialization()">awaitInitialization</a></span>()</code></th>
+<td class="colLast">
+<div class="block">Block until initialization finishes.</div>
+</td>
+</tr>
+<tr id="i1" class="rowColor">
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#awaitStop()">awaitStop</a></span>()</code></th>
+<td class="colLast">
+<div class="block">Block until stop finishes.</div>
+</td>
+</tr>
+<tr id="i2" class="altColor">
+<td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#run()">run</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i1" class="rowColor">
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#shutdown()">shutdown</a></span>()</code></th>
 <td class="colLast">
@@ -348,6 +362,17 @@ implements <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base
 <!--   -->
 </a>
 <h3>Method Detail</h3>
+<a id="awaitInitialization()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>awaitInitialization</h4>
+<pre class="methodSignature">public&nbsp;void&nbsp;awaitInitialization()</pre>
+<div class="block">Block until initialization finishes. Just calls the method on the
+ underlying service.</div>
+</li>
+</ul>
 <a id="run()">
 <!--   -->
 </a>
@@ -364,11 +389,21 @@ implements <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base
 <a id="shutdown()">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>shutdown</h4>
 <pre class="methodSignature">public&nbsp;void&nbsp;shutdown()</pre>
 <div class="block">Stop the server.</div>
+</li>
+</ul>
+<a id="awaitStop()">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>awaitStop</h4>
+<pre class="methodSignature">public&nbsp;void&nbsp;awaitStop()</pre>
+<div class="block">Block until stop finishes. Just calls the method on the underlying service.</div>
 </li>
 </ul>
 </li>
