@@ -63,6 +63,8 @@ public class UCentralUtils {
 				Arrays.asList(36, 40, 44, 48, 149, 153, 157, 161, 165)
 			)
 		);
+		// NOTE: later, we may want to support channels 12, 13, and/or 14, if
+		// the AP supports it and OWF vendors will use them
 		bandToChannelsMap.put(
 			UCentralConstants.BAND_2G,
 			Collections.unmodifiableList(
@@ -417,18 +419,23 @@ public class UCentralUtils {
 	}
 
 	/**
-	 * Converts channel number to that channel's center frequency in MHz.
+	 * Converts channel number to that channel's center frequency in MHz. If,
+	 * due to channel numbering schemes, the channel number appears in multiple
+	 * bands, use the lowest such band.
 	 *
 	 * @param channel channel number
 	 * @return the center frequency of the given channel in MHz
 	 */
-	public static int channelToFrequencyMHz(int channel) {
-		// TODO fixme
-		if (channel <= 14) {
-			// 2.4 GHz
-			return 2407 + 5 * channel;
+	public static int channelToFrequencyMHzInLowestMatchingBand(int channel) {
+		if (isChannelInBand(channel, UCentralConstants.BAND_2G)) {
+			if (channel <= 13) {
+				return 2407 + 5 * channel;
+			} else {
+				// special case
+				return 2484;
+			}
 		} else {
-			// 5 GHz
+			// 5G
 			return 5000 + channel;
 		}
 	}

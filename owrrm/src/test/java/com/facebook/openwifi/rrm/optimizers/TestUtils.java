@@ -201,7 +201,7 @@ public class TestUtils {
 	public static WifiScanEntry createWifiScanEntry(int channel) {
 		WifiScanEntry entry = new WifiScanEntry();
 		entry.channel = channel;
-		entry.frequency = UCentralUtils.channelToFrequencyMHz(channel);
+		entry.frequency = UCentralUtils.channelToFrequencyMHzInLowestMatchingBand(channel);
 		entry.signal = -60;
 		entry.unixTimeMs = TestUtils.DEFAULT_WIFISCANENTRY_TIME.toEpochMilli();
 		return entry;
@@ -262,7 +262,7 @@ public class TestUtils {
 		WifiScanEntry entry = new WifiScanEntry();
 		entry.bssid = bssid;
 		entry.channel = channel;
-		entry.frequency = UCentralUtils.channelToFrequencyMHz(channel);
+		entry.frequency = UCentralUtils.channelToFrequencyMHzInLowestMatchingBand(channel);
 		entry.signal = -60;
 		entry.ht_oper = htOper;
 		entry.vht_oper = vhtOper;
