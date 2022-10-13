@@ -60,7 +60,7 @@ public class RRMConfig {
 		 * ({@code SERVICECONFIG_VENDORREFERENCEURL})
 		 */
 		public String vendorReferenceUrl =
-			"https://github.com/Telecominfraproject/wlan-cloud-rrm/blob/main/ALGORITHMS.md";
+			"https://github.com/Telecominfraproject/wlan-cloud-rrm/blob/main/owrrm/ALGORITHMS.md";
 	}
 
 	/** Service configuration. */
