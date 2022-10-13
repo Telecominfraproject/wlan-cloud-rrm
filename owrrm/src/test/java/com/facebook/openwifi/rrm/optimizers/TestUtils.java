@@ -158,7 +158,7 @@ public class TestUtils {
 		JsonArray jsonList = new JsonArray();
 		jsonList.add(
 			createDeviceStatusRadioObject(
-				UCentralUtils.getBandFromChannel(channel),
+				UCentralUtils.channelToLowestMatchingBand(channel),
 				channel,
 				DEFAULT_CHANNEL_WIDTH,
 				txPower2G

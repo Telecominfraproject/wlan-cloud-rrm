@@ -306,7 +306,7 @@ public class MeasurementBasedApApTPC extends TPC {
 		List<String> serialNumbers,
 		Map<String, Map<String, Integer>> txPowerMap
 	) {
-		String band = UCentralUtils.getBandFromChannel(channel);
+		String band = UCentralUtils.channelToLowestMatchingBand(channel);
 		Set<String> managedBSSIDs = getManagedBSSIDs(model);
 		Map<String, List<Integer>> bssidToRssiValues =
 			buildRssiMap(managedBSSIDs, model.latestWifiScans, band);

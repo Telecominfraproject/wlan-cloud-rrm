@@ -166,7 +166,7 @@ public class LocationBasedOptimalTPC extends TPC {
 	) {
 		int numOfAPs = 0;
 		int boundary = 100;
-		String band = UCentralUtils.getBandFromChannel(channel);
+		String band = UCentralUtils.channelToLowestMatchingBand(channel);
 		Map<String, Integer> validAPs = new TreeMap<>();
 		List<Double> apLocX = new ArrayList<>();
 		List<Double> apLocY = new ArrayList<>();

@@ -452,13 +452,14 @@ public class UCentralUtils {
 	}
 
 	/**
-	 * Given the channel, gets the band by checking lower bound and upper bound
-	 * of each band
+	 * Given the channel, gets the lowest band that contains that channel (there
+	 * may be multiple bands that contain the same channel number due to channel
+	 * numbering schemes).
 	 *
 	 * @param channel channel number
-	 * @return band if the channel can be mapped to a valid band; null otherwise
+	 * @return band lowest band containing the channel; null if no such band
 	 */
-	public static String getBandFromChannel(int channel) {
+	public static String channelToLowestMatchingBand(int channel) {
 		for (String band : UCentralConstants.BANDS) {
 			if (isChannelInBand(channel, band)) {
 				return band;

@@ -144,7 +144,7 @@ public class RandomTxPowerInitializer extends TPC {
 			int channel = e.getKey();
 			List<String> serialNumbers = e.getValue();
 
-			String band = UCentralUtils.getBandFromChannel(channel);
+			String band = UCentralUtils.channelToLowestMatchingBand(channel);
 			for (String serialNumber : serialNumbers) {
 				int txPower = defaultTxPower;
 				if (setDifferentTxPowerPerAp) {

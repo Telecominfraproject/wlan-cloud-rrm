@@ -306,7 +306,7 @@ public class MeasurementBasedApClientTPC extends TPC {
 			Map<String, Integer> radioMap = new TreeMap<>();
 			for (State.Radio radio : state.radios) {
 				int currentChannel = radio.channel;
-				String band = UCentralUtils.getBandFromChannel(currentChannel);
+				String band = UCentralUtils.channelToLowestMatchingBand(currentChannel);
 				if (band == null) {
 					continue;
 				}
