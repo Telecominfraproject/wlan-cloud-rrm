@@ -322,7 +322,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/UCentralUtils.html#AVAILABLE_CHANNELS_BAND">AVAILABLE_CHANNELS_BAND</a></span> - Static variable in class com.facebook.openwifi.cloudsdk.<a href="com/facebook/openwifi/cloudsdk/UCentralUtils.html" title="class in com.facebook.openwifi.cloudsdk">UCentralUtils</a></dt>
 <dd>
-<div class="block">List of available channels per band for use.</div>
+<div class="block">Map from band to ordered (increasing) list of available channels</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifi/rrm/optimizers/channel/ChannelOptimizer.html#AVAILABLE_CHANNELS_WIDTH">AVAILABLE_CHANNELS_WIDTH</a></span> - Static variable in class com.facebook.openwifi.rrm.optimizers.channel.<a href="com/facebook/openwifi/rrm/optimizers/channel/ChannelOptimizer.html" title="class in com.facebook.openwifi.rrm.optimizers.channel">ChannelOptimizer</a></dt>
 <dd>
@@ -1282,6 +1282,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Return up to the N latest wifiscan results for the given device as a map
  of timestamp to scan results.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/UCentralUtils.html#getLowerChannelLimit(java.lang.String)">getLowerChannelLimit(String)</a></span> - Static method in class com.facebook.openwifi.cloudsdk.<a href="com/facebook/openwifi/cloudsdk/UCentralUtils.html" title="class in com.facebook.openwifi.cloudsdk">UCentralUtils</a></dt>
+<dd>
+<div class="block">Return the lowest available channel for the given band</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifi/rrm/optimizers/tpc/MeasurementBasedApApTPC.html#getManagedBSSIDs(com.facebook.openwifi.rrm.modules.Modeler.DataModel)">getManagedBSSIDs(Modeler.DataModel)</a></span> - Static method in class com.facebook.openwifi.rrm.optimizers.tpc.<a href="com/facebook/openwifi/rrm/optimizers/tpc/MeasurementBasedApApTPC.html" title="class in com.facebook.openwifi.rrm.optimizers.tpc">MeasurementBasedApApTPC</a></dt>
 <dd>
 <div class="block">Retrieve BSSIDs of APs we are managing.</div>
@@ -1374,6 +1378,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dt><span class="memberNameLink"><a href="com/facebook/openwifi/rrm/DeviceDataManager.html#getTopologyJson()">getTopologyJson()</a></span> - Method in class com.facebook.openwifi.rrm.<a href="com/facebook/openwifi/rrm/DeviceDataManager.html" title="class in com.facebook.openwifi.rrm">DeviceDataManager</a></dt>
 <dd>
 <div class="block">Return the topology as a JSON string.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/UCentralUtils.html#getUpperChannelLimit(java.lang.String)">getUpperChannelLimit(String)</a></span> - Static method in class com.facebook.openwifi.cloudsdk.<a href="com/facebook/openwifi/cloudsdk/UCentralUtils.html" title="class in com.facebook.openwifi.cloudsdk">UCentralUtils</a></dt>
+<dd>
+<div class="block">Return the lowest available channel for the given band</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifi/rrm/VersionProvider.html#getVersion()">getVersion()</a></span> - Method in class com.facebook.openwifi.rrm.<a href="com/facebook/openwifi/rrm/VersionProvider.html" title="class in com.facebook.openwifi.rrm">VersionProvider</a></dt>
 <dd>&nbsp;</dd>
@@ -1789,10 +1797,6 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Convert a MAC address in integer (6-byte) representation to string
  notation.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/UCentralUtils.html#LOWER_CHANNEL_LIMIT">LOWER_CHANNEL_LIMIT</a></span> - Static variable in class com.facebook.openwifi.cloudsdk.<a href="com/facebook/openwifi/cloudsdk/UCentralUtils.html" title="class in com.facebook.openwifi.cloudsdk">UCentralUtils</a></dt>
-<dd>
-<div class="block">Map of band to the band-specific lowest available channel</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifi/rrm/Utils.LruCache.html#%3Cinit%3E(int)">LruCache(int)</a></span> - Constructor for class com.facebook.openwifi.rrm.<a href="com/facebook/openwifi/rrm/Utils.LruCache.html" title="class in com.facebook.openwifi.rrm">Utils.LruCache</a></dt>
 <dd>
@@ -3203,10 +3207,6 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dt><span class="memberNameLink"><a href="com/facebook/openwifi/rrm/DeviceDataManager.html#updateZoneConfig(com.facebook.openwifi.rrm.DeviceDataManager.ZoneConfigFunction)">updateZoneConfig(DeviceDataManager.ZoneConfigFunction)</a></span> - Method in class com.facebook.openwifi.rrm.<a href="com/facebook/openwifi/rrm/DeviceDataManager.html" title="class in com.facebook.openwifi.rrm">DeviceDataManager</a></dt>
 <dd>
 <div class="block">Apply updates to the zone layer (under a write lock)</div>
-</dd>
-<dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/UCentralUtils.html#UPPER_CHANNEL_LIMIT">UPPER_CHANNEL_LIMIT</a></span> - Static variable in class com.facebook.openwifi.cloudsdk.<a href="com/facebook/openwifi/cloudsdk/UCentralUtils.html" title="class in com.facebook.openwifi.cloudsdk">UCentralUtils</a></dt>
-<dd>
-<div class="block">Map of band to the band-specific highest available channel</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/models/ap/State.Interface.html#uptime">uptime</a></span> - Variable in class com.facebook.openwifi.cloudsdk.models.ap.<a href="com/facebook/openwifi/cloudsdk/models/ap/State.Interface.html" title="class in com.facebook.openwifi.cloudsdk.models.ap">State.Interface</a></dt>
 <dd>&nbsp;</dd>
