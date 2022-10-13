@@ -33,8 +33,8 @@ import com.facebook.openwifi.cloudsdk.models.gw.ServiceEvent;
 import com.facebook.openwifi.cloudsdk.models.gw.StatisticsRecords;
 import com.facebook.openwifi.rrm.DeviceConfig;
 import com.facebook.openwifi.rrm.DeviceDataManager;
-import com.facebook.openwifi.rrm.Utils;
 import com.facebook.openwifi.rrm.RRMConfig.ModuleConfig.ModelerParams;
+import com.facebook.openwifi.rrm.Utils;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -314,8 +314,6 @@ public class Modeler implements Runnable {
 							latestStatesList.remove(0);
 						}
 						latestStatesList.add(stateModel);
-						dataModel.latestStates
-							.put(record.serialNumber, latestStatesList);
 						stateUpdates.add(record.serialNumber);
 					} catch (JsonSyntaxException e) {
 						logger.error(
