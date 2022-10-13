@@ -78,6 +78,14 @@ public class RandomTxPowerInitializerTest {
 				)
 			)
 		);
+		dataModel.latestDeviceCapabilities.put(
+			DEVICE_A,
+			TestUtils.createDeviceCapability(
+				new String[] {
+					UCentralConstants.BAND_5G,
+					UCentralConstants.BAND_2G }
+			)
+		);
 		dataModel.latestStates.put(
 			DEVICE_B,
 			Arrays.asList(
@@ -88,6 +96,10 @@ public class RandomTxPowerInitializerTest {
 					BSSID_B
 				)
 			)
+		);
+		dataModel.latestDeviceCapabilities.put(
+			DEVICE_B,
+			TestUtils.createDeviceCapability(UCentralConstants.BAND_2G)
 		);
 		return dataModel;
 	}

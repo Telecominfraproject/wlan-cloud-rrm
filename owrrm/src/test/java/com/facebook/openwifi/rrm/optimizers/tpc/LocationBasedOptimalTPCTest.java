@@ -145,6 +145,14 @@ public class LocationBasedOptimalTPCTest {
 					)
 				)
 			);
+			dataModel.latestDeviceCapabilities.put(
+				device,
+				TestUtils.createDeviceCapability(
+					new String[] {
+						UCentralConstants.BAND_2G,
+						UCentralConstants.BAND_5G }
+				)
+			);
 		}
 
 		Map<String, Map<String, Integer>> expected = new HashMap<>();
@@ -214,6 +222,14 @@ public class LocationBasedOptimalTPCTest {
 					)
 				)
 			);
+			dataModel2.latestDeviceCapabilities.put(
+				device,
+				TestUtils.createDeviceCapability(
+					new String[] {
+						UCentralConstants.BAND_2G,
+						UCentralConstants.BAND_5G }
+				)
+			);
 		}
 		dataModel2.latestDeviceStatusRadios
 			.put(
@@ -232,6 +248,10 @@ public class LocationBasedOptimalTPCTest {
 					dummyBssid
 				)
 			)
+		);
+		dataModel2.latestDeviceCapabilities.put(
+			deviceC,
+			TestUtils.createDeviceCapability(UCentralConstants.BAND_5G)
 		);
 
 		Map<String, Map<String, Integer>> expected2 = new HashMap<>();
@@ -327,6 +347,14 @@ public class LocationBasedOptimalTPCTest {
 					)
 				)
 			);
+			dataModel2.latestDeviceCapabilities.put(
+				device,
+				TestUtils.createDeviceCapability(
+					new String[] {
+						UCentralConstants.BAND_2G,
+						UCentralConstants.BAND_5G }
+				)
+			);
 		}
 
 		Map<String, Map<String, Integer>> expected2 = new HashMap<>();
@@ -388,6 +416,14 @@ public class LocationBasedOptimalTPCTest {
 					)
 				)
 			);
+			dataModel3.latestDeviceCapabilities.put(
+				device,
+				TestUtils.createDeviceCapability(
+					new String[] {
+						UCentralConstants.BAND_2G,
+						UCentralConstants.BAND_5G }
+				)
+			);
 		}
 
 		Map<String, Map<String, Integer>> expected3 = new HashMap<>();
@@ -437,6 +473,14 @@ public class LocationBasedOptimalTPCTest {
 						DEFAULT_TX_POWER,
 						dummyBssid
 					)
+				)
+			);
+			dataModel4.latestDeviceCapabilities.put(
+				device,
+				TestUtils.createDeviceCapability(
+					new String[] {
+						UCentralConstants.BAND_2G,
+						UCentralConstants.BAND_2G }
 				)
 			);
 		}

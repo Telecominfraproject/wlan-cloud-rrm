@@ -108,6 +108,10 @@ public class MeasurementBasedApApTPCTest {
 				TestUtils
 					.createDeviceStatusSingleBand(channel, MAX_TX_POWER)
 			);
+			model.latestDeviceCapabilities.put(
+				device,
+				TestUtils.createDeviceCapability(band)
+			);
 		}
 
 		return model;
@@ -156,6 +160,14 @@ public class MeasurementBasedApApTPCTest {
 						channel5G,
 						MAX_TX_POWER
 					)
+			);
+			model.latestDeviceCapabilities.put(
+				device,
+				TestUtils.createDeviceCapability(
+					new String[] {
+						UCentralConstants.BAND_2G,
+						UCentralConstants.BAND_5G }
+				)
 			);
 		}
 
@@ -591,6 +603,10 @@ public class MeasurementBasedApApTPCTest {
 				1,
 				MAX_TX_POWER
 			)
+		);
+		dataModel.latestDeviceCapabilities.put(
+			DEVICE_C,
+			TestUtils.createDeviceCapability(UCentralConstants.BAND_2G)
 		);
 		optimizer = new MeasurementBasedApApTPC(
 			dataModel,

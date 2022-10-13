@@ -57,6 +57,45 @@ public class TestUtils {
 	}
 
 	/**
+	 * Given the channel, gets the lowest band that contains that channel (there
+	 * may be multiple bands that contain the same channel number due to channel
+	 * numbering schemes).
+	 *
+	 * @param channel channel number
+	 * @return band lowest band containing the channel; null if no such band
+	 */
+	private static String channelToLowestMatchingBand(int channel) {
+		for (String band : UCentralConstants.BANDS) {
+			if (UCentralUtils.isChannelInBand(channel, band)) {
+				return band;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Converts channel number to that channel's center frequency in MHz. If,
+	 * due to channel numbering schemes, the channel number appears in multiple
+	 * bands, use the lowest such band.
+	 *
+	 * @param channel channel number
+	 * @return the center frequency of the given channel in MHz
+	 */
+	private static int channelToFrequencyMHzInLowestMatchingBand(int channel) {
+		if (UCentralUtils.isChannelInBand(channel, UCentralConstants.BAND_2G)) {
+			if (channel <= 13) {
+				return 2407 + 5 * channel;
+			} else {
+				// special case
+				return 2484;
+			}
+		} else {
+			// 5G
+			return 5000 + channel;
+		}
+	}
+
+	/**
 	 * Create a radio info object which forms one element of the list of radio
 	 * info objects representing a device's status.
 	 *
@@ -158,7 +197,7 @@ public class TestUtils {
 		JsonArray jsonList = new JsonArray();
 		jsonList.add(
 			createDeviceStatusRadioObject(
-				UCentralUtils.channelToLowestMatchingBand(channel),
+				channelToLowestMatchingBand(channel),
 				channel,
 				DEFAULT_CHANNEL_WIDTH,
 				txPower2G
@@ -201,7 +240,7 @@ public class TestUtils {
 	public static WifiScanEntry createWifiScanEntry(int channel) {
 		WifiScanEntry entry = new WifiScanEntry();
 		entry.channel = channel;
-		entry.frequency = UCentralUtils.channelToFrequencyMHzInLowestMatchingBand(channel);
+		entry.frequency = channelToFrequencyMHzInLowestMatchingBand(channel);
 		entry.signal = -60;
 		entry.unixTimeMs = TestUtils.DEFAULT_WIFISCANENTRY_TIME.toEpochMilli();
 		return entry;
@@ -262,7 +301,7 @@ public class TestUtils {
 		WifiScanEntry entry = new WifiScanEntry();
 		entry.bssid = bssid;
 		entry.channel = channel;
-		entry.frequency = UCentralUtils.channelToFrequencyMHzInLowestMatchingBand(channel);
+		entry.frequency = channelToFrequencyMHzInLowestMatchingBand(channel);
 		entry.signal = -60;
 		entry.ht_oper = htOper;
 		entry.vht_oper = vhtOper;
@@ -327,6 +366,21 @@ public class TestUtils {
 	}
 
 	/**
+	 * Generate the String for the "phy" field of a State's radio at a given
+	 * index. This field also appears in the device capability object.
+	 *
+	 * @param index index of the radio in the state
+	 * @return the String value for the "phy" field of the radio
+	 */
+	private static String generatePhyString(int index) {
+		String phyId = "platform/soc/c000000.wifi";
+		if (index > 0) {
+			phyId += String.format("+%d", index);
+		}
+		return phyId;
+	}
+
+	/**
 	 * Create an uplink0 interface with one radio, to place in
 	 * {@link State#interfaces}.
 	 *
@@ -335,6 +389,7 @@ public class TestUtils {
 	 *         {@link State#interfaces}
 	 */
 	private static State.Interface createUpStateInterface(int index) {
+		final String phyId = generatePhyString(index);
 		// @formatter:off
 		return gson.fromJson(
 			String.format(
@@ -369,7 +424,7 @@ public class TestUtils {
 				"      		},\n" +
 				"			\"iface\": \"wlan%d\",\n" +
 				"			\"mode\": \"ap\",\n" +
-				"			\"phy\": \"platform/soc/c000000.wifi\",\n" +
+				"			\"phy\": \"%s\",\n" +
 				"           \"radio\": {\n" +
 				"				\"$ref\": \"#/radios/%d\"\n" +
 				"			},\n" +
@@ -380,6 +435,7 @@ public class TestUtils {
 				index,
 				index,
 				index,
+				phyId,
 				index,
 				index
 			),
@@ -423,13 +479,13 @@ public class TestUtils {
 		// @formatter:on
 	}
 
-	/** Create an element of {@link State#radios}. */
-	private static State.Radio createStateRadio() {
+	/** Create an element of {@link State#radios} at a given index. */
+	private static State.Radio createStateRadio(int index) {
 		State.Radio radio = new State.Radio();
 		radio.active_ms = 564328;
 		radio.busy_ms = 36998;
 		radio.noise = 4294967193L;
-		radio.phy = "platform/soc/c000000.wifi";
+		radio.phy = generatePhyString(index);
 		radio.receive_ms = 28;
 		radio.transmit_ms = 4893;
 		return radio;
@@ -506,7 +562,7 @@ public class TestUtils {
 		state.interfaces[numRadios] = createDownStateInterface(numRadios);
 		state.radios = new State.Radio[numRadios];
 		for (int i = 0; i < numRadios; i++) {
-			state.radios[i] = createStateRadio();
+			state.radios[i] = createStateRadio(i);
 			state.radios[i].channel = channels[i];
 			state.radios[i].channel_width = Integer.toString(channelWidths[i]);
 			state.radios[i].tx_power = txPowers[i];
@@ -703,6 +759,44 @@ public class TestUtils {
 			new int[][] { clientRssisA, clientRssisB },
 			localtime
 		);
+	}
+
+	/**
+	 * Create a radio capability object which is part of the device capability.
+	 */
+	public static JsonObject createRadioCapability(String band) {
+		JsonObject radioCapability = new JsonObject();
+		JsonArray bandArray = new JsonArray();
+		bandArray.add(band);
+		radioCapability.add("band", bandArray);
+		// the following fields are present but unused so they are excluded here
+		// channels
+		// dfs_channels
+		// frequencies
+		// he_mac_capa
+		// he_phy_capa
+		// ht_capa
+		// htmode
+		// rx_ant
+		// tx_ant
+		// vht_capa
+		return radioCapability;
+	}
+
+	/** Create a device capability object with radios in the given bands. */
+	public static JsonObject createDeviceCapability(String[] bands) {
+		JsonObject deviceCapability = new JsonObject();
+		for (int i = 0; i < bands.length; i++) {
+			String phyId = generatePhyString(i);
+			JsonObject radioCapability = createRadioCapability(bands[i]);
+			deviceCapability.add(phyId, radioCapability);
+		}
+		return deviceCapability;
+	}
+
+	/** Create a device capability object with a radio in the given band. */
+	public static JsonObject createDeviceCapability(String band) {
+		return createDeviceCapability(new String[] { band });
 	}
 
 	/**

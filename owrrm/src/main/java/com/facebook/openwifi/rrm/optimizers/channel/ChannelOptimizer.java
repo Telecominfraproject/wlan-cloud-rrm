@@ -28,6 +28,8 @@ import com.facebook.openwifi.rrm.DeviceConfig;
 import com.facebook.openwifi.rrm.DeviceDataManager;
 import com.facebook.openwifi.rrm.modules.ConfigManager;
 import com.facebook.openwifi.rrm.modules.Modeler.DataModel;
+import com.facebook.openwifi.rrm.modules.ModelerUtils;
+import com.google.gson.JsonObject;
 
 /**
  * Channel optimizer base class.
@@ -298,25 +300,28 @@ public abstract class ChannelOptimizer {
 			List<WifiScanEntry> scanRespsFiltered =
 				new ArrayList<WifiScanEntry>();
 			for (WifiScanEntry entry : scanResps) {
-				if (UCentralUtils.isChannelInBand(entry.channel, band)) {
-					int channelWidth = getChannelWidthFromWiFiScan(
+				final String entryBand = UCentralUtils
+					.freqToBand(entry.frequency);
+				if (entryBand == null || !entryBand.equals(band)) {
+					continue;
+				}
+				int channelWidth = getChannelWidthFromWiFiScan(
+					entry.channel,
+					entry.ht_oper,
+					entry.vht_oper
+				);
+				int primaryChannel =
+					getPrimaryChannel(entry.channel, channelWidth);
+				List<Integer> coveredChannels =
+					getCoveredChannels(
 						entry.channel,
-						entry.ht_oper,
-						entry.vht_oper
+						primaryChannel,
+						channelWidth
 					);
-					int primaryChannel =
-						getPrimaryChannel(entry.channel, channelWidth);
-					List<Integer> coveredChannels =
-						getCoveredChannels(
-							entry.channel,
-							primaryChannel,
-							channelWidth
-						);
-					for (Integer newChannel : coveredChannels) {
-						WifiScanEntry newEntry = new WifiScanEntry(entry);
-						newEntry.channel = newChannel;
-						scanRespsFiltered.add(newEntry);
-					}
+				for (Integer newChannel : coveredChannels) {
+					WifiScanEntry newEntry = new WifiScanEntry(entry);
+					newEntry.channel = newChannel;
+					scanRespsFiltered.add(newEntry);
 				}
 			}
 
@@ -344,6 +349,7 @@ public abstract class ChannelOptimizer {
 	 * @param band the operational band (e.g., "2G")
 	 * @param serialNumber the device's serial number
 	 * @param state the latest state of all the devices
+	 * @param latestDeviceCapabilities latest device capabilities
 	 * @return the current channel and channel width (MHz) of the device in the
 	 * given band; returns a current channel of 0 if no channel in the given
 	 * band is found.
@@ -351,7 +357,8 @@ public abstract class ChannelOptimizer {
 	protected static int[] getCurrentChannel(
 		String band,
 		String serialNumber,
-		State state
+		State state,
+		Map<String, JsonObject> latestDeviceCapabilities
 	) {
 		int currentChannel = 0;
 		int currentChannelWidth = MIN_CHANNEL_WIDTH;
@@ -361,27 +368,40 @@ public abstract class ChannelOptimizer {
 			radioIndex < state.radios.length;
 			radioIndex++
 		) {
-			int tempChannel = state.radios[radioIndex].channel;
-			if (UCentralUtils.isChannelInBand(tempChannel, band)) {
-				currentChannel = tempChannel;
-				// treat as two separate 80MHz channel and only assign to one
-				// TODO: support 80p80 properly
-				Integer parsedChannelWidth = UCentralUtils
-					.parseChannelWidth(
-						state.radios[radioIndex].channel_width,
-						true
-					);
-				if (parsedChannelWidth != null) {
-					currentChannelWidth = parsedChannelWidth;
-					break;
-				}
-
-				logger.error(
-					"Invalid channel width {}",
-					state.radios[radioIndex].channel_width
-				);
+			State.Radio radio = state.radios[radioIndex];
+			// check if radio is in band of interest
+			JsonObject deviceCapability =
+				latestDeviceCapabilities.get(serialNumber);
+			if (deviceCapability == null) {
 				continue;
 			}
+			final String radioBand = ModelerUtils.getBand(
+				radio,
+				deviceCapability
+			);
+			if (radioBand == null || !radioBand.equals(band)) {
+				continue;
+			}
+
+			int tempChannel = radio.channel;
+			currentChannel = tempChannel;
+			// treat as two separate 80MHz channel and only assign to one
+			// TODO: support 80p80 properly
+			Integer parsedChannelWidth = UCentralUtils
+				.parseChannelWidth(
+					radio.channel_width,
+					true
+				);
+			if (parsedChannelWidth != null) {
+				currentChannelWidth = parsedChannelWidth;
+				break;
+			}
+
+			logger.error(
+				"Invalid channel width {}",
+				radio.channel_width
+			);
+			continue;
 		}
 		return new int[] { currentChannel, currentChannelWidth };
 	}

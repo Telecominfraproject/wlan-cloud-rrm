@@ -30,6 +30,8 @@ import com.facebook.openwifi.cloudsdk.models.ap.State.Interface.SSID.Association
 import com.facebook.openwifi.rrm.aggregators.Aggregator;
 import com.facebook.openwifi.rrm.aggregators.MeanAggregator;
 import com.facebook.openwifi.rrm.modules.Modeler.DataModel;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 /**
  * Modeler utilities.
@@ -554,5 +556,22 @@ public class ModelerUtils {
 			bssid,
 			station
 		);
+	}
+
+	/** Return the radio's band, or null if band cannot be found */
+	public static String getBand(
+		State.Radio radio,
+		JsonObject deviceCapability
+	) {
+		JsonElement radioCapabilityElement = deviceCapability.get(radio.phy);
+		if (radioCapabilityElement == null) {
+			return null;
+		}
+		JsonObject radioCapability = radioCapabilityElement.getAsJsonObject();
+		JsonElement bandsElement = radioCapability.get("band");
+		if (bandsElement == null) {
+			return null;
+		}
+		return bandsElement.getAsJsonArray().get(0).getAsString();
 	}
 }

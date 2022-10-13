@@ -419,28 +419,6 @@ public class UCentralUtils {
 	}
 
 	/**
-	 * Converts channel number to that channel's center frequency in MHz. If,
-	 * due to channel numbering schemes, the channel number appears in multiple
-	 * bands, use the lowest such band.
-	 *
-	 * @param channel channel number
-	 * @return the center frequency of the given channel in MHz
-	 */
-	public static int channelToFrequencyMHzInLowestMatchingBand(int channel) {
-		if (isChannelInBand(channel, UCentralConstants.BAND_2G)) {
-			if (channel <= 13) {
-				return 2407 + 5 * channel;
-			} else {
-				// special case
-				return 2484;
-			}
-		} else {
-			// 5G
-			return 5000 + channel;
-		}
-	}
-
-	/**
 	 * Determines if the given channel is in the given band.
 	 *
 	 * @param channel channel number
@@ -451,21 +429,13 @@ public class UCentralUtils {
 		return AVAILABLE_CHANNELS_BAND.get(band).contains(channel);
 	}
 
-	/**
-	 * Given the channel, gets the lowest band that contains that channel (there
-	 * may be multiple bands that contain the same channel number due to channel
-	 * numbering schemes).
-	 *
-	 * @param channel channel number
-	 * @return band lowest band containing the channel; null if no such band
-	 */
-	public static String channelToLowestMatchingBand(int channel) {
-		for (String band : UCentralConstants.BANDS) {
-			if (isChannelInBand(channel, band)) {
-				return band;
-			}
+	/** Return which band contains the given frequency (MHz). */
+	public static String freqToBand(int freqMHz) {
+		if (2412 <= freqMHz && freqMHz <= 2484) {
+			return "2G";
+		} else {
+			return "5G";
 		}
-		return null;
 	}
 
 	/**

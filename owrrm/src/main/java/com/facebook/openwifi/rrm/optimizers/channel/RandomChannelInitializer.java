@@ -23,8 +23,8 @@ import com.facebook.openwifi.cloudsdk.UCentralUtils;
 import com.facebook.openwifi.cloudsdk.WifiScanEntry;
 import com.facebook.openwifi.cloudsdk.models.ap.State;
 import com.facebook.openwifi.rrm.DeviceDataManager;
-import com.facebook.openwifi.rrm.modules.ModelerUtils;
 import com.facebook.openwifi.rrm.modules.Modeler.DataModel;
+import com.facebook.openwifi.rrm.modules.ModelerUtils;
 
 /**
  * Random channel initializer.
@@ -204,7 +204,12 @@ public class RandomChannelInitializer extends ChannelOptimizer {
 					continue;
 				}
 				int[] currentChannelInfo =
-					getCurrentChannel(band, serialNumber, state);
+					getCurrentChannel(
+						band,
+						serialNumber,
+						state,
+						model.latestDeviceCapabilities
+					);
 				int currentChannel = currentChannelInfo[0];
 				int currentChannelWidth = currentChannelInfo[1];
 				if (currentChannel == 0) {

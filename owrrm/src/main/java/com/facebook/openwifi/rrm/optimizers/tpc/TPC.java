@@ -25,6 +25,8 @@ import com.facebook.openwifi.rrm.DeviceConfig;
 import com.facebook.openwifi.rrm.DeviceDataManager;
 import com.facebook.openwifi.rrm.modules.ConfigManager;
 import com.facebook.openwifi.rrm.modules.Modeler.DataModel;
+import com.facebook.openwifi.rrm.modules.ModelerUtils;
+import com.google.gson.JsonObject;
 
 /**
  * TPC (Transmit Power Control) base class.
@@ -180,10 +182,10 @@ public abstract class TPC {
 	/**
 	 * Get AP serial numbers per channel.
 	 *
-	 * @return the map from channel to the list of AP serial numbers
+	 * @return map from band to channel to list of AP serial numbers
 	 */
-	protected Map<Integer, List<String>> getApsPerChannel() {
-		Map<Integer, List<String>> apsPerChannel = new TreeMap<>();
+	protected Map<String, Map<Integer, List<String>>> getApsPerChannel() {
+		Map<String, Map<Integer, List<String>>> apsPerChannel = new TreeMap<>();
 		for (Map.Entry<String, List<State>> e : model.latestStates.entrySet()) {
 			String serialNumber = e.getKey();
 			List<State> states = e.getValue();
@@ -202,7 +204,20 @@ public abstract class TPC {
 				if (currentChannel == 0) {
 					continue;
 				}
+				JsonObject deviceCapability =
+					model.latestDeviceCapabilities.get(serialNumber);
+				if (deviceCapability == null) {
+					continue;
+				}
+				final String band = ModelerUtils.getBand(
+					radio,
+					deviceCapability
+				);
+				if (band == null) {
+					continue;
+				}
 				apsPerChannel
+					.computeIfAbsent(band, k -> new TreeMap<>())
 					.computeIfAbsent(currentChannel, k -> new ArrayList<>())
 					.add(serialNumber);
 			}

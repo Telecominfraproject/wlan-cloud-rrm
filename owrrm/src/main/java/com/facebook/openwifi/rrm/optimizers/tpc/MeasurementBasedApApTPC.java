@@ -25,6 +25,8 @@ import com.facebook.openwifi.cloudsdk.WifiScanEntry;
 import com.facebook.openwifi.cloudsdk.models.ap.State;
 import com.facebook.openwifi.rrm.DeviceDataManager;
 import com.facebook.openwifi.rrm.modules.Modeler.DataModel;
+import com.facebook.openwifi.rrm.modules.ModelerUtils;
+import com.google.gson.JsonObject;
 
 /**
  * Measurement-based AP-AP TPC algorithm.
@@ -217,7 +219,13 @@ public class MeasurementBasedApApTPC extends TPC {
 
 			// At a given AP, if we receive a signal from ap_2, then it gets added to the rssi list for ap_2
 			latestScan.stream()
-				.filter(entry -> (managedBSSIDs.contains(entry.bssid) && UCentralUtils.isChannelInBand(entry.channel, band)))
+				.filter((entry) -> {
+					boolean isManaged = managedBSSIDs.contains(entry.bssid);
+					String entryBand = UCentralUtils
+						.freqToBand(entry.frequency);
+					return isManaged && entryBand != null &&
+						entryBand.equals(band);
+				})
 				.forEach(
 					entry -> {
 						bssidToRssiValues.get(entry.bssid).add(entry.signal);
@@ -296,17 +304,18 @@ public class MeasurementBasedApApTPC extends TPC {
 	/**
 	 * Calculate new tx powers for the given channel on the given APs .
 	 *
+	 * @param band band (e.g., "2G")
 	 * @param channel channel
 	 * @param serialNumbers the serial numbers of the APs with the channel
 	 * @param txPowerMap this maps from serial number to band to new tx power (dBm)
 	 *                   and is updated by this method with the new tx powers.
 	 */
 	protected void buildTxPowerMapForChannel(
+		String band,
 		int channel,
 		List<String> serialNumbers,
 		Map<String, Map<String, Integer>> txPowerMap
 	) {
-		String band = UCentralUtils.channelToLowestMatchingBand(channel);
 		Set<String> managedBSSIDs = getManagedBSSIDs(model);
 		Map<String, List<Integer>> bssidToRssiValues =
 			buildRssiMap(managedBSSIDs, model.latestWifiScans, band);
@@ -363,9 +372,16 @@ public class MeasurementBasedApApTPC extends TPC {
 					State.Radio radio = state.radios[idx];
 
 					// this specific SSID is not on the band of interest
-					if (
-						!UCentralUtils.isChannelInBand(radio.channel, band)
-					) {
+					JsonObject deviceCapability = model.latestDeviceCapabilities
+						.get(serialNumber);
+					if (deviceCapability == null) {
+						continue;
+					}
+					final String radioBand = ModelerUtils.getBand(
+						radio,
+						deviceCapability
+					);
+					if (radioBand == null || !radioBand.equals(band)) {
 						continue;
 					}
 
@@ -409,9 +425,27 @@ public class MeasurementBasedApApTPC extends TPC {
 	@Override
 	public Map<String, Map<String, Integer>> computeTxPowerMap() {
 		Map<String, Map<String, Integer>> txPowerMap = new TreeMap<>();
-		Map<Integer, List<String>> apsPerChannel = getApsPerChannel();
-		for (Map.Entry<Integer, List<String>> e : apsPerChannel.entrySet()) {
-			buildTxPowerMapForChannel(e.getKey(), e.getValue(), txPowerMap);
+		Map<String, Map<Integer, List<String>>> bandToChannelToAps =
+			getApsPerChannel();
+		for (
+			Map.Entry<String, Map<Integer, List<String>>> bandEntry : bandToChannelToAps
+				.entrySet()
+		) {
+			final String band = bandEntry.getKey();
+			Map<Integer, List<String>> channelToAps = bandEntry.getValue();
+			for (
+				Map.Entry<Integer, List<String>> channelEntry : channelToAps
+					.entrySet()
+			) {
+				final int channel = channelEntry.getKey();
+				List<String> serialNumbers = channelEntry.getValue();
+				buildTxPowerMapForChannel(
+					band,
+					channel,
+					serialNumbers,
+					txPowerMap
+				);
+			}
 		}
 		return txPowerMap;
 	}
