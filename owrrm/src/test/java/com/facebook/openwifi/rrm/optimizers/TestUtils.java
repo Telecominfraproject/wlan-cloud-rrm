@@ -134,7 +134,7 @@ public class TestUtils {
 	public static JsonArray createDeviceStatus(List<String> bands) {
 		JsonArray jsonList = new JsonArray();
 		for (String band : bands) {
-			int channel = UCentralUtils.LOWER_CHANNEL_LIMIT.get(band);
+			int channel = UCentralUtils.getLowerChannelLimit(band);
 			jsonList.add(
 				createDeviceStatusRadioObject(
 					band,

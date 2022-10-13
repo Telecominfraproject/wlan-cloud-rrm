@@ -85,7 +85,7 @@ public class MeasurementBasedApApTPCTest {
 	private static DataModel createModelSingleBand(String band) {
 		DataModel model = new DataModel();
 
-		final int channel = UCentralUtils.LOWER_CHANNEL_LIMIT.get(band);
+		final int channel = UCentralUtils.getLowerChannelLimit(band);
 
 		List<String> bssids = Arrays.asList(BSSID_A, BSSID_B, BSSID_C);
 		List<String> devices = Arrays.asList(DEVICE_A, DEVICE_B, DEVICE_C);
@@ -123,9 +123,9 @@ public class MeasurementBasedApApTPCTest {
 		DataModel model = new DataModel();
 
 		final int channel2G =
-			UCentralUtils.LOWER_CHANNEL_LIMIT.get(UCentralConstants.BAND_2G);
+			UCentralUtils.getLowerChannelLimit(UCentralConstants.BAND_2G);
 		final int channel5G =
-			UCentralUtils.LOWER_CHANNEL_LIMIT.get(UCentralConstants.BAND_5G);
+			UCentralUtils.getLowerChannelLimit(UCentralConstants.BAND_5G);
 
 		List<String> bssids = Arrays.asList(BSSID_A, BSSID_B, BSSID_C);
 		List<String> devices = Arrays.asList(DEVICE_A, DEVICE_B, DEVICE_C);
@@ -414,7 +414,7 @@ public class MeasurementBasedApApTPCTest {
 	 * @param band band (e.g., "2G")
 	 */
 	private static void testComputeTxPowerMapSimpleInOneBand(String band) {
-		int channel = UCentralUtils.LOWER_CHANNEL_LIMIT.get(band);
+		final int channel = UCentralUtils.getLowerChannelLimit(band);
 		DataModel dataModel = createModelSingleBand(band);
 		dataModel.latestWifiScans = createLatestWifiScansB(channel);
 		DeviceDataManager deviceDataManager = createDeviceDataManager();
@@ -439,7 +439,7 @@ public class MeasurementBasedApApTPCTest {
 	private static void testComputeTxPowerMapNonzeroNthSmallestRssi(
 		String band
 	) {
-		int channel = UCentralUtils.LOWER_CHANNEL_LIMIT.get(band);
+		final int channel = UCentralUtils.getLowerChannelLimit(band);
 		DataModel dataModel = createModelSingleBand(band);
 		dataModel.latestWifiScans = createLatestWifiScansC(channel);
 		DeviceDataManager deviceDataManager = createDeviceDataManager();
@@ -466,7 +466,7 @@ public class MeasurementBasedApApTPCTest {
 	 * @param band band (e.g., "2G")
 	 */
 	private static void testComputeTxPowerMapMissingDataInOneBand(String band) {
-		int channel = UCentralUtils.LOWER_CHANNEL_LIMIT.get(band);
+		final int channel = UCentralUtils.getLowerChannelLimit(band);
 		DataModel dataModel = createModelSingleBand(band);
 		dataModel.latestWifiScans =
 			createLatestWifiScansWithMissingEntries(channel);
@@ -508,11 +508,11 @@ public class MeasurementBasedApApTPCTest {
 		DeviceDataManager deviceDataManager = createDeviceDataManager();
 		// 2G: use testComputeTxPowerMapSimpleInOneBand setup
 		final int channel2G =
-			UCentralUtils.LOWER_CHANNEL_LIMIT.get(UCentralConstants.BAND_2G);
+			UCentralUtils.getLowerChannelLimit(UCentralConstants.BAND_2G);
 		dataModel.latestWifiScans = createLatestWifiScansB(channel2G);
 		// 5G: use testComputeTxPowerMapMissingDataInOneBand setup
 		final int channel5G =
-			UCentralUtils.LOWER_CHANNEL_LIMIT.get(UCentralConstants.BAND_5G);
+			UCentralUtils.getLowerChannelLimit(UCentralConstants.BAND_5G);
 		// add 5G wifiscan results to dataModel.latestWifiScans
 		Map<String, List<List<WifiScanEntry>>> toMerge =
 			createLatestWifiScansWithMissingEntries(channel5G);
