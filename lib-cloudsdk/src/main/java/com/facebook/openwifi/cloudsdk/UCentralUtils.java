@@ -63,6 +63,8 @@ public class UCentralUtils {
 				Arrays.asList(36, 40, 44, 48, 149, 153, 157, 161, 165)
 			)
 		);
+		// NOTE: later, we may want to support channels 12, 13, and/or 14, if
+		// the AP supports it and OWF vendors will use them
 		bandToChannelsMap.put(
 			UCentralConstants.BAND_2G,
 			Collections.unmodifiableList(
@@ -417,23 +419,6 @@ public class UCentralUtils {
 	}
 
 	/**
-	 * Converts channel number to that channel's center frequency in MHz.
-	 *
-	 * @param channel channel number
-	 * @return the center frequency of the given channel in MHz
-	 */
-	public static int channelToFrequencyMHz(int channel) {
-		// TODO fixme
-		if (channel <= 14) {
-			// 2.4 GHz
-			return 2407 + 5 * channel;
-		} else {
-			// 5 GHz
-			return 5000 + channel;
-		}
-	}
-
-	/**
 	 * Determines if the given channel is in the given band.
 	 *
 	 * @param channel channel number
@@ -444,20 +429,13 @@ public class UCentralUtils {
 		return AVAILABLE_CHANNELS_BAND.get(band).contains(channel);
 	}
 
-	/**
-	 * Given the channel, gets the band by checking lower bound and upper bound
-	 * of each band
-	 *
-	 * @param channel channel number
-	 * @return band if the channel can be mapped to a valid band; null otherwise
-	 */
-	public static String getBandFromChannel(int channel) {
-		for (String band : UCentralConstants.BANDS) {
-			if (isChannelInBand(channel, band)) {
-				return band;
-			}
+	/** Return which band contains the given frequency (MHz). */
+	public static String freqToBand(int freqMHz) {
+		if (2412 <= freqMHz && freqMHz <= 2484) {
+			return "2G";
+		} else {
+			return "5G";
 		}
-		return null;
 	}
 
 	/**

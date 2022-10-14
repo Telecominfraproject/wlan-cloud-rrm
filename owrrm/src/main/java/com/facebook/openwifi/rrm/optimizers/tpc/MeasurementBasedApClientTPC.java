@@ -15,13 +15,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.facebook.openwifi.cloudsdk.UCentralUtils;
 import com.facebook.openwifi.cloudsdk.models.ap.State;
 import com.facebook.openwifi.rrm.DeviceDataManager;
 import com.facebook.openwifi.rrm.modules.Modeler.DataModel;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.facebook.openwifi.rrm.modules.ModelerUtils;
+import com.google.gson.JsonObject;
 
 /**
  * Measurement-based AP-client algorithm.
@@ -305,8 +307,15 @@ public class MeasurementBasedApClientTPC extends TPC {
 
 			Map<String, Integer> radioMap = new TreeMap<>();
 			for (State.Radio radio : state.radios) {
-				int currentChannel = radio.channel;
-				String band = UCentralUtils.getBandFromChannel(currentChannel);
+				JsonObject deviceCapability = model.latestDeviceCapabilities
+					.get(serialNumber);
+				if (deviceCapability == null) {
+					continue;
+				}
+				final String band = ModelerUtils.getBand(
+					radio,
+					deviceCapability
+				);
 				if (band == null) {
 					continue;
 				}

@@ -18,7 +18,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.facebook.openwifi.cloudsdk.UCentralConstants;
-import com.facebook.openwifi.cloudsdk.UCentralUtils;
 import com.facebook.openwifi.rrm.DeviceDataManager;
 import com.facebook.openwifi.rrm.modules.Modeler.DataModel;
 
@@ -137,36 +136,44 @@ public class RandomTxPowerInitializer extends TPC {
 			logger.info("Default power: {}", defaultTxPower);
 		}
 
-		Map<Integer, List<String>> apsPerChannel = getApsPerChannel();
+		Map<String, Map<Integer, List<String>>> bandToChannelToAps =
+			getApsPerChannel();
 		Map<String, Map<String, Integer>> txPowerMap = new TreeMap<>();
 
-		for (Map.Entry<Integer, List<String>> e : apsPerChannel.entrySet()) {
-			int channel = e.getKey();
-			List<String> serialNumbers = e.getValue();
-
-			String band = UCentralUtils.getBandFromChannel(channel);
-			for (String serialNumber : serialNumbers) {
-				int txPower = defaultTxPower;
-				if (setDifferentTxPowerPerAp) {
-					List<Integer> curTxPowerChoices = updateTxPowerChoices(
-						band,
+		for (
+			Map.Entry<String, Map<Integer, List<String>>> bandEntry : bandToChannelToAps
+				.entrySet()
+		) {
+			final String band = bandEntry.getKey();
+			Map<Integer, List<String>> channelToAps = bandEntry.getValue();
+			for (
+				Map.Entry<Integer, List<String>> channelEntry : channelToAps
+					.entrySet()
+			) {
+				List<String> serialNumbers = channelEntry.getValue();
+				for (String serialNumber : serialNumbers) {
+					int txPower = defaultTxPower;
+					if (setDifferentTxPowerPerAp) {
+						List<Integer> curTxPowerChoices = updateTxPowerChoices(
+							band,
+							serialNumber,
+							DEFAULT_TX_POWER_CHOICES
+						);
+						txPower = curTxPowerChoices
+							.get(rng.nextInt(curTxPowerChoices.size()));
+					}
+					txPowerMap
+						.computeIfAbsent(serialNumber, k -> new TreeMap<>())
+						.put(band, txPower);
+					logger.info(
+						"Device {} band {}: Assigning tx power = {}",
 						serialNumber,
-						DEFAULT_TX_POWER_CHOICES
+						band,
+						txPower
 					);
-					txPower = curTxPowerChoices
-						.get(rng.nextInt(curTxPowerChoices.size()));
 				}
-				txPowerMap.computeIfAbsent(serialNumber, k -> new TreeMap<>())
-					.put(band, txPower);
-				logger.info(
-					"Device {} band {}: Assigning tx power = {}",
-					serialNumber,
-					band,
-					txPower
-				);
 			}
 		}
-
 		return txPowerMap;
 	}
 }

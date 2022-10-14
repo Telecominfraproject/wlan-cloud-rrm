@@ -18,12 +18,11 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.facebook.openwifi.cloudsdk.UCentralUtils;
 import com.facebook.openwifi.cloudsdk.models.ap.State;
 import com.facebook.openwifi.rrm.DeviceConfig;
 import com.facebook.openwifi.rrm.DeviceDataManager;
-import com.facebook.openwifi.rrm.modules.ModelerUtils;
 import com.facebook.openwifi.rrm.modules.Modeler.DataModel;
+import com.facebook.openwifi.rrm.modules.ModelerUtils;
 
 /**
  * Location-based optimal TPC algorithm.
@@ -153,6 +152,7 @@ public class LocationBasedOptimalTPC extends TPC {
 	/**
 	 * Calculate new tx powers for the given band.
 	 *
+	 * @param band band (e.g., "2G")
 	 * @param channel channel
 	 * @param serialNumbers The serial numbers of the APs with the channel
 	 * @param txPowerMap this map from serial number to band to new tx power
@@ -160,13 +160,13 @@ public class LocationBasedOptimalTPC extends TPC {
 	 *                   this method with the new tx powers.
 	 */
 	private void buildTxPowerMapForChannel(
+		String band,
 		int channel,
 		List<String> serialNumbers,
 		Map<String, Map<String, Integer>> txPowerMap
 	) {
 		int numOfAPs = 0;
 		int boundary = 100;
-		String band = UCentralUtils.getBandFromChannel(channel);
 		Map<String, Integer> validAPs = new TreeMap<>();
 		List<Double> apLocX = new ArrayList<>();
 		List<Double> apLocY = new ArrayList<>();
@@ -283,9 +283,27 @@ public class LocationBasedOptimalTPC extends TPC {
 	@Override
 	public Map<String, Map<String, Integer>> computeTxPowerMap() {
 		Map<String, Map<String, Integer>> txPowerMap = new TreeMap<>();
-		Map<Integer, List<String>> apsPerChannel = getApsPerChannel();
-		for (Map.Entry<Integer, List<String>> e : apsPerChannel.entrySet()) {
-			buildTxPowerMapForChannel(e.getKey(), e.getValue(), txPowerMap);
+		Map<String, Map<Integer, List<String>>> bandToChannelToAps =
+			getApsPerChannel();
+		for (
+			Map.Entry<String, Map<Integer, List<String>>> bandEntry : bandToChannelToAps
+				.entrySet()
+		) {
+			final String band = bandEntry.getKey();
+			Map<Integer, List<String>> channelToAps = bandEntry.getValue();
+			for (
+				Map.Entry<Integer, List<String>> channelEntry : channelToAps
+					.entrySet()
+			) {
+				final int channel = channelEntry.getKey();
+				List<String> serialNumbers = channelEntry.getValue();
+				buildTxPowerMapForChannel(
+					band,
+					channel,
+					serialNumbers,
+					txPowerMap
+				);
+			}
 		}
 		return txPowerMap;
 	}

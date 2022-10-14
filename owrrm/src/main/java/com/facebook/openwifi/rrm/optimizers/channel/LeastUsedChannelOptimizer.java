@@ -393,7 +393,12 @@ public class LeastUsedChannelOptimizer extends ChannelOptimizer {
 					continue;
 				}
 				int[] currentChannelInfo =
-					getCurrentChannel(band, serialNumber, state);
+					getCurrentChannel(
+						band,
+						serialNumber,
+						state,
+						model.latestDeviceCapabilities
+					);
 				int currentChannel = currentChannelInfo[0];
 				// Filter out APs if the radios in the state do not contain a
 				// channel in a band given by the state. This can happen when

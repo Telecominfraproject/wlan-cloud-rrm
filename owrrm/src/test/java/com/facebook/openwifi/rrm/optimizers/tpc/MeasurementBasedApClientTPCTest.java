@@ -61,11 +61,19 @@ public class MeasurementBasedApClientTPCTest {
 				TestUtils.createState(36, 20, 20, null, new int[] {})
 			)
 		);
+		dataModel.latestDeviceCapabilities.put(
+			deviceA,
+			TestUtils.createDeviceCapability(UCentralConstants.BAND_5G)
+		);
 		dataModel.latestStates.put(
 			deviceB,
 			Arrays.asList(
 				TestUtils.createState(36, 20, 20, "", new int[] { -65 })
 			)
+		);
+		dataModel.latestDeviceCapabilities.put(
+			deviceB,
+			TestUtils.createDeviceCapability(UCentralConstants.BAND_5G)
 		);
 		dataModel.latestStates.put(
 			deviceC,
@@ -79,17 +87,29 @@ public class MeasurementBasedApClientTPCTest {
 				)
 			)
 		);
+		dataModel.latestDeviceCapabilities.put(
+			deviceC,
+			TestUtils.createDeviceCapability(UCentralConstants.BAND_5G)
+		);
 		dataModel.latestStates.put(
 			deviceD,
 			Arrays.asList(
 				TestUtils.createState(36, 20, 22, null, new int[] { -80 })
 			)
 		);
+		dataModel.latestDeviceCapabilities.put(
+			deviceD,
+			TestUtils.createDeviceCapability(UCentralConstants.BAND_5G)
+		);
 		dataModel.latestStates.put(
 			deviceE,
 			Arrays.asList(
 				TestUtils.createState(36, 20, 23, null, new int[] { -45 })
 			)
+		);
+		dataModel.latestDeviceCapabilities.put(
+			deviceE,
+			TestUtils.createDeviceCapability(UCentralConstants.BAND_5G)
 		);
 
 		TPC optimizer = new MeasurementBasedApClientTPC(
@@ -158,12 +178,20 @@ public class MeasurementBasedApClientTPCTest {
 				TestUtils.createState(1, 20, 20, null, new int[] {})
 			)
 		);
+		dataModel.latestDeviceCapabilities.put(
+			deviceA,
+			TestUtils.createDeviceCapability(UCentralConstants.BAND_2G)
+		);
 		// 5G only
 		dataModel.latestStates.put(
 			deviceB,
 			Arrays.asList(
 				TestUtils.createState(36, 20, 20, null, new int[] {})
 			)
+		);
+		dataModel.latestDeviceCapabilities.put(
+			deviceB,
+			TestUtils.createDeviceCapability(UCentralConstants.BAND_5G)
 		);
 		// 2G and 5G
 		dataModel.latestStates.put(
@@ -179,6 +207,14 @@ public class MeasurementBasedApClientTPCTest {
 					20,
 					null
 				)
+			)
+		);
+		dataModel.latestDeviceCapabilities.put(
+			deviceC,
+			TestUtils.createDeviceCapability(
+				new String[] {
+					UCentralConstants.BAND_2G,
+					UCentralConstants.BAND_5G }
 			)
 		);
 		// No valid bands in 2G or 5G
@@ -248,11 +284,19 @@ public class MeasurementBasedApClientTPCTest {
 				TestUtils.createState(36, 20, 20, null, new int[] {})
 			)
 		);
+		dataModel.latestDeviceCapabilities.put(
+			deviceA,
+			TestUtils.createDeviceCapability(UCentralConstants.BAND_5G)
+		);
 		dataModel.latestStates.put(
 			deviceB,
 			Arrays.asList(
 				TestUtils.createState(36, 20, 20, "", new int[] { -65 })
 			)
+		);
+		dataModel.latestDeviceCapabilities.put(
+			deviceB,
+			TestUtils.createDeviceCapability(UCentralConstants.BAND_5G)
 		);
 		dataModel.latestStates.put(
 			deviceC,
@@ -265,6 +309,10 @@ public class MeasurementBasedApClientTPCTest {
 					new int[] { -65, -73, -58 }
 				)
 			)
+		);
+		dataModel.latestDeviceCapabilities.put(
+			deviceC,
+			TestUtils.createDeviceCapability(UCentralConstants.BAND_5G)
 		);
 
 		TPC optimizer = new MeasurementBasedApClientTPC(
