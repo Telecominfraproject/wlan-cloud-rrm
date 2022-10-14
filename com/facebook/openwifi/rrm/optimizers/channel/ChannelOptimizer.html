@@ -281,9 +281,10 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 </tr>
 <tr id="i4" class="altColor">
 <td class="colFirst"><code>protected static int[]</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getCurrentChannel(java.lang.String,java.lang.String,com.facebook.openwifi.cloudsdk.models.ap.State)">getCurrentChannel</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;band,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getCurrentChannel(java.lang.String,java.lang.String,com.facebook.openwifi.cloudsdk.models.ap.State,java.util.Map)">getCurrentChannel</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;band,
                  <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;serialNumber,
-                 <a href="../../../cloudsdk/models/ap/State.html" title="class in com.facebook.openwifi.cloudsdk.models.ap">State</a>&nbsp;state)</code></th>
+                 <a href="../../../cloudsdk/models/ap/State.html" title="class in com.facebook.openwifi.cloudsdk.models.ap">State</a>&nbsp;state,
+                 <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html?is-external=true" title="class or interface in java.util" class="externalLink">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>,&#8203;com.google.gson.JsonObject&gt;&nbsp;latestDeviceCapabilities)</code></th>
 <td class="colLast">
 <div class="block">Get the current channel and channel width (MHz) of the device (from state data).</div>
 </td>
@@ -534,7 +535,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 </dl>
 </li>
 </ul>
-<a id="getCurrentChannel(java.lang.String,java.lang.String,com.facebook.openwifi.cloudsdk.models.ap.State)">
+<a id="getCurrentChannel(java.lang.String,java.lang.String,com.facebook.openwifi.cloudsdk.models.ap.State,java.util.Map)">
 <!--   -->
 </a>
 <ul class="blockList">
@@ -542,13 +543,15 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <h4>getCurrentChannel</h4>
 <pre class="methodSignature">protected static&nbsp;int[]&nbsp;getCurrentChannel&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;band,
                                          <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;serialNumber,
-                                         <a href="../../../cloudsdk/models/ap/State.html" title="class in com.facebook.openwifi.cloudsdk.models.ap">State</a>&nbsp;state)</pre>
+                                         <a href="../../../cloudsdk/models/ap/State.html" title="class in com.facebook.openwifi.cloudsdk.models.ap">State</a>&nbsp;state,
+                                         <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html?is-external=true" title="class or interface in java.util" class="externalLink">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>,&#8203;com.google.gson.JsonObject&gt;&nbsp;latestDeviceCapabilities)</pre>
 <div class="block">Get the current channel and channel width (MHz) of the device (from state data).</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>band</code> - the operational band (e.g., "2G")</dd>
 <dd><code>serialNumber</code> - the device's serial number</dd>
 <dd><code>state</code> - the latest state of all the devices</dd>
+<dd><code>latestDeviceCapabilities</code> - latest device capabilities</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the current channel and channel width (MHz) of the device in the
  given band; returns a current channel of 0 if no channel in the given

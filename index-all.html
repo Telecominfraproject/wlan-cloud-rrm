@@ -360,7 +360,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/UCentralConstants.html#BANDS">BANDS</a></span> - Static variable in class com.facebook.openwifi.cloudsdk.<a href="com/facebook/openwifi/cloudsdk/UCentralConstants.html" title="class in com.facebook.openwifi.cloudsdk">UCentralConstants</a></dt>
 <dd>
-<div class="block">List of all bands</div>
+<div class="block">List of all bands ordered from lowest to highest</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/ies/HTOperation.html#basicHtMcsSet">basicHtMcsSet</a></span> - Variable in class com.facebook.openwifi.cloudsdk.ies.<a href="com/facebook/openwifi/cloudsdk/ies/HTOperation.html" title="class in com.facebook.openwifi.cloudsdk.ies">HTOperation</a></dt>
 <dd>
@@ -402,7 +402,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Build a map from BSSID to a sorted (ascending) list of RSSIs from
  neighboring APs.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/facebook/openwifi/rrm/optimizers/tpc/MeasurementBasedApApTPC.html#buildTxPowerMapForChannel(int,java.util.List,java.util.Map)">buildTxPowerMapForChannel(int, List&lt;String&gt;, Map&lt;String, Map&lt;String, Integer&gt;&gt;)</a></span> - Method in class com.facebook.openwifi.rrm.optimizers.tpc.<a href="com/facebook/openwifi/rrm/optimizers/tpc/MeasurementBasedApApTPC.html" title="class in com.facebook.openwifi.rrm.optimizers.tpc">MeasurementBasedApApTPC</a></dt>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifi/rrm/optimizers/tpc/MeasurementBasedApApTPC.html#buildTxPowerMapForChannel(java.lang.String,int,java.util.List,java.util.Map)">buildTxPowerMapForChannel(String, int, List&lt;String&gt;, Map&lt;String, Map&lt;String, Integer&gt;&gt;)</a></span> - Method in class com.facebook.openwifi.rrm.optimizers.tpc.<a href="com/facebook/openwifi/rrm/optimizers/tpc/MeasurementBasedApApTPC.html" title="class in com.facebook.openwifi.rrm.optimizers.tpc">MeasurementBasedApApTPC</a></dt>
 <dd>
 <div class="block">Calculate new tx powers for the given channel on the given APs .</div>
 </dd>
@@ -476,10 +476,6 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dt><span class="memberNameLink"><a href="com/facebook/openwifi/rrm/optimizers/channel/ChannelOptimizer.html#%3Cinit%3E(com.facebook.openwifi.rrm.modules.Modeler.DataModel,java.lang.String,com.facebook.openwifi.rrm.DeviceDataManager)">ChannelOptimizer(Modeler.DataModel, String, DeviceDataManager)</a></span> - Constructor for class com.facebook.openwifi.rrm.optimizers.channel.<a href="com/facebook/openwifi/rrm/optimizers/channel/ChannelOptimizer.html" title="class in com.facebook.openwifi.rrm.optimizers.channel">ChannelOptimizer</a></dt>
 <dd>
 <div class="block">Constructor.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/UCentralUtils.html#channelToFrequencyMHz(int)">channelToFrequencyMHz(int)</a></span> - Static method in class com.facebook.openwifi.cloudsdk.<a href="com/facebook/openwifi/cloudsdk/UCentralUtils.html" title="class in com.facebook.openwifi.cloudsdk">UCentralUtils</a></dt>
-<dd>
-<div class="block">Converts channel number to that channel's center frequency in MHz.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/ies/QbssLoad.html#channelUtilization">channelUtilization</a></span> - Variable in class com.facebook.openwifi.cloudsdk.ies.<a href="com/facebook/openwifi/cloudsdk/ies/QbssLoad.html" title="class in com.facebook.openwifi.cloudsdk.ies">QbssLoad</a></dt>
 <dd>
@@ -1114,6 +1110,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/models/ap/State.Unit.Memory.html#free">free</a></span> - Variable in class com.facebook.openwifi.cloudsdk.models.ap.<a href="com/facebook/openwifi/cloudsdk/models/ap/State.Unit.Memory.html" title="class in com.facebook.openwifi.cloudsdk.models.ap">State.Unit.Memory</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/UCentralUtils.html#freqToBand(int)">freqToBand(int)</a></span> - Static method in class com.facebook.openwifi.cloudsdk.<a href="com/facebook/openwifi/cloudsdk/UCentralUtils.html" title="class in com.facebook.openwifi.cloudsdk">UCentralUtils</a></dt>
+<dd>
+<div class="block">Return which band contains the given frequency (MHz).</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/models/ap/WifiScanEntryResult.html#frequency">frequency</a></span> - Variable in class com.facebook.openwifi.cloudsdk.models.ap.<a href="com/facebook/openwifi/cloudsdk/models/ap/WifiScanEntryResult.html" title="class in com.facebook.openwifi.cloudsdk.models.ap">WifiScanEntryResult</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifi/rrm/RRMConfig.html#fromEnv(java.util.Map)">fromEnv(Map&lt;String, String&gt;)</a></span> - Static method in class com.facebook.openwifi.rrm.<a href="com/facebook/openwifi/rrm/RRMConfig.html" title="class in com.facebook.openwifi.rrm">RRMConfig</a></dt>
@@ -1181,10 +1181,9 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Get AP serial numbers per channel.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/UCentralUtils.html#getBandFromChannel(int)">getBandFromChannel(int)</a></span> - Static method in class com.facebook.openwifi.cloudsdk.<a href="com/facebook/openwifi/cloudsdk/UCentralUtils.html" title="class in com.facebook.openwifi.cloudsdk">UCentralUtils</a></dt>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifi/rrm/modules/ModelerUtils.html#getBand(com.facebook.openwifi.cloudsdk.models.ap.State.Radio,com.google.gson.JsonObject)">getBand(State.Radio, JsonObject)</a></span> - Static method in class com.facebook.openwifi.rrm.modules.<a href="com/facebook/openwifi/rrm/modules/ModelerUtils.html" title="class in com.facebook.openwifi.rrm.modules">ModelerUtils</a></dt>
 <dd>
-<div class="block">Given the channel, gets the band by checking lower bound and upper bound
- of each band</div>
+<div class="block">Return the radio's band, or null if band cannot be found</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/UCentralUtils.html#getBandsMap(java.util.Map)">getBandsMap(Map&lt;String, JsonArray&gt;)</a></span> - Static method in class com.facebook.openwifi.cloudsdk.<a href="com/facebook/openwifi/cloudsdk/UCentralUtils.html" title="class in com.facebook.openwifi.cloudsdk">UCentralUtils</a></dt>
 <dd>
@@ -1217,7 +1216,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Get the actual covered channels of a neighboring AP
  based on the given channel and channel width.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/facebook/openwifi/rrm/optimizers/channel/ChannelOptimizer.html#getCurrentChannel(java.lang.String,java.lang.String,com.facebook.openwifi.cloudsdk.models.ap.State)">getCurrentChannel(String, String, State)</a></span> - Static method in class com.facebook.openwifi.rrm.optimizers.channel.<a href="com/facebook/openwifi/rrm/optimizers/channel/ChannelOptimizer.html" title="class in com.facebook.openwifi.rrm.optimizers.channel">ChannelOptimizer</a></dt>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifi/rrm/optimizers/channel/ChannelOptimizer.html#getCurrentChannel(java.lang.String,java.lang.String,com.facebook.openwifi.cloudsdk.models.ap.State,java.util.Map)">getCurrentChannel(String, String, State, Map&lt;String, JsonObject&gt;)</a></span> - Static method in class com.facebook.openwifi.rrm.optimizers.channel.<a href="com/facebook/openwifi/rrm/optimizers/channel/ChannelOptimizer.html" title="class in com.facebook.openwifi.rrm.optimizers.channel">ChannelOptimizer</a></dt>
 <dd>
 <div class="block">Get the current channel and channel width (MHz) of the device (from state data).</div>
 </dd>

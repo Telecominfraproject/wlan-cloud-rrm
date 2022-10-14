@@ -254,7 +254,8 @@ extends <a href="TPC.html" title="class in com.facebook.openwifi.rrm.optimizers.
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>protected void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#buildTxPowerMapForChannel(int,java.util.List,java.util.Map)">buildTxPowerMapForChannel</a></span>&#8203;(int&nbsp;channel,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#buildTxPowerMapForChannel(java.lang.String,int,java.util.List,java.util.Map)">buildTxPowerMapForChannel</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;band,
+                         int&nbsp;channel,
                          <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&gt;&nbsp;serialNumbers,
                          <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html?is-external=true" title="class or interface in java.util" class="externalLink">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>,&#8203;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html?is-external=true" title="class or interface in java.util" class="externalLink">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>,&#8203;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Integer.html?is-external=true" title="class or interface in java.lang" class="externalLink">Integer</a>&gt;&gt;&nbsp;txPowerMap)</code></th>
 <td class="colLast">
@@ -496,18 +497,20 @@ extends <a href="TPC.html" title="class in com.facebook.openwifi.rrm.optimizers.
 </dl>
 </li>
 </ul>
-<a id="buildTxPowerMapForChannel(int,java.util.List,java.util.Map)">
+<a id="buildTxPowerMapForChannel(java.lang.String,int,java.util.List,java.util.Map)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>buildTxPowerMapForChannel</h4>
-<pre class="methodSignature">protected&nbsp;void&nbsp;buildTxPowerMapForChannel&#8203;(int&nbsp;channel,
+<pre class="methodSignature">protected&nbsp;void&nbsp;buildTxPowerMapForChannel&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;band,
+                                         int&nbsp;channel,
                                          <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&gt;&nbsp;serialNumbers,
                                          <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html?is-external=true" title="class or interface in java.util" class="externalLink">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>,&#8203;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html?is-external=true" title="class or interface in java.util" class="externalLink">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>,&#8203;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Integer.html?is-external=true" title="class or interface in java.lang" class="externalLink">Integer</a>&gt;&gt;&nbsp;txPowerMap)</pre>
 <div class="block">Calculate new tx powers for the given channel on the given APs .</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>band</code> - band (e.g., "2G")</dd>
 <dd><code>channel</code> - channel</dd>
 <dd><code>serialNumbers</code> - the serial numbers of the APs with the channel</dd>
 <dd><code>txPowerMap</code> - this maps from serial number to band to new tx power (dBm)
