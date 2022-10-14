@@ -220,11 +220,12 @@ public class MeasurementBasedApApTPC extends TPC {
 			// At a given AP, if we receive a signal from ap_2, then it gets added to the rssi list for ap_2
 			latestScan.stream()
 				.filter((entry) -> {
-					boolean isManaged = managedBSSIDs.contains(entry.bssid);
+					if (!managedBSSIDs.contains(entry.bssid)) {
+						return false;
+					}
 					String entryBand = UCentralUtils
 						.freqToBand(entry.frequency);
-					return isManaged && entryBand != null &&
-						entryBand.equals(band);
+					return entryBand != null && entryBand.equals(band);
 				})
 				.forEach(
 					entry -> {

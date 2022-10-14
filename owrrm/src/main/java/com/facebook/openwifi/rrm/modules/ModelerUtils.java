@@ -30,6 +30,7 @@ import com.facebook.openwifi.cloudsdk.models.ap.State.Interface.SSID.Association
 import com.facebook.openwifi.rrm.aggregators.Aggregator;
 import com.facebook.openwifi.rrm.aggregators.MeanAggregator;
 import com.facebook.openwifi.rrm.modules.Modeler.DataModel;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
@@ -563,6 +564,9 @@ public class ModelerUtils {
 		State.Radio radio,
 		JsonObject deviceCapability
 	) {
+		if (radio.phy == null) {
+			return null;
+		}
 		JsonElement radioCapabilityElement = deviceCapability.get(radio.phy);
 		if (radioCapabilityElement == null) {
 			return null;
@@ -572,6 +576,10 @@ public class ModelerUtils {
 		if (bandsElement == null) {
 			return null;
 		}
-		return bandsElement.getAsJsonArray().get(0).getAsString();
+		JsonArray bands = bandsElement.getAsJsonArray();
+		if (bands.isEmpty()) {
+			return null;
+		}
+		return bands.get(0).getAsString();
 	}
 }
