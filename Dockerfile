@@ -1,4 +1,4 @@
-FROM maven:3-jdk-11 as build
+FROM maven:3-eclipse-temurin-11 as build
 WORKDIR /usr/src/java
 COPY . .
 RUN mvn clean package -pl owrrm -am -DappendVersionString="$(./scripts/get_build_version.sh)"
