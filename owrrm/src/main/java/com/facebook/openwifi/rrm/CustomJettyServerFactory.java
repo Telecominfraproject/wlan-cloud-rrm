@@ -119,7 +119,7 @@ public class CustomJettyServerFactory implements JettyServerFactory {
 		if (internalPort != -1) {
 			internalConnector = makeConnector(
 				server,
-				"localhost",
+				"0.0.0.0",
 				internalPort,
 				trustForwardHeaders
 			);
@@ -129,7 +129,7 @@ public class CustomJettyServerFactory implements JettyServerFactory {
 		if (externalPort != -1) {
 			externalConnector = makeConnector(
 				server,
-				"localhost",
+				"0.0.0.0",
 				externalPort,
 				trustForwardHeaders
 			);
