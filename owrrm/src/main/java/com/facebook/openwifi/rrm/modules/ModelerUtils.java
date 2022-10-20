@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.facebook.openwifi.cloudsdk.models.ap.Capabilities;
 import com.facebook.openwifi.cloudsdk.AggregatedState;
 import com.facebook.openwifi.cloudsdk.WifiScanEntry;
 import com.facebook.openwifi.cloudsdk.ies.HTOperation;
@@ -30,9 +31,6 @@ import com.facebook.openwifi.cloudsdk.models.ap.State.Interface.SSID.Association
 import com.facebook.openwifi.rrm.aggregators.Aggregator;
 import com.facebook.openwifi.rrm.aggregators.MeanAggregator;
 import com.facebook.openwifi.rrm.modules.Modeler.DataModel;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 
 /**
  * Modeler utilities.
@@ -562,24 +560,19 @@ public class ModelerUtils {
 	/** Return the radio's band, or null if band cannot be found */
 	public static String getBand(
 		State.Radio radio,
-		JsonObject deviceCapability
+		Map<String, Capabilities.Phy> capabilityPhy
 	) {
 		if (radio.phy == null) {
 			return null;
 		}
-		JsonElement radioCapabilityElement = deviceCapability.get(radio.phy);
-		if (radioCapabilityElement == null) {
+		Capabilities.Phy phy = capabilityPhy.get(radio.phy);
+		if (phy == null) {
 			return null;
 		}
-		JsonObject radioCapability = radioCapabilityElement.getAsJsonObject();
-		JsonElement bandsElement = radioCapability.get("band");
-		if (bandsElement == null) {
+		String[] bands = phy.band;
+		if (bands == null || bands.length == 0) {
 			return null;
 		}
-		JsonArray bands = bandsElement.getAsJsonArray();
-		if (bands.isEmpty()) {
-			return null;
-		}
-		return bands.get(0).getAsString();
+		return bands[0];
 	}
 }

@@ -65,9 +65,9 @@ public class UnmanagedApAwareChannelOptimizerTest {
 						.createState(aExpectedChannel, channelWidth, bssidA)
 				)
 		);
-		dataModel.latestDeviceCapabilities.put(
+		dataModel.latestDeviceCapabilitiesPhy.put(
 			deviceA,
-			TestUtils.createDeviceCapability(band)
+			TestUtils.createDeviceCapabilityPhy(band)
 		);
 		dataModel.latestWifiScans.put(
 			deviceA,
@@ -93,9 +93,9 @@ public class UnmanagedApAwareChannelOptimizerTest {
 			deviceB,
 			Arrays.asList(TestUtils.createState(40, channelWidth, bssidB))
 		);
-		dataModel.latestDeviceCapabilities.put(
+		dataModel.latestDeviceCapabilitiesPhy.put(
 			deviceB,
-			TestUtils.createDeviceCapability(band)
+			TestUtils.createDeviceCapabilityPhy(band)
 		);
 		dataModel.latestWifiScans.put(
 			deviceB,
@@ -131,9 +131,9 @@ public class UnmanagedApAwareChannelOptimizerTest {
 			deviceC,
 			Arrays.asList(TestUtils.createState(149, channelWidth, bssidC))
 		);
-		dataModel.latestDeviceCapabilities.put(
+		dataModel.latestDeviceCapabilitiesPhy.put(
 			deviceC,
-			TestUtils.createDeviceCapability(band)
+			TestUtils.createDeviceCapabilityPhy(band)
 		);
 		dataModel.latestWifiScans.put(
 			deviceC,
@@ -185,9 +185,9 @@ public class UnmanagedApAwareChannelOptimizerTest {
 						.createState(aExpectedChannel, channelWidth, bssidA)
 				)
 		);
-		dataModel.latestDeviceCapabilities.put(
+		dataModel.latestDeviceCapabilitiesPhy.put(
 			deviceA,
-			TestUtils.createDeviceCapability(band)
+			TestUtils.createDeviceCapabilityPhy(band)
 		);
 		dataModel.latestWifiScans.put(
 			deviceA,
@@ -211,9 +211,9 @@ public class UnmanagedApAwareChannelOptimizerTest {
 			deviceB,
 			Arrays.asList(TestUtils.createState(6, channelWidth, bssidB))
 		);
-		dataModel.latestDeviceCapabilities.put(
+		dataModel.latestDeviceCapabilitiesPhy.put(
 			deviceB,
-			TestUtils.createDeviceCapability(band)
+			TestUtils.createDeviceCapabilityPhy(band)
 		);
 		dataModel.latestWifiScans.put(
 			deviceB,
@@ -233,9 +233,9 @@ public class UnmanagedApAwareChannelOptimizerTest {
 			deviceC,
 			Arrays.asList(TestUtils.createState(6, channelWidth, bssidC))
 		);
-		dataModel.latestDeviceCapabilities.put(
+		dataModel.latestDeviceCapabilitiesPhy.put(
 			deviceC,
-			TestUtils.createDeviceCapability(band)
+			TestUtils.createDeviceCapabilityPhy(band)
 		);
 		dataModel.latestWifiScans.put(
 			deviceC,

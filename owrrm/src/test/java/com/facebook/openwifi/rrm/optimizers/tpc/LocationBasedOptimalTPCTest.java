@@ -145,9 +145,9 @@ public class LocationBasedOptimalTPCTest {
 					)
 				)
 			);
-			dataModel.latestDeviceCapabilities.put(
+			dataModel.latestDeviceCapabilitiesPhy.put(
 				device,
-				TestUtils.createDeviceCapability(
+				TestUtils.createDeviceCapabilityPhy(
 					new String[] {
 						UCentralConstants.BAND_2G,
 						UCentralConstants.BAND_5G }
@@ -222,9 +222,9 @@ public class LocationBasedOptimalTPCTest {
 					)
 				)
 			);
-			dataModel2.latestDeviceCapabilities.put(
+			dataModel2.latestDeviceCapabilitiesPhy.put(
 				device,
-				TestUtils.createDeviceCapability(
+				TestUtils.createDeviceCapabilityPhy(
 					new String[] {
 						UCentralConstants.BAND_2G,
 						UCentralConstants.BAND_5G }
@@ -249,9 +249,9 @@ public class LocationBasedOptimalTPCTest {
 				)
 			)
 		);
-		dataModel2.latestDeviceCapabilities.put(
+		dataModel2.latestDeviceCapabilitiesPhy.put(
 			deviceC,
-			TestUtils.createDeviceCapability(UCentralConstants.BAND_5G)
+			TestUtils.createDeviceCapabilityPhy(UCentralConstants.BAND_5G)
 		);
 
 		Map<String, Map<String, Integer>> expected2 = new HashMap<>();
@@ -347,9 +347,9 @@ public class LocationBasedOptimalTPCTest {
 					)
 				)
 			);
-			dataModel2.latestDeviceCapabilities.put(
+			dataModel2.latestDeviceCapabilitiesPhy.put(
 				device,
-				TestUtils.createDeviceCapability(
+				TestUtils.createDeviceCapabilityPhy(
 					new String[] {
 						UCentralConstants.BAND_2G,
 						UCentralConstants.BAND_5G }
@@ -416,9 +416,9 @@ public class LocationBasedOptimalTPCTest {
 					)
 				)
 			);
-			dataModel3.latestDeviceCapabilities.put(
+			dataModel3.latestDeviceCapabilitiesPhy.put(
 				device,
-				TestUtils.createDeviceCapability(
+				TestUtils.createDeviceCapabilityPhy(
 					new String[] {
 						UCentralConstants.BAND_2G,
 						UCentralConstants.BAND_5G }
@@ -475,9 +475,9 @@ public class LocationBasedOptimalTPCTest {
 					)
 				)
 			);
-			dataModel4.latestDeviceCapabilities.put(
+			dataModel4.latestDeviceCapabilitiesPhy.put(
 				device,
-				TestUtils.createDeviceCapability(
+				TestUtils.createDeviceCapabilityPhy(
 					new String[] {
 						UCentralConstants.BAND_2G,
 						UCentralConstants.BAND_2G }

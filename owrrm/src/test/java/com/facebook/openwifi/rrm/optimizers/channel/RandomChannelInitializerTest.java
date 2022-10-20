@@ -67,13 +67,13 @@ public class RandomChannelInitializerTest {
 			deviceB,
 			TestUtils.createDeviceStatus(band, 8)
 		);
-		dataModel.latestDeviceCapabilities.put(
+		dataModel.latestDeviceCapabilitiesPhy.put(
 			deviceA,
-			TestUtils.createDeviceCapability(band)
+			TestUtils.createDeviceCapabilityPhy(band)
 		);
-		dataModel.latestDeviceCapabilities.put(
+		dataModel.latestDeviceCapabilitiesPhy.put(
 			deviceB,
-			TestUtils.createDeviceCapability(band)
+			TestUtils.createDeviceCapabilityPhy(band)
 		);
 
 		ChannelOptimizer optimizer = new RandomChannelInitializer(
@@ -124,17 +124,17 @@ public class RandomChannelInitializerTest {
 			deviceB,
 			TestUtils.createDeviceStatus(band, 8)
 		);
-		dataModel.latestDeviceCapabilities.put(
+		dataModel.latestDeviceCapabilitiesPhy.put(
 			deviceA,
-			TestUtils.createDeviceCapability(
+			TestUtils.createDeviceCapabilityPhy(
 				new String[] {
 					UCentralConstants.BAND_2G,
 					UCentralConstants.BAND_2G }
 			)
 		);
-		dataModel.latestDeviceCapabilities.put(
+		dataModel.latestDeviceCapabilitiesPhy.put(
 			deviceB,
-			TestUtils.createDeviceCapability(
+			TestUtils.createDeviceCapabilityPhy(
 				new String[] {
 					UCentralConstants.BAND_2G,
 					UCentralConstants.BAND_2G }

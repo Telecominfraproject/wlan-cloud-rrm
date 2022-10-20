@@ -26,6 +26,7 @@ import com.facebook.openwifi.cloudsdk.UCentralUtils;
 import com.facebook.openwifi.cloudsdk.WifiScanEntry;
 import com.facebook.openwifi.cloudsdk.kafka.UCentralKafkaConsumer;
 import com.facebook.openwifi.cloudsdk.kafka.UCentralKafkaConsumer.KafkaRecord;
+import com.facebook.openwifi.cloudsdk.models.ap.Capabilities;
 import com.facebook.openwifi.cloudsdk.models.ap.State;
 import com.facebook.openwifi.cloudsdk.models.gw.DeviceCapabilities;
 import com.facebook.openwifi.cloudsdk.models.gw.DeviceWithStatus;
@@ -102,7 +103,7 @@ public class Modeler implements Runnable {
 			new ConcurrentHashMap<>();
 
 		/** List of capabilities per device. */
-		public Map<String, JsonObject> latestDeviceCapabilities =
+		public Map<String, Map<String, Capabilities.Phy>> latestDeviceCapabilitiesPhy =
 			new ConcurrentHashMap<>();
 	}
 
@@ -376,9 +377,9 @@ public class Modeler implements Runnable {
 		String serialNumber,
 		DeviceCapabilities capabilities
 	) {
-		dataModel.latestDeviceCapabilities.put(
+		dataModel.latestDeviceCapabilitiesPhy.put(
 			serialNumber,
-			capabilities.capabilities.getAsJsonObject("wifi")
+			capabilities.capabilities.wifi
 		);
 	}
 
@@ -448,7 +449,7 @@ public class Modeler implements Runnable {
 			logger.debug("Removed some status entries from data model");
 		}
 		if (
-			dataModel.latestDeviceCapabilities.entrySet()
+			dataModel.latestDeviceCapabilitiesPhy.entrySet()
 				.removeIf(e -> !isRRMEnabled(e.getKey()))
 		) {
 			logger.debug("Removed some capabilities entries from data model");

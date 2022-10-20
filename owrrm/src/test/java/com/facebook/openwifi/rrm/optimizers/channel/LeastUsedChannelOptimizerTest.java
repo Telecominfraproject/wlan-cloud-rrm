@@ -63,9 +63,9 @@ public class LeastUsedChannelOptimizerTest {
 					.createState(aExpectedChannel, channelWidth, dummyBssid)
 			)
 		);
-		dataModel.latestDeviceCapabilities.put(
+		dataModel.latestDeviceCapabilitiesPhy.put(
 			deviceA,
-			TestUtils.createDeviceCapability(band)
+			TestUtils.createDeviceCapabilityPhy(band)
 		);
 		dataModel.latestWifiScans.put(
 			deviceA,
@@ -89,9 +89,9 @@ public class LeastUsedChannelOptimizerTest {
 			deviceB,
 			Arrays.asList(TestUtils.createState(40, channelWidth, dummyBssid))
 		);
-		dataModel.latestDeviceCapabilities.put(
+		dataModel.latestDeviceCapabilitiesPhy.put(
 			deviceB,
-			TestUtils.createDeviceCapability(band)
+			TestUtils.createDeviceCapabilityPhy(band)
 		);
 		dataModel.latestWifiScans.put(
 			deviceB,
@@ -116,9 +116,9 @@ public class LeastUsedChannelOptimizerTest {
 				TestUtils.createState(149, channelWidth, dummyBssid)
 			)
 		);
-		dataModel.latestDeviceCapabilities.put(
+		dataModel.latestDeviceCapabilitiesPhy.put(
 			deviceC,
-			TestUtils.createDeviceCapability(band)
+			TestUtils.createDeviceCapabilityPhy(band)
 		);
 		dataModel.latestWifiScans.put(
 			deviceC,
@@ -167,9 +167,9 @@ public class LeastUsedChannelOptimizerTest {
 					.createState(aExpectedChannel, channelWidth, dummyBssid)
 			)
 		);
-		dataModel.latestDeviceCapabilities.put(
+		dataModel.latestDeviceCapabilitiesPhy.put(
 			deviceA,
-			TestUtils.createDeviceCapability(band)
+			TestUtils.createDeviceCapabilityPhy(band)
 		);
 		dataModel.latestWifiScans.put(
 			deviceA,
@@ -193,9 +193,9 @@ public class LeastUsedChannelOptimizerTest {
 			deviceB,
 			Arrays.asList(TestUtils.createState(6, channelWidth, dummyBssid))
 		);
-		dataModel.latestDeviceCapabilities.put(
+		dataModel.latestDeviceCapabilitiesPhy.put(
 			deviceB,
-			TestUtils.createDeviceCapability(band)
+			TestUtils.createDeviceCapabilityPhy(band)
 		);
 		dataModel.latestWifiScans.put(
 			deviceB,
@@ -215,9 +215,9 @@ public class LeastUsedChannelOptimizerTest {
 			deviceC,
 			Arrays.asList(TestUtils.createState(6, channelWidth, dummyBssid))
 		);
-		dataModel.latestDeviceCapabilities.put(
+		dataModel.latestDeviceCapabilitiesPhy.put(
 			deviceC,
-			TestUtils.createDeviceCapability(band)
+			TestUtils.createDeviceCapabilityPhy(band)
 		);
 		dataModel.latestWifiScans.put(
 			deviceC,
@@ -275,9 +275,9 @@ public class LeastUsedChannelOptimizerTest {
 					.createState(aExpectedChannel, channelWidth, dummyBssid)
 			)
 		);
-		dataModel.latestDeviceCapabilities.put(
+		dataModel.latestDeviceCapabilitiesPhy.put(
 			deviceA,
-			TestUtils.createDeviceCapability(band)
+			TestUtils.createDeviceCapabilityPhy(band)
 		);
 		dataModel.latestWifiScans.put(
 			deviceA,
@@ -300,9 +300,9 @@ public class LeastUsedChannelOptimizerTest {
 			deviceB,
 			Arrays.asList(TestUtils.createState(40, channelWidth, dummyBssid))
 		);
-		dataModel.latestDeviceCapabilities.put(
+		dataModel.latestDeviceCapabilitiesPhy.put(
 			deviceB,
-			TestUtils.createDeviceCapability(band)
+			TestUtils.createDeviceCapabilityPhy(band)
 		);
 		dataModel.latestWifiScans.put(
 			deviceB,
@@ -326,9 +326,9 @@ public class LeastUsedChannelOptimizerTest {
 				TestUtils.createState(149, channelWidth, dummyBssid)
 			)
 		);
-		dataModel.latestDeviceCapabilities.put(
+		dataModel.latestDeviceCapabilitiesPhy.put(
 			deviceC,
-			TestUtils.createDeviceCapability(band)
+			TestUtils.createDeviceCapabilityPhy(band)
 		);
 		dataModel.latestWifiScans.put(
 			deviceC,
@@ -385,9 +385,9 @@ public class LeastUsedChannelOptimizerTest {
 					.createState(aExpectedChannel, channelWidth, dummyBssid)
 			)
 		);
-		dataModel.latestDeviceCapabilities.put(
+		dataModel.latestDeviceCapabilitiesPhy.put(
 			deviceA,
-			TestUtils.createDeviceCapability(band)
+			TestUtils.createDeviceCapabilityPhy(band)
 		);
 		dataModel.latestWifiScans.put(
 			deviceA,
@@ -412,9 +412,9 @@ public class LeastUsedChannelOptimizerTest {
 			deviceB,
 			Arrays.asList(TestUtils.createState(40, channelWidth, dummyBssid))
 		);
-		dataModel.latestDeviceCapabilities.put(
+		dataModel.latestDeviceCapabilitiesPhy.put(
 			deviceB,
-			TestUtils.createDeviceCapability(band)
+			TestUtils.createDeviceCapabilityPhy(band)
 		);
 		dataModel.latestWifiScans.put(
 			deviceB,
@@ -439,9 +439,9 @@ public class LeastUsedChannelOptimizerTest {
 				TestUtils.createState(149, channelWidth, dummyBssid)
 			)
 		);
-		dataModel.latestDeviceCapabilities.put(
+		dataModel.latestDeviceCapabilitiesPhy.put(
 			deviceC,
-			TestUtils.createDeviceCapability(band)
+			TestUtils.createDeviceCapabilityPhy(band)
 		);
 		dataModel.latestWifiScans.put(
 			deviceC,
@@ -492,9 +492,9 @@ public class LeastUsedChannelOptimizerTest {
 					.createState(aExpectedChannel, channelWidth, dummyBssid)
 			)
 		);
-		dataModel.latestDeviceCapabilities.put(
+		dataModel.latestDeviceCapabilitiesPhy.put(
 			deviceA,
-			TestUtils.createDeviceCapability(band)
+			TestUtils.createDeviceCapabilityPhy(band)
 		);
 		dataModel.latestWifiScans.put(
 			deviceA,
@@ -520,9 +520,9 @@ public class LeastUsedChannelOptimizerTest {
 			deviceB,
 			Arrays.asList(TestUtils.createState(40, channelWidth, dummyBssid))
 		);
-		dataModel.latestDeviceCapabilities.put(
+		dataModel.latestDeviceCapabilitiesPhy.put(
 			deviceB,
-			TestUtils.createDeviceCapability(band)
+			TestUtils.createDeviceCapabilityPhy(band)
 		);
 		dataModel.latestWifiScans.put(
 			deviceB,
@@ -547,9 +547,9 @@ public class LeastUsedChannelOptimizerTest {
 				TestUtils.createState(149, channelWidth, dummyBssid)
 			)
 		);
-		dataModel.latestDeviceCapabilities.put(
+		dataModel.latestDeviceCapabilitiesPhy.put(
 			deviceC,
-			TestUtils.createDeviceCapability(band)
+			TestUtils.createDeviceCapabilityPhy(band)
 		);
 		dataModel.latestWifiScans.put(
 			deviceC,
@@ -571,9 +571,9 @@ public class LeastUsedChannelOptimizerTest {
 			deviceD,
 			Arrays.asList(TestUtils.createState(40, channelWidth, dummyBssid))
 		);
-		dataModel.latestDeviceCapabilities.put(
+		dataModel.latestDeviceCapabilitiesPhy.put(
 			deviceD,
-			TestUtils.createDeviceCapability(band)
+			TestUtils.createDeviceCapabilityPhy(band)
 		);
 		dataModel.latestWifiScans.put(
 			deviceD,
@@ -631,9 +631,9 @@ public class LeastUsedChannelOptimizerTest {
 					.createState(aExpectedChannel, channelWidth, dummyBssid)
 			)
 		);
-		dataModel.latestDeviceCapabilities.put(
+		dataModel.latestDeviceCapabilitiesPhy.put(
 			deviceA,
-			TestUtils.createDeviceCapability(band)
+			TestUtils.createDeviceCapabilityPhy(band)
 		);
 		dataModel.latestWifiScans.put(
 			deviceA,
@@ -657,9 +657,9 @@ public class LeastUsedChannelOptimizerTest {
 			deviceB,
 			Arrays.asList(TestUtils.createState(36, channelWidth, dummyBssid))
 		);
-		dataModel.latestDeviceCapabilities.put(
+		dataModel.latestDeviceCapabilitiesPhy.put(
 			deviceB,
-			TestUtils.createDeviceCapability(band)
+			TestUtils.createDeviceCapabilityPhy(band)
 		);
 		dataModel.latestWifiScans.put(
 			deviceB,
@@ -684,9 +684,9 @@ public class LeastUsedChannelOptimizerTest {
 				TestUtils.createState(149, channelWidth, dummyBssid)
 			)
 		);
-		dataModel.latestDeviceCapabilities.put(
+		dataModel.latestDeviceCapabilitiesPhy.put(
 			deviceC,
-			TestUtils.createDeviceCapability(band)
+			TestUtils.createDeviceCapabilityPhy(band)
 		);
 		dataModel.latestWifiScans.put(
 			deviceC,
@@ -710,9 +710,9 @@ public class LeastUsedChannelOptimizerTest {
 			deviceD,
 			Arrays.asList(TestUtils.createState(36, channelWidth, dummyBssid))
 		);
-		dataModel.latestDeviceCapabilities.put(
+		dataModel.latestDeviceCapabilitiesPhy.put(
 			deviceD,
-			TestUtils.createDeviceCapability(band)
+			TestUtils.createDeviceCapabilityPhy(band)
 		);
 		dataModel.latestWifiScans.put(
 			deviceD,
@@ -742,9 +742,9 @@ public class LeastUsedChannelOptimizerTest {
 					.createState(aExpectedChannel, channelWidth, dummyBssid)
 			)
 		);
-		dataModel.latestDeviceCapabilities.put(
+		dataModel.latestDeviceCapabilitiesPhy.put(
 			deviceE,
-			TestUtils.createDeviceCapability(band)
+			TestUtils.createDeviceCapabilityPhy(band)
 		);
 		dataModel.latestWifiScans.put(
 			deviceE,
@@ -795,9 +795,9 @@ public class LeastUsedChannelOptimizerTest {
 					.createState(aExpectedChannel, channelWidth, dummyBssid)
 			)
 		);
-		dataModel.latestDeviceCapabilities.put(
+		dataModel.latestDeviceCapabilitiesPhy.put(
 			deviceA,
-			TestUtils.createDeviceCapability(band)
+			TestUtils.createDeviceCapabilityPhy(band)
 		);
 		dataModel.latestWifiScans.put(
 			deviceA,
@@ -820,9 +820,9 @@ public class LeastUsedChannelOptimizerTest {
 			deviceB,
 			Arrays.asList(TestUtils.createState(48, channelWidth, dummyBssid))
 		);
-		dataModel.latestDeviceCapabilities.put(
+		dataModel.latestDeviceCapabilitiesPhy.put(
 			deviceB,
-			TestUtils.createDeviceCapability(band)
+			TestUtils.createDeviceCapabilityPhy(band)
 		);
 		dataModel.latestWifiScans.put(
 			deviceB,
@@ -858,9 +858,9 @@ public class LeastUsedChannelOptimizerTest {
 				TestUtils.createState(149, channelWidth, dummyBssid)
 			)
 		);
-		dataModel.latestDeviceCapabilities.put(
+		dataModel.latestDeviceCapabilitiesPhy.put(
 			deviceC,
-			TestUtils.createDeviceCapability(band)
+			TestUtils.createDeviceCapabilityPhy(band)
 		);
 		dataModel.latestWifiScans.put(
 			deviceC,

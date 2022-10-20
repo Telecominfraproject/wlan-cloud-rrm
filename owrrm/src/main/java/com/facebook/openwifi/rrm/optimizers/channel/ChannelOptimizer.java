@@ -18,6 +18,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.facebook.openwifi.cloudsdk.models.ap.Capabilities;
 import com.facebook.openwifi.cloudsdk.UCentralConstants;
 import com.facebook.openwifi.cloudsdk.UCentralUtils;
 import com.facebook.openwifi.cloudsdk.WifiScanEntry;
@@ -29,7 +30,6 @@ import com.facebook.openwifi.rrm.DeviceDataManager;
 import com.facebook.openwifi.rrm.modules.ConfigManager;
 import com.facebook.openwifi.rrm.modules.Modeler.DataModel;
 import com.facebook.openwifi.rrm.modules.ModelerUtils;
-import com.google.gson.JsonObject;
 
 /**
  * Channel optimizer base class.
@@ -142,7 +142,7 @@ public abstract class ChannelOptimizer {
 			.removeIf(serialNumber -> !deviceConfigs.containsKey(serialNumber));
 		this.model.latestDeviceStatusRadios.keySet()
 			.removeIf(serialNumber -> !deviceConfigs.containsKey(serialNumber));
-		this.model.latestDeviceCapabilities.keySet()
+		this.model.latestDeviceCapabilitiesPhy.keySet()
 			.removeIf(serialNumber -> !deviceConfigs.containsKey(serialNumber));
 	}
 
@@ -349,7 +349,7 @@ public abstract class ChannelOptimizer {
 	 * @param band the operational band (e.g., "2G")
 	 * @param serialNumber the device's serial number
 	 * @param state the latest state of all the devices
-	 * @param latestDeviceCapabilities latest device capabilities
+	 * @param latestDeviceCapabilitiesPhy latest device phy from capabilities
 	 * @return the current channel and channel width (MHz) of the device in the
 	 * given band; returns a current channel of 0 if no channel in the given
 	 * band is found.
@@ -358,7 +358,7 @@ public abstract class ChannelOptimizer {
 		String band,
 		String serialNumber,
 		State state,
-		Map<String, JsonObject> latestDeviceCapabilities
+		Map<String, Map<String, Capabilities.Phy>> latestDeviceCapabilitiesPhy
 	) {
 		int currentChannel = 0;
 		int currentChannelWidth = MIN_CHANNEL_WIDTH;
@@ -370,14 +370,14 @@ public abstract class ChannelOptimizer {
 		) {
 			State.Radio radio = state.radios[radioIndex];
 			// check if radio is in band of interest
-			JsonObject deviceCapability =
-				latestDeviceCapabilities.get(serialNumber);
-			if (deviceCapability == null) {
+			Map<String, Capabilities.Phy> capabilitiesPhy =
+				latestDeviceCapabilitiesPhy.get(serialNumber);
+			if (capabilitiesPhy == null) {
 				continue;
 			}
 			final String radioBand = ModelerUtils.getBand(
 				radio,
-				deviceCapability
+				capabilitiesPhy
 			);
 			if (radioBand == null || !radioBand.equals(band)) {
 				continue;

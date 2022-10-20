@@ -337,7 +337,7 @@ public class LeastUsedChannelOptimizer extends ChannelOptimizer {
 		Map<String, Map<String, List<Integer>>> deviceAvailableChannels =
 			UCentralUtils.getDeviceAvailableChannels(
 				model.latestDeviceStatusRadios,
-				model.latestDeviceCapabilities,
+				model.latestDeviceCapabilitiesPhy,
 				UCentralUtils.AVAILABLE_CHANNELS_BAND
 			);
 
@@ -397,7 +397,7 @@ public class LeastUsedChannelOptimizer extends ChannelOptimizer {
 						band,
 						serialNumber,
 						state,
-						model.latestDeviceCapabilities
+						model.latestDeviceCapabilitiesPhy
 					);
 				int currentChannel = currentChannelInfo[0];
 				// Filter out APs if the radios in the state do not contain a

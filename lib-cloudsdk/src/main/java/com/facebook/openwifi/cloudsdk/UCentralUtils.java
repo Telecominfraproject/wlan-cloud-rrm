@@ -21,6 +21,7 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.facebook.openwifi.cloudsdk.models.ap.Capabilities;
 import com.facebook.openwifi.cloudsdk.ies.Country;
 import com.facebook.openwifi.cloudsdk.ies.LocalPowerConstraint;
 import com.facebook.openwifi.cloudsdk.ies.QbssLoad;
@@ -304,7 +305,7 @@ public class UCentralUtils {
 	 */
 	public static Map<String, Map<String, List<Integer>>> getDeviceAvailableChannels(
 		Map<String, JsonArray> deviceStatus,
-		Map<String, JsonObject> deviceCapabilities,
+		Map<String, Map<String, Capabilities.Phy>> deviceCapabilities,
 		Map<String, List<Integer>> defaultAvailableChannels
 	) {
 		Map<String, Map<String, List<Integer>>> deviceAvailableChannels =
@@ -323,41 +324,33 @@ public class UCentralUtils {
 				JsonObject radioObject = e.getAsJsonObject();
 				String band = radioObject.get("band").getAsString();
 
-				JsonObject capabilitesObject =
+				Map<String, Capabilities.Phy> capabilitiesPhyMap =
 					deviceCapabilities.get(serialNumber);
 				List<Integer> availableChannels = new ArrayList<>();
-				if (capabilitesObject == null) {
+				if (capabilitiesPhyMap == null) {
 					availableChannels
 						.addAll(defaultAvailableChannels.get(band));
 				} else {
-					Set<Entry<String, JsonElement>> entrySet = capabilitesObject
-						.entrySet();
-					for (Map.Entry<String, JsonElement> f : entrySet) {
-						String bandInsideObject = f.getValue()
-							.getAsJsonObject()
-							.get("band")
-							.getAsString();
+					Set<Entry<String, Capabilities.Phy>> entrySet =
+						capabilitiesPhyMap
+							.entrySet();
+					for (Map.Entry<String, Capabilities.Phy> f : entrySet) {
+						Capabilities.Phy phy = f.getValue();
+						String bandInsideObject = phy.band.toString();
 						if (bandInsideObject.equals(band)) {
 							// (TODO) Remove the following dfsChannels code block
 							// when the DFS channels are available
 							Set<Integer> dfsChannels = new HashSet<>();
 							try {
-								JsonArray channelInfo = f.getValue()
-									.getAsJsonObject()
-									.get("dfs_channels")
-									.getAsJsonArray();
-
-								for (JsonElement d : channelInfo) {
-									dfsChannels.add(d.getAsInt());
+								Integer[] channelInfo = phy.dfs_channels;
+								for (Integer d : channelInfo) {
+									dfsChannels.add(d);
 								}
 							} catch (Exception d) {}
 							try {
-								JsonArray channelInfo = f.getValue()
-									.getAsJsonObject()
-									.get("channels")
-									.getAsJsonArray();
-								for (JsonElement c : channelInfo) {
-									int channel = c.getAsInt();
+								Integer[] channelInfo = phy.channels;
+								for (Integer c : channelInfo) {
+									int channel = c.intValue();
 									if (!dfsChannels.contains(channel)) {
 										availableChannels.add(channel);
 									}

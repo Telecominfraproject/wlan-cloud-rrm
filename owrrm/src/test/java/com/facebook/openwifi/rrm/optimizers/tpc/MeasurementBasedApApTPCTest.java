@@ -108,9 +108,9 @@ public class MeasurementBasedApApTPCTest {
 				TestUtils
 					.createDeviceStatusSingleBand(channel, MAX_TX_POWER)
 			);
-			model.latestDeviceCapabilities.put(
+			model.latestDeviceCapabilitiesPhy.put(
 				device,
-				TestUtils.createDeviceCapability(band)
+				TestUtils.createDeviceCapabilityPhy(band)
 			);
 		}
 
@@ -161,9 +161,9 @@ public class MeasurementBasedApApTPCTest {
 						MAX_TX_POWER
 					)
 			);
-			model.latestDeviceCapabilities.put(
+			model.latestDeviceCapabilitiesPhy.put(
 				device,
-				TestUtils.createDeviceCapability(
+				TestUtils.createDeviceCapabilityPhy(
 					new String[] {
 						UCentralConstants.BAND_2G,
 						UCentralConstants.BAND_5G }
@@ -604,9 +604,9 @@ public class MeasurementBasedApApTPCTest {
 				MAX_TX_POWER
 			)
 		);
-		dataModel.latestDeviceCapabilities.put(
+		dataModel.latestDeviceCapabilitiesPhy.put(
 			DEVICE_C,
-			TestUtils.createDeviceCapability(UCentralConstants.BAND_2G)
+			TestUtils.createDeviceCapabilityPhy(UCentralConstants.BAND_2G)
 		);
 		optimizer = new MeasurementBasedApApTPC(
 			dataModel,

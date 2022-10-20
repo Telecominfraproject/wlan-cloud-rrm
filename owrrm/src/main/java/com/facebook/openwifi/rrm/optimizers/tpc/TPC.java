@@ -20,13 +20,13 @@ import java.util.stream.IntStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.facebook.openwifi.cloudsdk.models.ap.Capabilities;
 import com.facebook.openwifi.cloudsdk.models.ap.State;
 import com.facebook.openwifi.rrm.DeviceConfig;
 import com.facebook.openwifi.rrm.DeviceDataManager;
 import com.facebook.openwifi.rrm.modules.ConfigManager;
 import com.facebook.openwifi.rrm.modules.Modeler.DataModel;
 import com.facebook.openwifi.rrm.modules.ModelerUtils;
-import com.google.gson.JsonObject;
 
 /**
  * TPC (Transmit Power Control) base class.
@@ -78,7 +78,7 @@ public abstract class TPC {
 		this.model.latestDeviceStatusRadios.keySet()
 			.removeIf(serialNumber -> !deviceConfigs.containsKey(serialNumber)
 			);
-		this.model.latestDeviceCapabilities.keySet()
+		this.model.latestDeviceCapabilitiesPhy.keySet()
 			.removeIf(serialNumber -> !deviceConfigs.containsKey(serialNumber)
 			);
 	}
@@ -204,14 +204,14 @@ public abstract class TPC {
 				if (currentChannel == 0) {
 					continue;
 				}
-				JsonObject deviceCapability =
-					model.latestDeviceCapabilities.get(serialNumber);
-				if (deviceCapability == null) {
+				Map<String, Capabilities.Phy> capabilitiesPhy =
+					model.latestDeviceCapabilitiesPhy.get(serialNumber);
+				if (capabilitiesPhy == null) {
 					continue;
 				}
 				final String band = ModelerUtils.getBand(
 					radio,
-					deviceCapability
+					capabilitiesPhy
 				);
 				if (band == null) {
 					continue;
