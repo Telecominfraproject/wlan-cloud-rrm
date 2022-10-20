@@ -14,3 +14,5 @@ bin/
 *.iml
 *.iws
 *.ipr
+
+temp/
