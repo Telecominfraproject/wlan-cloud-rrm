@@ -47,17 +47,17 @@ public class DeviceDataManager {
 	private final ReadWriteLock topologyLock = new ReentrantReadWriteLock();
 
 	/** Lock on {@link #deviceLayeredConfig}. */
-	private final ReadWriteLock deviceLayeredConfigLock =
+	public final ReadWriteLock deviceLayeredConfigLock =
 		new ReentrantReadWriteLock();
 
 	/** The current device topology. */
-	private DeviceTopology topology;
+	public DeviceTopology topology;
 
 	/** The current layered device config. */
-	private DeviceLayeredConfig deviceLayeredConfig;
+	public DeviceLayeredConfig deviceLayeredConfig;
 
 	/** The cached device configs (map of serial number to computed config). */
-	private Map<String, DeviceConfig> cachedDeviceConfigs =
+	public Map<String, DeviceConfig> cachedDeviceConfigs =
 		new ConcurrentHashMap<>();
 
 	/** Empty constructor without backing files (ex. for unit tests). */

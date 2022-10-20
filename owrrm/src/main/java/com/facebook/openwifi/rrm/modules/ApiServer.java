@@ -61,6 +61,7 @@ import com.facebook.openwifi.rrm.optimizers.tpc.RandomTxPowerInitializer;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import org.openjdk.jol.info.GraphLayout;
 import io.swagger.v3.core.util.Json;
 import io.swagger.v3.core.util.Yaml;
 import io.swagger.v3.jaxrs2.Reader;
@@ -311,6 +312,7 @@ public class ApiServer implements Runnable {
 		service.get("/api/v1/currentModel", new GetCurrentModelEndpoint());
 		service.get("/api/v1/optimizeChannel", new OptimizeChannelEndpoint());
 		service.get("/api/v1/optimizeTxPower", new OptimizeTxPowerEndpoint());
+		service.get("/api/v1/memory", new MemoryEndpoint(this));
 
 		logger.info(
 			"API server listening for HTTP internal on port {} and external on port {}",
@@ -1357,6 +1359,91 @@ public class ApiServer implements Runnable {
 			}
 			response.type(MediaType.APPLICATION_JSON);
 			return gson.toJson(new ChannelAllocation(result.channelMap));
+		}
+	}
+
+	@Path("/api/v1/memory")
+	public class MemoryEndpoint implements Route {
+		private final ApiServer apiServer;
+
+		MemoryEndpoint(ApiServer server) {
+			this.apiServer = server;
+		}
+
+		@Override
+		public String handle(Request request, Response response) {
+			String type = request.queryParamOrDefault("type", "");
+			String view = request.queryParamOrDefault("view", "footprint");
+
+			java.util.function.Function<GraphLayout, String> fn = (GraphLayout graph) -> {
+				return view.equals("footprint") ? graph.toFootprint() : graph.toPrintable();
+			};
+
+			String result;
+			switch (type) {
+				case "modeler.dataModel":
+					result = fn.apply(GraphLayout.parseInstance(apiServer.modeler.dataModel));
+					break;
+
+				case "modeler.dataModel.latestWifiScans":
+					result = fn.apply(GraphLayout.parseInstance(apiServer.modeler.dataModel.latestWifiScans));
+					break;
+
+				case "modeler.dataModel.latestStates":
+					result = fn.apply(GraphLayout.parseInstance(apiServer.modeler.dataModel.latestStates));
+					break;
+
+				case "modeler.dataModel.latestDeviceStatusRadios":
+					result = fn.apply(GraphLayout.parseInstance(apiServer.modeler.dataModel.latestDeviceStatusRadios));
+					break;
+
+				case "modeler.deviceDataManager":
+					result = fn.apply(GraphLayout.parseInstance(apiServer.modeler.deviceDataManager));
+					break;
+
+				case "modeler.deviceDataManager.topology":
+					result = fn.apply(GraphLayout.parseInstance(apiServer.modeler.deviceDataManager.topology));
+					break;
+
+				case "modeler.deviceDataManager.deviceLayeredConfig":
+					result = fn.apply(GraphLayout.parseInstance(apiServer.modeler.deviceDataManager.deviceLayeredConfig));
+					break;
+
+				case "modeler.deviceDataManager.cachedDeviceConfigs":
+					result = fn.apply(GraphLayout.parseInstance(apiServer.modeler.deviceDataManager.cachedDeviceConfigs));
+					break;
+
+				case "modeler.dataModel.latestDeviceCapabilities":
+					result = fn.apply(GraphLayout.parseInstance(apiServer.modeler.dataModel.latestDeviceCapabilities));
+
+				case "modeler":
+					result = fn.apply(GraphLayout.parseInstance(apiServer.modeler));
+					break;
+
+				case "configManager.deviceDataMap":
+					result = fn.apply(GraphLayout.parseInstance(apiServer.configManager.deviceDataMap));
+					break;
+
+				case "configManager":
+					result = fn.apply(GraphLayout.parseInstance(apiServer.configManager));
+					break;
+
+				case "scheduler":
+					result = fn.apply(GraphLayout.parseInstance(apiServer.scheduler));
+					break;
+
+				case "deviceDataManager":
+					result = fn.apply(GraphLayout.parseInstance(apiServer.deviceDataManager));
+					break;
+
+				case "":
+				default:
+					result = GraphLayout.parseInstance(apiServer).toFootprint();
+					break;
+			}
+
+			logger.info("MEMORY RESPONSE: \n{}", result);
+			return result;
 		}
 	}
 

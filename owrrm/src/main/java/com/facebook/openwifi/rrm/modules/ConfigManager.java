@@ -46,7 +46,7 @@ public class ConfigManager implements Runnable {
 	private final UCentralClient client;
 
 	/** Runtime per-device data. */
-	private class DeviceData {
+	public class DeviceData {
 		/** Last received device config. */
 		public UCentralApConfiguration config;
 
@@ -55,7 +55,7 @@ public class ConfigManager implements Runnable {
 	}
 
 	/** Map from device serial number to runtime data. */
-	private Map<String, DeviceData> deviceDataMap = new TreeMap<>();
+	public Map<String, DeviceData> deviceDataMap = new TreeMap<>();
 
 	/** The main thread reference (i.e. where {@link #run()} is invoked). */
 	private Thread mainThread;

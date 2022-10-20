@@ -50,7 +50,7 @@ public class Modeler implements Runnable {
 	private final ModelerParams params;
 
 	/** The device data manager. */
-	private final DeviceDataManager deviceDataManager;
+	public final DeviceDataManager deviceDataManager;
 
 	/** The uCentral client instance. */
 	private final UCentralClient client;
@@ -74,7 +74,7 @@ public class Modeler implements Runnable {
 	}
 
 	/** The blocking data queue. */
-	private final BlockingQueue<InputData> dataQueue =
+	public final BlockingQueue<InputData> dataQueue =
 		new LinkedBlockingQueue<>();
 
 	/** Data model representation. */
