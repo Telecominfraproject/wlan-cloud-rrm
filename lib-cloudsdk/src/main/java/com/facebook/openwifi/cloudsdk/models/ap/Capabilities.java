@@ -26,15 +26,15 @@ public class Capabilities {
 	@SerializedName("switch") public Map<String, Switch> switch_;
 
 	public static class Phy {
-		public Integer tx_ant;
-		public Integer rx_ant;
+		public int tx_ant;
+		public int rx_ant;
 		public Integer[] frequencies;
 		public Integer[] channels;
 		public Integer[] dfs_channels;
-		public String htmode;
+		public String[] htmode;
 		public String[] band;
-		public Integer[] ht_capa;
-		public Integer[] vht_capa;
+		public int ht_capa;
+		public int vht_capa;
 		public Integer[] he_phy_capa;
 		public Integer[] he_mac_capa;
 	}
