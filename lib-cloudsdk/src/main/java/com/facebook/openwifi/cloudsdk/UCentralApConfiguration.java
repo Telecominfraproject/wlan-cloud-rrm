@@ -8,12 +8,14 @@
 
 package com.facebook.openwifi.cloudsdk;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
+import com.facebook.openwifi.cloudsdk.models.ap.UCentralSchema;
+
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 /**
@@ -21,16 +23,16 @@ import com.google.gson.JsonObject;
  */
 public class UCentralApConfiguration {
 	/** The raw configuration. */
-	private final JsonObject config;
+	private final UCentralSchema config;
 
 	/** Constructor from JSON string. */
 	public UCentralApConfiguration(String configJson) {
-		this.config = new Gson().fromJson(configJson, JsonObject.class);
+		this.config = new Gson().fromJson(configJson, UCentralSchema.class);
 	}
 
-	/** Constructor from JsonObject (makes deep copy). */
+	/** Constructor from JsonObject */
 	public UCentralApConfiguration(JsonObject config) {
-		this.config = config.deepCopy();
+		this.config = new Gson().fromJson(config, UCentralSchema.class);
 	}
 
 	@Override
@@ -45,22 +47,21 @@ public class UCentralApConfiguration {
 
 	/** Return the number of radios, or -1 if the field is missing/malformed. */
 	public int getRadioCount() {
-		if (!config.has("radios") || !config.get("radios").isJsonArray()) {
+		if (config.radios == null) {
 			return -1;
 		}
-		return config.getAsJsonArray("radios").size();
+		return config.radios.size();
 	}
 
 	/** Return all info in the radio config (or an empty array if none). */
-	public JsonArray getRadioConfigList() {
-		if (!config.has("radios") || !config.get("radios").isJsonArray()) {
-			return new JsonArray();
-		}
-		return config.getAsJsonArray("radios");
+	public List<UCentralSchema.Radio> getRadioConfigList() {
+		return config.radios;
 	}
 
 	/** Return all the operational bands of an AP (from the radio config) */
-	public Set<String> getRadioBandsSet(JsonArray radioConfigList) {
+	public Set<String> getRadioBandsSet(
+		List<UCentralSchema.Radio> radioConfigList
+	) {
 		Set<String> radioBandsSet = new HashSet<>();
 		if (radioConfigList == null) {
 			return radioBandsSet;
@@ -69,46 +70,39 @@ public class UCentralApConfiguration {
 			int radioIndex = 0; radioIndex < radioConfigList.size();
 			radioIndex++
 		) {
-			JsonElement e = radioConfigList.get(radioIndex);
-			if (!e.isJsonObject()) {
+			UCentralSchema.Radio radio = radioConfigList.get(radioIndex);
+			if (radio == null || radio.band == null) {
 				continue;
 			}
-			JsonObject radioObject = e.getAsJsonObject();
-			if (!radioObject.has("band")) {
-				continue;
-			}
-			radioBandsSet.add(radioObject.get("band").getAsString());
+			radioBandsSet.add(radio.band);
 		}
 		return radioBandsSet;
 	}
 
 	/** Return the radio config at the given index, or null if invalid. */
-	public JsonObject getRadioConfig(int index) {
+	public UCentralSchema.Radio getRadioConfig(int index) {
 		if (getRadioCount() < index) {
 			return null;
 		}
-		JsonArray radios = config.getAsJsonArray("radios");
+		List<UCentralSchema.Radio> radios = config.radios;
 		if (radios == null) {
 			return null;
 		}
-		JsonElement e = radios.get(index);
-		if (!e.isJsonObject()) {
-			return null;
-		}
-		return e.getAsJsonObject();
+		UCentralSchema.Radio radio = radios.get(index);
+		return radio;
 	}
 
 	/** Set radio config at the given index. Adds empty objects as needed. */
-	public void setRadioConfig(int index, JsonObject radioConfig) {
+	public void setRadioConfig(int index, UCentralSchema.Radio radioConfig) {
 		int radioCount = getRadioCount();
 		if (radioCount == -1) {
-			config.add("radios", new JsonArray());
+			config.radios = new ArrayList<UCentralSchema.Radio>();
 			radioCount = 0;
 		}
-		JsonArray radios = config.getAsJsonArray("radios");
+		List<UCentralSchema.Radio> radios = config.radios;
 		for (int i = radioCount; i <= index; i++) {
 			// insert empty objects as needed
-			radios.add(new JsonObject());
+			radios.add(new UCentralSchema.Radio());
 		}
 		radios.set(index, radioConfig);
 	}
@@ -119,11 +113,7 @@ public class UCentralApConfiguration {
 	 */
 	public int getStatisticsInterval() {
 		try {
-			return config
-				.getAsJsonObject("metrics")
-				.getAsJsonObject("statistics")
-				.get("interval")
-				.getAsInt();
+			return config.metrics.statistics.interval;
 		} catch (Exception e) {
 			return -1;
 		}
@@ -131,17 +121,14 @@ public class UCentralApConfiguration {
 
 	/** Set the statistics interval to the given value (in seconds). */
 	public void setStatisticsInterval(int intervalSec) {
-		if (!config.has("metrics") || !config.get("metrics").isJsonObject()) {
-			config.add("metrics", new JsonObject());
+		if (config.metrics == null) {
+			config.metrics = new UCentralSchema.Metrics();
 		}
-		JsonObject metrics = config.getAsJsonObject("metrics");
 		if (
-			!metrics.has("statistics") ||
-				!metrics.get("statistics").isJsonObject()
+			config.metrics.statistics == null
 		) {
-			metrics.add("statistics", new JsonObject());
+			config.metrics.statistics = new UCentralSchema.Metrics.Statistics();
 		}
-		JsonObject statistics = metrics.getAsJsonObject("statistics");
-		statistics.addProperty("interval", intervalSec);
+		config.metrics.statistics.interval = intervalSec;
 	}
 }

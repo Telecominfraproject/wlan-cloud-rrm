@@ -27,10 +27,12 @@ import com.facebook.openwifi.cloudsdk.ies.LocalPowerConstraint;
 import com.facebook.openwifi.cloudsdk.ies.QbssLoad;
 import com.facebook.openwifi.cloudsdk.ies.TxPwrInfo;
 import com.facebook.openwifi.cloudsdk.models.ap.State;
+import com.facebook.openwifi.cloudsdk.models.ap.UCentralSchema;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 
 /**
  * uCentral utility methods/structures.
@@ -177,61 +179,109 @@ public class UCentralUtils {
 	}
 
 	/**
+	 * Set all radios config channel of an AP to a given value.
+	 *
+	 * Returns true if changed, or false if unchanged for any reason.
+	 */
+	public static boolean setRadioConfigChannel(
+		String serialNumber,
+		UCentralApConfiguration config,
+		Map<String, Integer> newValueList
+	) {
+		return setRadioConfigField(
+			serialNumber,
+			config,
+			"channel",
+			newValueList
+		);
+	}
+
+	/**
+	 * Set all radios config tx power of an AP to a given value.
+	 *
+	 * Returns true if changed, or false if unchanged for any reason.
+	 */
+	public static boolean setRadioConfigTxPower(
+		String serialNumber,
+		UCentralApConfiguration config,
+		Map<String, Integer> newValueList
+	) {
+		return setRadioConfigField(
+			serialNumber,
+			config,
+			"tx-power",
+			newValueList
+		);
+	}
+
+	/**
 	 * Set all radios config of an AP to a given value.
 	 *
 	 * Returns true if changed, or false if unchanged for any reason.
 	 */
-	public static boolean setRadioConfigField(
+	private static boolean setRadioConfigField(
 		String serialNumber,
 		UCentralApConfiguration config,
 		String fieldName,
 		Map<String, Integer> newValueList
 	) {
 		boolean wasModified = false;
-		int radioCount = config.getRadioCount();
 
 		// Iterate all the radios of an AP to find the corresponding band
-		for (int radioIndex = 0; radioIndex < radioCount; radioIndex++) {
-			JsonObject radioConfig = config.getRadioConfig(radioIndex);
+		for (
+			int radioIndex = 0; radioIndex < config.getRadioCount();
+			radioIndex++
+		) {
+			UCentralSchema.Radio radioConfig =
+				config.getRadioConfig(radioIndex);
 			if (radioConfig == null) {
 				continue;
 			}
-			String operationalBand = radioConfig.get("band").getAsString();
+
+			String operationalBand = radioConfig.band;
 			if (!newValueList.containsKey(operationalBand)) {
 				continue;
 			}
 
-			// If the field doesn't exist in config, we generate the fieldName and
+			// If the fieldName doesn't exist in config, we generate the fieldName and
 			// assign the new value to it.
 			int newValue = newValueList.get(operationalBand);
-			if (!radioConfig.has(fieldName)) {
-				radioConfig.addProperty(fieldName, newValue);
-				config.setRadioConfig(radioIndex, radioConfig);
+			Integer currentValue = null;
+
+			switch (fieldName) {
+			case "channel":
+				if (
+					radioConfig.channel == null ||
+						radioConfig.channel.isString()
+				) {
+					wasModified = true;
+				} else {
+					currentValue = radioConfig.channel.getAsInt();
+
+					if (currentValue != newValue) {
+						wasModified = true;
+					}
+				}
+				radioConfig.channel = new JsonPrimitive(newValue);
+				break;
+
+			case "tx-power":
+				currentValue = radioConfig.txPower;
+				if (currentValue != newValue) {
+					radioConfig.txPower = newValue;
+					wasModified = true;
+				}
+				break;
+			}
+
+			if (wasModified) {
 				logger.info(
-					"Device {}: setting {} {} to {} (was empty)",
+					"Device {}: setting {} {} to {} (was {})",
 					serialNumber,
 					operationalBand,
 					fieldName,
-					newValue
-				);
-				wasModified = true;
-				continue;
-			}
-
-			// Compare vs. existing value.
-			// not all values are int so override those values
-			Integer currentValue = null;
-			JsonElement fieldValue = radioConfig.get(fieldName);
-			if (
-				fieldValue.isJsonPrimitive() &&
-					fieldValue.getAsJsonPrimitive().isNumber()
-			) {
-				currentValue = fieldValue.getAsInt();
-			} else {
-				logger.debug(
-					"Unable to get field '{}' as int, value was {}",
-					fieldName,
-					fieldValue.toString()
+					newValue,
+					currentValue
 				);
 			}
 
@@ -243,21 +293,9 @@ public class UCentralUtils {
 					fieldName,
 					newValue
 				);
-			} else {
-				// Update to new value
-				radioConfig.addProperty(fieldName, newValue);
-				config.setRadioConfig(radioIndex, radioConfig);
-				logger.info(
-					"Device {}: setting {} {} to {} (was {})",
-					serialNumber,
-					operationalBand,
-					fieldName,
-					newValue,
-					currentValue != null ? currentValue : fieldValue.toString()
-				);
-				wasModified = true;
 			}
 		}
+
 		return wasModified;
 	}
 
@@ -269,22 +307,18 @@ public class UCentralUtils {
 	 * Returns the results map
 	 */
 	public static Map<String, List<String>> getBandsMap(
-		Map<String, JsonArray> deviceStatus
+		Map<String, List<UCentralSchema.Radio>> deviceStatus
 	) {
 		Map<String, List<String>> bandsMap = new HashMap<>();
 
 		for (String serialNumber : deviceStatus.keySet()) {
-			JsonArray radioList =
-				deviceStatus.get(serialNumber).getAsJsonArray();
+			List<UCentralSchema.Radio> radioList =
+				deviceStatus.get(serialNumber);
 			for (
 				int radioIndex = 0; radioIndex < radioList.size(); radioIndex++
 			) {
-				JsonElement e = radioList.get(radioIndex);
-				if (!e.isJsonObject()) {
-					return null;
-				}
-				JsonObject radioObject = e.getAsJsonObject();
-				String band = radioObject.get("band").getAsString();
+				UCentralSchema.Radio radio = radioList.get(radioIndex);
+				String band = radio.band;
 				bandsMap
 					.computeIfAbsent(band, k -> new ArrayList<>())
 					.add(serialNumber);
@@ -304,7 +338,7 @@ public class UCentralUtils {
 	 * @return the results map of {band, {device, list of available channels}}
 	 */
 	public static Map<String, Map<String, List<Integer>>> getDeviceAvailableChannels(
-		Map<String, JsonArray> deviceStatus,
+		Map<String, List<UCentralSchema.Radio>> deviceStatus,
 		Map<String, Map<String, Capabilities.Phy>> deviceCapabilities,
 		Map<String, List<Integer>> defaultAvailableChannels
 	) {
@@ -312,18 +346,13 @@ public class UCentralUtils {
 			new HashMap<>();
 
 		for (String serialNumber : deviceStatus.keySet()) {
-			JsonArray radioList =
-				deviceStatus.get(serialNumber).getAsJsonArray();
+			List<UCentralSchema.Radio> radioList =
+				deviceStatus.get(serialNumber);
 			for (
 				int radioIndex = 0; radioIndex < radioList.size(); radioIndex++
 			) {
-				JsonElement e = radioList.get(radioIndex);
-				if (!e.isJsonObject()) {
-					return null;
-				}
-				JsonObject radioObject = e.getAsJsonObject();
-				String band = radioObject.get("band").getAsString();
-
+				UCentralSchema.Radio radio = radioList.get(radioIndex);
+				String band = radio.band;
 				Map<String, Capabilities.Phy> capabilitiesPhyMap =
 					deviceCapabilities.get(serialNumber);
 				List<Integer> availableChannels = new ArrayList<>();

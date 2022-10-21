@@ -35,10 +35,10 @@ public class UCentralUtilsTest {
 			"{\"interfaces\": [], \"radios\": [{\"band\": \"5G\", \"channel\": \"auto\"}]}"
 		);
 		boolean modified = UCentralUtils
-			.setRadioConfigField(serialNumber, config, "channel", newValueList);
+			.setRadioConfigChannel(serialNumber, config, newValueList);
 		assertTrue(modified);
 		assertEquals(
-			config.getRadioConfig(0).get("channel").getAsInt(),
+			config.getRadioConfig(0).channel.getAsInt(),
 			expectedChannel
 		);
 
@@ -47,10 +47,10 @@ public class UCentralUtilsTest {
 			"{\"interfaces\": [], \"radios\": [{\"band\": \"5G\"}]}"
 		);
 		modified = UCentralUtils
-			.setRadioConfigField(serialNumber, config, "channel", newValueList);
+			.setRadioConfigChannel(serialNumber, config, newValueList);
 		assertTrue(modified);
 		assertEquals(
-			config.getRadioConfig(0).get("channel").getAsInt(),
+			config.getRadioConfig(0).channel.getAsInt(),
 			expectedChannel
 		);
 
@@ -59,10 +59,10 @@ public class UCentralUtilsTest {
 			"{\"interfaces\": [], \"radios\": [{\"band\": \"5G\", \"channel\": 1}]}"
 		);
 		modified = UCentralUtils
-			.setRadioConfigField(serialNumber, config, "channel", newValueList);
+			.setRadioConfigChannel(serialNumber, config, newValueList);
 		assertFalse(modified);
 		assertEquals(
-			config.getRadioConfig(0).get("channel").getAsInt(),
+			config.getRadioConfig(0).channel.getAsInt(),
 			expectedChannel
 		);
 
@@ -71,10 +71,10 @@ public class UCentralUtilsTest {
 			"{\"interfaces\": [], \"radios\": [{\"band\": \"5G\", \"channel\": 15}]}"
 		);
 		modified = UCentralUtils
-			.setRadioConfigField(serialNumber, config, "channel", newValueList);
+			.setRadioConfigChannel(serialNumber, config, newValueList);
 		assertTrue(modified);
 		assertEquals(
-			config.getRadioConfig(0).get("channel").getAsInt(),
+			config.getRadioConfig(0).channel.getAsInt(),
 			expectedChannel
 		);
 	}

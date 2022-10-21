@@ -329,10 +329,9 @@ public class ConfigManager implements Runnable {
 			channelList.putAll(deviceConfig.userChannels);
 		}
 		if (!channelList.isEmpty()) {
-			modified |= UCentralUtils.setRadioConfigField(
+			modified |= UCentralUtils.setRadioConfigChannel(
 				serialNumber,
 				config,
-				"channel",
 				channelList
 			);
 		}
@@ -346,10 +345,9 @@ public class ConfigManager implements Runnable {
 			txPowerList.putAll(deviceConfig.userTxPowers);
 		}
 		if (!txPowerList.isEmpty()) {
-			modified |= UCentralUtils.setRadioConfigField(
+			modified |= UCentralUtils.setRadioConfigTxPower(
 				serialNumber,
 				config,
-				"tx-power",
 				txPowerList
 			);
 		}

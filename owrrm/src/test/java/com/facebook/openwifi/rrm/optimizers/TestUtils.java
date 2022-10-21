@@ -24,10 +24,11 @@ import com.facebook.openwifi.cloudsdk.UCentralUtils;
 import com.facebook.openwifi.cloudsdk.WifiScanEntry;
 import com.facebook.openwifi.cloudsdk.models.ap.Capabilities;
 import com.facebook.openwifi.cloudsdk.models.ap.State;
+import com.facebook.openwifi.cloudsdk.models.ap.UCentralSchema;
 import com.facebook.openwifi.rrm.DeviceTopology;
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 
 public class TestUtils {
 	/** The Gson instance. */
@@ -104,34 +105,34 @@ public class TestUtils {
 	 * @param band band (e.g., "2G")
 	 * @param channel channel number
 	 * @param channelWidth channel width in MHz
-	 * @return a radio info object as a {@code JsonObject}
+	 * @return a radio info object as a {@code UCentralSchema.Radio}
 	 */
-	private static JsonObject createDeviceStatusRadioObject(
+	private static UCentralSchema.Radio createDeviceStatusRadioObject(
 		String band,
 		int channel,
 		int channelWidth,
 		int txPower
 	) {
-		return gson.fromJson(
-			String.format(
-				"{\"band\": %s,\"channel\": %d,\"channel-mode\":\"HE\"," +
-					"\"channel-width\":%d,\"country\":\"CA\",\"tx-power\":%d}",
-				band,
-				channel,
-				channelWidth,
-				txPower
-			),
-			JsonObject.class
-		);
+		UCentralSchema.Radio radio = new UCentralSchema.Radio();
+		radio.band = band;
+		radio.channel = new JsonPrimitive(channel);
+		radio.channelMode = "HE";
+		radio.channelWidth = channelWidth;
+		radio.country = "CA";
+		radio.txPower = txPower;
+		return radio;
 	}
 
 	/**
 	 * Create an array with one radio info entry with the given channel on a
 	 * given band.
 	 */
-	public static JsonArray createDeviceStatus(String band, int channel) {
-		JsonArray jsonList = new JsonArray();
-		jsonList.add(
+	public static List<UCentralSchema.Radio> createDeviceStatus(
+		String band,
+		int channel
+	) {
+		List<UCentralSchema.Radio> radios = new ArrayList<>();
+		radios.add(
 			createDeviceStatusRadioObject(
 				band,
 				channel,
@@ -139,7 +140,7 @@ public class TestUtils {
 				DEFAULT_TX_POWER
 			)
 		);
-		return jsonList;
+		return radios;
 	}
 
 	/**
@@ -151,13 +152,13 @@ public class TestUtils {
 	 * @return an array with one radio info entry with the given band, channel,
 	 *         and tx power
 	 */
-	public static JsonArray createDeviceStatus(
+	public static List<UCentralSchema.Radio> createDeviceStatus(
 		String band,
 		int channel,
 		int txPower
 	) {
-		JsonArray jsonList = new JsonArray();
-		jsonList.add(
+		List<UCentralSchema.Radio> radios = new ArrayList<>();
+		radios.add(
 			createDeviceStatusRadioObject(
 				band,
 				channel,
@@ -165,18 +166,20 @@ public class TestUtils {
 				txPower
 			)
 		);
-		return jsonList;
+		return radios;
 	}
 
 	/**
 	 * Create an array with one radio info entry per given band (using the
 	 * lowest channel).
 	 */
-	public static JsonArray createDeviceStatus(List<String> bands) {
-		JsonArray jsonList = new JsonArray();
+	public static List<UCentralSchema.Radio> createDeviceStatus(
+		List<String> bands
+	) {
+		List<UCentralSchema.Radio> radios = new ArrayList<>();
 		for (String band : bands) {
 			int channel = UCentralUtils.getLowerChannelLimit(band);
-			jsonList.add(
+			radios.add(
 				createDeviceStatusRadioObject(
 					band,
 					channel,
@@ -185,19 +188,19 @@ public class TestUtils {
 				)
 			);
 		}
-		return jsonList;
+		return radios;
 	}
 
 	/**
 	 * Create an array with one radio info entry with the given tx power and
 	 * channel.
 	 */
-	public static JsonArray createDeviceStatusSingleBand(
+	public static List<UCentralSchema.Radio> createDeviceStatusSingleBand(
 		int channel,
 		int txPower2G
 	) {
-		JsonArray jsonList = new JsonArray();
-		jsonList.add(
+		List<UCentralSchema.Radio> radios = new ArrayList<>();
+		radios.add(
 			createDeviceStatusRadioObject(
 				channelToLowestMatchingBand(channel),
 				channel,
@@ -205,21 +208,21 @@ public class TestUtils {
 				txPower2G
 			)
 		);
-		return jsonList;
+		return radios;
 	}
 
 	/**
 	 * Create an array with two radio info entries (2G and 5G), with the given
 	 * tx powers and channels.
 	 */
-	public static JsonArray createDeviceStatusDualBand(
+	public static List<UCentralSchema.Radio> createDeviceStatusDualBand(
 		int channel2G,
 		int txPower2G,
 		int channel5G,
 		int txPower5G
 	) {
-		JsonArray jsonList = new JsonArray();
-		jsonList.add(
+		List<UCentralSchema.Radio> radios = new ArrayList<>();
+		radios.add(
 			createDeviceStatusRadioObject(
 				UCentralConstants.BAND_2G,
 				channel2G,
@@ -227,7 +230,7 @@ public class TestUtils {
 				txPower2G
 			)
 		);
-		jsonList.add(
+		radios.add(
 			createDeviceStatusRadioObject(
 				UCentralConstants.BAND_5G,
 				channel5G,
@@ -235,7 +238,7 @@ public class TestUtils {
 				txPower5G
 			)
 		);
-		return jsonList;
+		return radios;
 	}
 
 	/** Create a wifi scan entry with the given channel. */
