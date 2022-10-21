@@ -342,15 +342,14 @@ public class UCentralUtils {
 							// when the DFS channels are available
 							Set<Integer> dfsChannels = new HashSet<>();
 							try {
-								Integer[] channelInfo = phy.dfs_channels;
-								for (Integer d : channelInfo) {
+								int[] channelInfo = phy.dfs_channels;
+								for (int d : channelInfo) {
 									dfsChannels.add(d);
 								}
 							} catch (Exception d) {}
 							try {
-								Integer[] channelInfo = phy.channels;
-								for (Integer c : channelInfo) {
-									int channel = c.intValue();
+								int[] channelInfo = phy.channels;
+								for (int channel : channelInfo) {
 									if (!dfsChannels.contains(channel)) {
 										availableChannels.add(channel);
 									}
