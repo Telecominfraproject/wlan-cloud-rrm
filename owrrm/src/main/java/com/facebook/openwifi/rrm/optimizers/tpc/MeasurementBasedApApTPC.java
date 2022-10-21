@@ -22,11 +22,11 @@ import org.slf4j.LoggerFactory;
 
 import com.facebook.openwifi.cloudsdk.UCentralUtils;
 import com.facebook.openwifi.cloudsdk.WifiScanEntry;
+import com.facebook.openwifi.cloudsdk.models.ap.Capabilities;
 import com.facebook.openwifi.cloudsdk.models.ap.State;
 import com.facebook.openwifi.rrm.DeviceDataManager;
 import com.facebook.openwifi.rrm.modules.Modeler.DataModel;
 import com.facebook.openwifi.rrm.modules.ModelerUtils;
-import com.google.gson.JsonObject;
 
 /**
  * Measurement-based AP-AP TPC algorithm.
@@ -373,14 +373,15 @@ public class MeasurementBasedApApTPC extends TPC {
 					State.Radio radio = state.radios[idx];
 
 					// this specific SSID is not on the band of interest
-					JsonObject deviceCapability = model.latestDeviceCapabilities
-						.get(serialNumber);
-					if (deviceCapability == null) {
+					Map<String, Capabilities.Phy> capabilitiesPhy =
+						model.latestDeviceCapabilitiesPhy
+							.get(serialNumber);
+					if (capabilitiesPhy == null) {
 						continue;
 					}
 					final String radioBand = ModelerUtils.getBand(
 						radio,
-						deviceCapability
+						capabilitiesPhy
 					);
 					if (radioBand == null || !radioBand.equals(band)) {
 						continue;

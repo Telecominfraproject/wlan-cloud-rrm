@@ -8,10 +8,10 @@
 
 package com.facebook.openwifi.cloudsdk.models.gw;
 
-import com.google.gson.JsonObject;
+import com.facebook.openwifi.cloudsdk.models.ap.Capabilities;
 
 public class DeviceCapabilities {
-	public JsonObject capabilities;
+	public Capabilities capabilities;
 	public long firstUpdate;
 	public long lastUpdate;
 	public String serialNumber;

@@ -125,7 +125,7 @@ public class RandomChannelInitializer extends ChannelOptimizer {
 		Map<String, Map<String, List<Integer>>> deviceAvailableChannels =
 			UCentralUtils.getDeviceAvailableChannels(
 				model.latestDeviceStatusRadios,
-				model.latestDeviceCapabilities,
+				model.latestDeviceCapabilitiesPhy,
 				UCentralUtils.AVAILABLE_CHANNELS_BAND
 			);
 
@@ -208,7 +208,7 @@ public class RandomChannelInitializer extends ChannelOptimizer {
 						band,
 						serialNumber,
 						state,
-						model.latestDeviceCapabilities
+						model.latestDeviceCapabilitiesPhy
 					);
 				int currentChannel = currentChannelInfo[0];
 				int currentChannelWidth = currentChannelInfo[1];

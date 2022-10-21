@@ -78,9 +78,9 @@ public class RandomTxPowerInitializerTest {
 				)
 			)
 		);
-		dataModel.latestDeviceCapabilities.put(
+		dataModel.latestDeviceCapabilitiesPhy.put(
 			DEVICE_A,
-			TestUtils.createDeviceCapability(
+			TestUtils.createDeviceCapabilityPhy(
 				new String[] {
 					UCentralConstants.BAND_5G,
 					UCentralConstants.BAND_2G }
@@ -97,9 +97,9 @@ public class RandomTxPowerInitializerTest {
 				)
 			)
 		);
-		dataModel.latestDeviceCapabilities.put(
+		dataModel.latestDeviceCapabilitiesPhy.put(
 			DEVICE_B,
-			TestUtils.createDeviceCapability(UCentralConstants.BAND_2G)
+			TestUtils.createDeviceCapabilityPhy(UCentralConstants.BAND_2G)
 		);
 		return dataModel;
 	}

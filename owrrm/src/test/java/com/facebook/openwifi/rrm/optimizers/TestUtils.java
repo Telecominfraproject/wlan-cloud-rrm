@@ -11,6 +11,7 @@ package com.facebook.openwifi.rrm.optimizers;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -21,6 +22,7 @@ import com.facebook.openwifi.cloudsdk.AggregatedState;
 import com.facebook.openwifi.cloudsdk.UCentralConstants;
 import com.facebook.openwifi.cloudsdk.UCentralUtils;
 import com.facebook.openwifi.cloudsdk.WifiScanEntry;
+import com.facebook.openwifi.cloudsdk.models.ap.Capabilities;
 import com.facebook.openwifi.cloudsdk.models.ap.State;
 import com.facebook.openwifi.rrm.DeviceTopology;
 import com.google.gson.Gson;
@@ -764,11 +766,9 @@ public class TestUtils {
 	/**
 	 * Create a radio capability object which is part of the device capability.
 	 */
-	public static JsonObject createRadioCapability(String band) {
-		JsonObject radioCapability = new JsonObject();
-		JsonArray bandArray = new JsonArray();
-		bandArray.add(band);
-		radioCapability.add("band", bandArray);
+	public static Capabilities.Phy createCapabilitiesPhy(String band) {
+		Capabilities.Phy phy = new Capabilities.Phy();
+		phy.band = new String[] { band };
 		// the following fields are present but unused so they are excluded here
 		// channels
 		// dfs_channels
@@ -780,23 +780,27 @@ public class TestUtils {
 		// rx_ant
 		// tx_ant
 		// vht_capa
-		return radioCapability;
+		return phy;
 	}
 
 	/** Create a device capability object with radios in the given bands. */
-	public static JsonObject createDeviceCapability(String[] bands) {
-		JsonObject deviceCapability = new JsonObject();
+	public static Map<String, Capabilities.Phy> createDeviceCapabilityPhy(
+		String[] bands
+	) {
+		Map<String, Capabilities.Phy> capabilitiesPhy = new HashMap<>();
 		for (int i = 0; i < bands.length; i++) {
 			String phyId = generatePhyString(i);
-			JsonObject radioCapability = createRadioCapability(bands[i]);
-			deviceCapability.add(phyId, radioCapability);
+			Capabilities.Phy radioCapability = createCapabilitiesPhy(bands[i]);
+			capabilitiesPhy.put(phyId, radioCapability);
 		}
-		return deviceCapability;
+		return capabilitiesPhy;
 	}
 
 	/** Create a device capability object with a radio in the given band. */
-	public static JsonObject createDeviceCapability(String band) {
-		return createDeviceCapability(new String[] { band });
+	public static Map<String, Capabilities.Phy> createDeviceCapabilityPhy(
+		String band
+	) {
+		return createDeviceCapabilityPhy(new String[] { band });
 	}
 
 	/**

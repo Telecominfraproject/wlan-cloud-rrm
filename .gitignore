@@ -14,3 +14,6 @@ bin/
 *.iml
 *.iws
 *.ipr
+
+# Miscellaneous files thzt should not be checked in
+temp/
