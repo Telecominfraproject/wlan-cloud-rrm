@@ -1373,6 +1373,12 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Get the wifiscan results based on the bandwidth info</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/UCentralUtils.html#getScriptOutput(com.facebook.openwifi.cloudsdk.models.gw.CommandInfo)">getScriptOutput(CommandInfo)</a></span> - Static method in class com.facebook.openwifi.cloudsdk.<a href="com/facebook/openwifi/cloudsdk/UCentralUtils.html" title="class in com.facebook.openwifi.cloudsdk">UCentralUtils</a></dt>
+<dd>
+<div class="block">Given the result of the "script" API, return the actual script output
+ (decoded/decompressed if needed), or null if the script returned an
+ error.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifi/rrm/optimizers/channel/LeastUsedChannelOptimizer.html#getSortedAPs(java.util.Map)">getSortedAPs(Map&lt;String, List&lt;WifiScanEntry&gt;&gt;)</a></span> - Static method in class com.facebook.openwifi.rrm.optimizers.channel.<a href="com/facebook/openwifi/rrm/optimizers/channel/LeastUsedChannelOptimizer.html" title="class in com.facebook.openwifi.rrm.optimizers.channel">LeastUsedChannelOptimizer</a></dt>
 <dd>
 <div class="block">Get the sorted APs list to determine the visit ordering.</div>
@@ -1402,6 +1408,11 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifi/rrm/VersionProvider.html#getVersion()">getVersion()</a></span> - Method in class com.facebook.openwifi.rrm.<a href="com/facebook/openwifi/rrm/VersionProvider.html" title="class in com.facebook.openwifi.rrm">VersionProvider</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/UCentralUtils.html#getWifiClientInfo(com.facebook.openwifi.cloudsdk.models.ap.State)">getWifiClientInfo(State)</a></span> - Static method in class com.facebook.openwifi.cloudsdk.<a href="com/facebook/openwifi/cloudsdk/UCentralUtils.html" title="class in com.facebook.openwifi.cloudsdk">UCentralUtils</a></dt>
+<dd>
+<div class="block">Return a map of Wi-Fi client (STA) MAC addresses to the Client structure
+ found for that interface.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifi/rrm/DeviceDataManager.html#getZoneConfig(java.lang.String)">getZoneConfig(String)</a></span> - Method in class com.facebook.openwifi.rrm.<a href="com/facebook/openwifi/rrm/DeviceDataManager.html" title="class in com.facebook.openwifi.rrm">DeviceDataManager</a></dt>
 <dd>
 <div class="block">Return config for the given zone with all config layers applied.</div>
@@ -2269,6 +2280,11 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/models/ap/Capabilities.Phy.html#%3Cinit%3E()">Phy()</a></span> - Constructor for class com.facebook.openwifi.cloudsdk.models.ap.<a href="com/facebook/openwifi/cloudsdk/models/ap/Capabilities.Phy.html" title="class in com.facebook.openwifi.cloudsdk.models.ap">Capabilities.Phy</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/UCentralClient.html#pingFromDevice(java.lang.String,java.lang.String)">pingFromDevice(String, String)</a></span> - Method in class com.facebook.openwifi.cloudsdk.<a href="com/facebook/openwifi/cloudsdk/UCentralClient.html" title="class in com.facebook.openwifi.cloudsdk">UCentralClient</a></dt>
+<dd>
+<div class="block">Instruct a device (AP) to ping a given destination (IP/hostname),
+ returning the raw ping output or null upon error.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/models/ap/Capabilities.html#platform">platform</a></span> - Variable in class com.facebook.openwifi.cloudsdk.models.ap.<a href="com/facebook/openwifi/cloudsdk/models/ap/Capabilities.html" title="class in com.facebook.openwifi.cloudsdk.models.ap">Capabilities</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/models/ap/State.html#poe">poe</a></span> - Variable in class com.facebook.openwifi.cloudsdk.models.ap.<a href="com/facebook/openwifi/cloudsdk/models/ap/State.html" title="class in com.facebook.openwifi.cloudsdk.models.ap">State</a></dt>
@@ -2634,6 +2650,18 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifi/rrm/modules/ApiServer.RunRRMEndpoint.html#%3Cinit%3E()">RunRRMEndpoint()</a></span> - Constructor for class com.facebook.openwifi.rrm.modules.<a href="com/facebook/openwifi/rrm/modules/ApiServer.RunRRMEndpoint.html" title="class in com.facebook.openwifi.rrm.modules">ApiServer.RunRRMEndpoint</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/UCentralClient.html#runScript(java.lang.String,java.lang.String)">runScript(String, String)</a></span> - Method in class com.facebook.openwifi.cloudsdk.<a href="com/facebook/openwifi/cloudsdk/UCentralClient.html" title="class in com.facebook.openwifi.cloudsdk">UCentralClient</a></dt>
+<dd>
+<div class="block">Run a shell script on a device and return the result, or null upon error.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/UCentralClient.html#runScript(java.lang.String,java.lang.String,int)">runScript(String, String, int)</a></span> - Method in class com.facebook.openwifi.cloudsdk.<a href="com/facebook/openwifi/cloudsdk/UCentralClient.html" title="class in com.facebook.openwifi.cloudsdk">UCentralClient</a></dt>
+<dd>
+<div class="block">Run a shell script on a device and return the result, or null upon error.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/UCentralClient.html#runScript(java.lang.String,java.lang.String,int,java.lang.String)">runScript(String, String, int, String)</a></span> - Method in class com.facebook.openwifi.cloudsdk.<a href="com/facebook/openwifi/cloudsdk/UCentralClient.html" title="class in com.facebook.openwifi.cloudsdk">UCentralClient</a></dt>
+<dd>
+<div class="block">Run a script on a device and return the result, or null upon error.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/models/ap/Capabilities.Phy.html#rx_ant">rx_ant</a></span> - Variable in class com.facebook.openwifi.cloudsdk.models.ap.<a href="com/facebook/openwifi/cloudsdk/models/ap/Capabilities.Phy.html" title="class in com.facebook.openwifi.cloudsdk.models.ap">Capabilities.Phy</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/models/ap/State.Interface.Counters.html#rx_bytes">rx_bytes</a></span> - Variable in class com.facebook.openwifi.cloudsdk.models.ap.<a href="com/facebook/openwifi/cloudsdk/models/ap/State.Interface.Counters.html" title="class in com.facebook.openwifi.cloudsdk.models.ap">State.Interface.Counters</a></dt>
@@ -2674,6 +2702,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">RRMScheduler parameters.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/models/gw/ScriptRequest.html#script">script</a></span> - Variable in class com.facebook.openwifi.cloudsdk.models.gw.<a href="com/facebook/openwifi/cloudsdk/models/gw/ScriptRequest.html" title="class in com.facebook.openwifi.cloudsdk.models.gw">ScriptRequest</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/models/gw/ScriptRequest.html#scriptId">scriptId</a></span> - Variable in class com.facebook.openwifi.cloudsdk.models.gw.<a href="com/facebook/openwifi/cloudsdk/models/gw/ScriptRequest.html" title="class in com.facebook.openwifi.cloudsdk.models.gw">ScriptRequest</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/facebook/openwifi/cloudsdk/models/gw/ScriptRequest.html" title="class in com.facebook.openwifi.cloudsdk.models.gw"><span class="typeNameLink">ScriptRequest</span></a> - Class in <a href="com/facebook/openwifi/cloudsdk/models/gw/package-summary.html">com.facebook.openwifi.cloudsdk.models.gw</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/models/gw/ScriptRequest.html#%3Cinit%3E()">ScriptRequest()</a></span> - Constructor for class com.facebook.openwifi.cloudsdk.models.gw.<a href="com/facebook/openwifi/cloudsdk/models/gw/ScriptRequest.html" title="class in com.facebook.openwifi.cloudsdk.models.gw">ScriptRequest</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/ies/HTOperation.html#secondaryChannelOffset">secondaryChannelOffset</a></span> - Variable in class com.facebook.openwifi.cloudsdk.ies.<a href="com/facebook/openwifi/cloudsdk/ies/HTOperation.html" title="class in com.facebook.openwifi.cloudsdk.ies">HTOperation</a></dt>
 <dd>
 <div class="block">Indicates the offset of the secondary channel relative to the primary
@@ -2698,6 +2734,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/models/gw/DeviceConfigureRequest.html#serialNumber">serialNumber</a></span> - Variable in class com.facebook.openwifi.cloudsdk.models.gw.<a href="com/facebook/openwifi/cloudsdk/models/gw/DeviceConfigureRequest.html" title="class in com.facebook.openwifi.cloudsdk.models.gw">DeviceConfigureRequest</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/models/gw/DeviceWithStatus.html#serialNumber">serialNumber</a></span> - Variable in class com.facebook.openwifi.cloudsdk.models.gw.<a href="com/facebook/openwifi/cloudsdk/models/gw/DeviceWithStatus.html" title="class in com.facebook.openwifi.cloudsdk.models.gw">DeviceWithStatus</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/models/gw/ScriptRequest.html#serialNumber">serialNumber</a></span> - Variable in class com.facebook.openwifi.cloudsdk.models.gw.<a href="com/facebook/openwifi/cloudsdk/models/gw/ScriptRequest.html" title="class in com.facebook.openwifi.cloudsdk.models.gw">ScriptRequest</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/models/gw/StatisticsDetails.html#serialNumber">serialNumber</a></span> - Variable in class com.facebook.openwifi.cloudsdk.models.gw.<a href="com/facebook/openwifi/cloudsdk/models/gw/StatisticsDetails.html" title="class in com.facebook.openwifi.cloudsdk.models.gw">StatisticsDetails</a></dt>
 <dd>&nbsp;</dd>
@@ -2977,6 +3015,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/models/ap/State.Interface.SSID.Association.html#tid_stats">tid_stats</a></span> - Variable in class com.facebook.openwifi.cloudsdk.models.ap.<a href="com/facebook/openwifi/cloudsdk/models/ap/State.Interface.SSID.Association.html" title="class in com.facebook.openwifi.cloudsdk.models.ap">State.Interface.SSID.Association</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/models/gw/ScriptRequest.html#timeout">timeout</a></span> - Variable in class com.facebook.openwifi.cloudsdk.models.gw.<a href="com/facebook/openwifi/cloudsdk/models/gw/ScriptRequest.html" title="class in com.facebook.openwifi.cloudsdk.models.gw">ScriptRequest</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifi/rrm/mysql/StateRecord.html#timestamp">timestamp</a></span> - Variable in class com.facebook.openwifi.rrm.mysql.<a href="com/facebook/openwifi/rrm/mysql/StateRecord.html" title="class in com.facebook.openwifi.rrm.mysql">StateRecord</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/kafka/UCentralKafkaConsumer.KafkaRecord.html#timestampMs">timestampMs</a></span> - Variable in class com.facebook.openwifi.cloudsdk.kafka.<a href="com/facebook/openwifi/cloudsdk/kafka/UCentralKafkaConsumer.KafkaRecord.html" title="class in com.facebook.openwifi.cloudsdk.kafka">UCentralKafkaConsumer.KafkaRecord</a></dt>
@@ -3088,6 +3128,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/AggregatedState.html#txRate">txRate</a></span> - Variable in class com.facebook.openwifi.cloudsdk.<a href="com/facebook/openwifi/cloudsdk/AggregatedState.html" title="class in com.facebook.openwifi.cloudsdk">AggregatedState</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/AggregatedState.html#txRetries">txRetries</a></span> - Variable in class com.facebook.openwifi.cloudsdk.<a href="com/facebook/openwifi/cloudsdk/AggregatedState.html" title="class in com.facebook.openwifi.cloudsdk">AggregatedState</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/models/gw/ScriptRequest.html#type">type</a></span> - Variable in class com.facebook.openwifi.cloudsdk.models.gw.<a href="com/facebook/openwifi/cloudsdk/models/gw/ScriptRequest.html" title="class in com.facebook.openwifi.cloudsdk.models.gw">ScriptRequest</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/models/gw/ServiceEvent.html#type">type</a></span> - Variable in class com.facebook.openwifi.cloudsdk.models.gw.<a href="com/facebook/openwifi/cloudsdk/models/gw/ServiceEvent.html" title="class in com.facebook.openwifi.cloudsdk.models.gw">ServiceEvent</a></dt>
 <dd>&nbsp;</dd>
@@ -3512,6 +3554,8 @@ the order they are declared.</div>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/models/gw/CommandInfo.html#when">when</a></span> - Variable in class com.facebook.openwifi.cloudsdk.models.gw.<a href="com/facebook/openwifi/cloudsdk/models/gw/CommandInfo.html" title="class in com.facebook.openwifi.cloudsdk.models.gw">CommandInfo</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/models/gw/DeviceConfigureRequest.html#when">when</a></span> - Variable in class com.facebook.openwifi.cloudsdk.models.gw.<a href="com/facebook/openwifi/cloudsdk/models/gw/DeviceConfigureRequest.html" title="class in com.facebook.openwifi.cloudsdk.models.gw">DeviceConfigureRequest</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/models/gw/ScriptRequest.html#when">when</a></span> - Variable in class com.facebook.openwifi.cloudsdk.models.gw.<a href="com/facebook/openwifi/cloudsdk/models/gw/ScriptRequest.html" title="class in com.facebook.openwifi.cloudsdk.models.gw">ScriptRequest</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/models/ap/Capabilities.html#wifi">wifi</a></span> - Variable in class com.facebook.openwifi.cloudsdk.models.ap.<a href="com/facebook/openwifi/cloudsdk/models/ap/Capabilities.html" title="class in com.facebook.openwifi.cloudsdk.models.ap">Capabilities</a></dt>
 <dd>&nbsp;</dd>

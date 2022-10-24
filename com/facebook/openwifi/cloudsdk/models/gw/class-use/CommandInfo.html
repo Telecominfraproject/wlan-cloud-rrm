@@ -137,10 +137,56 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="../CommandInfo.html" title="class in com.facebook.openwifi.cloudsdk.models.gw">CommandInfo</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">UCentralClient.</span><code><span class="memberNameLink"><a href="../../../UCentralClient.html#runScript(java.lang.String,java.lang.String)">runScript</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;serialNumber,
+         <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;script)</code></th>
+<td class="colLast">
+<div class="block">Run a shell script on a device and return the result, or null upon error.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../CommandInfo.html" title="class in com.facebook.openwifi.cloudsdk.models.gw">CommandInfo</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">UCentralClient.</span><code><span class="memberNameLink"><a href="../../../UCentralClient.html#runScript(java.lang.String,java.lang.String,int)">runScript</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;serialNumber,
+         <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;script,
+         int&nbsp;timeoutSec)</code></th>
+<td class="colLast">
+<div class="block">Run a shell script on a device and return the result, or null upon error.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../CommandInfo.html" title="class in com.facebook.openwifi.cloudsdk.models.gw">CommandInfo</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">UCentralClient.</span><code><span class="memberNameLink"><a href="../../../UCentralClient.html#runScript(java.lang.String,java.lang.String,int,java.lang.String)">runScript</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;serialNumber,
+         <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;script,
+         int&nbsp;timeoutSec,
+         <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;type)</code></th>
+<td class="colLast">
+<div class="block">Run a script on a device and return the result, or null upon error.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../CommandInfo.html" title="class in com.facebook.openwifi.cloudsdk.models.gw">CommandInfo</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">UCentralClient.</span><code><span class="memberNameLink"><a href="../../../UCentralClient.html#wifiScan(java.lang.String,boolean)">wifiScan</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;serialNumber,
         boolean&nbsp;verbose)</code></th>
 <td class="colLast">
 <div class="block">Launch a wifi scan for a device (by serial number).</div>
+</td>
+</tr>
+</tbody>
+</table>
+<table class="useSummary">
+<caption><span>Methods in <a href="../../../package-summary.html">com.facebook.openwifi.cloudsdk</a> with parameters of type <a href="../CommandInfo.html" title="class in com.facebook.openwifi.cloudsdk.models.gw">CommandInfo</a></span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colSecond" scope="col">Method</th>
+<th class="colLast" scope="col">Description</th>
+</tr>
+<tbody>
+<tr class="altColor">
+<td class="colFirst"><code>static <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">UCentralUtils.</span><code><span class="memberNameLink"><a href="../../../UCentralUtils.html#getScriptOutput(com.facebook.openwifi.cloudsdk.models.gw.CommandInfo)">getScriptOutput</a></span>&#8203;(<a href="../CommandInfo.html" title="class in com.facebook.openwifi.cloudsdk.models.gw">CommandInfo</a>&nbsp;info)</code></th>
+<td class="colLast">
+<div class="block">Given the result of the "script" API, return the actual script output
+ (decoded/decompressed if needed), or null if the script returned an
+ error.</div>
 </td>
 </tr>
 </tbody>
