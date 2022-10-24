@@ -8,8 +8,10 @@
 
 package com.facebook.openwifi.cloudsdk;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -17,6 +19,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.zip.DataFormatException;
+import java.util.zip.Inflater;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +31,7 @@ import com.facebook.openwifi.cloudsdk.ies.LocalPowerConstraint;
 import com.facebook.openwifi.cloudsdk.ies.QbssLoad;
 import com.facebook.openwifi.cloudsdk.ies.TxPwrInfo;
 import com.facebook.openwifi.cloudsdk.models.ap.State;
+import com.facebook.openwifi.cloudsdk.models.gw.CommandInfo;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -476,5 +481,112 @@ public class UCentralUtils {
 		} catch (NumberFormatException e) {
 			return null;
 		}
+	}
+
+	/**
+	 * Return a map of Wi-Fi client (STA) MAC addresses to the Client structure
+	 * found for that interface. This does NOT support clients connected on
+	 * multiple interfaces simultaneously.
+	 */
+	public static Map<String, State.Interface.Client> getWifiClientInfo(
+		State state
+	) {
+		Map<String, State.Interface.Client> ret = new HashMap<>();
+
+		// Aggregate over all interfaces
+		for (State.Interface iface : state.interfaces) {
+			if (iface.ssids == null || iface.clients == null) {
+				continue;
+			}
+
+			// Convert client array to map (for faster lookups)
+			Map<String, State.Interface.Client> ifaceMap = new HashMap<>();
+			for (State.Interface.Client client : iface.clients) {
+				ifaceMap.put(client.mac, client);
+			}
+
+			// Loop over all SSIDs and connected clients
+			for (State.Interface.SSID ssid : iface.ssids) {
+				if (ssid.associations == null) {
+					continue;
+				}
+				for (
+					State.Interface.SSID.Association association : ssid.associations
+				) {
+					State.Interface.Client client =
+						ifaceMap.get(association.station);
+					if (client != null) {
+						ret.put(association.station, client);
+					}
+				}
+			}
+		}
+
+		return ret;
+	}
+
+	/**
+	 * Decompress (inflate) a UTF-8 string using ZLIB.
+	 *
+	 * @param compressed the compressed string
+	 * @param uncompressedSize the uncompressed size (must be known)
+	 */
+	private static String inflate(String compressed, int uncompressedSize)
+		throws DataFormatException {
+		if (compressed == null) {
+			throw new NullPointerException("Null compressed string");
+		}
+		if (uncompressedSize < 0) {
+			throw new IllegalArgumentException("Invalid size");
+		}
+
+		byte[] input = compressed.getBytes(StandardCharsets.UTF_8);
+		byte[] output = new byte[uncompressedSize];
+
+		Inflater inflater = new Inflater();
+		inflater.setInput(input, 0, input.length);
+		inflater.inflate(output);
+		inflater.end();
+
+		return new String(output, StandardCharsets.UTF_8);
+	}
+
+	/**
+	 * Given the result of the "script" API, return the actual script output
+	 * (decoded/decompressed if needed), or null if the script returned an
+	 * error.
+	 *
+	 * @see UCentralClient#runScript(String, String, int, String)
+	 */
+	public static String getScriptOutput(CommandInfo info) {
+		if (info == null || info.results == null) {
+			return null;
+		}
+		if (!info.results.has("status")) {
+			return null;
+		}
+		JsonObject status = info.results.get("status").getAsJsonObject();
+		if (!status.has("error") || status.get("error").getAsInt() != 0) {
+			return null;
+		}
+		if (status.has("result")) {
+			// Raw result
+			return status.get("result").getAsString();
+		} else if (status.has("result_64") && status.has("result_sz")) {
+			// Base64+compressed result
+			// NOTE: untested, not actually implemented on ucentral-client?
+			try {
+				String encoded = status.get("result_64").getAsString();
+				int uncompressedSize = status.get("result_sz").getAsInt();
+				String decoded = new String(
+					Base64.getDecoder().decode(encoded),
+					StandardCharsets.UTF_8
+				);
+				return inflate(decoded, uncompressedSize);
+			} catch (Exception e) {
+				logger.error("Failed to decode or inflate script result", e);
+			}
+		}
+		return null;
 	}
 }

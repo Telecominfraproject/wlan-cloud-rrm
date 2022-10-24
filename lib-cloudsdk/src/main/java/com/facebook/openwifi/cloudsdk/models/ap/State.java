@@ -54,6 +54,8 @@ public class State {
 				public int ack_signal;
 				public int ack_signal_avg;
 				public JsonObject[] tid_stats; // TODO: see cfg80211_tid_stats
+
+				// TODO ipaddr_v4 - either string or object (ip4leases), but duplicated in "clients"
 			}
 
 			public Association[] associations;

@@ -25,6 +25,7 @@ import com.facebook.openwifi.cloudsdk.models.gw.DeviceCapabilities;
 import com.facebook.openwifi.cloudsdk.models.gw.DeviceConfigureRequest;
 import com.facebook.openwifi.cloudsdk.models.gw.DeviceListWithStatus;
 import com.facebook.openwifi.cloudsdk.models.gw.DeviceWithStatus;
+import com.facebook.openwifi.cloudsdk.models.gw.ScriptRequest;
 import com.facebook.openwifi.cloudsdk.models.gw.ServiceEvent;
 import com.facebook.openwifi.cloudsdk.models.gw.StatisticsRecords;
 import com.facebook.openwifi.cloudsdk.models.gw.SystemInfoResults;
@@ -560,6 +561,83 @@ public class UCentralClient {
 			logger.error(errMsg, e);
 			return null;
 		}
+	}
+
+	/**
+	 * Run a shell script on a device and return the result, or null upon error.
+	 *
+	 * @see #runScript(String, String, int)
+	 */
+	public CommandInfo runScript(String serialNumber, String script) {
+		return runScript(serialNumber, script, 30);
+	}
+
+	/**
+	 * Run a shell script on a device and return the result, or null upon error.
+	 *
+	 * @see #runScript(String, String, int, String)
+	 */
+	public CommandInfo runScript(
+		String serialNumber,
+		String script,
+		int timeoutSec
+	) {
+		return runScript(serialNumber, script, timeoutSec, "shell");
+	}
+
+	/**
+	 * Run a script on a device and return the result, or null upon error.
+	 *
+	 * @param serialNumber the device
+	 * @param script the script contents
+	 * @param timeoutSec the timeout in seconds
+	 * @param type the script type (either "shell" or "ucode")
+	 *
+	 * @see UCentralUtils#getScriptOutput(CommandInfo)
+	 */
+	public CommandInfo runScript(
+		String serialNumber,
+		String script,
+		int timeoutSec,
+		String type
+	) {
+		ScriptRequest req = new ScriptRequest();
+		req.serialNumber = serialNumber;
+		req.timeout = timeoutSec;
+		req.type = type;
+		req.script = script;
+		req.scriptId = "1"; // ??
+		HttpResponse<String> response = httpPost(
+			String.format("device/%s/script", serialNumber),
+			OWGW_SERVICE,
+			req
+		);
+		if (!response.isSuccess()) {
+			logger.error("Error: {}", response.getBody());
+			return null;
+		}
+		try {
+			return gson.fromJson(response.getBody(), CommandInfo.class);
+		} catch (JsonSyntaxException e) {
+			String errMsg = String.format(
+				"Failed to deserialize to CommandInfo: %s",
+				response.getBody()
+			);
+			logger.error(errMsg, e);
+			return null;
+		}
+	}
+
+	/**
+	 * Instruct a device (AP) to ping a given destination (IP/hostname),
+	 * returning the raw ping output or null upon error.
+	 */
+	public String pingFromDevice(String serialNumber, String host) {
+		// TODO pass options, parse output
+		final int PING_COUNT = 5;
+		String script = String.format("ping -c %d %s", PING_COUNT, host);
+		CommandInfo info = runScript(serialNumber, script);
+		return UCentralUtils.getScriptOutput(info);
 	}
 
 	/** Retrieve a list of inventory from owprov. */
