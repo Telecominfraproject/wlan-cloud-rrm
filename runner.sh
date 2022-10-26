@@ -8,4 +8,4 @@ echo $@
 java \
 	-XX:+IdleTuningGcOnIdle -Xtune:virtualized \
 	-jar "$BIN" \
-	run "$@"
+	"$@"
