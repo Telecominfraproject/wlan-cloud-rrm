@@ -7,7 +7,9 @@ JVM=$1
 BIN=$2
 shift 2
 
-COMMON_PARAMETERS=()
+COMMON_PARAMETERS=(
+-XX:+CompactStrings
+)
 
 if [ -n "$JVM_HOTSPOT" ]; then
 # for hotspot
