@@ -15,6 +15,8 @@ if [ -n "$JVM_HOTSPOT" ]; then
 # for hotspot
 PARAMETERS=(
 "${COMMON_PARAMETERS[@]}"
+-XX:+UseG1GC
+-XX:+UseStringDeduplication
 )
 else
 # for openj9
