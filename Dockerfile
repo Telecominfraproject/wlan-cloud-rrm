@@ -14,7 +14,7 @@ COPY runner.sh /
 COPY --from=build /usr/src/java/owrrm/target/openwifi-rrm.jar /usr/local/bin/
 EXPOSE 16789 16790
 ENTRYPOINT ["/docker-entrypoint.sh"]
-CMD ["/runner.sh", "/usr/local/bin/openwifi-rrm.jar", \
+CMD ["/runner.sh", "java", "/usr/local/bin/openwifi-rrm.jar", \
     "run", \
     "--config-env", \
     "-t", "/owrrm-data/topology.json", \

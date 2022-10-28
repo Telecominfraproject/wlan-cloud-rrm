@@ -1,11 +1,38 @@
 #!/usr/bin/env sh
 
-BIN=$1
-shift 1
+# script to help run the binary with specific jvm and jvm options
+# Defaults to openj9. Switch by setting JVM_IMPL environment variable
 
-echo $@
+JAVA_BIN=$1
+JAR=$2
+shift 2
 
-java \
-	-XX:+IdleTuningGcOnIdle -Xtune:virtualized \
-	-jar "$BIN" \
-	"$@"
+COMMON_PARAMETERS=" \
+-XX:+CompactStrings \
+"
+
+JVM_IMPL="${JVM_IMPL:-openj9}"
+
+if [ "$JVM_IMPL" = "hotspot" ]; then
+# for hotspot
+PARAMETERS="\
+$COMMON_PARAMETERS \
+-XX:+UseG1GC \
+-XX:+UseStringDeduplication \
+"
+elif [ "$JVM_IMPL" = "openj9" ]; then
+# for openj9
+PARAMETERS=" \
+$COMMON_PARAMETERS \
+-XX:+IdleTuningGcOnIdle \
+-Xtune:virtualized
+"
+else
+echo "Invalid JVM_IMPL option"
+exit 1
+fi
+
+"$JAVA_BIN" \
+	$PARAMETERS \
+	-jar "$JAR" \
+	$@
