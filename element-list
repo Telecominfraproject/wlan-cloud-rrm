@@ -5,6 +5,7 @@ com.facebook.openwifi.cloudsdk.models.ap
 com.facebook.openwifi.cloudsdk.models.gw
 com.facebook.openwifi.cloudsdk.models.prov
 com.facebook.openwifi.cloudsdk.models.prov.rrm
+com.facebook.openwifi.librca
 com.facebook.openwifi.rrm
 com.facebook.openwifi.rrm.aggregators
 com.facebook.openwifi.rrm.modules
