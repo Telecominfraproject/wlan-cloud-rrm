@@ -8,7 +8,6 @@
   <modules>
     <module>lib-cloudsdk</module>
     <module>owrrm</module>
-    <module>lib-rca</module>
   </modules>
   <properties>
     <!-- Hack for static files located in root project -->
@@ -130,7 +129,7 @@
       </plugins>
     </pluginManagement>
   </build>
-  <dependencyManagement>
+  <dependencyManagement>  
     <dependencies>
       <dependency>
         <groupId>org.slf4j</groupId>
