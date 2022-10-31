@@ -1,0 +1,71 @@
+{
+  "serviceConfig": {
+    "name": "owrrm",
+    "id": 932063579484203008,
+    "privateEndpoint": "http://owrrm.wlan.local:16789",
+    "publicEndpoint": "https://owrrm.rrm-test.mcx-openwifi.link",
+    "vendor": "Meta",
+    "vendorUrl": "https://github.com/Telecominfraproject/wlan-cloud-rrm",
+    "vendorReferenceUrl": "https://github.com/Telecominfraproject/wlan-cloud-rrm/blob/main/ALGORITHMS.md"
+  },
+  "uCentralConfig": {
+    "usePublicEndpoints": true,
+    "uCentralSecPublicEndpoint": "https://owsec.rrm-test.mcx-openwifi.link",
+    "username": "tip@ucentral.com",
+    "password": "Il3Q_fjrXtv1DAvVX80VlQ",
+    "verifySsl": false,
+    "uCentralSocketParams": {
+      "connectTimeoutMs": 2000,
+      "socketTimeoutMs": 15000,
+      "wifiScanTimeoutMs": 45000
+    }
+  },
+  "kafkaConfig": {
+    "bootstrapServer": "vm.rrm-test.mcx-openwifi.link:9093",
+    "stateTopic": "state",
+    "wifiScanTopic": "wifiscan",
+    "serviceEventsTopic": "service_events",
+    "groupId": "rrm-service-rockymandayam",
+    "autoOffsetReset": "latest",
+    "pollTimeoutMs": 10000
+  },
+  "databaseConfig": {
+    "server": "",
+    "user": "root",
+    "password": "openwifi",
+    "dbName": "rrm",
+    "dataRetentionIntervalDays": 14
+  },
+  "moduleConfig": {
+    "dataCollectorParams": {
+      "updateIntervalMs": 5000,
+      "deviceStatsIntervalSec": 60,
+      "wifiScanIntervalSec": 60,
+      "capabilitiesIntervalSec": 3600,
+      "executorThreadCount": 3
+    },
+    "configManagerParams": {
+      "updateIntervalMs": 60000,
+      "configEnabled": true,
+      "configOnEventOnly": true,
+      "configDebounceIntervalSec": 30
+    },
+    "modelerParams": {
+      "wifiScanBufferSize": 10
+    },
+    "apiServerParams": {
+      "httpPort": 16789,
+      "corsDomainList": "",
+      "useOpenWifiAuth": false,
+      "openWifiAuthCacheSize": 100
+    },
+    "provMonitorParams": {
+      "useVenues": true,
+      "syncIntervalMs": 300000
+    },
+    "schedulerParams": {
+      "threadCount": 2,
+      "dryRun": false
+    }
+  }
+}

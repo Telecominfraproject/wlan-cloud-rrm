@@ -1,0 +1,83 @@
+{
+  "apConfig": {
+    "903cb36ae30e": {
+      "enableRRM": true,
+      "enableConfig": true,
+      "enableWifiScan": true
+    },
+    "903cb36ae3cc": {
+      "enableRRM": true,
+      "enableConfig": true,
+      "enableWifiScan": true
+    },
+    "903cb36ae589": {
+      "enableRRM": true,
+      "enableConfig": true,
+      "enableWifiScan": true
+    },
+    "903cb3bb1ef9": {
+      "enableRRM": true,
+      "enableConfig": true,
+      "enableWifiScan": true
+    },
+    "903cb3bb252a": {
+      "enableRRM": true,
+      "enableConfig": true,
+      "enableWifiScan": true
+    },
+    "903cb3bb2737": {
+      "enableRRM": true,
+      "enableConfig": true,
+      "enableWifiScan": true
+    },
+    "903cb36ae223": {
+      "enableRRM": false,
+      "enableConfig": false,
+      "enableWifiScan": false
+    }
+  },
+  "zoneConfig": {
+    "wuweicai": {
+      "schedule": {
+        "crons": [
+          "0 * * ? * *"
+        ],
+        "algorithms": [
+          {
+            "name": "OptimizeChannel",
+            "args": {
+              "mode": "least_used"
+            }
+          }
+        ]
+      }
+    },
+    "alex": {
+      "schedule": {
+        "crons": [
+          "0 */10 * ? * *"
+        ],
+        "algorithms": [
+          {
+            "name": "OptimizeChannel",
+            "args": {}
+          }
+        ]
+      }
+    },
+    "pohan": {
+      "schedule": {
+        "crons": [
+          "0 */1 * ? * *"
+        ],
+        "algorithms": [
+          {
+            "name": "OptimizeChannel",
+            "args": {}
+          }
+        ]
+      }
+    }
+  },
+  "networkConfig": {}
+}
