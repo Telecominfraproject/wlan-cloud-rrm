@@ -7,8 +7,8 @@
   <packaging>pom</packaging>
   <modules>
     <module>lib-cloudsdk</module>
-    <module>owrrm</module>
     <module>lib-rca</module>
+    <module>owrrm</module>
   </modules>
   <properties>
     <!-- Hack for static files located in root project -->
