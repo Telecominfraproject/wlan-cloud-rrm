@@ -17,3 +17,7 @@ bin/
 
 # Miscellaneous files thzt should not be checked in
 temp/
+
+
+# .DS_Store files
+*.DS_Store
