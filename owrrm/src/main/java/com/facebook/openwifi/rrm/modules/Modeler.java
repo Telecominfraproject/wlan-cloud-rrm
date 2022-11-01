@@ -8,6 +8,7 @@
 
 package com.facebook.openwifi.rrm.modules;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -169,10 +170,15 @@ public class Modeler implements Runnable {
 			consumer.addKafkaListener(
 				getClass().getSimpleName(),
 				new UCentralKafkaConsumer.KafkaListener() {
+					// NOTE: list copying due to potential modification in run()
+
 					@Override
 					public void handleStateRecords(List<KafkaRecord> records) {
 						dataQueue.offer(
-							new InputData(InputDataType.STATE, records)
+							new InputData(
+								InputDataType.STATE,
+								new ArrayList<>(records)
+							)
 						);
 					}
 
@@ -181,7 +187,10 @@ public class Modeler implements Runnable {
 						List<KafkaRecord> records
 					) {
 						dataQueue.offer(
-							new InputData(InputDataType.WIFISCAN, records)
+							new InputData(
+								InputDataType.WIFISCAN,
+								new ArrayList<>(records)
+							)
 						);
 					}
 

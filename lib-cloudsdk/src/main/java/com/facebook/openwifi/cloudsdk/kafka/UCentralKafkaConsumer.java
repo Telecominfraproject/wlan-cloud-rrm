@@ -70,7 +70,12 @@ public class UCentralKafkaConsumer {
 		/** The state payload JSON. */
 		public final JsonObject payload;
 
-		/** Unix time (ms). */
+		/**
+		 * The record timestamp (Unix time, in ms).
+		 *
+		 * Depending on the broker configuration for "message.timestamp.type",
+		 * this may either be the "CreateTime" or "LogAppendTime".
+		 */
 		public final long timestampMs;
 
 		/** Constructor. */
@@ -85,7 +90,12 @@ public class UCentralKafkaConsumer {
 		}
 	}
 
-	/** Kafka record listener interface. */
+	/**
+	 * Kafka record listener interface.
+	 *
+	 * The inputs must NOT be mutated, as they may be passed to multiple
+	 * listeners and may result in ConcurrentModificationException.
+	 */
 	public interface KafkaListener {
 		/** Handle a list of state records. */
 		void handleStateRecords(List<KafkaRecord> records);
@@ -271,7 +281,6 @@ public class UCentralKafkaConsumer {
 					serialNumber,
 					payload.toString()
 				);
-				// record.timestamp() is empirically confirmed to be Unix time (ms)
 				KafkaRecord kafkaRecord =
 					new KafkaRecord(serialNumber, payload, record.timestamp());
 				if (record.topic().equals(stateTopic)) {

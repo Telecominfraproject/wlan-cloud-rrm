@@ -30,6 +30,7 @@ import com.facebook.openwifi.rrm.modules.Modeler;
 import com.facebook.openwifi.rrm.modules.ProvMonitor;
 import com.facebook.openwifi.rrm.modules.RRMScheduler;
 import com.facebook.openwifi.rrm.mysql.DatabaseManager;
+import com.facebook.openwifi.rrm.rca.modules.StationPinger;
 
 /**
  * RRM service runner.
@@ -134,10 +135,16 @@ public class RRM {
 				) : null;
 		KafkaRunner kafkaRunner = (consumer == null && producer == null)
 			? null : new KafkaRunner(consumer, producer);
+		StationPinger stationPinger = new StationPinger(
+			config.rcaConfig.stationPingerParams,
+			client,
+			consumer
+		);
 
 		// Add shutdown hook
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 			logger.debug("Running shutdown hook...");
+			stationPinger.shutdown();
 			if (kafkaRunner != null) {
 				kafkaRunner.shutdown();
 			}
