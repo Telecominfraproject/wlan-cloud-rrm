@@ -117,6 +117,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <th class="colFirst" scope="row"><a href="#com.facebook.openwifi.rrm.modules">com.facebook.openwifi.rrm.modules</a></th>
 <td class="colLast">&nbsp;</td>
 </tr>
+<tr class="rowColor">
+<th class="colFirst" scope="row"><a href="#com.facebook.openwifi.rrm.rca">com.facebook.openwifi.rrm.rca</a></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="altColor">
+<th class="colFirst" scope="row"><a href="#com.facebook.openwifi.rrm.rca.modules">com.facebook.openwifi.rrm.rca.modules</a></th>
+<td class="colLast">&nbsp;</td>
+</tr>
 </tbody>
 </table>
 </li>
@@ -240,6 +248,58 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
            <a href="../../rrm/modules/Modeler.html" title="class in com.facebook.openwifi.rrm.modules">Modeler</a>&nbsp;modeler,
            <a href="../UCentralClient.html" title="class in com.facebook.openwifi.cloudsdk">UCentralClient</a>&nbsp;client,
            <a href="../../rrm/modules/RRMScheduler.html" title="class in com.facebook.openwifi.rrm.modules">RRMScheduler</a>&nbsp;scheduler)</code></th>
+<td class="colLast">
+<div class="block">Constructor.</div>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+</li>
+<li class="blockList">
+<section role="region"><a id="com.facebook.openwifi.rrm.rca">
+<!--   -->
+</a>
+<h3>Uses of <a href="../UCentralClient.html" title="class in com.facebook.openwifi.cloudsdk">UCentralClient</a> in <a href="../../rrm/rca/package-summary.html">com.facebook.openwifi.rrm.rca</a></h3>
+<table class="useSummary">
+<caption><span>Methods in <a href="../../rrm/rca/package-summary.html">com.facebook.openwifi.rrm.rca</a> with parameters of type <a href="../UCentralClient.html" title="class in com.facebook.openwifi.cloudsdk">UCentralClient</a></span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colSecond" scope="col">Method</th>
+<th class="colLast" scope="col">Description</th>
+</tr>
+<tbody>
+<tr class="altColor">
+<td class="colFirst"><code>static <a href="../../rrm/rca/RCAUtils.PingResult.html" title="class in com.facebook.openwifi.rrm.rca">RCAUtils.PingResult</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">RCAUtils.</span><code><span class="memberNameLink"><a href="../../rrm/rca/RCAUtils.html#pingFromDevice(com.facebook.openwifi.cloudsdk.UCentralClient,java.lang.String,java.lang.String,int)">pingFromDevice</a></span>&#8203;(<a href="../UCentralClient.html" title="class in com.facebook.openwifi.cloudsdk">UCentralClient</a>&nbsp;client,
+              <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;serialNumber,
+              <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;host,
+              int&nbsp;pingCount)</code></th>
+<td class="colLast">
+<div class="block">Instruct a device (AP) to ping a given destination (IP/hostname),
+ returning the raw ping output or null upon error.</div>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+</li>
+<li class="blockList">
+<section role="region"><a id="com.facebook.openwifi.rrm.rca.modules">
+<!--   -->
+</a>
+<h3>Uses of <a href="../UCentralClient.html" title="class in com.facebook.openwifi.cloudsdk">UCentralClient</a> in <a href="../../rrm/rca/modules/package-summary.html">com.facebook.openwifi.rrm.rca.modules</a></h3>
+<table class="useSummary">
+<caption><span>Constructors in <a href="../../rrm/rca/modules/package-summary.html">com.facebook.openwifi.rrm.rca.modules</a> with parameters of type <a href="../UCentralClient.html" title="class in com.facebook.openwifi.cloudsdk">UCentralClient</a></span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Constructor</th>
+<th class="colLast" scope="col">Description</th>
+</tr>
+<tbody>
+<tr class="altColor">
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../rrm/rca/modules/StationPinger.html#%3Cinit%3E(com.facebook.openwifi.rrm.rca.RCAConfig.StationPingerParams,com.facebook.openwifi.cloudsdk.UCentralClient,com.facebook.openwifi.cloudsdk.kafka.UCentralKafkaConsumer)">StationPinger</a></span>&#8203;(<a href="../../rrm/rca/RCAConfig.StationPingerParams.html" title="class in com.facebook.openwifi.rrm.rca">RCAConfig.StationPingerParams</a>&nbsp;params,
+             <a href="../UCentralClient.html" title="class in com.facebook.openwifi.cloudsdk">UCentralClient</a>&nbsp;uCentralClient,
+             <a href="../kafka/UCentralKafkaConsumer.html" title="class in com.facebook.openwifi.cloudsdk.kafka">UCentralKafkaConsumer</a>&nbsp;consumer)</code></th>
 <td class="colLast">
 <div class="block">Constructor.</div>
 </td>

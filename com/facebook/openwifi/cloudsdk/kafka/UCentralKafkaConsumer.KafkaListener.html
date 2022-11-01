@@ -128,7 +128,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dl>
 <hr>
 <pre>public static interface <span class="typeNameLabel">UCentralKafkaConsumer.KafkaListener</span></pre>
-<div class="block">Kafka record listener interface.</div>
+<div class="block">Kafka record listener interface.
+
+ The inputs must NOT be mutated, as they may be passed to multiple
+ listeners and may result in ConcurrentModificationException.</div>
 </li>
 </ul>
 </div>
