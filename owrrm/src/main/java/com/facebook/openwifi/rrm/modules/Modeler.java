@@ -303,12 +303,15 @@ public class Modeler implements Runnable {
 				JsonObject state = record.payload.getAsJsonObject("state");
 				if (state != null) {
 					try {
-						State stateModel = gson.fromJson(state, State.class);
-						List<State> latestStatesList = dataModel.latestStates
-							.computeIfAbsent(
-								record.serialNumber,
-								k -> new LinkedList<>()
-							);
+						State stateModel =
+							gson.fromJson(state, State.class);
+						stateModel.timeStamp = record.timestampMs;
+						List<State> latestStatesList =
+							dataModel.latestStates
+								.computeIfAbsent(
+									record.serialNumber,
+									k -> new LinkedList<>()
+								);
 						while (
 							latestStatesList.size() >= params.stateBufferSize
 						) {

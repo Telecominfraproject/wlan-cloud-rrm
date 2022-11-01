@@ -823,11 +823,15 @@ public class TestUtils {
 		int[] clientRssi
 	) {
 		AggregatedState state = new AggregatedState();
-		state.radio = new AggregatedState.Radio(channel, channelWidth, txPower);
+		state.radioConfig =
+			new AggregatedState.RadioConfig(channel, channelWidth, txPower);
 		state.bssid = bssid;
 		state.station = station;
+		state.associationInfoList = new ArrayList<>();
 		for (int rssi : clientRssi) {
-			state.rssi.add(rssi);
+			AggregatedState.AssociationInfo associationInfo =
+				new AggregatedState.AssociationInfo(rssi);
+			state.associationInfoList.add(associationInfo);
 		}
 		return state;
 	}
