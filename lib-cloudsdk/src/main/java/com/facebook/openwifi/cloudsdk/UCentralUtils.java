@@ -25,11 +25,11 @@ import java.util.zip.Inflater;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.facebook.openwifi.cloudsdk.models.ap.Capabilities;
 import com.facebook.openwifi.cloudsdk.ies.Country;
 import com.facebook.openwifi.cloudsdk.ies.LocalPowerConstraint;
 import com.facebook.openwifi.cloudsdk.ies.QbssLoad;
 import com.facebook.openwifi.cloudsdk.ies.TxPwrInfo;
+import com.facebook.openwifi.cloudsdk.models.ap.Capabilities;
 import com.facebook.openwifi.cloudsdk.models.ap.State;
 import com.facebook.openwifi.cloudsdk.models.gw.CommandInfo;
 import com.google.gson.Gson;
@@ -566,7 +566,12 @@ public class UCentralUtils {
 			return null;
 		}
 		JsonObject status = info.results.get("status").getAsJsonObject();
-		if (!status.has("error") || status.get("error").getAsInt() != 0) {
+		if (!status.has("error")) {
+			return null;
+		}
+		int errorCode = status.get("error").getAsInt();
+		if (errorCode != 0) {
+			logger.error("Script failed with code {}", errorCode);
 			return null;
 		}
 		if (status.has("result")) {

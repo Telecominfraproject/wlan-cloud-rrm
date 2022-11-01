@@ -117,7 +117,7 @@ public class State {
 	public static class Radio {
 		public long active_ms;
 		public long busy_ms;
-		public int channel;
+		public int channel; // TODO might be int[] array??
 		public String channel_width;
 		public long noise;
 		public String phy;

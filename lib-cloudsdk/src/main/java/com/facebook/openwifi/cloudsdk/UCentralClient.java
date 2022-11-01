@@ -628,18 +628,6 @@ public class UCentralClient {
 		}
 	}
 
-	/**
-	 * Instruct a device (AP) to ping a given destination (IP/hostname),
-	 * returning the raw ping output or null upon error.
-	 */
-	public String pingFromDevice(String serialNumber, String host) {
-		// TODO pass options, parse output
-		final int PING_COUNT = 5;
-		String script = String.format("ping -c %d %s", PING_COUNT, host);
-		CommandInfo info = runScript(serialNumber, script);
-		return UCentralUtils.getScriptOutput(info);
-	}
-
 	/** Retrieve a list of inventory from owprov. */
 	public InventoryTagList getProvInventory() {
 		HttpResponse<String> response = httpGet("inventory", OWPROV_SERVICE);

@@ -10,6 +10,8 @@ package com.facebook.openwifi.rrm;
 
 import java.util.Map;
 
+import com.facebook.openwifi.rrm.rca.RCAConfig;
+
 /**
  * RRM service configuration model.
  */
@@ -405,6 +407,9 @@ public class RRMConfig {
 	/** Module configuration. */
 	public ModuleConfig moduleConfig = new ModuleConfig();
 
+	/** Root cause analysis configuration. */
+	public RCAConfig rcaConfig = new RCAConfig();
+
 	/** Construct RRMConfig from environment variables. */
 	public static RRMConfig fromEnv(Map<String, String> env) {
 		RRMConfig config = new RRMConfig();
@@ -582,6 +587,9 @@ public class RRMConfig {
 		}
 
 		// @formatter:on
+
+		/* RCAConfig */
+		config.rcaConfig = RCAConfig.fromEnv(env);
 
 		return config;
 	}
