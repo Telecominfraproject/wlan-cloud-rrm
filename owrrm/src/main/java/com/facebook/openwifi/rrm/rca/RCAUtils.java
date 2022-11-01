@@ -18,9 +18,14 @@ import com.facebook.openwifi.cloudsdk.models.gw.CommandInfo;
 public class RCAUtils {
 	/** Ping result, only containing a data summary (not individual pings). */
 	public static class PingResult {
+		// NOTE: fields are taken directly from ping output
+		/** Minimum ping RTT (ms) */
 		public double min;
+		/** Average ping RTT (ms) */
 		public double avg;
+		/** Maximum ping RTT (ms) */
 		public double max;
+		/** Standard deviation of ping RTT measurements (ms) */
 		public double mdev;
 		// TODO other stats? (ex. tx/rx packets, % packet loss)
 

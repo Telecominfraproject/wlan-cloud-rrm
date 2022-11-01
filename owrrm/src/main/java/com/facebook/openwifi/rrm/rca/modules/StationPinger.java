@@ -44,14 +44,11 @@ public class StationPinger {
 	private static final Logger logger =
 		LoggerFactory.getLogger(StationPinger.class);
 
-	/** Drop records older than this interval (in ms). */
-	private static final long STATE_STALE_THRESHOLD_MS = 300000; // 5 min
-
 	/** The module parameters. */
 	private final StationPingerParams params;
 
 	/** The uCentral client. */
-	private final UCentralClient client;
+	private final UCentralClient uCentralClient;
 
 	/** The executor service instance. */
 	private final ExecutorService executor;
@@ -75,11 +72,11 @@ public class StationPinger {
 	/** Constructor. */
 	public StationPinger(
 		StationPingerParams params,
-		UCentralClient client,
+		UCentralClient uCentralClient,
 		UCentralKafkaConsumer consumer
 	) {
 		this.params = params;
-		this.client = client;
+		this.uCentralClient = uCentralClient;
 		this.executor =
 			Executors.newFixedThreadPool(
 				params.executorThreadCount,
@@ -122,7 +119,7 @@ public class StationPinger {
 		long now = System.currentTimeMillis();
 		for (KafkaRecord record : records) {
 			// Drop old records
-			if (now - record.timestampMs > STATE_STALE_THRESHOLD_MS) {
+			if (now - record.timestampMs > params.staleStateThresholdMs) {
 				logger.debug(
 					"Dropping old state record for {} at time {}",
 					record.serialNumber,
@@ -223,7 +220,7 @@ public class StationPinger {
 				host
 			);
 			PingResult result = RCAUtils
-				.pingFromDevice(client, serialNumber, host, params.pingCount);
+				.pingFromDevice(uCentralClient, serialNumber, host, params.pingCount);
 			if (result == null) {
 				logger.debug(
 					"Ping failed from {} to {} ({})",

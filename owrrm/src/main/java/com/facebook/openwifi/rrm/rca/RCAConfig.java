@@ -38,6 +38,13 @@ public class RCAConfig {
 		public int pingCount = 5;
 
 		/**
+		 * Ignore state records older than this interval (in ms)
+		 * ({@code STATIONPINGERPARAMS_STALESTATETHRESHOLDMS})
+		 */
+		// NOTE: should not be longer than Kafka "state" publish interval
+		public int staleStateThresholdMs = 300000; // 5 min
+
+		/**
 		 * Number of executor threads for ping tasks
 		 * ({@code STATIONPINGERPARAMS_EXECUTORTHREADCOUNT})
 		 */
@@ -61,6 +68,9 @@ public class RCAConfig {
 		}
 		if ((v = env.get("STATIONPINGERPARAMS_PINGCOUNT")) != null) {
 			stationPingerParams.pingCount = Integer.parseInt(v);
+		}
+		if ((v = env.get("STATIONPINGERPARAMS_STALESTATETHRESHOLDMS")) != null) {
+			stationPingerParams.staleStateThresholdMs = Integer.parseInt(v);
 		}
 		if ((v = env.get("STATIONPINGERPARAMS_EXECUTORTHREADCOUNT")) != null) {
 			stationPingerParams.executorThreadCount = Integer.parseInt(v);
