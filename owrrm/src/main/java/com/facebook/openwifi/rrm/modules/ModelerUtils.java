@@ -411,15 +411,6 @@ public class ModelerUtils {
 				continue;
 			}
 			for (SSID ssid : stateInterface.ssids) {
-				Map<String, Integer> radioInfo = new HashMap<>();
-				radioInfo.put("channel", ssid.radio.get("channel").getAsInt());
-				radioInfo.put(
-					"channel_width",
-					ssid.radio.get("channel_width").getAsInt()
-				);
-				radioInfo
-					.put("tx_power", ssid.radio.get("tx_power").getAsInt());
-
 				for (Association association : ssid.associations) {
 					if (association == null) {
 						continue;
@@ -432,7 +423,12 @@ public class ModelerUtils {
 						bssidToAggregatedStates
 							.computeIfAbsent(key, k -> new ArrayList<>());
 					AggregatedState aggState =
-						new AggregatedState(association, radioInfo);
+						new AggregatedState(
+							association,
+							ssid.counters,
+							ssid.radio,
+							state.timeStamp
+						);
 
 					/**
 					 * Indicate if the aggState can be merged into some old AggregatedState.
@@ -535,7 +531,8 @@ public class ModelerUtils {
 	) {
 		Map<String, State> latestState = new ConcurrentHashMap<>();
 		for (
-			Map.Entry<String, List<State>> stateEntry : latestStates.entrySet()
+			Map.Entry<String, List<State>> stateEntry : latestStates
+				.entrySet()
 		) {
 			String key = stateEntry.getKey();
 			List<State> value = stateEntry.getValue();

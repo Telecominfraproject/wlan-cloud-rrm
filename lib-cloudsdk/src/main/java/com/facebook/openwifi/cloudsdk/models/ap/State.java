@@ -132,4 +132,5 @@ public class State {
 	@SerializedName("link-state") public JsonObject linkState;
 	public JsonObject gps;
 	public JsonObject poe;
+	public long timeStamp;
 }
