@@ -1,6 +1,12 @@
 /target/
 */target/
 
+# owrrm specific
+*.log*
+device_config.json
+settings.json
+topology.json
+
 # Eclipse
 .settings/
 bin/
