@@ -24,10 +24,10 @@ import com.facebook.openwifi.cloudsdk.UCentralApConfiguration;
 import com.facebook.openwifi.cloudsdk.UCentralClient;
 import com.facebook.openwifi.cloudsdk.UCentralUtils;
 import com.facebook.openwifi.cloudsdk.WifiScanEntry;
+import com.facebook.openwifi.cloudsdk.StateInfo;
 import com.facebook.openwifi.cloudsdk.kafka.UCentralKafkaConsumer;
 import com.facebook.openwifi.cloudsdk.kafka.UCentralKafkaConsumer.KafkaRecord;
 import com.facebook.openwifi.cloudsdk.models.ap.Capabilities;
-import com.facebook.openwifi.cloudsdk.models.ap.State;
 import com.facebook.openwifi.cloudsdk.models.gw.DeviceCapabilities;
 import com.facebook.openwifi.cloudsdk.models.gw.DeviceWithStatus;
 import com.facebook.openwifi.cloudsdk.models.gw.ServiceEvent;
@@ -95,7 +95,7 @@ public class Modeler implements Runnable {
 			new ConcurrentHashMap<>();
 
 		/** List of latest states per device. */
-		public Map<String, List<State>> latestStates =
+		public Map<String, List<StateInfo>> latestStates =
 			new ConcurrentHashMap<>();
 
 		/** List of radio info per device. */
@@ -268,7 +268,8 @@ public class Modeler implements Runnable {
 			JsonObject state = records.data.get(0).data;
 			if (state != null) {
 				try {
-					State stateModel = gson.fromJson(state, State.class);
+					StateInfo stateModel =
+						gson.fromJson(state, StateInfo.class);
 					dataModel.latestStates.computeIfAbsent(
 						device.serialNumber,
 						k -> new LinkedList<>()
@@ -303,10 +304,10 @@ public class Modeler implements Runnable {
 				JsonObject state = record.payload.getAsJsonObject("state");
 				if (state != null) {
 					try {
-						State stateModel =
-							gson.fromJson(state, State.class);
-						stateModel.timeStamp = record.timestampMs;
-						List<State> latestStatesList =
+						StateInfo stateModel =
+							gson.fromJson(state, StateInfo.class);
+						stateModel.timestamp = record.timestampMs;
+						List<StateInfo> latestStatesList =
 							dataModel.latestStates
 								.computeIfAbsent(
 									record.serialNumber,
