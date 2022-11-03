@@ -23,12 +23,15 @@ public final class ClientSteeringState {
 	/** Private default constructor (this is a singleton class) */
 	private ClientSteeringState() {};
 
-	public static ClientSteeringState getInstance() { return singleton; }
+	/** Get the singleton instance */
+	public static ClientSteeringState getInstance() {
+		return singleton;
+	}
 
 	/**
-	 * Map from AP serial number to radio bssid to time (unix time in ms) of the
-	 * latest attempted client steering action. The {@code Long} values are
-	 * never null.
+	 * Map from AP serial number to radio bssid to time (JVM monotonic time in
+	 * ms) of the latest attempted client steering action. The {@code Long}
+	 * values are never null.
 	 */
 	private final ConcurrentMap<String, Map<String, Long>> apRadioLastAttempt =
 		new ConcurrentHashMap<>();
@@ -44,7 +47,7 @@ public final class ClientSteeringState {
 	 *
 	 * @param apSerialNumber non-null AP serial number
 	 * @param bssid non-null radio bssid
-	 * @param currentTimeNs current Java VM monotonic time (ns)
+	 * @param currentTimeNs current JVM monotonic time (ns)
 	 */
 	final void registerClientSteeringAttempt(
 		String apSerialNumber,
@@ -85,7 +88,7 @@ public final class ClientSteeringState {
 	 *
 	 * @param apSerialNumber AP serial number
 	 * @param bssid radio bssid
-	 * @param currentTimeNs current Java VM monotonic time (ns)
+	 * @param currentTimeNs current JVM monotonic time (ns)
 	 * @param backoffTime backoff time (ms)
 	 * @return true if enough more than the backoff time has passed
 	 */

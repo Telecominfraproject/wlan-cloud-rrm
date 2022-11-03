@@ -35,9 +35,6 @@ public class SingleAPBandSteering extends ClientSteeringOptimizer {
 	/** The Gson instance. */
 	private static final Gson gson = new Gson();
 
-	// TODO implement window size (only considers latest stats for now)
-	// TODO implement window percent (% of samples that must violate thresholds)
-
 	private static final Logger logger =
 		LoggerFactory.getLogger(SingleAPBandSteering.class);
 
@@ -126,16 +123,21 @@ public class SingleAPBandSteering extends ClientSteeringOptimizer {
 	@Override
 	public Map<String, Map<String, String>> computeApClientActionMap() {
 		Map<String, Map<String, String>> apClientActionMap = new HashMap<>();
+		// iterate through every AP
 		for (
 			Map.Entry<String, List<State>> entry : model.latestStates
 				.entrySet()
 		) {
+			// get the latest state
+			// TODO window size (look at multiple states)
+			// TODO window percent (% of samples that must violate thresholds)
 			List<State> states = entry.getValue();
 			if (states == null || states.isEmpty()) {
 				continue;
 			}
 			final String serialNumber = entry.getKey();
 			final State state = states.get(states.size() - 1);
+			// iterate through every radio and every connected client
 			if (state.interfaces == null || state.interfaces.length == 0) {
 				continue;
 			}
@@ -171,6 +173,7 @@ public class SingleAPBandSteering extends ClientSteeringOptimizer {
 					for (
 						State.Interface.SSID.Association assoc : ssid.associations
 					) {
+						// decide whether to do any band steering
 						// TODO check which bands AP & client can use (see 11k)
 						if (UCentralConstants.BAND_2G.equals(band)) {
 							if (assoc.rssi < minRssi2G) {
