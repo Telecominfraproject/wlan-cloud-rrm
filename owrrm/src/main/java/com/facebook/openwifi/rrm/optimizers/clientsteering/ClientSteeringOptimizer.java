@@ -44,18 +44,18 @@ public abstract class ClientSteeringOptimizer {
 	 *
 	 * @param apSerialNumber non-null AP serial number
 	 * @param bssid non-null radio bssid
-	 * @param currentTimeMs current time (unix time in ms)
+	 * @param currentTimeNs current Java VM monotonic time (ns)
 	 */
 	protected static final void registerClientSteeringAttempt(
 		String apSerialNumber,
 		String bssid,
-		long currentTimeMs
+		long currentTimeNs
 	) {
 		Map<String, Long> radioLastAttempt = apRadioLastAttempt
 			.computeIfAbsent(apSerialNumber, k -> new TreeMap<>());
 		Long lastAttempt = radioLastAttempt.get(bssid);
-		if (lastAttempt == null || currentTimeMs > lastAttempt) {
-			radioLastAttempt.put(bssid, currentTimeMs);
+		if (lastAttempt == null || currentTimeNs > lastAttempt) {
+			radioLastAttempt.put(bssid, currentTimeNs);
 		}
 	}
 
@@ -85,14 +85,14 @@ public abstract class ClientSteeringOptimizer {
 	 *
 	 * @param apSerialNumber AP serial number
 	 * @param bssid radio bssid
-	 * @param currentTimeMs current unix time (ms)
+	 * @param currentTimeNs current Java VM monotonic time (ns)
 	 * @param backoffTime backoff time (ms)
 	 * @return true if enough more than the backoff time has passed
 	 */
 	protected static final boolean checkBackoff(
 		String apSerialNumber,
 		String bssid,
-		long currentTimeMs,
+		long currentTimeNs,
 		long backoffTime
 	) {
 		// TODO use per-AP-and-radio backoff, doubling each time up to a max
@@ -102,7 +102,7 @@ public abstract class ClientSteeringOptimizer {
 		if (latestClientSteeringAttempt == null) {
 			return true;
 		}
-		return currentTimeMs - latestClientSteeringAttempt > backoffTime;
+		return currentTimeNs - latestClientSteeringAttempt > backoffTime;
 	}
 
 	/** The input data model. */

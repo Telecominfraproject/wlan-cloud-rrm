@@ -139,7 +139,7 @@ public class SingleAPBandSteering extends ClientSteeringOptimizer {
 			if (state.interfaces == null || state.interfaces.length == 0) {
 				continue;
 			}
-			final long currentTimeMs = System.currentTimeMillis();
+			final long currentTimeNs = System.nanoTime();
 			for (State.Interface iface : state.interfaces) {
 				if (iface.ssids == null || iface.ssids.length == 0) {
 					continue;
@@ -178,7 +178,7 @@ public class SingleAPBandSteering extends ClientSteeringOptimizer {
 									checkBackoff(
 										serialNumber,
 										assoc.bssid,
-										currentTimeMs,
+										currentTimeNs,
 										backoffTime
 									)
 								) {
@@ -200,7 +200,7 @@ public class SingleAPBandSteering extends ClientSteeringOptimizer {
 									registerClientSteeringAttempt(
 										serialNumber,
 										assoc.bssid,
-										currentTimeMs
+										currentTimeNs
 									);
 								}
 
@@ -209,7 +209,7 @@ public class SingleAPBandSteering extends ClientSteeringOptimizer {
 									checkBackoff(
 										serialNumber,
 										assoc.bssid,
-										currentTimeMs,
+										currentTimeNs,
 										backoffTime
 									)
 								) {
@@ -231,7 +231,7 @@ public class SingleAPBandSteering extends ClientSteeringOptimizer {
 									registerClientSteeringAttempt(
 										serialNumber,
 										assoc.bssid,
-										currentTimeMs
+										currentTimeNs
 									);
 								}
 							}
@@ -243,7 +243,7 @@ public class SingleAPBandSteering extends ClientSteeringOptimizer {
 									checkBackoff(
 										serialNumber,
 										assoc.bssid,
-										currentTimeMs,
+										currentTimeNs,
 										backoffTime
 									)
 								) {
@@ -265,7 +265,7 @@ public class SingleAPBandSteering extends ClientSteeringOptimizer {
 									registerClientSteeringAttempt(
 										serialNumber,
 										assoc.bssid,
-										currentTimeMs
+										currentTimeNs
 									);
 								}
 							}
