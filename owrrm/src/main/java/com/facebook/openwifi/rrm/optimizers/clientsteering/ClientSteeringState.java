@@ -8,8 +8,8 @@
 
 package com.facebook.openwifi.rrm.optimizers.clientsteering;
 
+import java.util.HashMap;
 import java.util.Map;
-import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -55,7 +55,7 @@ public final class ClientSteeringState {
 		long currentTimeNs
 	) {
 		Map<String, Long> radioLastAttempt = apClientLastAttempt
-			.computeIfAbsent(apSerialNumber, k -> new TreeMap<>());
+			.computeIfAbsent(apSerialNumber, k -> new HashMap<>());
 		Long lastAttempt = radioLastAttempt.get(station);
 		if (lastAttempt == null || currentTimeNs > lastAttempt) {
 			radioLastAttempt.put(station, currentTimeNs);

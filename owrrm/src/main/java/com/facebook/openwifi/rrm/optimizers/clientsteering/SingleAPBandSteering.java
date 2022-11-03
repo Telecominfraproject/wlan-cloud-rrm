@@ -67,6 +67,7 @@ public class SingleAPBandSteering extends ClientSteeringOptimizer {
 	/** Backoff time (ms) for all APs and radios */
 	private final int backoffTime;
 
+	/** Make a SingleAPBandSteering object with the given arguments */
 	public static SingleAPBandSteering makeWithArgs(
 		DataModel model,
 		String zone,
