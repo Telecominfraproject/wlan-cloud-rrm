@@ -175,7 +175,7 @@ public class SingleAPBandSteering extends ClientSteeringOptimizer {
 						if (UCentralConstants.BAND_2G.equals(band)) {
 							if (assoc.rssi < minRssi2G) {
 								if (
-									checkBackoff(
+									getClientSteeringState().checkBackoff(
 										serialNumber,
 										assoc.bssid,
 										currentTimeNs,
@@ -197,16 +197,17 @@ public class SingleAPBandSteering extends ClientSteeringOptimizer {
 											CLIENT_STEERING_ACTIONS.DEAUTHENTICATE
 												.name()
 										);
-									registerClientSteeringAttempt(
-										serialNumber,
-										assoc.bssid,
-										currentTimeNs
-									);
+									getClientSteeringState()
+										.registerClientSteeringAttempt(
+											serialNumber,
+											assoc.bssid,
+											currentTimeNs
+										);
 								}
 
 							} else if (assoc.rssi > maxRssi2G) {
 								if (
-									checkBackoff(
+									getClientSteeringState().checkBackoff(
 										serialNumber,
 										assoc.bssid,
 										currentTimeNs,
@@ -228,11 +229,12 @@ public class SingleAPBandSteering extends ClientSteeringOptimizer {
 											CLIENT_STEERING_ACTIONS.STEER_UP
 												.name()
 										);
-									registerClientSteeringAttempt(
-										serialNumber,
-										assoc.bssid,
-										currentTimeNs
-									);
+									getClientSteeringState()
+										.registerClientSteeringAttempt(
+											serialNumber,
+											assoc.bssid,
+											currentTimeNs
+										);
 								}
 							}
 							// otherwise, do nothing
@@ -240,7 +242,7 @@ public class SingleAPBandSteering extends ClientSteeringOptimizer {
 							// treat 5G and 6G clients the same way
 							if (assoc.rssi < minRssiNon2G) {
 								if (
-									checkBackoff(
+									getClientSteeringState().checkBackoff(
 										serialNumber,
 										assoc.bssid,
 										currentTimeNs,
@@ -262,11 +264,12 @@ public class SingleAPBandSteering extends ClientSteeringOptimizer {
 											CLIENT_STEERING_ACTIONS.STEER_DOWN
 												.name()
 										);
-									registerClientSteeringAttempt(
-										serialNumber,
-										assoc.bssid,
-										currentTimeNs
-									);
+									getClientSteeringState()
+										.registerClientSteeringAttempt(
+											serialNumber,
+											assoc.bssid,
+											currentTimeNs
+										);
 								}
 							}
 							// otherwise, do nothing
