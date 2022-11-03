@@ -185,6 +185,7 @@ public class SingleAPBandSteeringTest {
 		);
 		Map<String, Map<String, String>> apClientActionMap =
 			optimizer.computeApClientActionMap();
+		System.out.println(exp);
 		assertEquals(exp, apClientActionMap);
 	}
 }

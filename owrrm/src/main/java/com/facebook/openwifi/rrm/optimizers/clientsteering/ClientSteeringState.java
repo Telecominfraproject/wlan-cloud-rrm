@@ -29,57 +29,57 @@ public final class ClientSteeringState {
 	}
 
 	/**
-	 * Map from AP serial number to radio bssid to time (JVM monotonic time in
+	 * Map from AP serial number to client MAC to time (JVM monotonic time in
 	 * ms) of the latest attempted client steering action. The {@code Long}
 	 * values are never null.
 	 */
-	private final ConcurrentMap<String, Map<String, Long>> apRadioLastAttempt =
+	private final ConcurrentMap<String, Map<String, Long>> apClientLastAttempt =
 		new ConcurrentHashMap<>();
 
 	/** Reset the state (e.g., for testing) */
 	public final void reset() {
-		apRadioLastAttempt.clear();
+		apClientLastAttempt.clear();
 	}
 
 	/**
 	 * Register the time of the latest client steering attempt by the given AP
-	 * and radio.
+	 * for the given client.
 	 *
 	 * @param apSerialNumber non-null AP serial number
-	 * @param bssid non-null radio bssid
+	 * @param station non-null client MAC
 	 * @param currentTimeNs current JVM monotonic time (ns)
 	 */
 	final void registerClientSteeringAttempt(
 		String apSerialNumber,
-		String bssid,
+		String station,
 		long currentTimeNs
 	) {
-		Map<String, Long> radioLastAttempt = apRadioLastAttempt
+		Map<String, Long> radioLastAttempt = apClientLastAttempt
 			.computeIfAbsent(apSerialNumber, k -> new TreeMap<>());
-		Long lastAttempt = radioLastAttempt.get(bssid);
+		Long lastAttempt = radioLastAttempt.get(station);
 		if (lastAttempt == null || currentTimeNs > lastAttempt) {
-			radioLastAttempt.put(bssid, currentTimeNs);
+			radioLastAttempt.put(station, currentTimeNs);
 		}
 	}
 
 	/**
 	 * Get the time of the latest client steering attempt by AP serial number
-	 * and radio bssid. Return null if no client steering attempt has been made
+	 * and client MAC. Return null if no client steering attempt has been made
 	 * for the given AP and radio.
 	 *
 	 * @param apSerialNumber non-null AP serial number
-	 * @param bssid non-null radio bssid
+	 * @param station non-null client MAC
 	 */
 	final Long getLatestClientSteeringAttempt(
 		String apSerialNumber,
-		String bssid
+		String station
 	) {
-		Map<String, Long> clientLatestAttempt = apRadioLastAttempt
+		Map<String, Long> clientLatestAttempt = apClientLastAttempt
 			.get(apSerialNumber);
 		if (clientLatestAttempt == null) {
 			return null;
 		}
-		return clientLatestAttempt.get(bssid);
+		return clientLatestAttempt.get(station);
 	}
 
 	/**
@@ -87,21 +87,21 @@ public final class ClientSteeringState {
 	 * latest client steering attempt for the given AP and radio.
 	 *
 	 * @param apSerialNumber AP serial number
-	 * @param bssid radio bssid
+	 * @param station client MAC
 	 * @param currentTimeNs current JVM monotonic time (ns)
 	 * @param backoffTime backoff time (ms)
 	 * @return true if enough more than the backoff time has passed
 	 */
 	final boolean checkBackoff(
 		String apSerialNumber,
-		String bssid,
+		String station,
 		long currentTimeNs,
 		long backoffTime
 	) {
 		// TODO use per-AP-and-radio backoff, doubling each time up to a max
 		// instead of a passed in backoff time
 		Long latestClientSteeringAttempt =
-			getLatestClientSteeringAttempt(apSerialNumber, bssid);
+			getLatestClientSteeringAttempt(apSerialNumber, station);
 		if (latestClientSteeringAttempt == null) {
 			return true;
 		}
