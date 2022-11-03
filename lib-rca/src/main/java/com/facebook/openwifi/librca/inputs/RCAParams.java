@@ -8,6 +8,9 @@
 
 package com.facebook.openwifi.librca.inputs;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /** Define root cause analysis configuration parameters */
 public final class RCAParams {
 
@@ -83,46 +86,123 @@ public final class RCAParams {
 		this.maxTxDroppedRatioPercent = 0.1;
 	}
 
-	private static void validatePositive(String varName, int value) {
+	/**
+	 * Confirm that the given value is positive. If it is not, add a String
+	 * describing the problem to {@code errors}.
+	 */
+	private static void validatePositive(
+		String varName,
+		int value,
+		List<String> errors
+	) {
 		if (value <= 0) {
-			throw new IllegalArgumentException(varName + " must be positive.");
+			errors.add(varName + " must be positive.");
 		}
 	}
 
-	private static void validatePositive(String varName, double value) {
+	/**
+	 * Confirm that the given value is positive. If it is not, add a String
+	 * describing the problem to {@code errors}.
+	 */
+	private static void validatePositive(
+		String varName,
+		double value,
+		List<String> errors
+	) {
 		if (value <= 0) {
-			throw new IllegalArgumentException(varName + " must be positive.");
+			errors.add(varName + " must be positive.");
 		}
 	}
 
-	private static void validatePercentile(String varName, double value) {
+	/**
+	 * Confirm that the given value is a valid percentile (between 0 and 100
+	 * inclusive). If it is not, add a String describing the problem to
+	 * {@code errors}.
+	 */
+	private static void validatePercentile(
+		String varName,
+		double value,
+		List<String> errors
+	) {
 		if (value < 0 || value > 100) {
-			throw new IllegalArgumentException(
-				varName + " must be between 0 and 100 inclusive.");
+			errors.add(varName + " must be between 0 and 100 inclusive.");
 		}
 	}
 
-	public void validate() {
-		validatePositive("Detection window", detectionWindowMin);
+	public List<String> validate() {
+		List<String> errors = new ArrayList<>();
+		validatePositive("Detection window", detectionWindowMin, errors);
 
-		validatePositive("Minimum estimated throughput",
-			minEstimatedThroughputMbps);
-		validatePercentile("Thoughput aggregation percentile",
-			throughputAggregationPercentile);
-		validatePositive("Maximum latency threshold", maxLatencyThresholdMs);
-		validatePositive("Maximum jitter threshold", maxJitterThresholdMs);
-		validatePositive("Maximum disconnection rate", maxDisconnectionRatePerHour);
+		validatePositive(
+			"Minimum estimated throughput",
+			minEstimatedThroughputMbps,
+			errors
+		);
+		validatePercentile(
+			"Thoughput aggregation percentile",
+			throughputAggregationPercentile,
+			errors
+		);
+		validatePositive(
+			"Maximum latency threshold",
+			maxLatencyThresholdMs,
+			errors
+		);
+		validatePositive(
+			"Maximum jitter threshold",
+			maxJitterThresholdMs,
+			errors
+		);
+		validatePositive(
+			"Maximum disconnection rate",
+			maxDisconnectionRatePerHour,
+			errors
+		);
 
-		validatePositive("Minimum tx rate", minTxRateMbps);
-		validatePercentile("Maximum Packet Error Rate (PER)", maxPERPercent);
-		validatePercentile("Minimum idle airtime", minIdleAirtimePercent);
-		validatePositive("Maximum number of clients", maxNumClients);
+		validatePositive("Minimum tx rate", minTxRateMbps, errors);
+		validatePercentile(
+			"Maximum Packet Error Rate (PER)",
+			maxPERPercent,
+			errors
+		);
+		validatePercentile(
+			"Minimum idle airtime",
+			minIdleAirtimePercent,
+			errors
+		);
+		validatePositive("Maximum number of clients", maxNumClients, errors);
 
-		validatePercentile("Maximum intf airtime", maxIntfAirtimePercent);
-		validatePositive("Maximum number of neighbors", maxNumNeighbors);
-		validatePositive("Minimum client bandwidth", minClientBandwidthMHz);
-		validatePositive("Minimum Access Point (AP) bandwidth", minApBandwidthMHz);
-		validatePercentile("Minimum self airtime ratio", minSelfAirtimeRatioPercent);
-		validatePercentile("Maximum tx dropped ratio", maxTxDroppedRatioPercent);
+		validatePercentile(
+			"Maximum intf airtime",
+			maxIntfAirtimePercent,
+			errors
+		);
+		validatePositive(
+			"Maximum number of neighbors",
+			maxNumNeighbors,
+			errors
+		);
+		validatePositive(
+			"Minimum client bandwidth",
+			minClientBandwidthMHz,
+			errors
+		);
+		validatePositive(
+			"Minimum Access Point (AP) bandwidth",
+			minApBandwidthMHz,
+			errors
+		);
+		validatePercentile(
+			"Minimum self airtime ratio",
+			minSelfAirtimeRatioPercent,
+			errors
+		);
+		validatePercentile(
+			"Maximum tx dropped ratio",
+			maxTxDroppedRatioPercent,
+			errors
+		);
+
+		return errors;
 	}
 }
