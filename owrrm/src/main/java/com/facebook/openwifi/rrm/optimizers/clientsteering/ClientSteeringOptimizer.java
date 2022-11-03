@@ -8,6 +8,7 @@
 
 package com.facebook.openwifi.rrm.optimizers.clientsteering;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -36,7 +37,7 @@ public abstract class ClientSteeringOptimizer {
 	 * are never null.
 	 */
 	public static final Map<String, Map<String, Long>> apRadioLastAttempt =
-		new TreeMap<>();
+		new HashMap<>();
 
 	/**
 	 * Register the time of the latest client steering attempt by the given AP

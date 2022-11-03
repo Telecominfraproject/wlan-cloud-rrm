@@ -8,9 +8,9 @@
 
 package com.facebook.openwifi.rrm.optimizers.clientsteering;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -125,7 +125,7 @@ public class SingleAPBandSteering extends ClientSteeringOptimizer {
 
 	@Override
 	public Map<String, Map<String, String>> computeApClientActionMap() {
-		Map<String, Map<String, String>> apClientActionMap = new TreeMap<>();
+		Map<String, Map<String, String>> apClientActionMap = new HashMap<>();
 		for (
 			Map.Entry<String, List<State>> entry : model.latestStates
 				.entrySet()
@@ -190,7 +190,7 @@ public class SingleAPBandSteering extends ClientSteeringOptimizer {
 									apClientActionMap
 										.computeIfAbsent(
 											serialNumber,
-											k -> new TreeMap<>()
+											k -> new HashMap<>()
 										)
 										.put(
 											assoc.station,
@@ -221,7 +221,7 @@ public class SingleAPBandSteering extends ClientSteeringOptimizer {
 									apClientActionMap
 										.computeIfAbsent(
 											serialNumber,
-											k -> new TreeMap<>()
+											k -> new HashMap<>()
 										)
 										.put(
 											assoc.station,
@@ -255,7 +255,7 @@ public class SingleAPBandSteering extends ClientSteeringOptimizer {
 									apClientActionMap
 										.computeIfAbsent(
 											serialNumber,
-											k -> new TreeMap<>()
+											k -> new HashMap<>()
 										)
 										.put(
 											assoc.station,
