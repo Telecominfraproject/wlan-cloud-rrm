@@ -13,9 +13,11 @@ import java.util.List;
 
 /** Define root cause analysis configuration parameters */
 public final class RCAParams {
+	// Note: we expect to receive these parameters in json format, so for now
+	// we do not include a constructor which takes in the member vars as inputs
 
-	/** Look-back window in minutes */
-	public final int detectionWindowMin;
+	/** Look-back window in ms */
+	public final int detectionWindowMs;
 
 	// KPI calculation parameters
 	/** Minimum acceptable estimated throughput (Mbps) */
@@ -33,7 +35,7 @@ public final class RCAParams {
 	 */
 	public final int maxDisconnectionRatePerHour;
 
-	// High Level metrics parameters
+	// High Level metrics thresholds
 	/** Minimum acceptable tx rate (Mbps) */
 	public final double minTxRateMbps;
 	/** Maximum acceptable Packet Error Rate (PER) (units are %) */
@@ -43,7 +45,7 @@ public final class RCAParams {
 	/** Maximum acceptable number of clients for one radio */
 	public final int maxNumClients;
 
-	// Low Level metrics parameters
+	// Low Level metrics thresholds
 	/** Minimum acceptable RSSI (dBm) */
 	public final int minRssidBm;
 	/** Maximum acceptable noise (dBm) */
@@ -63,7 +65,8 @@ public final class RCAParams {
 
 	/** Default constructor */
 	public RCAParams() {
-		this.detectionWindowMin = 360;
+		// 6 hours -> 21600000 ms
+		this.detectionWindowMs = 21600000;
 
 		this.minEstimatedThroughputMbps = 10;
 		this.throughputAggregationPercentile = 10.0;
@@ -129,9 +132,10 @@ public final class RCAParams {
 		}
 	}
 
+	/** Return a list of errors (empty list of no errors) */
 	public List<String> validate() {
 		List<String> errors = new ArrayList<>();
-		validatePositive("Detection window", detectionWindowMin, errors);
+		validatePositive("Detection window", detectionWindowMs, errors);
 
 		validatePositive(
 			"Minimum estimated throughput",
