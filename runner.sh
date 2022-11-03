@@ -12,6 +12,7 @@ COMMON_PARAMETERS=" \
 "
 
 JVM_IMPL="${JVM_IMPL:-openj9}"
+EXTRA_JVM_FLAGS="${EXTRA_JVM_FLAGS:-}"
 
 if [ "$JVM_IMPL" = "hotspot" ]; then
 # for hotspot
@@ -19,6 +20,7 @@ PARAMETERS="\
 $COMMON_PARAMETERS \
 -XX:+UseG1GC \
 -XX:+UseStringDeduplication \
+$EXTRA_JVM_FLAGS \
 "
 elif [ "$JVM_IMPL" = "openj9" ]; then
 # for openj9
@@ -26,6 +28,7 @@ PARAMETERS=" \
 $COMMON_PARAMETERS \
 -XX:+IdleTuningGcOnIdle \
 -Xtune:virtualized
+$EXTRA_JVM_FLAGS \
 "
 else
 echo "Invalid JVM_IMPL option"

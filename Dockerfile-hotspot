@@ -3,7 +3,7 @@ WORKDIR /usr/src/java
 COPY . .
 RUN mvn clean package -pl owrrm -am -DappendVersionString="$(./scripts/get_build_version.sh)"
 
-FROM ibm-semeru-runtimes:open-11-jre
+FROM eclipse-temurin:11-jre-jammy
 RUN apt-get update && apt-get install -y gettext-base
 ADD https://raw.githubusercontent.com/Telecominfraproject/wlan-cloud-ucentral-deploy/main/docker-compose/certs/restapi-ca.pem \
   /usr/local/share/ca-certificates/restapi-ca-selfsigned.pem
@@ -12,9 +12,15 @@ WORKDIR /usr/src/java
 COPY docker-entrypoint.sh /
 COPY runner.sh /
 COPY --from=build /usr/src/java/owrrm/target/openwifi-rrm.jar /usr/local/bin/
+
+# generate Application CDS
+RUN java -Xshare:off -XX:DumpLoadedClassList=static-cds.lst -jar /usr/local/bin/openwifi-rrm.jar --help  && \
+    java -Xshare:dump -XX:SharedClassListFile=static-cds.lst -XX:SharedArchiveFile=static-cds.jsa -jar /usr/local/bin/openwifi-rrm.jar
+
 EXPOSE 16789 16790
 ENTRYPOINT ["/docker-entrypoint.sh"]
-ENV JVM_IMPL=openj9
+ENV JVM_IMPL=hotspot
+ENV EXTRA_JVM_FLAGS="-XX:SharedArchiveFile=static-cds.jsa -Xshare:auto"
 CMD ["/runner.sh", "java", "/usr/local/bin/openwifi-rrm.jar", \
     "run", \
     "--config-env", \
