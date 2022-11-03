@@ -181,7 +181,7 @@ public class SingleAPBandSteering extends ClientSteeringOptimizer {
 								if (
 									getClientSteeringState().checkBackoff(
 										serialNumber,
-										assoc.bssid,
+										assoc.station,
 										currentTimeNs,
 										backoffTime
 									)
@@ -213,7 +213,7 @@ public class SingleAPBandSteering extends ClientSteeringOptimizer {
 								if (
 									getClientSteeringState().checkBackoff(
 										serialNumber,
-										assoc.bssid,
+										assoc.station,
 										currentTimeNs,
 										backoffTime
 									)
@@ -248,7 +248,7 @@ public class SingleAPBandSteering extends ClientSteeringOptimizer {
 								if (
 									getClientSteeringState().checkBackoff(
 										serialNumber,
-										assoc.bssid,
+										assoc.station,
 										currentTimeNs,
 										backoffTime
 									)
