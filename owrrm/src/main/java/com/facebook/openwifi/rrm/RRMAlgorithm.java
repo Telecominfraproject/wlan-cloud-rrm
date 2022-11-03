@@ -20,6 +20,8 @@ import com.facebook.openwifi.rrm.optimizers.channel.ChannelOptimizer;
 import com.facebook.openwifi.rrm.optimizers.channel.LeastUsedChannelOptimizer;
 import com.facebook.openwifi.rrm.optimizers.channel.RandomChannelInitializer;
 import com.facebook.openwifi.rrm.optimizers.channel.UnmanagedApAwareChannelOptimizer;
+import com.facebook.openwifi.rrm.optimizers.clientsteering.ClientSteeringOptimizer;
+import com.facebook.openwifi.rrm.optimizers.clientsteering.SingleAPBandSteering;
 import com.facebook.openwifi.rrm.optimizers.tpc.LocationBasedOptimalTPC;
 import com.facebook.openwifi.rrm.optimizers.tpc.MeasurementBasedApApTPC;
 import com.facebook.openwifi.rrm.optimizers.tpc.MeasurementBasedApClientTPC;
@@ -42,6 +44,10 @@ public class RRMAlgorithm {
 		OptimizeTxPower (
 			"Optimize tx power configuration",
 			"Run transmit power control algorithm"
+		),
+		ClientSteering (
+			"Steer clients onto the optimal AP and band",
+			"Run client steering algorithm"
 		);
 
 		/** The long name. */
@@ -72,6 +78,13 @@ public class RRMAlgorithm {
 		 * @see TPC#computeTxPowerMap()
 		 */
 		public Map<String, Map<String, Integer>> txPowerMap;
+
+		/**
+		 * Computed actions for each AP-client pair.
+		 *
+		 * @see ClientSteeringOptimizer#computeApClientActionMap()
+		 */
+		public Map<String, Map<String, String>> apClientActionMap;
 	}
 
 	/** The algorithm name (should be AlgorithmType enum string). */
@@ -282,6 +295,39 @@ public class RRMAlgorithm {
 					configManager,
 					result.txPowerMap
 				);
+				if (updateImmediately) {
+					configManager.queueZoneAndWakeUp(zone);
+				}
+			}
+		} else if (
+			name.equals(RRMAlgorithm.AlgorithmType.ClientSteering.name())
+		) {
+			logger.info(
+				"Zone '{}': Running client steering optimizer (mode='{}')",
+				zone,
+				mode
+			);
+			ClientSteeringOptimizer optimizer;
+			switch (mode) {
+			default:
+				if (!allowDefaultMode || !mode.isEmpty()) {
+					result.error = modeErrorStr;
+					return result;
+				}
+				logger.info("Using default algorithm mode...");
+				// fall through
+			case SingleAPBandSteering.ALGORITHM_ID:
+				optimizer = SingleAPBandSteering.makeWithArgs(
+					modeler.getDataModelCopy(),
+					zone,
+					deviceDataManager,
+					args
+				);
+				break;
+			}
+			result.apClientActionMap = optimizer.computeApClientActionMap();
+			if (!dryRun) {
+				optimizer.steer(result.apClientActionMap);
 				if (updateImmediately) {
 					configManager.queueZoneAndWakeUp(zone);
 				}
