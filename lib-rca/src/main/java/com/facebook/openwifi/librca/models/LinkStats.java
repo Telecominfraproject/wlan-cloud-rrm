@@ -8,8 +8,12 @@
 
 package com.facebook.openwifi.librca.models;
 
-/** Input Data Model */
-public class InputStats {
+import java.util.List;
+
+/** 
+ * Aggregation Statistics Model of InputStats. Aggregate by bssid, station and RadioConfig.
+ */
+public class LinkStats {
     public static class RadioConfig {
         public int channel;
         public int channelWidth;
@@ -52,5 +56,5 @@ public class InputStats {
     public String bssid;
     public String station;
     public RadioConfig radioConfig;
-    Association association;
+    List<Association> associationList;
 }
