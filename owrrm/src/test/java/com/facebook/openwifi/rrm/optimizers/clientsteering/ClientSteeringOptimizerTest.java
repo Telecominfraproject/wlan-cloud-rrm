@@ -24,9 +24,12 @@ public class ClientSteeringOptimizerTest {
 		final String apB = "bbbbbbbbbbbb";
 		final String bssidB = "bb:bb:bb:bb:bb:bb";
 
+		ClientSteeringOptimizer.apRadioLastAttempt.clear();
+
 		// no attempts have been registered
 		assertEquals(
-			Long.MIN_VALUE, ClientSteeringOptimizer.getLatestClientSteeringAttempt(apA, bssidA1)
+			null,
+			ClientSteeringOptimizer.getLatestClientSteeringAttempt(apA, bssidA1)
 		);
 
 		// when an attempt has been registered for one AP and one bssid
@@ -34,10 +37,12 @@ public class ClientSteeringOptimizerTest {
 		ClientSteeringOptimizer
 			.registerClientSteeringAttempt(apA, bssidA1, timestamp1);
 		assertEquals(
-			timestamp1, ClientSteeringOptimizer.getLatestClientSteeringAttempt(apA, bssidA1)
+			timestamp1,
+			ClientSteeringOptimizer.getLatestClientSteeringAttempt(apA, bssidA1)
 		);
 		assertEquals(
-			Long.MIN_VALUE, ClientSteeringOptimizer.getLatestClientSteeringAttempt(apA, bssidA2)
+			null,
+			ClientSteeringOptimizer.getLatestClientSteeringAttempt(apA, bssidA2)
 		);
 
 		// registering one radio should not affect another radio's timestamp
@@ -45,10 +50,12 @@ public class ClientSteeringOptimizerTest {
 		ClientSteeringOptimizer
 			.registerClientSteeringAttempt(apA, bssidA2, timestamp2);
 		assertEquals(
-			timestamp1, ClientSteeringOptimizer.getLatestClientSteeringAttempt(apA, bssidA1)
+			timestamp1,
+			ClientSteeringOptimizer.getLatestClientSteeringAttempt(apA, bssidA1)
 		);
 		assertEquals(
-			timestamp2, ClientSteeringOptimizer.getLatestClientSteeringAttempt(apA, bssidA2)
+			timestamp2,
+			ClientSteeringOptimizer.getLatestClientSteeringAttempt(apA, bssidA2)
 		);
 
 		// registering one AP should not affect another AP's timestamp
@@ -56,10 +63,12 @@ public class ClientSteeringOptimizerTest {
 		ClientSteeringOptimizer
 			.registerClientSteeringAttempt(apB, bssidB, timestamp3);
 		assertEquals(
-			timestamp1, ClientSteeringOptimizer.getLatestClientSteeringAttempt(apA, bssidA1)
+			timestamp1,
+			ClientSteeringOptimizer.getLatestClientSteeringAttempt(apA, bssidA1)
 		);
 		assertEquals(
-			timestamp2, ClientSteeringOptimizer.getLatestClientSteeringAttempt(apA, bssidA2)
+			timestamp2,
+			ClientSteeringOptimizer.getLatestClientSteeringAttempt(apA, bssidA2)
 		);
 		assertEquals(
 			timestamp3,
@@ -70,10 +79,12 @@ public class ClientSteeringOptimizerTest {
 		ClientSteeringOptimizer
 			.registerClientSteeringAttempt(apB, bssidB, timestamp2);
 		assertEquals(
-			timestamp1, ClientSteeringOptimizer.getLatestClientSteeringAttempt(apA, bssidA1)
+			timestamp1,
+			ClientSteeringOptimizer.getLatestClientSteeringAttempt(apA, bssidA1)
 		);
 		assertEquals(
-			timestamp2, ClientSteeringOptimizer.getLatestClientSteeringAttempt(apA, bssidA2)
+			timestamp2,
+			ClientSteeringOptimizer.getLatestClientSteeringAttempt(apA, bssidA2)
 		);
 		assertEquals(
 			timestamp3,
@@ -85,10 +96,12 @@ public class ClientSteeringOptimizerTest {
 		ClientSteeringOptimizer
 			.registerClientSteeringAttempt(apB, bssidB, timestamp4);
 		assertEquals(
-			timestamp1, ClientSteeringOptimizer.getLatestClientSteeringAttempt(apA, bssidA1)
+			timestamp1,
+			ClientSteeringOptimizer.getLatestClientSteeringAttempt(apA, bssidA1)
 		);
 		assertEquals(
-			timestamp2, ClientSteeringOptimizer.getLatestClientSteeringAttempt(apA, bssidA2)
+			timestamp2,
+			ClientSteeringOptimizer.getLatestClientSteeringAttempt(apA, bssidA2)
 		);
 		assertEquals(
 			timestamp4,

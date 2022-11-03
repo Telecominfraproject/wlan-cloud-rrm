@@ -35,7 +35,7 @@ public abstract class ClientSteeringOptimizer {
 	 * attempts across all instances of all subclasses. The {@code Long} values
 	 * are never null.
 	 */
-	private static final Map<String, Map<String, Long>> apRadioLastAttempt =
+	public static final Map<String, Map<String, Long>> apRadioLastAttempt =
 		new TreeMap<>();
 
 	/**
@@ -53,30 +53,30 @@ public abstract class ClientSteeringOptimizer {
 	) {
 		Map<String, Long> radioLastAttempt = apRadioLastAttempt
 			.computeIfAbsent(apSerialNumber, k -> new TreeMap<>());
-		long lastAttempt = radioLastAttempt.getOrDefault(bssid, Long.MIN_VALUE);
-		if (currentTimeMs > lastAttempt) {
+		Long lastAttempt = radioLastAttempt.get(bssid);
+		if (lastAttempt == null || currentTimeMs > lastAttempt) {
 			radioLastAttempt.put(bssid, currentTimeMs);
 		}
 	}
 
 	/**
 	 * Get the time of the latest client steering attempt by AP serial number
-	 * and radio bssid. Return {@link Long#MIN_VALUE} if no client steering
-	 * attempt has been made for the given AP and radio.
+	 * and radio bssid. Return null if no client steering attempt has been made
+	 * for the given AP and radio.
 	 *
 	 * @param apSerialNumber non-null AP serial number
 	 * @param bssid non-null radio bssid
 	 */
-	protected static final long getLatestClientSteeringAttempt(
+	protected static final Long getLatestClientSteeringAttempt(
 		String apSerialNumber,
 		String bssid
 	) {
 		Map<String, Long> clientLatestAttempt = apRadioLastAttempt
 			.get(apSerialNumber);
 		if (clientLatestAttempt == null) {
-			return Long.MIN_VALUE;
+			return null;
 		}
-		return clientLatestAttempt.getOrDefault(bssid, Long.MIN_VALUE);
+		return clientLatestAttempt.get(bssid);
 	}
 
 	/**
@@ -97,9 +97,12 @@ public abstract class ClientSteeringOptimizer {
 	) {
 		// TODO use per-AP-and-radio backoff, doubling each time up to a max
 		// instead of a passed in backoff time
-		return currentTimeMs -
-			getLatestClientSteeringAttempt(apSerialNumber, bssid) >
-			backoffTime;
+		Long latestClientSteeringAttempt =
+			getLatestClientSteeringAttempt(apSerialNumber, bssid);
+		if (latestClientSteeringAttempt == null) {
+			return true;
+		}
+		return currentTimeMs - latestClientSteeringAttempt > backoffTime;
 	}
 
 	/** The input data model. */

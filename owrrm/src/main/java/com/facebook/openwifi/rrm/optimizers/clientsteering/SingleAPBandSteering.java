@@ -16,12 +16,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.facebook.openwifi.cloudsdk.UCentralConstants;
-import com.facebook.openwifi.cloudsdk.UCentralUtils;
 import com.facebook.openwifi.cloudsdk.models.ap.Capabilities;
 import com.facebook.openwifi.cloudsdk.models.ap.State;
 import com.facebook.openwifi.rrm.DeviceDataManager;
 import com.facebook.openwifi.rrm.modules.Modeler.DataModel;
 import com.facebook.openwifi.rrm.modules.ModelerUtils;
+import com.google.gson.Gson;
 
 /**
  * Implements simple band steering for each AP separately
@@ -31,6 +31,9 @@ import com.facebook.openwifi.rrm.modules.ModelerUtils;
  * 6G clients below a configurable RSSI threshold are asked to move to 2G.
  */
 public class SingleAPBandSteering extends ClientSteeringOptimizer {
+
+	/** The Gson instance. */
+	private static final Gson gson = new Gson();
 
 	// TODO implement window size (only considers latest stats for now)
 	// TODO implement window percent (% of samples that must violate thresholds)
@@ -148,13 +151,10 @@ public class SingleAPBandSteering extends ClientSteeringOptimizer {
 					) {
 						continue;
 					}
-					final Integer idx = UCentralUtils.parseReferenceIndex(
-						ssid.radio.get("$ref").getAsString()
+					final State.Radio radio = gson.fromJson(
+						ssid.radio,
+						State.Radio.class
 					);
-					if (idx == null) {
-						continue;
-					}
-					final State.Radio radio = state.radios[idx];
 					Map<String, Capabilities.Phy> capabilitiesPhy =
 						model.latestDeviceCapabilitiesPhy
 							.get(serialNumber);

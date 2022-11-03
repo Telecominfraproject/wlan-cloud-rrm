@@ -169,12 +169,13 @@ public class SingleAPBandSteeringTest {
 		// see javadoc of createModel for more details
 		Map<String, Map<String, String>> exp = new HashMap<>();
 		Map<String, String> apAMap = new HashMap<>();
-		apAMap.put(bssidsA[0], CLIENT_STEERING_ACTIONS.DEAUTHENTICATE.name());
-		apAMap.put(bssidsA[1], CLIENT_STEERING_ACTIONS.STEER_DOWN.name());
+		apAMap
+			.put(clientsA[0][0], CLIENT_STEERING_ACTIONS.DEAUTHENTICATE.name());
+		apAMap.put(clientsA[1][0], CLIENT_STEERING_ACTIONS.STEER_DOWN.name());
 		exp.put(apA, apAMap);
 		// no action for AP B
 		Map<String, String> apCMap = new HashMap<>();
-		apCMap.put(bssidsC[0], CLIENT_STEERING_ACTIONS.STEER_UP.name());
+		apCMap.put(clientsC[0][0], CLIENT_STEERING_ACTIONS.STEER_UP.name());
 		exp.put(apC, apCMap);
 		SingleAPBandSteering optimizer = SingleAPBandSteering.makeWithArgs(
 			dataModel,
