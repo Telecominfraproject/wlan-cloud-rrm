@@ -8,21 +8,23 @@
 
 package com.facebook.openwifi.rrm.optimizers.clientsteering;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
-
-import com.facebook.openwifi.rrm.optimizers.TestUtils;
 
 public class ClientSteeringStateTest {
 
 	@Test
-	void testApRadioLastAttempt() {
+	void testRegisterAndCheckBackoff() {
 		final String apA = "aaaaaaaaaaaa";
 		final String clientA1 = "1a:aa:aa:aa:aa:aa";
 		final String clientA2 = "2a:aa:aa:aa:aa:aa";
 		final String apB = "bbbbbbbbbbbb";
 		final String clientB = "1b:bb:bb:bb:bb:bb";
+
+		final long currentTimeNs = System.nanoTime();
+		final long bufferTimeNs = 60_000_000_000L; // 1 min
 
 		ClientSteeringState clientSteeringState =
 			ClientSteeringState.getInstance();
@@ -32,100 +34,151 @@ public class ClientSteeringStateTest {
 		clientSteeringState.reset();
 
 		// no attempts have been registered
-		assertEquals(
-			null,
-			clientSteeringState.getLastAttempt(apA, clientA1)
+		assertTrue(
+			clientSteeringState
+				.checkBackoff(apA, clientA1, currentTimeNs, bufferTimeNs)
 		);
 
-		// when an attempt has been registered for one AP and one bssid
-		final long timestamp1 = TestUtils.DEFAULT_LOCAL_TIME;
+		// when an attempt has been registered for one AP and one client
+		final long timestamp1 = currentTimeNs;
 		clientSteeringState.registerAttempt(
 			apA,
 			clientA1,
 			timestamp1
 		);
-		assertEquals(
-			timestamp1,
-			clientSteeringState.getLastAttempt(apA, clientA1)
+		// immediately after registering, clientA1 backoff should be in effect
+		assertFalse(
+			clientSteeringState
+				.checkBackoff(apA, clientA1, timestamp1, bufferTimeNs)
 		);
-		assertEquals(
-			null,
-			clientSteeringState.getLastAttempt(apA, clientA2)
+		// later, backoff should expire
+		assertTrue(
+			clientSteeringState.checkBackoff(
+				apA,
+				clientA1,
+				timestamp1 + bufferTimeNs + 1,
+				bufferTimeNs
+			)
+		);
+		// but clientA2 unaffected
+		assertTrue(
+			clientSteeringState
+				.checkBackoff(apA, clientA2, timestamp1, bufferTimeNs)
 		);
 
-		// registering one radio should not affect another radio's timestamp
-		final long timestamp2 = timestamp1 + 1;
+		// registering one client should not affect another client
+		final long timestamp2 = timestamp1 + 1_000_000_000L;
 		clientSteeringState.registerAttempt(
 			apA,
 			clientA2,
 			timestamp2
 		);
-		assertEquals(
-			timestamp1,
-			clientSteeringState.getLastAttempt(apA, clientA1)
+		assertFalse(
+			clientSteeringState
+				.checkBackoff(apA, clientA1, timestamp1, bufferTimeNs)
 		);
-		assertEquals(
-			timestamp2,
-			clientSteeringState.getLastAttempt(apA, clientA2)
+		assertTrue(
+			clientSteeringState.checkBackoff(
+				apA,
+				clientA1,
+				timestamp1 + bufferTimeNs + 1,
+				bufferTimeNs
+			)
+		);
+		assertFalse(
+			clientSteeringState
+				.checkBackoff(apA, clientA2, timestamp2, bufferTimeNs)
+		);
+		assertTrue(
+			clientSteeringState.checkBackoff(
+				apA,
+				clientA2,
+				timestamp2 + bufferTimeNs + 1,
+				bufferTimeNs
+			)
 		);
 
-		// registering one AP should not affect another AP's timestamp
-		final long timestamp3 = timestamp2 + 1;
+		// registering one AP should not affect another AP
+		final long timestamp3 = timestamp2 + 1_000_000_000L;
 		clientSteeringState.registerAttempt(
 			apB,
 			clientB,
 			timestamp3
 		);
-		assertEquals(
-			timestamp1,
-			clientSteeringState.getLastAttempt(apA, clientA1)
+		assertFalse(
+			clientSteeringState
+				.checkBackoff(apA, clientA2, timestamp2, bufferTimeNs)
 		);
-		assertEquals(
-			timestamp2,
-			clientSteeringState.getLastAttempt(apA, clientA2)
+		assertTrue(
+			clientSteeringState.checkBackoff(
+				apA,
+				clientA2,
+				timestamp2 + bufferTimeNs + 1,
+				bufferTimeNs
+			)
 		);
-		assertEquals(
-			timestamp3,
-			clientSteeringState.getLastAttempt(apB, clientB)
+		assertFalse(
+			clientSteeringState
+				.checkBackoff(apB, clientB, timestamp3, bufferTimeNs)
+		);
+		assertTrue(
+			clientSteeringState.checkBackoff(
+				apB,
+				clientB,
+				timestamp3 + bufferTimeNs + 1,
+				bufferTimeNs
+			)
 		);
 
-		// registering older timestamp should not affect state
+		// registering older timestamp should not matter
 		clientSteeringState.registerAttempt(
 			apB,
 			clientB,
 			timestamp2
 		);
-		assertEquals(
-			timestamp1,
-			clientSteeringState.getLastAttempt(apA, clientA1)
-		);
-		assertEquals(
-			timestamp2,
-			clientSteeringState.getLastAttempt(apA, clientA2)
-		);
-		assertEquals(
-			timestamp3,
-			clientSteeringState.getLastAttempt(apB, clientB)
+		// false: should be based on timestamp3 not timestamp2
+		assertFalse(
+			clientSteeringState.checkBackoff(
+				apB,
+				clientB,
+				timestamp2 + bufferTimeNs + 1,
+				bufferTimeNs
+			)
 		);
 
 		// registering new timestamp should update state
-		final long timestamp4 = timestamp3 + 1;
+		final long timestamp4 = timestamp3 + 1_000_000_000L;
 		clientSteeringState.registerAttempt(
 			apB,
 			clientB,
 			timestamp4
 		);
-		assertEquals(
-			timestamp1,
-			clientSteeringState.getLastAttempt(apA, clientA1)
+		// false: should be based on timestamp4 not timestamp3
+		assertFalse(
+			clientSteeringState.checkBackoff(
+				apB,
+				clientB,
+				timestamp3 + bufferTimeNs + 1,
+				bufferTimeNs
+			)
 		);
-		assertEquals(
-			timestamp2,
-			clientSteeringState.getLastAttempt(apA, clientA2)
+
+		// check a different backoffTimeNs
+		assertTrue(
+			clientSteeringState.checkBackoff(
+				apB,
+				clientB,
+				timestamp4 + bufferTimeNs + 1,
+				bufferTimeNs
+			)
 		);
-		assertEquals(
-			timestamp4,
-			clientSteeringState.getLastAttempt(apB, clientB)
+		assertFalse(
+			clientSteeringState.checkBackoff(
+				apB,
+				clientB,
+				timestamp4 + bufferTimeNs + 1,
+				bufferTimeNs + 1
+			)
 		);
 	}
 }

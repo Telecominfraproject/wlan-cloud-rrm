@@ -36,8 +36,9 @@ public final class ClientSteeringState {
 	private final ConcurrentMap<String, Map<String, Long>> apClientLastAttempt =
 		new ConcurrentHashMap<>();
 
-	/** Reset the state (e.g., for testing) */
+	/** Reset the state - ONLY FOR TESTING */
 	public final void reset() {
+		// TODO better way then to call this before every test??
 		apClientLastAttempt.clear();
 	}
 
@@ -70,7 +71,7 @@ public final class ClientSteeringState {
 	 * @param apSerialNumber non-null AP serial number
 	 * @param station non-null client MAC
 	 */
-	public Long getLastAttempt(
+	private Long getLastAttempt(
 		String apSerialNumber,
 		String station
 	) {

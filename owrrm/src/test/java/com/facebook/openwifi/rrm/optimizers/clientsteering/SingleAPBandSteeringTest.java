@@ -161,6 +161,7 @@ public class SingleAPBandSteeringTest {
 
 	@Test
 	void testComputeApClientActionMap() {
+		ClientSteeringState.getInstance().reset();
 		DeviceDataManager deviceDataManager = new DeviceDataManager();
 		deviceDataManager
 			.setTopology(TestUtils.createTopology(TEST_ZONE, apA, apB, apC));
@@ -186,6 +187,7 @@ public class SingleAPBandSteeringTest {
 		Map<String, Map<String, String>> apClientActionMap =
 			optimizer.computeApClientActionMap();
 		System.out.println(exp);
+		System.out.println(apClientActionMap);
 		assertEquals(exp, apClientActionMap);
 	}
 }
