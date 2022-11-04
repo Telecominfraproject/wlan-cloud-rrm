@@ -202,7 +202,7 @@ public class SingleAPBandSteering extends ClientSteeringOptimizer {
 												.name()
 										);
 									getClientSteeringState()
-										.registerClientSteeringAttempt(
+										.registerAttempt(
 											serialNumber,
 											assoc.station,
 											currentTimeNs
@@ -234,7 +234,7 @@ public class SingleAPBandSteering extends ClientSteeringOptimizer {
 												.name()
 										);
 									getClientSteeringState()
-										.registerClientSteeringAttempt(
+										.registerAttempt(
 											serialNumber,
 											assoc.station,
 											currentTimeNs
@@ -269,7 +269,7 @@ public class SingleAPBandSteering extends ClientSteeringOptimizer {
 												.name()
 										);
 									getClientSteeringState()
-										.registerClientSteeringAttempt(
+										.registerAttempt(
 											serialNumber,
 											assoc.station,
 											currentTimeNs

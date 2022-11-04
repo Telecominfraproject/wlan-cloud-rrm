@@ -34,98 +34,98 @@ public class ClientSteeringStateTest {
 		// no attempts have been registered
 		assertEquals(
 			null,
-			clientSteeringState.getLatestClientSteeringAttempt(apA, clientA1)
+			clientSteeringState.getLastAttempt(apA, clientA1)
 		);
 
 		// when an attempt has been registered for one AP and one bssid
 		final long timestamp1 = TestUtils.DEFAULT_LOCAL_TIME;
-		clientSteeringState.registerClientSteeringAttempt(
+		clientSteeringState.registerAttempt(
 			apA,
 			clientA1,
 			timestamp1
 		);
 		assertEquals(
 			timestamp1,
-			clientSteeringState.getLatestClientSteeringAttempt(apA, clientA1)
+			clientSteeringState.getLastAttempt(apA, clientA1)
 		);
 		assertEquals(
 			null,
-			clientSteeringState.getLatestClientSteeringAttempt(apA, clientA2)
+			clientSteeringState.getLastAttempt(apA, clientA2)
 		);
 
 		// registering one radio should not affect another radio's timestamp
 		final long timestamp2 = timestamp1 + 1;
-		clientSteeringState.registerClientSteeringAttempt(
+		clientSteeringState.registerAttempt(
 			apA,
 			clientA2,
 			timestamp2
 		);
 		assertEquals(
 			timestamp1,
-			clientSteeringState.getLatestClientSteeringAttempt(apA, clientA1)
+			clientSteeringState.getLastAttempt(apA, clientA1)
 		);
 		assertEquals(
 			timestamp2,
-			clientSteeringState.getLatestClientSteeringAttempt(apA, clientA2)
+			clientSteeringState.getLastAttempt(apA, clientA2)
 		);
 
 		// registering one AP should not affect another AP's timestamp
 		final long timestamp3 = timestamp2 + 1;
-		clientSteeringState.registerClientSteeringAttempt(
+		clientSteeringState.registerAttempt(
 			apB,
 			clientB,
 			timestamp3
 		);
 		assertEquals(
 			timestamp1,
-			clientSteeringState.getLatestClientSteeringAttempt(apA, clientA1)
+			clientSteeringState.getLastAttempt(apA, clientA1)
 		);
 		assertEquals(
 			timestamp2,
-			clientSteeringState.getLatestClientSteeringAttempt(apA, clientA2)
+			clientSteeringState.getLastAttempt(apA, clientA2)
 		);
 		assertEquals(
 			timestamp3,
-			clientSteeringState.getLatestClientSteeringAttempt(apB, clientB)
+			clientSteeringState.getLastAttempt(apB, clientB)
 		);
 
 		// registering older timestamp should not affect state
-		clientSteeringState.registerClientSteeringAttempt(
+		clientSteeringState.registerAttempt(
 			apB,
 			clientB,
 			timestamp2
 		);
 		assertEquals(
 			timestamp1,
-			clientSteeringState.getLatestClientSteeringAttempt(apA, clientA1)
+			clientSteeringState.getLastAttempt(apA, clientA1)
 		);
 		assertEquals(
 			timestamp2,
-			clientSteeringState.getLatestClientSteeringAttempt(apA, clientA2)
+			clientSteeringState.getLastAttempt(apA, clientA2)
 		);
 		assertEquals(
 			timestamp3,
-			clientSteeringState.getLatestClientSteeringAttempt(apB, clientB)
+			clientSteeringState.getLastAttempt(apB, clientB)
 		);
 
 		// registering new timestamp should update state
 		final long timestamp4 = timestamp3 + 1;
-		clientSteeringState.registerClientSteeringAttempt(
+		clientSteeringState.registerAttempt(
 			apB,
 			clientB,
 			timestamp4
 		);
 		assertEquals(
 			timestamp1,
-			clientSteeringState.getLatestClientSteeringAttempt(apA, clientA1)
+			clientSteeringState.getLastAttempt(apA, clientA1)
 		);
 		assertEquals(
 			timestamp2,
-			clientSteeringState.getLatestClientSteeringAttempt(apA, clientA2)
+			clientSteeringState.getLastAttempt(apA, clientA2)
 		);
 		assertEquals(
 			timestamp4,
-			clientSteeringState.getLatestClientSteeringAttempt(apB, clientB)
+			clientSteeringState.getLastAttempt(apB, clientB)
 		);
 	}
 }

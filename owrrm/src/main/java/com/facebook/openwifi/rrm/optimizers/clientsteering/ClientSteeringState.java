@@ -49,7 +49,7 @@ public final class ClientSteeringState {
 	 * @param station non-null client MAC
 	 * @param currentTimeNs current JVM monotonic time (ns)
 	 */
-	final void registerClientSteeringAttempt(
+	final void registerAttempt(
 		String apSerialNumber,
 		String station,
 		long currentTimeNs
@@ -70,7 +70,7 @@ public final class ClientSteeringState {
 	 * @param apSerialNumber non-null AP serial number
 	 * @param station non-null client MAC
 	 */
-	final Long getLatestClientSteeringAttempt(
+	final Long getLastAttempt(
 		String apSerialNumber,
 		String station
 	) {
@@ -100,12 +100,12 @@ public final class ClientSteeringState {
 	) {
 		// TODO use per-AP-and-radio backoff, doubling each time up to a max
 		// instead of a passed in backoff time
-		Long latestClientSteeringAttempt =
-			getLatestClientSteeringAttempt(apSerialNumber, station);
-		if (latestClientSteeringAttempt == null) {
+		Long lastAttempt =
+			getLastAttempt(apSerialNumber, station);
+		if (lastAttempt == null) {
 			return true;
 		}
-		return currentTimeNs - latestClientSteeringAttempt > backoffTimeNs;
+		return currentTimeNs - lastAttempt > backoffTimeNs;
 	}
 
 }
