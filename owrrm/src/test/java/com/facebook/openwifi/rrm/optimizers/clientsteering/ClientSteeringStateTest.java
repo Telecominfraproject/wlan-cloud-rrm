@@ -29,8 +29,6 @@ public class ClientSteeringStateTest {
 		ClientSteeringState clientSteeringState =
 			ClientSteeringState.getInstance();
 
-		// TODO any better structure that doesn't require remembering to reset
-		// every time?
 		clientSteeringState.reset();
 
 		// first attempt should register

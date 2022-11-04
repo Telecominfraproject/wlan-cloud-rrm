@@ -59,11 +59,6 @@ public class SingleAPBandSteeringTest {
 		new String[][] { new String[] { "1c:cc:cc:cc:cc:cc" },
 			new String[] { "2c:cc:cc:cc:cc:cc" } };
 
-	//	// useful for iterating over the APs
-	//	private static final List<String> aps = Collections.unmodifiableList(Arrays.asList(apA, apB, apC));
-	//	private static final List<String[]> bssids = Collections.unmodifiableList(Arrays.asList(bssidsA, bssidsB, bssidsC));
-	//	private static final List<String[][]> clients = Collections.unmodifiableList(Arrays.asList(clientsA, clientsB, clientsC));
-
 	/** Default channel width */
 	private static final int DEFAULT_CHANNEL_WIDTH = 20;
 
