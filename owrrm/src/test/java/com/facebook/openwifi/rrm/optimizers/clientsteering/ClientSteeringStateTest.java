@@ -33,151 +33,72 @@ public class ClientSteeringStateTest {
 		// every time?
 		clientSteeringState.reset();
 
-		// no attempts have been registered
+		// first attempt should register
 		assertTrue(
-			clientSteeringState
-				.isBackoffExpired(apA, clientA1, currentTimeNs, bufferTimeNs)
-		);
-
-		// when an attempt has been registered for one AP and one client
-		final long timestamp1 = currentTimeNs;
-		clientSteeringState.registerAttempt(
-			apA,
-			clientA1,
-			timestamp1
-		);
-		// immediately after registering, clientA1 backoff should be in effect
-		assertFalse(
-			clientSteeringState
-				.isBackoffExpired(apA, clientA1, timestamp1, bufferTimeNs)
-		);
-		// later, backoff should expire
-		assertTrue(
-			clientSteeringState.isBackoffExpired(
+			clientSteeringState.registerIfBackoffExpired(
 				apA,
 				clientA1,
-				timestamp1 + bufferTimeNs + 1,
+				currentTimeNs,
 				bufferTimeNs
 			)
 		);
-		// but clientA2 unaffected
-		assertTrue(
-			clientSteeringState
-				.isBackoffExpired(apA, clientA2, timestamp1, bufferTimeNs)
-		);
-
-		// registering one client should not affect another client
-		final long timestamp2 = timestamp1 + 1_000_000_000L;
-		clientSteeringState.registerAttempt(
-			apA,
-			clientA2,
-			timestamp2
-		);
+		// should not register AP A & clientA1 again while backoff is in effect
 		assertFalse(
-			clientSteeringState
-				.isBackoffExpired(apA, clientA1, timestamp1, bufferTimeNs)
-		);
-		assertTrue(
-			clientSteeringState.isBackoffExpired(
+			clientSteeringState.registerIfBackoffExpired(
 				apA,
 				clientA1,
-				timestamp1 + bufferTimeNs + 1,
+				currentTimeNs + 1,
 				bufferTimeNs
 			)
 		);
-		assertFalse(
-			clientSteeringState
-				.isBackoffExpired(apA, clientA2, timestamp2, bufferTimeNs)
-		);
+		// one client's backoff should not affect another client
 		assertTrue(
-			clientSteeringState.isBackoffExpired(
+			clientSteeringState.registerIfBackoffExpired(
 				apA,
 				clientA2,
-				timestamp2 + bufferTimeNs + 1,
+				currentTimeNs + 1,
 				bufferTimeNs
 			)
 		);
-
-		// registering one AP should not affect another AP
-		final long timestamp3 = timestamp2 + 1_000_000_000L;
-		clientSteeringState.registerAttempt(
-			apB,
-			clientB,
-			timestamp3
-		);
-		assertFalse(
-			clientSteeringState
-				.isBackoffExpired(apA, clientA2, timestamp2, bufferTimeNs)
-		);
+		// one AP should not affect another
 		assertTrue(
-			clientSteeringState.isBackoffExpired(
+			clientSteeringState.registerIfBackoffExpired(
+				apB,
+				clientB,
+				currentTimeNs + 1,
+				bufferTimeNs
+			)
+		);
+		// should re-register AP A & clientA1 after backoff has expired
+		assertTrue(
+			clientSteeringState.registerIfBackoffExpired(
 				apA,
-				clientA2,
-				timestamp2 + bufferTimeNs + 1,
+				clientA1,
+				currentTimeNs + bufferTimeNs,
 				bufferTimeNs
 			)
 		);
+		// an older timestamp should not register
 		assertFalse(
+			clientSteeringState.registerIfBackoffExpired(
+				apB,
+				clientB,
+				currentTimeNs - 1,
+				bufferTimeNs
+			)
+		);
+		// try a different backoffTimeNs
+		assertTrue(
 			clientSteeringState
-				.isBackoffExpired(apB, clientB, timestamp3, bufferTimeNs)
+				.registerIfBackoffExpired(apA, clientA2, currentTimeNs + 2, 1)
 		);
+		// same client on a different AP should have separate timer
 		assertTrue(
-			clientSteeringState.isBackoffExpired(
+			clientSteeringState.registerIfBackoffExpired(
 				apB,
-				clientB,
-				timestamp3 + bufferTimeNs + 1,
+				clientA2,
+				currentTimeNs + 3,
 				bufferTimeNs
-			)
-		);
-
-		// registering older timestamp should not matter
-		clientSteeringState.registerAttempt(
-			apB,
-			clientB,
-			timestamp2
-		);
-		// false: should be based on timestamp3 not timestamp2
-		assertFalse(
-			clientSteeringState.isBackoffExpired(
-				apB,
-				clientB,
-				timestamp2 + bufferTimeNs + 1,
-				bufferTimeNs
-			)
-		);
-
-		// registering new timestamp should update state
-		final long timestamp4 = timestamp3 + 1_000_000_000L;
-		clientSteeringState.registerAttempt(
-			apB,
-			clientB,
-			timestamp4
-		);
-		// false: should be based on timestamp4 not timestamp3
-		assertFalse(
-			clientSteeringState.isBackoffExpired(
-				apB,
-				clientB,
-				timestamp3 + bufferTimeNs + 1,
-				bufferTimeNs
-			)
-		);
-
-		// check a different backoffTimeNs
-		assertTrue(
-			clientSteeringState.isBackoffExpired(
-				apB,
-				clientB,
-				timestamp4 + bufferTimeNs + 1,
-				bufferTimeNs
-			)
-		);
-		assertFalse(
-			clientSteeringState.isBackoffExpired(
-				apB,
-				clientB,
-				timestamp4 + bufferTimeNs + 1,
-				bufferTimeNs + 1
 			)
 		);
 	}

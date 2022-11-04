@@ -33,80 +33,57 @@ public final class ClientSteeringState {
 	 * ns) of the latest attempted client steering action. The {@code Long}
 	 * values are never null.
 	 */
-	private final ConcurrentMap<String, Map<String, Long>> apClientLastAttempt =
+	private ConcurrentMap<String, Map<String, Long>> apClientLastAttempt =
 		new ConcurrentHashMap<>();
 
 	/** Reset the state - ONLY FOR TESTING */
-	public final void reset() {
+	public synchronized void reset() {
 		// TODO better way then to call this before every test??
 		apClientLastAttempt.clear();
 	}
 
 	/**
-	 * Register the time of the latest client steering attempt by the given AP
-	 * for the given client.
-	 *
-	 * @param apSerialNumber non-null AP serial number
-	 * @param station non-null client MAC
-	 * @param currentTimeNs current JVM monotonic time (ns)
-	 */
-	public void registerAttempt(
-		String apSerialNumber,
-		String station,
-		long currentTimeNs
-	) {
-		Map<String, Long> radioLastAttempt = apClientLastAttempt
-			.computeIfAbsent(apSerialNumber, k -> new HashMap<>());
-		Long lastAttempt = radioLastAttempt.get(station);
-		if (lastAttempt == null || currentTimeNs > lastAttempt) {
-			radioLastAttempt.put(station, currentTimeNs);
-		}
-	}
-
-	/**
-	 * Get the time of the latest client steering attempt by AP serial number
-	 * and client MAC. Return null if no client steering attempt has been made
-	 * for the given AP and radio.
-	 *
-	 * @param apSerialNumber non-null AP serial number
-	 * @param station non-null client MAC
-	 */
-	private Long getLastAttempt(
-		String apSerialNumber,
-		String station
-	) {
-		Map<String, Long> clientLatestAttempt = apClientLastAttempt
-			.get(apSerialNumber);
-		if (clientLatestAttempt == null) {
-			return null;
-		}
-		return clientLatestAttempt.get(station);
-	}
-
-	/**
-	 * Check if enough time (more than the backoff time) has passed since the
-	 * latest client steering attempt for the given AP and radio.
+	 * Register a client steering attempt for the given AP and station at the
+	 * given time if there has been no previous attempt or more than the given
+	 * backoff time has passed since the last attempt and the current time.
+	 * Return true if the attempt was registered; false otherwise.
+	 * <p>
+	 * The backoff time must be non-negative. The backoff time window is
+	 * "exclusive" - e.g., if the backoff time is X ns, and the current time is
+	 * exactly X ns after the last attempt, the backoff is considered expired.
+	 * <p>
+	 * Note that if there was a previous attempt for the given AP and station,
+	 * the current time must not be before the last attempt.
 	 *
 	 * @param apSerialNumber AP serial number
 	 * @param station client MAC
-	 * @param currentTimeNs current JVM monotonic time (ns)
-	 * @param backoffTimeNs backoff time (ns)
-	 * @return true if enough more than the backoff time has passed
+	 * @param currentTimeNs JVM monotonic time in ns
+	 * @param backoffTimeNs non-negative backoff time (ns)
+	 * @return true if client steering attempt was registered; false otherwise
 	 */
-	public boolean isBackoffExpired(
+	public synchronized boolean registerIfBackoffExpired(
 		String apSerialNumber,
 		String station,
 		long currentTimeNs,
 		long backoffTimeNs
 	) {
-		// TODO use per-AP-and-radio backoff, doubling each time up to a max
-		// instead of a passed in backoff time
-		Long lastAttempt =
-			getLastAttempt(apSerialNumber, station);
-		if (lastAttempt == null) {
-			return true;
+		if (backoffTimeNs < 0) {
+			throw new IllegalArgumentException(
+				"Backoff time must be non-negative."
+			);
 		}
-		return currentTimeNs - lastAttempt > backoffTimeNs;
+		// get last attempt
+		Map<String, Long> clientLastAttempt = apClientLastAttempt
+			.computeIfAbsent(apSerialNumber, k -> new HashMap<>());
+		Long lastAttempt = clientLastAttempt.get(station);
+		// check if backoff expired
+		if (
+			lastAttempt != null && currentTimeNs - lastAttempt < backoffTimeNs
+		) {
+			return false;
+		}
+		// register attempt
+		clientLastAttempt.put(station, currentTimeNs);
+		return true;
 	}
-
 }

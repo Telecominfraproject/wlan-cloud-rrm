@@ -179,12 +179,13 @@ public class SingleAPBandSteering extends ClientSteeringOptimizer {
 						if (UCentralConstants.BAND_2G.equals(band)) {
 							if (assoc.rssi < minRssi2G) {
 								if (
-									getClientSteeringState().isBackoffExpired(
-										serialNumber,
-										assoc.station,
-										currentTimeNs,
-										backoffTimeNs
-									)
+									getClientSteeringState()
+										.registerIfBackoffExpired(
+											serialNumber,
+											assoc.station,
+											currentTimeNs,
+											backoffTimeNs
+										)
 								) {
 									logger.debug(
 										"Planning to deauthenticate client {} on AP {}",
@@ -201,22 +202,16 @@ public class SingleAPBandSteering extends ClientSteeringOptimizer {
 											CLIENT_STEERING_ACTIONS.DEAUTHENTICATE
 												.name()
 										);
-									getClientSteeringState()
-										.registerAttempt(
-											serialNumber,
-											assoc.station,
-											currentTimeNs
-										);
 								}
-
 							} else if (assoc.rssi > maxRssi2G) {
 								if (
-									getClientSteeringState().isBackoffExpired(
-										serialNumber,
-										assoc.station,
-										currentTimeNs,
-										backoffTimeNs
-									)
+									getClientSteeringState()
+										.registerIfBackoffExpired(
+											serialNumber,
+											assoc.station,
+											currentTimeNs,
+											backoffTimeNs
+										)
 								) {
 									logger.debug(
 										"Planning to request client {} on AP {} to move to 5G or 6G",
@@ -233,12 +228,6 @@ public class SingleAPBandSteering extends ClientSteeringOptimizer {
 											CLIENT_STEERING_ACTIONS.STEER_UP
 												.name()
 										);
-									getClientSteeringState()
-										.registerAttempt(
-											serialNumber,
-											assoc.station,
-											currentTimeNs
-										);
 								}
 							}
 							// otherwise, do nothing
@@ -246,12 +235,13 @@ public class SingleAPBandSteering extends ClientSteeringOptimizer {
 							// treat 5G and 6G clients the same way
 							if (assoc.rssi < minRssiNon2G) {
 								if (
-									getClientSteeringState().isBackoffExpired(
-										serialNumber,
-										assoc.station,
-										currentTimeNs,
-										backoffTimeNs
-									)
+									getClientSteeringState()
+										.registerIfBackoffExpired(
+											serialNumber,
+											assoc.station,
+											currentTimeNs,
+											backoffTimeNs
+										)
 								) {
 									logger.debug(
 										"Planning to request client {} on AP {} to move to 2G",
@@ -267,12 +257,6 @@ public class SingleAPBandSteering extends ClientSteeringOptimizer {
 											assoc.station,
 											CLIENT_STEERING_ACTIONS.STEER_DOWN
 												.name()
-										);
-									getClientSteeringState()
-										.registerAttempt(
-											serialNumber,
-											assoc.station,
-											currentTimeNs
 										);
 								}
 							}
