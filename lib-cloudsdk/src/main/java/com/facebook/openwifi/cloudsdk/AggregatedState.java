@@ -193,12 +193,12 @@ public class AggregatedState {
 		}
 	}
 
-	//Aggregate AssociationInfo over bssid, station and RadioConfig.
+	// Aggregate AssociationInfo over bssid, station and RadioConfig.
 	public String bssid;
 	public String station;
 	public RadioConfig radioConfig;
 
-	//Store a list of AssociationInfo of the same link and radio configuration. */
+	// Store a list of AssociationInfo of the same link and radio configuration. */
 	public List<AssociationInfo> associationInfoList;
 
 	/** Constructor with no args. For test purpose. */
