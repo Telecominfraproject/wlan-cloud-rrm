@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 
 import com.facebook.openwifi.cloudsdk.models.ap.Capabilities;
 import com.facebook.openwifi.cloudsdk.UCentralUtils;
+import com.facebook.openwifi.cloudsdk.StateInfo;
 import com.facebook.openwifi.cloudsdk.models.ap.State;
 import com.facebook.openwifi.rrm.DeviceDataManager;
 import com.facebook.openwifi.rrm.modules.Modeler.DataModel;
@@ -293,10 +294,12 @@ public class MeasurementBasedApClientTPC extends TPC {
 	public Map<String, Map<String, Integer>> computeTxPowerMap() {
 		Map<String, Map<String, Integer>> txPowerMap = new TreeMap<>();
 
-		for (Map.Entry<String, List<State>> e : model.latestStates.entrySet()) {
+		for (
+			Map.Entry<String, List<StateInfo>> e : model.latestStates.entrySet()
+		) {
 			String serialNumber = e.getKey();
-			List<State> states = e.getValue();
-			State state = states.get(states.size() - 1);
+			List<StateInfo> states = e.getValue();
+			StateInfo state = states.get(states.size() - 1);
 			if (state.radios == null || state.radios.length == 0) {
 				logger.debug(
 					"Device {}: No radios found, skipping...",
@@ -306,7 +309,7 @@ public class MeasurementBasedApClientTPC extends TPC {
 			}
 
 			Map<String, Integer> radioMap = new TreeMap<>();
-			for (State.Radio radio : state.radios) {
+			for (StateInfo.Radio radio : state.radios) {
 				Map<String, Capabilities.Phy> capabilityPhy =
 					model.latestDeviceCapabilitiesPhy
 						.get(serialNumber);

@@ -24,6 +24,7 @@ import org.junit.jupiter.api.Test;
 
 import com.facebook.openwifi.cloudsdk.AggregatedState;
 import com.facebook.openwifi.cloudsdk.WifiScanEntry;
+import com.facebook.openwifi.cloudsdk.StateInfo;
 import com.facebook.openwifi.cloudsdk.models.ap.State;
 import com.facebook.openwifi.rrm.aggregators.MeanAggregator;
 import com.facebook.openwifi.rrm.modules.Modeler.DataModel;
@@ -615,7 +616,7 @@ public class ModelerUtilsTest {
 			new ArrayList<>(Arrays.asList(aggStateC))
 		);
 
-		State toBeAggregated1 = TestUtils.createState(
+		StateInfo toBeAggregated1 = TestUtils.createState(
 			6,
 			20,
 			10,
@@ -667,7 +668,7 @@ public class ModelerUtilsTest {
 			Arrays.asList(20, 30, 40, 60)
 		);
 
-		State toBeAggregated2 = TestUtils.createState(
+		StateInfo toBeAggregated2 = TestUtils.createState(
 			11,
 			20,
 			20,
@@ -714,7 +715,7 @@ public class ModelerUtilsTest {
 		DataModel dataModel = new DataModel();
 
 		// This serie of StateA is used to test a valid input states.
-		State time1StateA = TestUtils.createState(
+		StateInfo time1StateA = TestUtils.createState(
 			1,
 			80,
 			10,
@@ -730,7 +731,7 @@ public class ModelerUtilsTest {
 			TestUtils.DEFAULT_LOCAL_TIME
 		);
 
-		State time2StateA = TestUtils.createState(
+		StateInfo time2StateA = TestUtils.createState(
 			1,
 			80,
 			10,
@@ -747,7 +748,7 @@ public class ModelerUtilsTest {
 		);
 
 		//As State time3StateA is obsolete, it should not be aggregated.
-		State time3StateA = TestUtils.createState(
+		StateInfo time3StateA = TestUtils.createState(
 			1,
 			80,
 			10,
@@ -875,7 +876,7 @@ public class ModelerUtilsTest {
 		);
 
 		// Test more clients operate on the same channel (stationB and stationA)
-		State time1StateB = TestUtils.createState(
+		StateInfo time1StateB = TestUtils.createState(
 			1,
 			80,
 			10,
@@ -888,7 +889,7 @@ public class ModelerUtilsTest {
 			.computeIfAbsent(serialNumberB, k -> new ArrayList<>())
 			.add(time1StateB);
 
-		State time1StateC = TestUtils.createState(
+		StateInfo time1StateC = TestUtils.createState(
 			6,
 			40,
 			20,

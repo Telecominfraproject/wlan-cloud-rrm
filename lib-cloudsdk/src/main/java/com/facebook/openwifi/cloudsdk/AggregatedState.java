@@ -22,34 +22,6 @@ import com.google.gson.JsonObject;
  */
 public class AggregatedState {
 
-	/** Rate information with aggregated fields. */
-	public static class Rate {
-		/**
-		 * Aggregated fields bitRate
-		 */
-		public long bitRate;
-
-		/**
-		 * Aggregated fields chWidth
-		 */
-		public int chWidth;
-
-		/**
-		 * Aggregated fields mcs
-		 */
-		public int mcs;
-
-		/** Constructor with no args */
-		private Rate() {}
-
-		/** Constructor with args */
-		private Rate(long bitRate, int chWidth, int mcs) {
-			this.bitRate = bitRate;
-			this.chWidth = chWidth;
-			this.mcs = mcs;
-		}
-	}
-
 	/**
 	 * Radio information with channel, channel_width and tx_power.
 	 */
@@ -99,11 +71,39 @@ public class AggregatedState {
 		}
 	}
 
-	/** 
-	 * Data model to keep raw data from {@link State.Interface.SSID.Association}, 
+	/**
+	 * Data model to keep raw data from {@link State.Interface.SSID.Association},
 	 * {@link State.Radio} and {@link State.Interface.Counters}.
 	 */
 	public static class AssociationInfo {
+		/** Rate information with aggregated fields. */
+		public static class Rate {
+			/**
+			 * Aggregated fields bitRate
+			 */
+			public long bitRate;
+
+			/**
+			 * Aggregated fields chWidth
+			 */
+			public int chWidth;
+
+			/**
+			 * Aggregated fields mcs
+			 */
+			public int mcs;
+
+			/** Constructor with no args */
+			private Rate() {}
+
+			/** Constructor with args */
+			private Rate(long bitRate, int chWidth, int mcs) {
+				this.bitRate = bitRate;
+				this.chWidth = chWidth;
+				this.mcs = mcs;
+			}
+		}
+
 		public long connected;
 		public long inactive;
 		public int rssi;
@@ -126,7 +126,9 @@ public class AggregatedState {
 		public long noiseRadio;
 		public long receiveMsRadio;
 		public long transmitMsRadio;
-		public long timeStamp;
+
+		/** unix time in ms */
+		public long timestamp;
 
 		/** Default Constructor. */
 		public AssociationInfo() {}
@@ -141,7 +143,7 @@ public class AggregatedState {
 			Association association,
 			Counters counters,
 			JsonObject radio,
-			long timeStamp
+			long timestamp
 		) {
 			// Association info
 			connected = association.connected;
@@ -187,16 +189,19 @@ public class AggregatedState {
 			receiveMsRadio = radio.get("receive_ms").getAsLong();
 			noiseRadio = radio.get("noise").getAsLong();
 
-			this.timeStamp = timeStamp;
+			this.timestamp = timestamp;
 		}
 	}
 
+	/** Aggregate AssociationInfo over bssid, station and RadioConfig */
 	public String bssid;
 	public String station;
 	public RadioConfig radioConfig;
+
+	/** Store a list of AssociationInfo of the same link and radio configuration. */
 	public List<AssociationInfo> associationInfoList;
 
-	/** Constructor with no args */
+	/** Constructor with no args. For test purpose. */
 	public AggregatedState() {
 		this.associationInfoList = new ArrayList<>();
 		this.radioConfig = new RadioConfig();
@@ -207,13 +212,13 @@ public class AggregatedState {
 		Association association,
 		Counters counters,
 		JsonObject radio,
-		long timeStamp
+		long timestamp
 	) {
 		this.bssid = association.bssid;
 		this.station = association.station;
 		this.associationInfoList = new ArrayList<>();
 		associationInfoList
-			.add(new AssociationInfo(association, counters, radio, timeStamp));
+			.add(new AssociationInfo(association, counters, radio, timestamp));
 		this.radioConfig = new RadioConfig(radio);
 	}
 

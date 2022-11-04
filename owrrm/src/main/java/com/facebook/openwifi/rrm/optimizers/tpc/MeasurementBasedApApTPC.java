@@ -24,6 +24,7 @@ import com.facebook.openwifi.cloudsdk.UCentralUtils;
 import com.facebook.openwifi.cloudsdk.WifiScanEntry;
 import com.facebook.openwifi.cloudsdk.models.ap.Capabilities;
 import com.facebook.openwifi.cloudsdk.models.ap.State;
+import com.facebook.openwifi.cloudsdk.StateInfo;
 import com.facebook.openwifi.rrm.DeviceDataManager;
 import com.facebook.openwifi.rrm.modules.Modeler.DataModel;
 import com.facebook.openwifi.rrm.modules.ModelerUtils;
@@ -156,17 +157,19 @@ public class MeasurementBasedApApTPC extends TPC {
 	 */
 	protected static Set<String> getManagedBSSIDs(DataModel model) {
 		Set<String> managedBSSIDs = new HashSet<>();
-		for (Map.Entry<String, List<State>> e : model.latestStates.entrySet()) {
-			List<State> states = e.getValue();
-			State state = states.get(states.size() - 1);
+		for (
+			Map.Entry<String, List<StateInfo>> e : model.latestStates.entrySet()
+		) {
+			List<StateInfo> states = e.getValue();
+			StateInfo state = states.get(states.size() - 1);
 			if (state.interfaces == null) {
 				continue;
 			}
-			for (State.Interface iface : state.interfaces) {
+			for (StateInfo.Interface iface : state.interfaces) {
 				if (iface.ssids == null) {
 					continue;
 				}
-				for (State.Interface.SSID ssid : iface.ssids) {
+				for (StateInfo.Interface.SSID ssid : iface.ssids) {
 					if (ssid.bssid == null) {
 						continue;
 					}
@@ -322,8 +325,8 @@ public class MeasurementBasedApApTPC extends TPC {
 			buildRssiMap(managedBSSIDs, model.latestWifiScans, band);
 		logger.debug("Starting TPC for the {} band", band);
 		for (String serialNumber : serialNumbers) {
-			List<State> states = model.latestStates.get(serialNumber);
-			State state = states.get(states.size() - 1);
+			List<StateInfo> states = model.latestStates.get(serialNumber);
+			StateInfo state = states.get(states.size() - 1);
 			if (
 				state == null || state.radios == null ||
 					state.radios.length == 0
