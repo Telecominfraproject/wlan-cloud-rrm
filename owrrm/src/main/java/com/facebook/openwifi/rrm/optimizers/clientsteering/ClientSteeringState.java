@@ -93,7 +93,7 @@ public final class ClientSteeringState {
 	 * @param backoffTimeNs backoff time (ns)
 	 * @return true if enough more than the backoff time has passed
 	 */
-	public boolean checkBackoff(
+	public boolean isBackoffExpired(
 		String apSerialNumber,
 		String station,
 		long currentTimeNs,

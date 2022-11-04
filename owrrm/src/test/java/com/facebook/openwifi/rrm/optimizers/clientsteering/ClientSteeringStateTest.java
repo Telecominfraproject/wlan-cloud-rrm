@@ -36,7 +36,7 @@ public class ClientSteeringStateTest {
 		// no attempts have been registered
 		assertTrue(
 			clientSteeringState
-				.checkBackoff(apA, clientA1, currentTimeNs, bufferTimeNs)
+				.isBackoffExpired(apA, clientA1, currentTimeNs, bufferTimeNs)
 		);
 
 		// when an attempt has been registered for one AP and one client
@@ -49,11 +49,11 @@ public class ClientSteeringStateTest {
 		// immediately after registering, clientA1 backoff should be in effect
 		assertFalse(
 			clientSteeringState
-				.checkBackoff(apA, clientA1, timestamp1, bufferTimeNs)
+				.isBackoffExpired(apA, clientA1, timestamp1, bufferTimeNs)
 		);
 		// later, backoff should expire
 		assertTrue(
-			clientSteeringState.checkBackoff(
+			clientSteeringState.isBackoffExpired(
 				apA,
 				clientA1,
 				timestamp1 + bufferTimeNs + 1,
@@ -63,7 +63,7 @@ public class ClientSteeringStateTest {
 		// but clientA2 unaffected
 		assertTrue(
 			clientSteeringState
-				.checkBackoff(apA, clientA2, timestamp1, bufferTimeNs)
+				.isBackoffExpired(apA, clientA2, timestamp1, bufferTimeNs)
 		);
 
 		// registering one client should not affect another client
@@ -75,10 +75,10 @@ public class ClientSteeringStateTest {
 		);
 		assertFalse(
 			clientSteeringState
-				.checkBackoff(apA, clientA1, timestamp1, bufferTimeNs)
+				.isBackoffExpired(apA, clientA1, timestamp1, bufferTimeNs)
 		);
 		assertTrue(
-			clientSteeringState.checkBackoff(
+			clientSteeringState.isBackoffExpired(
 				apA,
 				clientA1,
 				timestamp1 + bufferTimeNs + 1,
@@ -87,10 +87,10 @@ public class ClientSteeringStateTest {
 		);
 		assertFalse(
 			clientSteeringState
-				.checkBackoff(apA, clientA2, timestamp2, bufferTimeNs)
+				.isBackoffExpired(apA, clientA2, timestamp2, bufferTimeNs)
 		);
 		assertTrue(
-			clientSteeringState.checkBackoff(
+			clientSteeringState.isBackoffExpired(
 				apA,
 				clientA2,
 				timestamp2 + bufferTimeNs + 1,
@@ -107,10 +107,10 @@ public class ClientSteeringStateTest {
 		);
 		assertFalse(
 			clientSteeringState
-				.checkBackoff(apA, clientA2, timestamp2, bufferTimeNs)
+				.isBackoffExpired(apA, clientA2, timestamp2, bufferTimeNs)
 		);
 		assertTrue(
-			clientSteeringState.checkBackoff(
+			clientSteeringState.isBackoffExpired(
 				apA,
 				clientA2,
 				timestamp2 + bufferTimeNs + 1,
@@ -119,10 +119,10 @@ public class ClientSteeringStateTest {
 		);
 		assertFalse(
 			clientSteeringState
-				.checkBackoff(apB, clientB, timestamp3, bufferTimeNs)
+				.isBackoffExpired(apB, clientB, timestamp3, bufferTimeNs)
 		);
 		assertTrue(
-			clientSteeringState.checkBackoff(
+			clientSteeringState.isBackoffExpired(
 				apB,
 				clientB,
 				timestamp3 + bufferTimeNs + 1,
@@ -138,7 +138,7 @@ public class ClientSteeringStateTest {
 		);
 		// false: should be based on timestamp3 not timestamp2
 		assertFalse(
-			clientSteeringState.checkBackoff(
+			clientSteeringState.isBackoffExpired(
 				apB,
 				clientB,
 				timestamp2 + bufferTimeNs + 1,
@@ -155,7 +155,7 @@ public class ClientSteeringStateTest {
 		);
 		// false: should be based on timestamp4 not timestamp3
 		assertFalse(
-			clientSteeringState.checkBackoff(
+			clientSteeringState.isBackoffExpired(
 				apB,
 				clientB,
 				timestamp3 + bufferTimeNs + 1,
@@ -165,7 +165,7 @@ public class ClientSteeringStateTest {
 
 		// check a different backoffTimeNs
 		assertTrue(
-			clientSteeringState.checkBackoff(
+			clientSteeringState.isBackoffExpired(
 				apB,
 				clientB,
 				timestamp4 + bufferTimeNs + 1,
@@ -173,7 +173,7 @@ public class ClientSteeringStateTest {
 			)
 		);
 		assertFalse(
-			clientSteeringState.checkBackoff(
+			clientSteeringState.isBackoffExpired(
 				apB,
 				clientB,
 				timestamp4 + bufferTimeNs + 1,

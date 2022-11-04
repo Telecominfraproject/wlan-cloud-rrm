@@ -179,7 +179,7 @@ public class SingleAPBandSteering extends ClientSteeringOptimizer {
 						if (UCentralConstants.BAND_2G.equals(band)) {
 							if (assoc.rssi < minRssi2G) {
 								if (
-									getClientSteeringState().checkBackoff(
+									getClientSteeringState().isBackoffExpired(
 										serialNumber,
 										assoc.station,
 										currentTimeNs,
@@ -211,7 +211,7 @@ public class SingleAPBandSteering extends ClientSteeringOptimizer {
 
 							} else if (assoc.rssi > maxRssi2G) {
 								if (
-									getClientSteeringState().checkBackoff(
+									getClientSteeringState().isBackoffExpired(
 										serialNumber,
 										assoc.station,
 										currentTimeNs,
@@ -246,7 +246,7 @@ public class SingleAPBandSteering extends ClientSteeringOptimizer {
 							// treat 5G and 6G clients the same way
 							if (assoc.rssi < minRssiNon2G) {
 								if (
-									getClientSteeringState().checkBackoff(
+									getClientSteeringState().isBackoffExpired(
 										serialNumber,
 										assoc.station,
 										currentTimeNs,
