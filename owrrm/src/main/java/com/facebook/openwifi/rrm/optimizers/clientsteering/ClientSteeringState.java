@@ -49,7 +49,7 @@ public final class ClientSteeringState {
 	 * @param station non-null client MAC
 	 * @param currentTimeNs current JVM monotonic time (ns)
 	 */
-	final void registerAttempt(
+	public void registerAttempt(
 		String apSerialNumber,
 		String station,
 		long currentTimeNs
@@ -70,7 +70,7 @@ public final class ClientSteeringState {
 	 * @param apSerialNumber non-null AP serial number
 	 * @param station non-null client MAC
 	 */
-	final Long getLastAttempt(
+	public Long getLastAttempt(
 		String apSerialNumber,
 		String station
 	) {
@@ -92,7 +92,7 @@ public final class ClientSteeringState {
 	 * @param backoffTimeNs backoff time (ns)
 	 * @return true if enough more than the backoff time has passed
 	 */
-	final boolean checkBackoff(
+	public boolean checkBackoff(
 		String apSerialNumber,
 		String station,
 		long currentTimeNs,
