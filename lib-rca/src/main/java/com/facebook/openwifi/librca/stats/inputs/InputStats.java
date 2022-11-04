@@ -10,6 +10,18 @@ package com.facebook.openwifi.librca.stats.inputs;
 
 /** Input Data Model */
 public class InputStats {
+    /** Radio parameters */
+    public static class Radio {
+        public long active_ms;
+        public long busy_ms;
+        public int channel;
+        public String channel_width;
+        public long noise;
+        public String phy;
+        public long receive_ms;
+        public long transmit_ms;
+        public int tx_power;
+    }
 	public static class SSID {
 		public static class Association {
 			/** Modulation and Coding Scheme */
@@ -38,20 +50,6 @@ public class InputStats {
 			public int ack_signal;
 			public int ack_signal_avg;
 		}
-
-		public static class Radio {
-			public long active_ms;
-			public long busy_ms;
-			public int channel;
-			public String channel_width;
-			public long noise;
-			public String phy;
-			public long receive_ms;
-			public long transmit_ms;
-			public int tx_power;
-			public Association[] associations;
-		}
-
 		public Association[] associations;
 		public Radio radio;
 	}
