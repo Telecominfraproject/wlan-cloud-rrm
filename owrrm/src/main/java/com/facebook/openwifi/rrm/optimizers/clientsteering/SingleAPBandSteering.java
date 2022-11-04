@@ -38,6 +38,7 @@ public class SingleAPBandSteering extends ClientSteeringOptimizer {
 	private static final Logger logger =
 		LoggerFactory.getLogger(SingleAPBandSteering.class);
 
+	/** The RRM algorithm ID. */
 	public static final String ALGORITHM_ID = "band";
 
 	/**
