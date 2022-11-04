@@ -30,7 +30,7 @@ public final class ClientSteeringState {
 
 	/**
 	 * Map from AP serial number to client MAC to time (JVM monotonic time in
-	 * ms) of the latest attempted client steering action. The {@code Long}
+	 * ns) of the latest attempted client steering action. The {@code Long}
 	 * values are never null.
 	 */
 	private final ConcurrentMap<String, Map<String, Long>> apClientLastAttempt =
@@ -89,14 +89,14 @@ public final class ClientSteeringState {
 	 * @param apSerialNumber AP serial number
 	 * @param station client MAC
 	 * @param currentTimeNs current JVM monotonic time (ns)
-	 * @param backoffTime backoff time (ms)
+	 * @param backoffTimeNs backoff time (ns)
 	 * @return true if enough more than the backoff time has passed
 	 */
 	final boolean checkBackoff(
 		String apSerialNumber,
 		String station,
 		long currentTimeNs,
-		long backoffTime
+		long backoffTimeNs
 	) {
 		// TODO use per-AP-and-radio backoff, doubling each time up to a max
 		// instead of a passed in backoff time
@@ -105,7 +105,7 @@ public final class ClientSteeringState {
 		if (latestClientSteeringAttempt == null) {
 			return true;
 		}
-		return currentTimeNs - latestClientSteeringAttempt > backoffTime;
+		return currentTimeNs - latestClientSteeringAttempt > backoffTimeNs;
 	}
 
 }

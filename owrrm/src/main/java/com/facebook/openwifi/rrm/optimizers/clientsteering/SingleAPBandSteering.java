@@ -55,8 +55,8 @@ public class SingleAPBandSteering extends ClientSteeringOptimizer {
 	 * 2G
 	 */
 	public static final short DEFAULT_MIN_RSSI_NON_2G = -82;
-	/** Default backoff time (ms) for all APs and radios */
-	public static final int DEFAULT_BACKOFF_TIME = 300000; // 5 min
+	/** Default backoff time (ns) for all APs and radios */
+	public static final long DEFAULT_BACKOFF_TIME_NS = 300_000_000_000L; // 5 min
 
 	/** RSSI below which 2G clients are deauthenticated */
 	private final short minRssi2G;
@@ -64,8 +64,8 @@ public class SingleAPBandSteering extends ClientSteeringOptimizer {
 	private final short maxRssi2G;
 	/** RSSI below which 5G and 6G clients are asked to move to 2G */
 	private final short minRssiNon2G;
-	/** Backoff time (ms) for all APs and radios */
-	private final int backoffTime;
+	/** Backoff time (ns) for all APs and radios */
+	private final long backoffTimeNs;
 
 	/** Make a SingleAPBandSteering object with the given arguments */
 	public static SingleAPBandSteering makeWithArgs(
@@ -77,7 +77,7 @@ public class SingleAPBandSteering extends ClientSteeringOptimizer {
 		short minRssi2G = DEFAULT_MIN_RSSI_2G;
 		short maxRssi2G = DEFAULT_MAX_RSSI_2G;
 		short minRssiNon2G = DEFAULT_MIN_RSSI_NON_2G;
-		int backoffTime = DEFAULT_BACKOFF_TIME;
+		long backoffTimeNs = DEFAULT_BACKOFF_TIME_NS;
 
 		String arg;
 		if ((arg = args.get("minRssi2G")) != null) {
@@ -89,8 +89,8 @@ public class SingleAPBandSteering extends ClientSteeringOptimizer {
 		if ((arg = args.get("minRssiNon2G")) != null) {
 			minRssiNon2G = Short.parseShort(arg);
 		}
-		if ((arg = args.get("backoffTime")) != null) {
-			backoffTime = Short.parseShort(arg);
+		if ((arg = args.get("backoffTimeNs")) != null) {
+			backoffTimeNs = Short.parseShort(arg);
 		}
 
 		return new SingleAPBandSteering(
@@ -100,7 +100,7 @@ public class SingleAPBandSteering extends ClientSteeringOptimizer {
 			minRssi2G,
 			maxRssi2G,
 			minRssiNon2G,
-			backoffTime
+			backoffTimeNs
 		);
 	}
 
@@ -112,13 +112,13 @@ public class SingleAPBandSteering extends ClientSteeringOptimizer {
 		short minRssi2G,
 		short maxRssi2G,
 		short minRssiNon2G,
-		int backoffTime
+		long backoffTimeNs
 	) {
 		super(model, zone, deviceDataManager);
 		this.minRssi2G = minRssi2G;
 		this.maxRssi2G = maxRssi2G;
 		this.minRssiNon2G = minRssiNon2G;
-		this.backoffTime = backoffTime;
+		this.backoffTimeNs = backoffTimeNs;
 	}
 
 	@Override
@@ -183,7 +183,7 @@ public class SingleAPBandSteering extends ClientSteeringOptimizer {
 										serialNumber,
 										assoc.station,
 										currentTimeNs,
-										backoffTime
+										backoffTimeNs
 									)
 								) {
 									logger.debug(
@@ -215,7 +215,7 @@ public class SingleAPBandSteering extends ClientSteeringOptimizer {
 										serialNumber,
 										assoc.station,
 										currentTimeNs,
-										backoffTime
+										backoffTimeNs
 									)
 								) {
 									logger.debug(
@@ -250,7 +250,7 @@ public class SingleAPBandSteering extends ClientSteeringOptimizer {
 										serialNumber,
 										assoc.station,
 										currentTimeNs,
-										backoffTime
+										backoffTimeNs
 									)
 								) {
 									logger.debug(
