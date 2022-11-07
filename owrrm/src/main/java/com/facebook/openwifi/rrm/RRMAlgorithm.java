@@ -36,6 +36,11 @@ public class RRMAlgorithm {
 	private static final Logger logger =
 		LoggerFactory.getLogger(RRMAlgorithm.class);
 
+	/**
+	 * Client steering state. A single instance must be passed into all client
+	 * steering algorithms, as the state must persist across runs of the
+	 * optimizers.
+	 */
 	private static final ClientSteeringState clientSteeringState =
 		new ClientSteeringState();
 

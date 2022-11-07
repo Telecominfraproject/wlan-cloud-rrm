@@ -16,7 +16,7 @@ import java.util.concurrent.ConcurrentMap;
 /** Class to manage global client steering state */
 public class ClientSteeringState {
 
-	/** Private default constructor (this is a singleton class) */
+	/** Default constructor */
 	public ClientSteeringState() {};
 
 	/**
