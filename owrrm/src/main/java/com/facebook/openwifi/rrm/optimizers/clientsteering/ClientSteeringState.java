@@ -29,10 +29,12 @@ public class ClientSteeringState {
 
 	/**
 	 * Register a client steering attempt for the given AP and station at the
-	 * given time if there has been no previous attempt or more than the given
-	 * backoff time has passed since the last attempt and the current time.
-	 * Return true if the attempt was registered; false otherwise. The attempt
-	 * is not registered if this run is specified as a dry run.
+	 * given time if there is no previous registered attempt or more than the
+	 * given backoff time has passed since the registration time of the last
+	 * attempt and the current time. Note that only registration times are
+	 * checked and/or entered, and nothing is executed here. Return true if the
+	 * attempt was registered; false otherwise. The attempt is not registered if
+	 * this run is specified as a dry run.
 	 * <p>
 	 * The backoff time must be non-negative. The backoff time window is
 	 * "exclusive" - e.g., if the backoff time is X ns, and the current time is
