@@ -34,7 +34,8 @@ public class ClientSteeringStateTest {
 				apA,
 				clientA1,
 				currentTimeNs,
-				bufferTimeNs
+				bufferTimeNs,
+				false // dryRun
 			)
 		);
 		// should not register AP A & clientA1 again while backoff is in effect
@@ -43,7 +44,8 @@ public class ClientSteeringStateTest {
 				apA,
 				clientA1,
 				currentTimeNs + 1,
-				bufferTimeNs
+				bufferTimeNs,
+				false // dryRun
 			)
 		);
 		// one client's backoff should not affect another client
@@ -52,7 +54,8 @@ public class ClientSteeringStateTest {
 				apA,
 				clientA2,
 				currentTimeNs + 1,
-				bufferTimeNs
+				bufferTimeNs,
+				false // dryRun
 			)
 		);
 		// one AP should not affect another
@@ -61,7 +64,8 @@ public class ClientSteeringStateTest {
 				apB,
 				clientB,
 				currentTimeNs + 1,
-				bufferTimeNs
+				bufferTimeNs,
+				false // dryRun
 			)
 		);
 		// should re-register AP A & clientA1 after backoff has expired
@@ -70,7 +74,8 @@ public class ClientSteeringStateTest {
 				apA,
 				clientA1,
 				currentTimeNs + bufferTimeNs,
-				bufferTimeNs
+				bufferTimeNs,
+				false // dryRun
 			)
 		);
 		// an older timestamp should not register
@@ -79,13 +84,20 @@ public class ClientSteeringStateTest {
 				apB,
 				clientB,
 				currentTimeNs - 1,
-				bufferTimeNs
+				bufferTimeNs,
+				false // dryRun
 			)
 		);
 		// try a different backoffTimeNs
 		assertTrue(
 			clientSteeringState
-				.registerIfBackoffExpired(apA, clientA2, currentTimeNs + 2, 1)
+				.registerIfBackoffExpired(
+					apA,
+					clientA2,
+					currentTimeNs + 2,
+					1,
+					false /* dryRun */
+				)
 		);
 		// same client on a different AP should have separate timer
 		assertTrue(
@@ -93,7 +105,8 @@ public class ClientSteeringStateTest {
 				apB,
 				clientA2,
 				currentTimeNs + 3,
-				bufferTimeNs
+				bufferTimeNs,
+				false // dryRun
 			)
 		);
 	}

@@ -180,7 +180,7 @@ public class SingleAPBandSteeringTest {
 			new HashMap<>(0) // args (use default)
 		);
 		Map<String, Map<String, String>> apClientActionMap =
-			optimizer.computeApClientActionMap();
+			optimizer.computeApClientActionMap(false /* dryRun */);
 		assertEquals(exp, apClientActionMap);
 	}
 }

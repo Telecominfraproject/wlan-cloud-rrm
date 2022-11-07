@@ -86,7 +86,7 @@ public class RRMAlgorithm {
 		/**
 		 * Computed actions for each AP-client pair.
 		 *
-		 * @see ClientSteeringOptimizer#computeApClientActionMap()
+		 * @see ClientSteeringOptimizer#computeApClientActionMap(boolean)
 		 */
 		public Map<String, Map<String, String>> apClientActionMap;
 	}
@@ -330,7 +330,8 @@ public class RRMAlgorithm {
 				);
 				break;
 			}
-			result.apClientActionMap = optimizer.computeApClientActionMap();
+			result.apClientActionMap =
+				optimizer.computeApClientActionMap(dryRun);
 			if (!dryRun) {
 				optimizer.steer(result.apClientActionMap);
 				if (updateImmediately) {

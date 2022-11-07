@@ -62,10 +62,12 @@ public abstract class ClientSteeringOptimizer {
 	}
 
 	/**
-	 * Computed map from AP serial number to client MAC to client steering
+	 * Compute map from AP serial number to client MAC to client steering
 	 * action.
 	 */
-	public abstract Map<String, Map<String, String>> computeApClientActionMap();
+	public abstract Map<String, Map<String, String>> computeApClientActionMap(
+		boolean dryRun
+	);
 
 	/**
 	 * Steer clients (steer up, steer down, and deauthenticate).

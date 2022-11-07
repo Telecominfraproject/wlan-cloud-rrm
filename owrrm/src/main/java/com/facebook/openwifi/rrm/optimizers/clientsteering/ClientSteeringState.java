@@ -31,7 +31,8 @@ public class ClientSteeringState {
 	 * Register a client steering attempt for the given AP and station at the
 	 * given time if there has been no previous attempt or more than the given
 	 * backoff time has passed since the last attempt and the current time.
-	 * Return true if the attempt was registered; false otherwise.
+	 * Return true if the attempt was registered; false otherwise. The attempt
+	 * is not registered if this run is specified as a dry run.
 	 * <p>
 	 * The backoff time must be non-negative. The backoff time window is
 	 * "exclusive" - e.g., if the backoff time is X ns, and the current time is
@@ -44,13 +45,15 @@ public class ClientSteeringState {
 	 * @param station client MAC
 	 * @param currentTimeNs JVM monotonic time in ns
 	 * @param backoffTimeNs non-negative backoff time (ns)
+	 * @param dryRun if set, do not apply changes
 	 * @return true if client steering attempt was registered; false otherwise
 	 */
 	public synchronized boolean registerIfBackoffExpired(
 		String apSerialNumber,
 		String station,
 		long currentTimeNs,
-		long backoffTimeNs
+		long backoffTimeNs,
+		boolean dryRun
 	) {
 		if (backoffTimeNs < 0) {
 			throw new IllegalArgumentException(
@@ -68,7 +71,9 @@ public class ClientSteeringState {
 			return false;
 		}
 		// register attempt
-		clientLastAttempt.put(station, currentTimeNs);
+		if (!dryRun) {
+			clientLastAttempt.put(station, currentTimeNs);
+		}
 		return true;
 	}
 }

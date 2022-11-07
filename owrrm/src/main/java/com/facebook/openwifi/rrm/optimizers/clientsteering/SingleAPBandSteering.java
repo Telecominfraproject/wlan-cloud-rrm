@@ -126,7 +126,9 @@ public class SingleAPBandSteering extends ClientSteeringOptimizer {
 	}
 
 	@Override
-	public Map<String, Map<String, String>> computeApClientActionMap() {
+	public Map<String, Map<String, String>> computeApClientActionMap(
+		boolean dryRun
+	) {
 		Map<String, Map<String, String>> apClientActionMap = new HashMap<>();
 		// iterate through every AP
 		for (
@@ -185,7 +187,8 @@ public class SingleAPBandSteering extends ClientSteeringOptimizer {
 							band,
 							serialNumber,
 							currentTimeNs,
-							apClientActionMap
+							apClientActionMap,
+							dryRun
 						);
 					}
 				}
@@ -196,12 +199,13 @@ public class SingleAPBandSteering extends ClientSteeringOptimizer {
 
 	/**
 	 * If a client steering action is desired, add an appropriate entry to the
-	 * apClientActionMap.
+	 * apClientActionMap, unless this run is marked as a dry run.
 	 *
 	 * @param assoc association between AP radio and client
 	 * @param band band (e.g., "2G")
 	 * @param serialNumber AP serial number
 	 * @param currentTimeNs JVM monotonic time in ns
+	 * @param dryRun if set, do not apply changes
 	 * @param apClientActionMap map from AP serial number to client MAC to client steering action name ({@link ClientSteeringOptimizer.CLIENT_STEERING_ACTIONS#name()})
 	 */
 	private void maybeAddApClientActionEntry(
@@ -209,7 +213,8 @@ public class SingleAPBandSteering extends ClientSteeringOptimizer {
 		String band,
 		String serialNumber,
 		long currentTimeNs,
-		Map<String, Map<String, String>> apClientActionMap
+		Map<String, Map<String, String>> apClientActionMap,
+		boolean dryRun
 	) {
 		// decide whether to do any band steering
 		// TODO check which bands AP & client can use (see 11k)
@@ -221,7 +226,8 @@ public class SingleAPBandSteering extends ClientSteeringOptimizer {
 							serialNumber,
 							assoc.station,
 							currentTimeNs,
-							backoffTimeNs
+							backoffTimeNs,
+							dryRun
 						)
 				) {
 					logger.debug(
@@ -247,7 +253,8 @@ public class SingleAPBandSteering extends ClientSteeringOptimizer {
 							serialNumber,
 							assoc.station,
 							currentTimeNs,
-							backoffTimeNs
+							backoffTimeNs,
+							dryRun
 						)
 				) {
 					logger.debug(
@@ -277,7 +284,8 @@ public class SingleAPBandSteering extends ClientSteeringOptimizer {
 							serialNumber,
 							assoc.station,
 							currentTimeNs,
-							backoffTimeNs
+							backoffTimeNs,
+							dryRun
 						)
 				) {
 					logger.debug(
