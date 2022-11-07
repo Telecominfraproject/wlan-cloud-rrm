@@ -48,7 +48,7 @@ public class ClientSteeringState {
 	 * @param dryRun if set, do not apply changes
 	 * @return true if client steering attempt was registered; false otherwise
 	 */
-	public synchronized boolean registerIfBackoffExpired(
+	public boolean registerIfBackoffExpired(
 		String apSerialNumber,
 		String station,
 		long currentTimeNs,
@@ -63,16 +63,19 @@ public class ClientSteeringState {
 		// get last attempt
 		Map<String, Long> clientLastAttempt = apClientLastAttempt
 			.computeIfAbsent(apSerialNumber, k -> new HashMap<>());
-		Long lastAttempt = clientLastAttempt.get(station);
-		// check if backoff expired
-		if (
-			lastAttempt != null && currentTimeNs - lastAttempt < backoffTimeNs
-		) {
-			return false;
-		}
-		// register attempt
-		if (!dryRun) {
-			clientLastAttempt.put(station, currentTimeNs);
+		synchronized (clientLastAttempt) {
+			Long lastAttempt = clientLastAttempt.get(station);
+			// check if backoff expired
+			if (
+				lastAttempt != null &&
+					currentTimeNs - lastAttempt < backoffTimeNs
+			) {
+				return false;
+			}
+			// register attempt
+			if (!dryRun) {
+				clientLastAttempt.put(station, currentTimeNs);
+			}
 		}
 		return true;
 	}
