@@ -26,10 +26,7 @@ public class ClientSteeringStateTest {
 		final long currentTimeNs = System.nanoTime();
 		final long bufferTimeNs = 60_000_000_000L; // 1 min
 
-		ClientSteeringState clientSteeringState =
-			ClientSteeringState.getInstance();
-
-		clientSteeringState.reset();
+		ClientSteeringState clientSteeringState = new ClientSteeringState();
 
 		// first attempt should register
 		assertTrue(

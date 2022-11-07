@@ -13,20 +13,11 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-/** Singleton class to manage global client steering state */
-public final class ClientSteeringState {
-
-	/** Singleton instance */
-	private static final ClientSteeringState singleton =
-		new ClientSteeringState();
+/** Class to manage global client steering state */
+public class ClientSteeringState {
 
 	/** Private default constructor (this is a singleton class) */
-	private ClientSteeringState() {};
-
-	/** Get the singleton instance */
-	public static ClientSteeringState getInstance() {
-		return singleton;
-	}
+	public ClientSteeringState() {};
 
 	/**
 	 * Map from AP serial number to client MAC to time (JVM monotonic time in
@@ -35,12 +26,6 @@ public final class ClientSteeringState {
 	 */
 	private ConcurrentMap<String, Map<String, Long>> apClientLastAttempt =
 		new ConcurrentHashMap<>();
-
-	/** Reset the state - ONLY FOR TESTING */
-	public synchronized void reset() {
-		// TODO better way then to call this before every test??
-		apClientLastAttempt.clear();
-	}
 
 	/**
 	 * Register a client steering attempt for the given AP and station at the

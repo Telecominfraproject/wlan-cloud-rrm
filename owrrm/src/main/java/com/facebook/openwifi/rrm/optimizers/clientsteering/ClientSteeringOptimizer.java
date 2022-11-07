@@ -34,16 +34,21 @@ public abstract class ClientSteeringOptimizer {
 	protected final String zone;
 	/** The device configs within {@link #zone}, keyed on serial number. */
 	protected final Map<String, DeviceConfig> deviceConfigs;
+	/** Client steering state */
+	protected final ClientSteeringState clientSteeringState;
 
 	/** Constructor */
 	public ClientSteeringOptimizer(
 		DataModel model,
 		String zone,
-		DeviceDataManager deviceDataManager
+		DeviceDataManager deviceDataManager,
+		ClientSteeringState clientSteeringState
 	) {
 		this.model = model;
 		this.zone = zone;
 		this.deviceConfigs = deviceDataManager.getAllDeviceConfigs(zone);
+
+		this.clientSteeringState = clientSteeringState;
 
 		// Remove model entries not in the given zone
 		this.model.latestWifiScans.keySet()
@@ -54,11 +59,6 @@ public abstract class ClientSteeringOptimizer {
 			.removeIf(serialNumber -> !deviceConfigs.containsKey(serialNumber));
 		this.model.latestDeviceCapabilitiesPhy.keySet()
 			.removeIf(serialNumber -> !deviceConfigs.containsKey(serialNumber));
-	}
-
-	/** Get global client steering state */
-	protected final ClientSteeringState getClientSteeringState() {
-		return ClientSteeringState.getInstance();
 	}
 
 	/**

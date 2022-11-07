@@ -73,6 +73,7 @@ public class SingleAPBandSteering extends ClientSteeringOptimizer {
 		DataModel model,
 		String zone,
 		DeviceDataManager deviceDataManager,
+		ClientSteeringState clientSteeringState,
 		Map<String, String> args
 	) {
 		short minRssi2G = DEFAULT_MIN_RSSI_2G;
@@ -98,6 +99,7 @@ public class SingleAPBandSteering extends ClientSteeringOptimizer {
 			model,
 			zone,
 			deviceDataManager,
+			clientSteeringState,
 			minRssi2G,
 			maxRssi2G,
 			minRssiNon2G,
@@ -110,12 +112,13 @@ public class SingleAPBandSteering extends ClientSteeringOptimizer {
 		DataModel model,
 		String zone,
 		DeviceDataManager deviceDataManager,
+		ClientSteeringState clientSteeringState,
 		short minRssi2G,
 		short maxRssi2G,
 		short minRssiNon2G,
 		long backoffTimeNs
 	) {
-		super(model, zone, deviceDataManager);
+		super(model, zone, deviceDataManager, clientSteeringState);
 		this.minRssi2G = minRssi2G;
 		this.maxRssi2G = maxRssi2G;
 		this.minRssiNon2G = minRssiNon2G;
@@ -180,7 +183,7 @@ public class SingleAPBandSteering extends ClientSteeringOptimizer {
 						if (UCentralConstants.BAND_2G.equals(band)) {
 							if (assoc.rssi < minRssi2G) {
 								if (
-									getClientSteeringState()
+									clientSteeringState
 										.registerIfBackoffExpired(
 											serialNumber,
 											assoc.station,
@@ -206,7 +209,7 @@ public class SingleAPBandSteering extends ClientSteeringOptimizer {
 								}
 							} else if (assoc.rssi > maxRssi2G) {
 								if (
-									getClientSteeringState()
+									clientSteeringState
 										.registerIfBackoffExpired(
 											serialNumber,
 											assoc.station,
@@ -236,7 +239,7 @@ public class SingleAPBandSteering extends ClientSteeringOptimizer {
 							// treat 5G and 6G clients the same way
 							if (assoc.rssi < minRssiNon2G) {
 								if (
-									getClientSteeringState()
+									clientSteeringState
 										.registerIfBackoffExpired(
 											serialNumber,
 											assoc.station,

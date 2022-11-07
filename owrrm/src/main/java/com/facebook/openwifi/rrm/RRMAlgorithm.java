@@ -21,6 +21,7 @@ import com.facebook.openwifi.rrm.optimizers.channel.LeastUsedChannelOptimizer;
 import com.facebook.openwifi.rrm.optimizers.channel.RandomChannelInitializer;
 import com.facebook.openwifi.rrm.optimizers.channel.UnmanagedApAwareChannelOptimizer;
 import com.facebook.openwifi.rrm.optimizers.clientsteering.ClientSteeringOptimizer;
+import com.facebook.openwifi.rrm.optimizers.clientsteering.ClientSteeringState;
 import com.facebook.openwifi.rrm.optimizers.clientsteering.SingleAPBandSteering;
 import com.facebook.openwifi.rrm.optimizers.tpc.LocationBasedOptimalTPC;
 import com.facebook.openwifi.rrm.optimizers.tpc.MeasurementBasedApApTPC;
@@ -34,6 +35,9 @@ import com.facebook.openwifi.rrm.optimizers.tpc.TPC;
 public class RRMAlgorithm {
 	private static final Logger logger =
 		LoggerFactory.getLogger(RRMAlgorithm.class);
+
+	private static final ClientSteeringState clientSteeringState =
+		new ClientSteeringState();
 
 	/** RRM algorithm type enum. */
 	public enum AlgorithmType {
@@ -321,6 +325,7 @@ public class RRMAlgorithm {
 					modeler.getDataModelCopy(),
 					zone,
 					deviceDataManager,
+					clientSteeringState,
 					args
 				);
 				break;
