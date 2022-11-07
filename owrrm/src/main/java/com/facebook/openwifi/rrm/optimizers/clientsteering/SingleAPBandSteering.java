@@ -162,6 +162,7 @@ public class SingleAPBandSteering extends ClientSteeringOptimizer {
 						ssid.radio,
 						State.Radio.class
 					);
+					// get band for this radio/ssid
 					Map<String, Capabilities.Phy> capabilitiesPhy =
 						model.latestDeviceCapabilitiesPhy
 							.get(serialNumber);
@@ -175,101 +176,128 @@ public class SingleAPBandSteering extends ClientSteeringOptimizer {
 					if (band == null) {
 						continue;
 					}
+					// decide steering action (if any) for each client
 					for (
 						State.Interface.SSID.Association assoc : ssid.associations
 					) {
-						// decide whether to do any band steering
-						// TODO check which bands AP & client can use (see 11k)
-						if (UCentralConstants.BAND_2G.equals(band)) {
-							if (assoc.rssi < minRssi2G) {
-								if (
-									clientSteeringState
-										.registerIfBackoffExpired(
-											serialNumber,
-											assoc.station,
-											currentTimeNs,
-											backoffTimeNs
-										)
-								) {
-									logger.debug(
-										"Planning to deauthenticate client {} on AP {}",
-										assoc.station,
-										serialNumber
-									);
-									apClientActionMap
-										.computeIfAbsent(
-											serialNumber,
-											k -> new HashMap<>()
-										)
-										.put(
-											assoc.station,
-											CLIENT_STEERING_ACTIONS.DEAUTHENTICATE
-												.name()
-										);
-								}
-							} else if (assoc.rssi > maxRssi2G) {
-								if (
-									clientSteeringState
-										.registerIfBackoffExpired(
-											serialNumber,
-											assoc.station,
-											currentTimeNs,
-											backoffTimeNs
-										)
-								) {
-									logger.debug(
-										"Planning to request client {} on AP {} to move to 5G or 6G",
-										assoc.station,
-										serialNumber
-									);
-									apClientActionMap
-										.computeIfAbsent(
-											serialNumber,
-											k -> new HashMap<>()
-										)
-										.put(
-											assoc.station,
-											CLIENT_STEERING_ACTIONS.STEER_UP
-												.name()
-										);
-								}
-							}
-							// otherwise, do nothing
-						} else {
-							// treat 5G and 6G clients the same way
-							if (assoc.rssi < minRssiNon2G) {
-								if (
-									clientSteeringState
-										.registerIfBackoffExpired(
-											serialNumber,
-											assoc.station,
-											currentTimeNs,
-											backoffTimeNs
-										)
-								) {
-									logger.debug(
-										"Planning to request client {} on AP {} to move to 2G",
-										assoc.station,
-										serialNumber
-									);
-									apClientActionMap
-										.computeIfAbsent(
-											serialNumber,
-											k -> new HashMap<>()
-										)
-										.put(
-											assoc.station,
-											CLIENT_STEERING_ACTIONS.STEER_DOWN
-												.name()
-										);
-								}
-							}
-							// otherwise, do nothing
-						}
+						maybeAddApClientActionEntry(
+							assoc,
+							band,
+							serialNumber,
+							currentTimeNs,
+							apClientActionMap
+						);
 					}
 				}
 			}
 		}
 		return apClientActionMap;
+	}
+
+	/**
+	 * If a client steering action is desired, add an appropriate entry to the
+	 * apClientActionMap.
+	 *
+	 * @param assoc association between AP radio and client
+	 * @param band band (e.g., "2G")
+	 * @param serialNumber AP serial number
+	 * @param currentTimeNs JVM monotonic time in ns
+	 * @param apClientActionMap map from AP serial number to client MAC to client steering action name ({@link ClientSteeringOptimizer.CLIENT_STEERING_ACTIONS#name()})
+	 */
+	private void maybeAddApClientActionEntry(
+		State.Interface.SSID.Association assoc,
+		String band,
+		String serialNumber,
+		long currentTimeNs,
+		Map<String, Map<String, String>> apClientActionMap
+	) {
+		// decide whether to do any band steering
+		// TODO check which bands AP & client can use (see 11k)
+		if (UCentralConstants.BAND_2G.equals(band)) {
+			if (assoc.rssi < minRssi2G) {
+				if (
+					clientSteeringState
+						.registerIfBackoffExpired(
+							serialNumber,
+							assoc.station,
+							currentTimeNs,
+							backoffTimeNs
+						)
+				) {
+					logger.debug(
+						"Planning to deauthenticate client {} on AP {}",
+						assoc.station,
+						serialNumber
+					);
+					apClientActionMap
+						.computeIfAbsent(
+							serialNumber,
+							k -> new HashMap<>()
+						)
+						.put(
+							assoc.station,
+							CLIENT_STEERING_ACTIONS.DEAUTHENTICATE
+								.name()
+						);
+				}
+			} else if (assoc.rssi > maxRssi2G) {
+				if (
+					clientSteeringState
+						.registerIfBackoffExpired(
+							serialNumber,
+							assoc.station,
+							currentTimeNs,
+							backoffTimeNs
+						)
+				) {
+					logger.debug(
+						"Planning to request client {} on AP {} to move to 5G or 6G",
+						assoc.station,
+						serialNumber
+					);
+					apClientActionMap
+						.computeIfAbsent(
+							serialNumber,
+							k -> new HashMap<>()
+						)
+						.put(
+							assoc.station,
+							CLIENT_STEERING_ACTIONS.STEER_UP
+								.name()
+						);
+				}
+			}
+			// otherwise, do nothing
+		} else {
+			// treat 5G and 6G clients the same way
+			if (assoc.rssi < minRssiNon2G) {
+				if (
+					clientSteeringState
+						.registerIfBackoffExpired(
+							serialNumber,
+							assoc.station,
+							currentTimeNs,
+							backoffTimeNs
+						)
+				) {
+					logger.debug(
+						"Planning to request client {} on AP {} to move to 2G",
+						assoc.station,
+						serialNumber
+					);
+					apClientActionMap
+						.computeIfAbsent(
+							serialNumber,
+							k -> new HashMap<>()
+						)
+						.put(
+							assoc.station,
+							CLIENT_STEERING_ACTIONS.STEER_DOWN
+								.name()
+						);
+				}
+			}
+			// otherwise, do nothing
+		}
 	}
 }
