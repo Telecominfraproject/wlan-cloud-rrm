@@ -551,6 +551,12 @@ components:
             additionalProperties:
               type: integer
               format: int32
+        apClientActionMap:
+          type: object
+          additionalProperties:
+            type: object
+            additionalProperties:
+              type: string
     Certificate:
       type: object
       properties:
