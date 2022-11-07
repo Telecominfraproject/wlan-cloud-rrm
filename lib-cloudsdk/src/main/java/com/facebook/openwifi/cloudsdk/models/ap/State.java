@@ -8,7 +8,6 @@
 
 package com.facebook.openwifi.cloudsdk.models.ap;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
 
@@ -136,21 +135,4 @@ public class State {
 
 	/** Default Constructor with no args */
 	public State() {}
-
-	/** Copy Constructor */
-	public State(State state) {
-		Gson gson = new Gson();
-		this.radios = new Radio[state.radios.length];
-		for (int i = 0; i < radios.length; i++) {
-			radios[i] = gson.fromJson(gson.toJson(state.radios[i]), Radio.class);
-		}
-		this.interfaces = new Interface[state.interfaces.length];
-		for (int i = 0; i < radios.length; i++) {
-			interfaces[i] = gson.fromJson(gson.toJson(state.interfaces[i]), Interface.class);
-		}
-		this.linkState = state.linkState.deepCopy();
-		this.gps = state.gps.deepCopy();
-		this.poe = state.poe.deepCopy();
-		this.unit = gson.fromJson(gson.toJson(state.unit), Unit.class);
-	}
 }

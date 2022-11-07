@@ -19,10 +19,4 @@ public class StateInfo extends State {
 
 	/** Default Constructor. */
 	public StateInfo() {}
-
-	/** Copy Constructor. */
-	public StateInfo(StateInfo stateInfo) {
-		super(stateInfo);
-		this.timestamp = stateInfo.timestamp;
-	}
 }
