@@ -220,7 +220,12 @@ public class StationPinger {
 				host
 			);
 			PingResult result = RCAUtils
-				.pingFromDevice(uCentralClient, serialNumber, host, params.pingCount);
+				.pingFromDevice(
+					uCentralClient,
+					serialNumber,
+					host,
+					params.pingCount
+				);
 			if (result == null) {
 				logger.debug(
 					"Ping failed from {} to {} ({})",
