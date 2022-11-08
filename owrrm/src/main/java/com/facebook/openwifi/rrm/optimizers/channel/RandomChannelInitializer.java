@@ -21,7 +21,6 @@ import org.slf4j.LoggerFactory;
 
 import com.facebook.openwifi.cloudsdk.UCentralUtils;
 import com.facebook.openwifi.cloudsdk.WifiScanEntry;
-import com.facebook.openwifi.cloudsdk.StateInfo;
 import com.facebook.openwifi.cloudsdk.models.ap.State;
 import com.facebook.openwifi.rrm.DeviceDataManager;
 import com.facebook.openwifi.rrm.modules.Modeler.DataModel;
@@ -130,7 +129,7 @@ public class RandomChannelInitializer extends ChannelOptimizer {
 				UCentralUtils.AVAILABLE_CHANNELS_BAND
 			);
 
-		Map<String, StateInfo> latestState =
+		Map<String, ? extends State> latestState =
 			ModelerUtils.getLatestState(model.latestStates);
 		Map<String, String> bssidsMap =
 			UCentralUtils.getBssidsMap(latestState);

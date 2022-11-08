@@ -192,7 +192,7 @@ public abstract class TPC {
 		) {
 			String serialNumber = e.getKey();
 			List<StateInfo> states = e.getValue();
-			StateInfo state = states.get(states.size() - 1);
+			State state = states.get(states.size() - 1);
 
 			if (state.radios == null || state.radios.length == 0) {
 				logger.debug(

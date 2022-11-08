@@ -161,15 +161,15 @@ public class MeasurementBasedApApTPC extends TPC {
 			Map.Entry<String, List<StateInfo>> e : model.latestStates.entrySet()
 		) {
 			List<StateInfo> states = e.getValue();
-			StateInfo state = states.get(states.size() - 1);
+			State state = states.get(states.size() - 1);
 			if (state.interfaces == null) {
 				continue;
 			}
-			for (StateInfo.Interface iface : state.interfaces) {
+			for (State.Interface iface : state.interfaces) {
 				if (iface.ssids == null) {
 					continue;
 				}
-				for (StateInfo.Interface.SSID ssid : iface.ssids) {
+				for (State.Interface.SSID ssid : iface.ssids) {
 					if (ssid.bssid == null) {
 						continue;
 					}
@@ -325,8 +325,8 @@ public class MeasurementBasedApApTPC extends TPC {
 			buildRssiMap(managedBSSIDs, model.latestWifiScans, band);
 		logger.debug("Starting TPC for the {} band", band);
 		for (String serialNumber : serialNumbers) {
-			List<StateInfo> states = model.latestStates.get(serialNumber);
-			StateInfo state = states.get(states.size() - 1);
+			List<? extends State> states = model.latestStates.get(serialNumber);
+			State state = states.get(states.size() - 1);
 			if (
 				state == null || state.radios == null ||
 					state.radios.length == 0

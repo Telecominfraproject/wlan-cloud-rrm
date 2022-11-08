@@ -275,10 +275,12 @@ public class Modeler implements Runnable {
 				continue;
 			}
 			JsonObject state = records.data.get(0).data;
+			long timestamp = records.data.get(0).recorded;
 			if (state != null) {
 				try {
 					StateInfo stateModel =
 						gson.fromJson(state, StateInfo.class);
+					stateModel.timestamp = timestamp;
 					dataModel.latestStates.computeIfAbsent(
 						device.serialNumber,
 						k -> new LinkedList<>()

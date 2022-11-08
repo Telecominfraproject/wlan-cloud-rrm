@@ -132,7 +132,4 @@ public class State {
 	@SerializedName("link-state") public JsonObject linkState;
 	public JsonObject gps;
 	public JsonObject poe;
-
-	/** Default Constructor with no args */
-	public State() {}
 }

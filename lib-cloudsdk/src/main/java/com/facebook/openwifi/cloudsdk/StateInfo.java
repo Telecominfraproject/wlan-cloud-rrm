@@ -12,11 +12,8 @@ import com.facebook.openwifi.cloudsdk.models.ap.State;
 
 public class StateInfo extends State {
 	/**
-	 * Unix time in milliseconds (ms). This is added it because {@link State} is an unknown
+	 * Unix time in milliseconds (ms). This is added it because State.unit.localtime is an unknown
 	 * time reference.
 	 */
 	public long timestamp;
-
-	/** Default Constructor. */
-	public StateInfo() {}
 }

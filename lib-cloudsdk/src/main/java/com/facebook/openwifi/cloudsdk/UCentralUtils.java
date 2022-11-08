@@ -387,11 +387,11 @@ public class UCentralUtils {
 	 * Returns the results map
 	 */
 	public static Map<String, String> getBssidsMap(
-		Map<String, StateInfo> latestState
+		Map<String, ? extends State> latestState
 	) {
 		Map<String, String> bssidMap = new HashMap<>();
-		for (Map.Entry<String, StateInfo> e : latestState.entrySet()) {
-			StateInfo state = e.getValue();
+		for (Entry<String, ? extends State> e : latestState.entrySet()) {
+			State state = e.getValue();
 			for (
 				int interfaceIndex = 0;
 				interfaceIndex < state.interfaces.length;

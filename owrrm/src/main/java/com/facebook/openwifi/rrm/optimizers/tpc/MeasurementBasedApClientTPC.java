@@ -299,7 +299,7 @@ public class MeasurementBasedApClientTPC extends TPC {
 		) {
 			String serialNumber = e.getKey();
 			List<StateInfo> states = e.getValue();
-			StateInfo state = states.get(states.size() - 1);
+			State state = states.get(states.size() - 1);
 			if (state.radios == null || state.radios.length == 0) {
 				logger.debug(
 					"Device {}: No radios found, skipping...",
@@ -309,7 +309,7 @@ public class MeasurementBasedApClientTPC extends TPC {
 			}
 
 			Map<String, Integer> radioMap = new TreeMap<>();
-			for (StateInfo.Radio radio : state.radios) {
+			for (State.Radio radio : state.radios) {
 				Map<String, Capabilities.Phy> capabilityPhy =
 					model.latestDeviceCapabilitiesPhy
 						.get(serialNumber);
