@@ -341,7 +341,7 @@ public class LeastUsedChannelOptimizer extends ChannelOptimizer {
 				UCentralUtils.AVAILABLE_CHANNELS_BAND
 			);
 
-		Map<String, State> latestState =
+		Map<String, ? extends State> latestState =
 			ModelerUtils.getLatestState(model.latestStates);
 		Map<String, String> bssidsMap =
 			UCentralUtils.getBssidsMap(latestState);

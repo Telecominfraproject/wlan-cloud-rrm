@@ -10,11 +10,11 @@ package com.facebook.openwifi.cloudsdk;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
+import com.facebook.openwifi.cloudsdk.models.ap.State.Interface.Counters;
 import com.facebook.openwifi.cloudsdk.models.ap.State.Interface.SSID.Association;
-import com.facebook.openwifi.cloudsdk.models.ap.State.Interface.SSID.Association.Rate;
+import com.google.gson.JsonObject;
 
 /**
  * Aggregation model for State aggregation. Only contains info useful for
@@ -22,74 +22,30 @@ import com.facebook.openwifi.cloudsdk.models.ap.State.Interface.SSID.Association
  */
 public class AggregatedState {
 
-	/** Rate information with aggregated fields. */
-	public static class AggregatedRate {
-		/**
-		 * This is the common bitRate for all the aggregated fields.
-		 */
-		public long bitRate;
-
-		/**
-		 * This is the common channel width for all the aggregated fields.
-		 */
-		public int chWidth;
-
-		/**
-		 * Aggregated fields mcs
-		 */
-		public List<Integer> mcs = new ArrayList<>();
-
-		/** Constructor with no args */
-		private AggregatedRate() {}
-
-		/** Add a Rate to the AggregatedRate */
-		private void add(Rate rate) {
-			if (rate == null) {
-				return;
-			}
-			if (mcs.isEmpty()) {
-				bitRate = rate.bitrate;
-				chWidth = rate.chwidth;
-			}
-			mcs.add(rate.mcs);
-		}
-
-		/**
-		 * Add an AggregatedRate with the same channel_width to the
-		 * AggregatedRate
-		 */
-		private void add(AggregatedRate rate) {
-			if (rate == null || rate.chWidth != chWidth) {
-				return;
-			}
-			if (mcs.isEmpty()) {
-				bitRate = rate.bitRate;
-				chWidth = rate.chWidth;
-			}
-			mcs.addAll(rate.mcs);
-		}
-	}
-
 	/**
 	 * Radio information with channel, channel_width and tx_power.
 	 */
-	public static class Radio {
+	public static class RadioConfig {
 		public int channel;
 		public int channelWidth;
 		public int txPower;
+		public String phy;
 
-		private Radio() {}
+		/** Default constructor with no args */
+		private RadioConfig() {}
 
-		public Radio(int channel, int channelWidth, int txPower) {
+		/** Constructor with args */
+		public RadioConfig(JsonObject radio) {
+			this.channel = radio.get("channel").getAsInt();
+			this.channelWidth = radio.get("channel_width").getAsInt();
+			this.txPower = radio.get("tx_power").getAsInt();
+			this.phy = radio.get("phy").getAsString();
+		}
+
+		public RadioConfig(int channel, int channelWidth, int txPower) {
 			this.channel = channel;
 			this.channelWidth = channelWidth;
 			this.txPower = txPower;
-		}
-
-		private Radio(Map<String, Integer> radioInfo) {
-			channel = radioInfo.getOrDefault("channel", -1);
-			channelWidth = radioInfo.getOrDefault("channel_width", -1);
-			txPower = radioInfo.getOrDefault("tx_power", -1);
 		}
 
 		@Override
@@ -109,64 +65,161 @@ public class AggregatedState {
 				return false;
 			}
 
-			Radio other = (Radio) obj;
+			RadioConfig other = (RadioConfig) obj;
 			return channel == other.channel &&
 				channelWidth == other.channelWidth && txPower == other.txPower;
 		}
 	}
 
-	public String bssid;
-	public String station;
-	public long connected;
-	public long inactive;
-	public List<Integer> rssi;
-	public long rxBytes;
-	public long rxPackets;
-	public AggregatedRate rxRate;
-	public long txBytes;
-	public long txDuration;
-	public long txFailed;
-	public long txPackets;
-	public AggregatedRate txRate;
-	public long txRetries;
-	public int ackSignal;
-	public int ackSignalAvg;
-	public Radio radio;
+	/**
+	 * Data model to keep raw data from {@link State.Interface.SSID.Association},
+	 * {@link State.Radio} and {@link State.Interface.Counters}.
+	 */
+	public static class AssociationInfo {
+		/** Rate information with aggregated fields. */
+		public static class Rate {
+			/**
+			 * Aggregated fields bitRate
+			 */
+			public long bitRate;
 
-	/** Constructor with no args */
-	public AggregatedState() {
-		this.rxRate = new AggregatedRate();
-		this.txRate = new AggregatedRate();
-		this.rssi = new ArrayList<>();
-		this.radio = new Radio();
+			/**
+			 * Aggregated fields chWidth
+			 */
+			public int chWidth;
+
+			/**
+			 * Aggregated fields mcs
+			 */
+			public int mcs;
+
+			/** Constructor with no args */
+			private Rate() {}
+
+			/** Constructor with args */
+			private Rate(long bitRate, int chWidth, int mcs) {
+				this.bitRate = bitRate;
+				this.chWidth = chWidth;
+				this.mcs = mcs;
+			}
+		}
+
+		public long connected;
+		public long inactive;
+		public int rssi;
+		public long rxBytes;
+		public long rxPackets;
+		public Rate rxRate;
+		public long txBytes;
+		public long txDuration;
+		public long txFailed;
+		public long txPackets;
+		public Rate txRate;
+		public long txRetries;
+		public int ackSignal;
+		public int ackSignalAvg;
+		public long txPacketsCounters;
+		public long txErrorsCounters;
+		public long txDroppedCounters;
+		public long activeMsRadio;
+		public long busyMsRadio;
+		public long noiseRadio;
+		public long receiveMsRadio;
+		public long transmitMsRadio;
+
+		/** unix time in ms */
+		public long timestamp;
+
+		/** Default Constructor. */
+		public AssociationInfo() {}
+
+		/** Constructor with only rssi(for test purpose) */
+		public AssociationInfo(int rssi) {
+			this.rssi = rssi;
+		}
+
+		/** Constructor with args */
+		public AssociationInfo(
+			Association association,
+			Counters counters,
+			JsonObject radio,
+			long timestamp
+		) {
+			// Association info
+			connected = association.connected;
+			inactive = association.inactive;
+			rssi = association.rssi;
+			rxBytes = association.rx_bytes;
+			rxPackets = association.rx_packets;
+			if (association.rx_rate != null) {
+				rxRate = new Rate(
+					association.rx_rate.bitrate,
+					association.rx_rate.chwidth,
+					association.rx_rate.mcs
+				);
+			} else {
+				rxRate = new Rate();
+			}
+
+			txBytes = association.tx_bytes;
+			txPackets = association.tx_packets;
+
+			if (association.tx_rate != null) {
+				txRate = new Rate(
+					association.tx_rate.bitrate,
+					association.tx_rate.chwidth,
+					association.tx_rate.mcs
+				);
+			} else {
+				txRate = new Rate();
+			}
+			txRetries = association.tx_retries;
+			ackSignal = association.ack_signal;
+			ackSignalAvg = association.ack_signal_avg;
+
+			//Counters info
+			txPacketsCounters = counters.tx_packets;
+			txErrorsCounters = counters.tx_errors;
+			txDroppedCounters = counters.tx_dropped;
+
+			// Radio info
+			activeMsRadio = radio.get("active_ms").getAsLong();
+			busyMsRadio = radio.get("busy_ms").getAsLong();
+			transmitMsRadio = radio.get("transmit_ms").getAsLong();
+			receiveMsRadio = radio.get("receive_ms").getAsLong();
+			noiseRadio = radio.get("noise").getAsLong();
+
+			this.timestamp = timestamp;
+		}
 	}
 
-	/** Construct from Association and radio */
+	// Aggregate AssociationInfo over bssid, station and RadioConfig.
+	public String bssid;
+	public String station;
+	public RadioConfig radioConfig;
+
+	// Store a list of AssociationInfo of the same link and radio configuration. */
+	public List<AssociationInfo> associationInfoList;
+
+	/** Constructor with no args. For test purpose. */
+	public AggregatedState() {
+		this.associationInfoList = new ArrayList<>();
+		this.radioConfig = new RadioConfig();
+	}
+
+	/** Construct from Association, Counters, Radio and time stamp */
 	public AggregatedState(
 		Association association,
-		Map<String, Integer> radioInfo
+		Counters counters,
+		JsonObject radio,
+		long timestamp
 	) {
-		this.rxRate = new AggregatedRate();
-		this.txRate = new AggregatedRate();
-		this.rssi = new ArrayList<>();
-
 		this.bssid = association.bssid;
 		this.station = association.station;
-		this.connected = association.connected;
-		this.inactive = association.inactive;
-		this.rssi.add(association.rssi);
-		this.rxBytes = association.rx_bytes;
-		this.rxPackets = association.rx_packets;
-		this.rxRate.add(association.rx_rate);
-		this.txBytes = association.tx_bytes;
-		this.txDuration = association.tx_duration;
-		this.txFailed = association.tx_failed;
-		this.txPackets = association.tx_packets;
-		this.txRate.add(association.tx_rate);
-		this.txRetries = association.tx_retries;
-		this.ackSignal = association.ack_signal;
-		this.ackSignalAvg = association.ack_signal_avg;
-		this.radio = new Radio(radioInfo);
+		this.associationInfoList = new ArrayList<>();
+		associationInfoList
+			.add(new AssociationInfo(association, counters, radio, timestamp));
+		this.radioConfig = new RadioConfig(radio);
 	}
 
 	/**
@@ -178,7 +231,7 @@ public class AggregatedState {
 	 */
 	public boolean matchesForAggregation(AggregatedState state) {
 		return bssid == state.bssid && station == state.station &&
-			Objects.equals(radio, state.radio);
+			Objects.equals(radioConfig, state.radioConfig);
 	}
 
 	/**
@@ -191,9 +244,7 @@ public class AggregatedState {
 	 */
 	public boolean add(AggregatedState state) {
 		if (matchesForAggregation(state)) {
-			this.rssi.addAll(state.rssi);
-			this.rxRate.add(state.rxRate);
-			this.txRate.add(state.txRate);
+			associationInfoList.addAll(state.associationInfoList);
 			return true;
 		}
 		return false;

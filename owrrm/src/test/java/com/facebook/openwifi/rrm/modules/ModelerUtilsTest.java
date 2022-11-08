@@ -24,6 +24,7 @@ import org.junit.jupiter.api.Test;
 
 import com.facebook.openwifi.cloudsdk.AggregatedState;
 import com.facebook.openwifi.cloudsdk.WifiScanEntry;
+import com.facebook.openwifi.cloudsdk.StateInfo;
 import com.facebook.openwifi.cloudsdk.models.ap.State;
 import com.facebook.openwifi.rrm.aggregators.MeanAggregator;
 import com.facebook.openwifi.rrm.modules.Modeler.DataModel;
@@ -615,7 +616,7 @@ public class ModelerUtilsTest {
 			new ArrayList<>(Arrays.asList(aggStateC))
 		);
 
-		State toBeAggregated1 = TestUtils.createState(
+		StateInfo toBeAggregated1 = TestUtils.createState(
 			6,
 			20,
 			10,
@@ -628,27 +629,46 @@ public class ModelerUtilsTest {
 		ModelerUtils
 			.addStateToAggregation(bssidToAggregatedStates, toBeAggregated1);
 
-		assertEquals(
-			bssidToAggregatedStates
+		List rssiList = new ArrayList<>();
+		for (
+			AggregatedState.AssociationInfo associationInfo : bssidToAggregatedStates
 				.get(ModelerUtils.getBssidStationKeyPair(bssidA, stationA1))
-				.get(0).rssi,
+				.get(0).associationInfoList
+		) {
+			rssiList.add(associationInfo.rssi);
+		}
+		assertEquals(
+			rssiList,
 			Arrays.asList(10, 20, 30)
 		);
 
-		assertEquals(
-			bssidToAggregatedStates
+		rssiList = new ArrayList<>();
+		for (
+			AggregatedState.AssociationInfo associationInfo : bssidToAggregatedStates
 				.get(ModelerUtils.getBssidStationKeyPair(bssidA, stationA1))
-				.get(1).rssi,
+				.get(1).associationInfoList
+		) {
+			rssiList.add(associationInfo.rssi);
+		}
+		assertEquals(
+			rssiList,
 			Arrays.asList(40, 50)
 		);
-		assertEquals(
-			bssidToAggregatedStates
+
+		rssiList = new ArrayList<>();
+		for (
+			AggregatedState.AssociationInfo associationInfo : bssidToAggregatedStates
 				.get(ModelerUtils.getBssidStationKeyPair(bssidA, stationA2))
-				.get(0).rssi,
+				.get(0).associationInfoList
+		) {
+			rssiList.add(associationInfo.rssi);
+		}
+		assertEquals(
+			rssiList,
 			Arrays.asList(20, 30, 40, 60)
 		);
 
-		State toBeAggregated2 = TestUtils.createState(
+		StateInfo toBeAggregated2 = TestUtils.createState(
 			11,
 			20,
 			20,
@@ -659,10 +679,17 @@ public class ModelerUtilsTest {
 		);
 		ModelerUtils
 			.addStateToAggregation(bssidToAggregatedStates, toBeAggregated2);
-		assertEquals(
-			bssidToAggregatedStates
+
+		rssiList = new ArrayList<>();
+		for (
+			AggregatedState.AssociationInfo associationInfo : bssidToAggregatedStates
 				.get(ModelerUtils.getBssidStationKeyPair(bssidB, stationB))
-				.get(0).rssi,
+				.get(0).associationInfoList
+		) {
+			rssiList.add(associationInfo.rssi);
+		}
+		assertEquals(
+			rssiList,
 			Arrays.asList(10, 20, 30, 40)
 		);
 	}
@@ -688,7 +715,7 @@ public class ModelerUtilsTest {
 		DataModel dataModel = new DataModel();
 
 		// This serie of StateA is used to test a valid input states.
-		State time1StateA = TestUtils.createState(
+		StateInfo time1StateA = TestUtils.createState(
 			1,
 			80,
 			10,
@@ -704,7 +731,7 @@ public class ModelerUtilsTest {
 			TestUtils.DEFAULT_LOCAL_TIME
 		);
 
-		State time2StateA = TestUtils.createState(
+		StateInfo time2StateA = TestUtils.createState(
 			1,
 			80,
 			10,
@@ -721,7 +748,7 @@ public class ModelerUtilsTest {
 		);
 
 		//As State time3StateA is obsolete, it should not be aggregated.
-		State time3StateA = TestUtils.createState(
+		StateInfo time3StateA = TestUtils.createState(
 			1,
 			80,
 			10,
@@ -758,48 +785,98 @@ public class ModelerUtilsTest {
 			2
 		);
 		assertEquals(
-			aggregatedMap.get(serialNumberA).get(ModelerUtils.getBssidStationKeyPair(bssidA, stationA1)).get(0).radio,
-			new AggregatedState.Radio(1, 80, 10)
+			aggregatedMap.get(serialNumberA).get(ModelerUtils.getBssidStationKeyPair(bssidA, stationA1)).get(0).radioConfig,
+			new AggregatedState.RadioConfig(1, 80, 10)
 		);
+
+		List rssiList = new ArrayList<>();
+		for (
+			AggregatedState.AssociationInfo associationInfo : aggregatedMap
+				.get(serialNumberA)
+				.get(ModelerUtils.getBssidStationKeyPair(bssidA, stationA1))
+				.get(0).associationInfoList
+		) {
+			rssiList.add(associationInfo.rssi);
+		}
 		assertEquals(
-			aggregatedMap.get(serialNumberA).get(ModelerUtils.getBssidStationKeyPair(bssidA, stationA1)).get(0).rssi,
+			rssiList,
 			Arrays.asList(-84, 27)
 		);
 		assertEquals(
-			aggregatedMap.get(serialNumberA).get(ModelerUtils.getBssidStationKeyPair(bssidA, stationA1)).get(1).radio,
-			new AggregatedState.Radio(6, 40, 20)
+			aggregatedMap.get(serialNumberA).get(ModelerUtils.getBssidStationKeyPair(bssidA, stationA1)).get(1).radioConfig,
+			new AggregatedState.RadioConfig(6, 40, 20)
 		);
+
+		rssiList = new ArrayList<>();
+		for (
+			AggregatedState.AssociationInfo associationInfo : aggregatedMap
+				.get(serialNumberA)
+				.get(ModelerUtils.getBssidStationKeyPair(bssidA, stationA1))
+				.get(1).associationInfoList
+		) {
+			rssiList.add(associationInfo.rssi);
+		}
 		assertEquals(
-			aggregatedMap.get(serialNumberA).get(ModelerUtils.getBssidStationKeyPair(bssidA, stationA1)).get(1).rssi,
+			rssiList,
 			Arrays.asList(-80)
 		);
 		assertEquals(
-			aggregatedMap.get(serialNumberA).get(ModelerUtils.getBssidStationKeyPair(bssidA, stationA2)).get(0).radio,
-			new AggregatedState.Radio(1, 80, 10)
+			aggregatedMap.get(serialNumberA).get(ModelerUtils.getBssidStationKeyPair(bssidA, stationA2)).get(0).radioConfig,
+			new AggregatedState.RadioConfig(1, 80, 10)
 		);
+
+		rssiList = new ArrayList<>();
+		for (
+			AggregatedState.AssociationInfo associationInfo : aggregatedMap
+				.get(serialNumberA)
+				.get(ModelerUtils.getBssidStationKeyPair(bssidA, stationA2))
+				.get(0).associationInfoList
+		) {
+			rssiList.add(associationInfo.rssi);
+		}
 		assertEquals(
-			aggregatedMap.get(serialNumberA).get(ModelerUtils.getBssidStationKeyPair(bssidA, stationA2)).get(0).rssi,
+			rssiList,
 			Arrays.asList(-67, -67)
 		);
 		assertEquals(
-			aggregatedMap.get(serialNumberA).get(ModelerUtils.getBssidStationKeyPair(bssidA, stationA2)).get(1).radio,
-			new AggregatedState.Radio(6, 40, 20)
+			aggregatedMap.get(serialNumberA).get(ModelerUtils.getBssidStationKeyPair(bssidA, stationA2)).get(1).radioConfig,
+			new AggregatedState.RadioConfig(6, 40, 20)
 		);
+
+		rssiList = new ArrayList<>();
+		for (
+			AggregatedState.AssociationInfo associationInfo : aggregatedMap
+				.get(serialNumberA)
+				.get(ModelerUtils.getBssidStationKeyPair(bssidA, stationA2))
+				.get(1).associationInfoList
+		) {
+			rssiList.add(associationInfo.rssi);
+		}
 		assertEquals(
-			aggregatedMap.get(serialNumberA).get(ModelerUtils.getBssidStationKeyPair(bssidA, stationA2)).get(1).rssi,
+			rssiList,
 			Arrays.asList(180, 67)
 		);
 		assertEquals(
-			aggregatedMap.get(serialNumberA).get(ModelerUtils.getBssidStationKeyPair(bssidA, stationA3)).get(0).radio,
-			new AggregatedState.Radio(1, 80, 10)
+			aggregatedMap.get(serialNumberA).get(ModelerUtils.getBssidStationKeyPair(bssidA, stationA3)).get(0).radioConfig,
+			new AggregatedState.RadioConfig(1, 80, 10)
 		);
+
+		rssiList = new ArrayList<>();
+		for (
+			AggregatedState.AssociationInfo associationInfo : aggregatedMap
+				.get(serialNumberA)
+				.get(ModelerUtils.getBssidStationKeyPair(bssidA, stationA3))
+				.get(0).associationInfoList
+		) {
+			rssiList.add(associationInfo.rssi);
+		}
 		assertEquals(
-			aggregatedMap.get(serialNumberA).get(ModelerUtils.getBssidStationKeyPair(bssidA, stationA3)).get(0).rssi,
+			rssiList,
 			Arrays.asList(10, 100)
 		);
 
 		// Test more clients operate on the same channel (stationB and stationA)
-		State time1StateB = TestUtils.createState(
+		StateInfo time1StateB = TestUtils.createState(
 			1,
 			80,
 			10,
@@ -812,7 +889,7 @@ public class ModelerUtilsTest {
 			.computeIfAbsent(serialNumberB, k -> new ArrayList<>())
 			.add(time1StateB);
 
-		State time1StateC = TestUtils.createState(
+		StateInfo time1StateC = TestUtils.createState(
 			6,
 			40,
 			20,
@@ -829,12 +906,32 @@ public class ModelerUtilsTest {
 			ModelerUtils
 				.getAggregatedStates(dataModel, obsoletionPeriodMs, refTimeMs);
 
+		rssiList = new ArrayList<>();
+		for (
+			AggregatedState.AssociationInfo associationInfo : aggregatedMap2
+				.get(serialNumberB)
+				.get(ModelerUtils.getBssidStationKeyPair(bssidB, stationB))
+				.get(0).associationInfoList
+		) {
+			rssiList.add(associationInfo.rssi);
+		}
 		assertEquals(
-			aggregatedMap2.get(serialNumberB).get(ModelerUtils.getBssidStationKeyPair(bssidB, stationB)).get(0).rssi, Arrays.asList(-30)
+			rssiList,
+			Arrays.asList(-30)
 		);
 
+		rssiList = new ArrayList<>();
+		for (
+			AggregatedState.AssociationInfo associationInfo : aggregatedMap2
+				.get(serialNumberC)
+				.get(ModelerUtils.getBssidStationKeyPair(bssidC, stationC))
+				.get(0).associationInfoList
+		) {
+			rssiList.add(associationInfo.rssi);
+		}
 		assertEquals(
-			aggregatedMap2.get(serialNumberC).get(ModelerUtils.getBssidStationKeyPair(bssidC, stationC)).get(0).rssi, Arrays.asList(-100)
+			rssiList,
+			Arrays.asList(-100)
 		);
 
 		assertEquals(

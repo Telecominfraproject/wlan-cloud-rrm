@@ -18,9 +18,9 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.facebook.openwifi.cloudsdk.models.ap.State;
 import com.facebook.openwifi.rrm.DeviceConfig;
 import com.facebook.openwifi.rrm.DeviceDataManager;
+import com.facebook.openwifi.cloudsdk.models.ap.State;
 import com.facebook.openwifi.rrm.modules.Modeler.DataModel;
 import com.facebook.openwifi.rrm.modules.ModelerUtils;
 
@@ -175,7 +175,7 @@ public class LocationBasedOptimalTPC extends TPC {
 		// Filter out the invalid APs (e.g., no radio, no location data)
 		// Update txPowerChoices, boundary, apLocX, apLocY for the optimization
 		for (String serialNumber : serialNumbers) {
-			List<State> states = model.latestStates.get(serialNumber);
+			List<? extends State> states = model.latestStates.get(serialNumber);
 			State state = states.get(states.size() - 1);
 
 			// Ignore the device if its radio is not active

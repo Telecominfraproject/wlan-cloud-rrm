@@ -22,6 +22,7 @@ import com.facebook.openwifi.cloudsdk.AggregatedState;
 import com.facebook.openwifi.cloudsdk.UCentralConstants;
 import com.facebook.openwifi.cloudsdk.UCentralUtils;
 import com.facebook.openwifi.cloudsdk.WifiScanEntry;
+import com.facebook.openwifi.cloudsdk.StateInfo;
 import com.facebook.openwifi.cloudsdk.models.ap.Capabilities;
 import com.facebook.openwifi.cloudsdk.models.ap.State;
 import com.facebook.openwifi.rrm.DeviceTopology;
@@ -535,7 +536,7 @@ public class TestUtils {
 	 * @param localtime unix timestamp in seconds.
 	 * @return the state of an AP with radios described by the given parameters
 	 */
-	public static State createState(
+	public static StateInfo createState(
 		int[] channels,
 		int[] channelWidths,
 		int[] txPowers,
@@ -556,13 +557,13 @@ public class TestUtils {
 			);
 		}
 		final int numRadios = channels.length;
-		State state = new State();
-		state.interfaces = new State.Interface[numRadios + 1];
+		StateInfo state = new StateInfo();
+		state.interfaces = new StateInfo.Interface[numRadios + 1];
 		for (int index = 0; index < numRadios; index++) {
 			state.interfaces[index] = createUpStateInterface(index);
 		}
 		state.interfaces[numRadios] = createDownStateInterface(numRadios);
-		state.radios = new State.Radio[numRadios];
+		state.radios = new StateInfo.Radio[numRadios];
 		for (int i = 0; i < numRadios; i++) {
 			state.radios[i] = createStateRadio(i);
 			state.radios[i].channel = channels[i];
@@ -570,10 +571,10 @@ public class TestUtils {
 			state.radios[i].tx_power = txPowers[i];
 			state.interfaces[i].ssids[0].bssid = bssids[i];
 			state.interfaces[i].ssids[0].associations =
-				new State.Interface.SSID.Association[clientRssis[i].length];
+				new StateInfo.Interface.SSID.Association[clientRssis[i].length];
 			for (int j = 0; j < clientRssis[i].length; j++) {
 				state.interfaces[i].ssids[0].associations[j] =
-					new State.Interface.SSID.Association();
+					new StateInfo.Interface.SSID.Association();
 				state.interfaces[i].ssids[0].associations[j].rssi =
 					clientRssis[i][j];
 				state.interfaces[i].ssids[0].associations[j].station =
@@ -599,7 +600,7 @@ public class TestUtils {
 	 * @param localtime unix timestamp in seconds.
 	 * @return the state of an AP with one radio
 	 */
-	public static State createState(
+	public static StateInfo createState(
 		int channel,
 		int channelWidth,
 		int txPower,
@@ -627,7 +628,7 @@ public class TestUtils {
 	 * @param bssid bssid
 	 * @return the state of an AP with one radio
 	 */
-	public static State createState(
+	public static StateInfo createState(
 		int channel,
 		int channelWidth,
 		String bssid
@@ -644,7 +645,7 @@ public class TestUtils {
 	 * @param bssid bssid
 	 * @return the state of an AP with one radio
 	 */
-	public static State createState(
+	public static StateInfo createState(
 		int channel,
 		int channelWidth,
 		int txPower,
@@ -669,7 +670,7 @@ public class TestUtils {
 	 * @param clientRssis array of client RSSIs
 	 * @return the state of an AP with one radio
 	 */
-	public static State createState(
+	public static StateInfo createState(
 		int channel,
 		int channelWidth,
 		int txPower,
@@ -700,7 +701,7 @@ public class TestUtils {
 	 * @param bssidB bssid for radio on channelB
 	 * @return the state of an AP with two radios
 	 */
-	public static State createState(
+	public static StateInfo createState(
 		int channelA,
 		int channelWidthA,
 		int txPowerA,
@@ -737,7 +738,7 @@ public class TestUtils {
 	* @param localtime local time for the State
 	* @return the state of an AP with two radios
 	*/
-	public static State createState(
+	public static StateInfo createState(
 		int channelA,
 		int channelWidthA,
 		int txPowerA,
@@ -823,11 +824,15 @@ public class TestUtils {
 		int[] clientRssi
 	) {
 		AggregatedState state = new AggregatedState();
-		state.radio = new AggregatedState.Radio(channel, channelWidth, txPower);
+		state.radioConfig =
+			new AggregatedState.RadioConfig(channel, channelWidth, txPower);
 		state.bssid = bssid;
 		state.station = station;
+		state.associationInfoList = new ArrayList<>();
 		for (int rssi : clientRssi) {
-			state.rssi.add(rssi);
+			AggregatedState.AssociationInfo associationInfo =
+				new AggregatedState.AssociationInfo(rssi);
+			state.associationInfoList.add(associationInfo);
 		}
 		return state;
 	}

@@ -22,6 +22,7 @@ import org.slf4j.LoggerFactory;
 import com.facebook.openwifi.cloudsdk.models.ap.Capabilities;
 import com.facebook.openwifi.cloudsdk.AggregatedState;
 import com.facebook.openwifi.cloudsdk.WifiScanEntry;
+import com.facebook.openwifi.cloudsdk.StateInfo;
 import com.facebook.openwifi.cloudsdk.ies.HTOperation;
 import com.facebook.openwifi.cloudsdk.ies.VHTOperation;
 import com.facebook.openwifi.cloudsdk.models.ap.State;
@@ -404,22 +405,13 @@ public class ModelerUtils {
 	 */
 	static void addStateToAggregation(
 		Map<String, List<AggregatedState>> bssidToAggregatedStates,
-		State state
+		StateInfo state
 	) {
 		for (Interface stateInterface : state.interfaces) {
 			if (stateInterface.ssids == null) {
 				continue;
 			}
 			for (SSID ssid : stateInterface.ssids) {
-				Map<String, Integer> radioInfo = new HashMap<>();
-				radioInfo.put("channel", ssid.radio.get("channel").getAsInt());
-				radioInfo.put(
-					"channel_width",
-					ssid.radio.get("channel_width").getAsInt()
-				);
-				radioInfo
-					.put("tx_power", ssid.radio.get("tx_power").getAsInt());
-
 				for (Association association : ssid.associations) {
 					if (association == null) {
 						continue;
@@ -432,7 +424,12 @@ public class ModelerUtils {
 						bssidToAggregatedStates
 							.computeIfAbsent(key, k -> new ArrayList<>());
 					AggregatedState aggState =
-						new AggregatedState(association, radioInfo);
+						new AggregatedState(
+							association,
+							ssid.counters,
+							ssid.radio,
+							state.timestamp
+						);
 
 					/**
 					 * Indicate if the aggState can be merged into some old AggregatedState.
@@ -489,11 +486,11 @@ public class ModelerUtils {
 			new HashMap<>();
 
 		for (
-			Map.Entry<String, List<State>> deviceToStateList : dataModel.latestStates
+			Map.Entry<String, List<StateInfo>> deviceToStateList : dataModel.latestStates
 				.entrySet()
 		) {
 			String serialNumber = deviceToStateList.getKey();
-			List<State> states = deviceToStateList.getValue();
+			List<StateInfo> states = deviceToStateList.getValue();
 
 			if (states.isEmpty()) {
 				continue;
@@ -512,7 +509,7 @@ public class ModelerUtils {
 				aggregatedStates
 					.computeIfAbsent(serialNumber, k -> new HashMap<>());
 
-			for (State state : states) {
+			for (StateInfo state : states) {
 				if (refTimeMs - state.unit.localtime > obsoletionPeriodMs) {
 					// discard obsolete entries
 					break;
@@ -530,15 +527,16 @@ public class ModelerUtils {
 	 * @param latestStates list of latest States per device
 	 * @return map from device String to latest State
 	 */
-	public static Map<String, State> getLatestState(
-		Map<String, List<State>> latestStates
+	public static Map<String, StateInfo> getLatestState(
+		Map<String, List<StateInfo>> latestStates
 	) {
-		Map<String, State> latestState = new ConcurrentHashMap<>();
+		Map<String, StateInfo> latestState = new ConcurrentHashMap<>();
 		for (
-			Map.Entry<String, List<State>> stateEntry : latestStates.entrySet()
+			Map.Entry<String, List<StateInfo>> stateEntry : latestStates
+				.entrySet()
 		) {
 			String key = stateEntry.getKey();
-			List<State> value = stateEntry.getValue();
+			List<StateInfo> value = stateEntry.getValue();
 			if (value.isEmpty()) {
 				latestState.put(key, null);
 			} else {
