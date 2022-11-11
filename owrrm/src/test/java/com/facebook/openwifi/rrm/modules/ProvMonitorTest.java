@@ -24,6 +24,7 @@ public class ProvMonitorTest {
 	private DeviceDataManager deviceDataManager;
 
 	/** Test provisioning monitor. */
+	@SuppressWarnings("unused")
 	private ProvMonitor provMonitor;
 
 	@BeforeEach
