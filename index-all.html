@@ -105,9 +105,9 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/models/ap/State.Interface.SSID.Association.html#ack_signal_avg">ack_signal_avg</a></span> - Variable in class com.facebook.openwifi.cloudsdk.models.ap.<a href="com/facebook/openwifi/cloudsdk/models/ap/State.Interface.SSID.Association.html" title="class in com.facebook.openwifi.cloudsdk.models.ap">State.Interface.SSID.Association</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/AggregatedState.html#ackSignal">ackSignal</a></span> - Variable in class com.facebook.openwifi.cloudsdk.<a href="com/facebook/openwifi/cloudsdk/AggregatedState.html" title="class in com.facebook.openwifi.cloudsdk">AggregatedState</a></dt>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/AggregatedState.AssociationInfo.html#ackSignal">ackSignal</a></span> - Variable in class com.facebook.openwifi.cloudsdk.<a href="com/facebook/openwifi/cloudsdk/AggregatedState.AssociationInfo.html" title="class in com.facebook.openwifi.cloudsdk">AggregatedState.AssociationInfo</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/AggregatedState.html#ackSignalAvg">ackSignalAvg</a></span> - Variable in class com.facebook.openwifi.cloudsdk.<a href="com/facebook/openwifi/cloudsdk/AggregatedState.html" title="class in com.facebook.openwifi.cloudsdk">AggregatedState</a></dt>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/AggregatedState.AssociationInfo.html#ackSignalAvg">ackSignalAvg</a></span> - Variable in class com.facebook.openwifi.cloudsdk.<a href="com/facebook/openwifi/cloudsdk/AggregatedState.AssociationInfo.html" title="class in com.facebook.openwifi.cloudsdk">AggregatedState.AssociationInfo</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/models/gw/WebTokenAclTemplate.html#aclTemplate">aclTemplate</a></span> - Variable in class com.facebook.openwifi.cloudsdk.models.gw.<a href="com/facebook/openwifi/cloudsdk/models/gw/WebTokenAclTemplate.html" title="class in com.facebook.openwifi.cloudsdk.models.gw">WebTokenAclTemplate</a></dt>
 <dd>&nbsp;</dd>
@@ -118,6 +118,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/models/gw/AclTemplate.html#%3Cinit%3E()">AclTemplate()</a></span> - Constructor for class com.facebook.openwifi.cloudsdk.models.gw.<a href="com/facebook/openwifi/cloudsdk/models/gw/AclTemplate.html" title="class in com.facebook.openwifi.cloudsdk.models.gw">AclTemplate</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/models/ap/State.Radio.html#active_ms">active_ms</a></span> - Variable in class com.facebook.openwifi.cloudsdk.models.ap.<a href="com/facebook/openwifi/cloudsdk/models/ap/State.Radio.html" title="class in com.facebook.openwifi.cloudsdk.models.ap">State.Radio</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/AggregatedState.AssociationInfo.html#activeMsRadio">activeMsRadio</a></span> - Variable in class com.facebook.openwifi.cloudsdk.<a href="com/facebook/openwifi/cloudsdk/AggregatedState.AssociationInfo.html" title="class in com.facebook.openwifi.cloudsdk">AggregatedState.AssociationInfo</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/models/gw/WifiScanRequest.html#activeScan">activeScan</a></span> - Variable in class com.facebook.openwifi.cloudsdk.models.gw.<a href="com/facebook/openwifi/cloudsdk/models/gw/WifiScanRequest.html" title="class in com.facebook.openwifi.cloudsdk.models.gw">WifiScanRequest</a></dt>
 <dd>&nbsp;</dd>
@@ -157,17 +159,22 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/AggregatedState.html#%3Cinit%3E()">AggregatedState()</a></span> - Constructor for class com.facebook.openwifi.cloudsdk.<a href="com/facebook/openwifi/cloudsdk/AggregatedState.html" title="class in com.facebook.openwifi.cloudsdk">AggregatedState</a></dt>
 <dd>
-<div class="block">Constructor with no args</div>
+<div class="block">Constructor with no args.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/AggregatedState.html#%3Cinit%3E(com.facebook.openwifi.cloudsdk.models.ap.State.Interface.SSID.Association,java.util.Map)">AggregatedState(State.Interface.SSID.Association, Map&lt;String, Integer&gt;)</a></span> - Constructor for class com.facebook.openwifi.cloudsdk.<a href="com/facebook/openwifi/cloudsdk/AggregatedState.html" title="class in com.facebook.openwifi.cloudsdk">AggregatedState</a></dt>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/AggregatedState.html#%3Cinit%3E(com.facebook.openwifi.cloudsdk.models.ap.State.Interface.SSID.Association,com.facebook.openwifi.cloudsdk.models.ap.State.Interface.Counters,com.google.gson.JsonObject,long)">AggregatedState(State.Interface.SSID.Association, State.Interface.Counters, JsonObject, long)</a></span> - Constructor for class com.facebook.openwifi.cloudsdk.<a href="com/facebook/openwifi/cloudsdk/AggregatedState.html" title="class in com.facebook.openwifi.cloudsdk">AggregatedState</a></dt>
 <dd>
-<div class="block">Construct from Association and radio</div>
+<div class="block">Construct from Association, Counters, Radio and time stamp</div>
 </dd>
-<dt><a href="com/facebook/openwifi/cloudsdk/AggregatedState.AggregatedRate.html" title="class in com.facebook.openwifi.cloudsdk"><span class="typeNameLink">AggregatedState.AggregatedRate</span></a> - Class in <a href="com/facebook/openwifi/cloudsdk/package-summary.html">com.facebook.openwifi.cloudsdk</a></dt>
+<dt><a href="com/facebook/openwifi/cloudsdk/AggregatedState.AssociationInfo.html" title="class in com.facebook.openwifi.cloudsdk"><span class="typeNameLink">AggregatedState.AssociationInfo</span></a> - Class in <a href="com/facebook/openwifi/cloudsdk/package-summary.html">com.facebook.openwifi.cloudsdk</a></dt>
+<dd>
+<div class="block">Data model to keep raw data from <a href="com/facebook/openwifi/cloudsdk/models/ap/State.Interface.SSID.Association.html" title="class in com.facebook.openwifi.cloudsdk.models.ap"><code>State.Interface.SSID.Association</code></a>,
+ <a href="com/facebook/openwifi/cloudsdk/models/ap/State.Radio.html" title="class in com.facebook.openwifi.cloudsdk.models.ap"><code>State.Radio</code></a> and <a href="com/facebook/openwifi/cloudsdk/models/ap/State.Interface.Counters.html" title="class in com.facebook.openwifi.cloudsdk.models.ap"><code>State.Interface.Counters</code></a>.</div>
+</dd>
+<dt><a href="com/facebook/openwifi/cloudsdk/AggregatedState.AssociationInfo.Rate.html" title="class in com.facebook.openwifi.cloudsdk"><span class="typeNameLink">AggregatedState.AssociationInfo.Rate</span></a> - Class in <a href="com/facebook/openwifi/cloudsdk/package-summary.html">com.facebook.openwifi.cloudsdk</a></dt>
 <dd>
 <div class="block">Rate information with aggregated fields.</div>
 </dd>
-<dt><a href="com/facebook/openwifi/cloudsdk/AggregatedState.Radio.html" title="class in com.facebook.openwifi.cloudsdk"><span class="typeNameLink">AggregatedState.Radio</span></a> - Class in <a href="com/facebook/openwifi/cloudsdk/package-summary.html">com.facebook.openwifi.cloudsdk</a></dt>
+<dt><a href="com/facebook/openwifi/cloudsdk/AggregatedState.RadioConfig.html" title="class in com.facebook.openwifi.cloudsdk"><span class="typeNameLink">AggregatedState.RadioConfig</span></a> - Class in <a href="com/facebook/openwifi/cloudsdk/package-summary.html">com.facebook.openwifi.cloudsdk</a></dt>
 <dd>
 <div class="block">Radio information with channel, channel_width and tx_power.</div>
 </dd>
@@ -301,6 +308,20 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/models/ap/State.Interface.SSID.Association.html#%3Cinit%3E()">Association()</a></span> - Constructor for class com.facebook.openwifi.cloudsdk.models.ap.<a href="com/facebook/openwifi/cloudsdk/models/ap/State.Interface.SSID.Association.html" title="class in com.facebook.openwifi.cloudsdk.models.ap">State.Interface.SSID.Association</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/AggregatedState.AssociationInfo.html#%3Cinit%3E()">AssociationInfo()</a></span> - Constructor for class com.facebook.openwifi.cloudsdk.<a href="com/facebook/openwifi/cloudsdk/AggregatedState.AssociationInfo.html" title="class in com.facebook.openwifi.cloudsdk">AggregatedState.AssociationInfo</a></dt>
+<dd>
+<div class="block">Default Constructor.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/AggregatedState.AssociationInfo.html#%3Cinit%3E(int)">AssociationInfo(int)</a></span> - Constructor for class com.facebook.openwifi.cloudsdk.<a href="com/facebook/openwifi/cloudsdk/AggregatedState.AssociationInfo.html" title="class in com.facebook.openwifi.cloudsdk">AggregatedState.AssociationInfo</a></dt>
+<dd>
+<div class="block">Constructor with only rssi(for test purpose)</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/AggregatedState.AssociationInfo.html#%3Cinit%3E(com.facebook.openwifi.cloudsdk.models.ap.State.Interface.SSID.Association,com.facebook.openwifi.cloudsdk.models.ap.State.Interface.Counters,com.google.gson.JsonObject,long)">AssociationInfo(State.Interface.SSID.Association, State.Interface.Counters, JsonObject, long)</a></span> - Constructor for class com.facebook.openwifi.cloudsdk.<a href="com/facebook/openwifi/cloudsdk/AggregatedState.AssociationInfo.html" title="class in com.facebook.openwifi.cloudsdk">AggregatedState.AssociationInfo</a></dt>
+<dd>
+<div class="block">Constructor with args</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/AggregatedState.html#associationInfoList">associationInfoList</a></span> - Variable in class com.facebook.openwifi.cloudsdk.<a href="com/facebook/openwifi/cloudsdk/AggregatedState.html" title="class in com.facebook.openwifi.cloudsdk">AggregatedState</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/models/ap/State.Interface.SSID.html#associations">associations</a></span> - Variable in class com.facebook.openwifi.cloudsdk.models.ap.<a href="com/facebook/openwifi/cloudsdk/models/ap/State.Interface.SSID.html" title="class in com.facebook.openwifi.cloudsdk.models.ap">State.Interface.SSID</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/models/gw/DeviceWithStatus.html#associations_2G">associations_2G</a></span> - Variable in class com.facebook.openwifi.cloudsdk.models.gw.<a href="com/facebook/openwifi/cloudsdk/models/gw/DeviceWithStatus.html" title="class in com.facebook.openwifi.cloudsdk.models.gw">DeviceWithStatus</a></dt>
@@ -382,9 +403,9 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/models/ap/State.Interface.SSID.Association.Rate.html#bitrate">bitrate</a></span> - Variable in class com.facebook.openwifi.cloudsdk.models.ap.<a href="com/facebook/openwifi/cloudsdk/models/ap/State.Interface.SSID.Association.Rate.html" title="class in com.facebook.openwifi.cloudsdk.models.ap">State.Interface.SSID.Association.Rate</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/AggregatedState.AggregatedRate.html#bitRate">bitRate</a></span> - Variable in class com.facebook.openwifi.cloudsdk.<a href="com/facebook/openwifi/cloudsdk/AggregatedState.AggregatedRate.html" title="class in com.facebook.openwifi.cloudsdk">AggregatedState.AggregatedRate</a></dt>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/AggregatedState.AssociationInfo.Rate.html#bitRate">bitRate</a></span> - Variable in class com.facebook.openwifi.cloudsdk.<a href="com/facebook/openwifi/cloudsdk/AggregatedState.AssociationInfo.Rate.html" title="class in com.facebook.openwifi.cloudsdk">AggregatedState.AssociationInfo.Rate</a></dt>
 <dd>
-<div class="block">This is the common bitRate for all the aggregated fields.</div>
+<div class="block">Aggregated fields bitRate</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/models/gw/UserInfo.html#blacklisted">blacklisted</a></span> - Variable in class com.facebook.openwifi.cloudsdk.models.gw.<a href="com/facebook/openwifi/cloudsdk/models/gw/UserInfo.html" title="class in com.facebook.openwifi.cloudsdk.models.gw">UserInfo</a></dt>
 <dd>&nbsp;</dd>
@@ -421,6 +442,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Calculate new tx powers for the given channel on the given APs .</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/models/ap/State.Radio.html#busy_ms">busy_ms</a></span> - Variable in class com.facebook.openwifi.cloudsdk.models.ap.<a href="com/facebook/openwifi/cloudsdk/models/ap/State.Radio.html" title="class in com.facebook.openwifi.cloudsdk.models.ap">State.Radio</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/AggregatedState.AssociationInfo.html#busyMsRadio">busyMsRadio</a></span> - Variable in class com.facebook.openwifi.cloudsdk.<a href="com/facebook/openwifi/cloudsdk/AggregatedState.AssociationInfo.html" title="class in com.facebook.openwifi.cloudsdk">AggregatedState.AssociationInfo</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifi/rrm/Utils.html#bytesToHex(byte%5B%5D)">bytesToHex(byte[])</a></span> - Static method in class com.facebook.openwifi.rrm.<a href="com/facebook/openwifi/rrm/Utils.html" title="class in com.facebook.openwifi.rrm">Utils</a></dt>
 <dd>
@@ -465,7 +488,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/models/gw/SystemInfoResults.html#certificates">certificates</a></span> - Variable in class com.facebook.openwifi.cloudsdk.models.gw.<a href="com/facebook/openwifi/cloudsdk/models/gw/SystemInfoResults.html" title="class in com.facebook.openwifi.cloudsdk.models.gw">SystemInfoResults</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/AggregatedState.Radio.html#channel">channel</a></span> - Variable in class com.facebook.openwifi.cloudsdk.<a href="com/facebook/openwifi/cloudsdk/AggregatedState.Radio.html" title="class in com.facebook.openwifi.cloudsdk">AggregatedState.Radio</a></dt>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/AggregatedState.RadioConfig.html#channel">channel</a></span> - Variable in class com.facebook.openwifi.cloudsdk.<a href="com/facebook/openwifi/cloudsdk/AggregatedState.RadioConfig.html" title="class in com.facebook.openwifi.cloudsdk">AggregatedState.RadioConfig</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/models/ap/State.Radio.html#channel">channel</a></span> - Variable in class com.facebook.openwifi.cloudsdk.models.ap.<a href="com/facebook/openwifi/cloudsdk/models/ap/State.Radio.html" title="class in com.facebook.openwifi.cloudsdk.models.ap">State.Radio</a></dt>
 <dd>&nbsp;</dd>
@@ -508,7 +531,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
  medium was busy, as indicated by either the physical or virtual carrier
  sense (CS) mechanism.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/AggregatedState.Radio.html#channelWidth">channelWidth</a></span> - Variable in class com.facebook.openwifi.cloudsdk.<a href="com/facebook/openwifi/cloudsdk/AggregatedState.Radio.html" title="class in com.facebook.openwifi.cloudsdk">AggregatedState.Radio</a></dt>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/AggregatedState.RadioConfig.html#channelWidth">channelWidth</a></span> - Variable in class com.facebook.openwifi.cloudsdk.<a href="com/facebook/openwifi/cloudsdk/AggregatedState.RadioConfig.html" title="class in com.facebook.openwifi.cloudsdk">AggregatedState.RadioConfig</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/ies/VHTOperation.html#channelWidth">channelWidth</a></span> - Variable in class com.facebook.openwifi.cloudsdk.ies.<a href="com/facebook/openwifi/cloudsdk/ies/VHTOperation.html" title="class in com.facebook.openwifi.cloudsdk.ies">VHTOperation</a></dt>
 <dd>
@@ -522,9 +545,9 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/models/ap/State.Interface.SSID.Association.Rate.html#chwidth">chwidth</a></span> - Variable in class com.facebook.openwifi.cloudsdk.models.ap.<a href="com/facebook/openwifi/cloudsdk/models/ap/State.Interface.SSID.Association.Rate.html" title="class in com.facebook.openwifi.cloudsdk.models.ap">State.Interface.SSID.Association.Rate</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/AggregatedState.AggregatedRate.html#chWidth">chWidth</a></span> - Variable in class com.facebook.openwifi.cloudsdk.<a href="com/facebook/openwifi/cloudsdk/AggregatedState.AggregatedRate.html" title="class in com.facebook.openwifi.cloudsdk">AggregatedState.AggregatedRate</a></dt>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/AggregatedState.AssociationInfo.Rate.html#chWidth">chWidth</a></span> - Variable in class com.facebook.openwifi.cloudsdk.<a href="com/facebook/openwifi/cloudsdk/AggregatedState.AssociationInfo.Rate.html" title="class in com.facebook.openwifi.cloudsdk">AggregatedState.AssociationInfo.Rate</a></dt>
 <dd>
-<div class="block">This is the common channel width for all the aggregated fields.</div>
+<div class="block">Aggregated fields chWidth</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/models/ap/State.Interface.Client.html#%3Cinit%3E()">Client()</a></span> - Constructor for class com.facebook.openwifi.cloudsdk.models.ap.<a href="com/facebook/openwifi/cloudsdk/models/ap/State.Interface.Client.html" title="class in com.facebook.openwifi.cloudsdk.models.ap">State.Interface.Client</a></dt>
 <dd>&nbsp;</dd>
@@ -699,7 +722,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Configure a device (by serial number).</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/AggregatedState.html#connected">connected</a></span> - Variable in class com.facebook.openwifi.cloudsdk.<a href="com/facebook/openwifi/cloudsdk/AggregatedState.html" title="class in com.facebook.openwifi.cloudsdk">AggregatedState</a></dt>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/AggregatedState.AssociationInfo.html#connected">connected</a></span> - Variable in class com.facebook.openwifi.cloudsdk.<a href="com/facebook/openwifi/cloudsdk/AggregatedState.AssociationInfo.html" title="class in com.facebook.openwifi.cloudsdk">AggregatedState.AssociationInfo</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/models/ap/State.Interface.SSID.Association.html#connected">connected</a></span> - Variable in class com.facebook.openwifi.cloudsdk.models.ap.<a href="com/facebook/openwifi/cloudsdk/models/ap/State.Interface.SSID.Association.html" title="class in com.facebook.openwifi.cloudsdk.models.ap">State.Interface.SSID.Association</a></dt>
 <dd>&nbsp;</dd>
@@ -1131,7 +1154,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/models/prov/EntityList.html#%3Cinit%3E()">EntityList()</a></span> - Constructor for class com.facebook.openwifi.cloudsdk.models.prov.<a href="com/facebook/openwifi/cloudsdk/models/prov/EntityList.html" title="class in com.facebook.openwifi.cloudsdk.models.prov">EntityList</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/AggregatedState.Radio.html#equals(java.lang.Object)">equals(Object)</a></span> - Method in class com.facebook.openwifi.cloudsdk.<a href="com/facebook/openwifi/cloudsdk/AggregatedState.Radio.html" title="class in com.facebook.openwifi.cloudsdk">AggregatedState.Radio</a></dt>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/AggregatedState.RadioConfig.html#equals(java.lang.Object)">equals(Object)</a></span> - Method in class com.facebook.openwifi.cloudsdk.<a href="com/facebook/openwifi/cloudsdk/AggregatedState.RadioConfig.html" title="class in com.facebook.openwifi.cloudsdk">AggregatedState.RadioConfig</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/ies/Country.CountryInfo.html#equals(java.lang.Object)">equals(Object)</a></span> - Method in class com.facebook.openwifi.cloudsdk.ies.<a href="com/facebook/openwifi/cloudsdk/ies/Country.CountryInfo.html" title="class in com.facebook.openwifi.cloudsdk.ies">Country.CountryInfo</a></dt>
 <dd>&nbsp;</dd>
@@ -1302,7 +1325,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Get the APs on a band who participate in an optimization algorithm.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/UCentralUtils.html#getBssidsMap(java.util.Map)">getBssidsMap(Map&lt;String, State&gt;)</a></span> - Static method in class com.facebook.openwifi.cloudsdk.<a href="com/facebook/openwifi/cloudsdk/UCentralUtils.html" title="class in com.facebook.openwifi.cloudsdk">UCentralUtils</a></dt>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/UCentralUtils.html#getBssidsMap(java.util.Map)">getBssidsMap(Map&lt;String, ? extends State&gt;)</a></span> - Static method in class com.facebook.openwifi.cloudsdk.<a href="com/facebook/openwifi/cloudsdk/UCentralUtils.html" title="class in com.facebook.openwifi.cloudsdk">UCentralUtils</a></dt>
 <dd>
 <div class="block">Get the mapping between bssids and APs.</div>
 </dd>
@@ -1380,7 +1403,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Return the latest state records for each unique device.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/facebook/openwifi/rrm/modules/ModelerUtils.html#getLatestState(java.util.Map)">getLatestState(Map&lt;String, List&lt;State&gt;&gt;)</a></span> - Static method in class com.facebook.openwifi.rrm.modules.<a href="com/facebook/openwifi/rrm/modules/ModelerUtils.html" title="class in com.facebook.openwifi.rrm.modules">ModelerUtils</a></dt>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifi/rrm/modules/ModelerUtils.html#getLatestState(java.util.Map)">getLatestState(Map&lt;String, List&lt;StateInfo&gt;&gt;)</a></span> - Static method in class com.facebook.openwifi.rrm.modules.<a href="com/facebook/openwifi/rrm/modules/ModelerUtils.html" title="class in com.facebook.openwifi.rrm.modules">ModelerUtils</a></dt>
 <dd>
 <div class="block">This method gets the most recent State from latestStates per device.</div>
 </dd>
@@ -1573,7 +1596,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Handle a list of wifi scan records.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/AggregatedState.Radio.html#hashCode()">hashCode()</a></span> - Method in class com.facebook.openwifi.cloudsdk.<a href="com/facebook/openwifi/cloudsdk/AggregatedState.Radio.html" title="class in com.facebook.openwifi.cloudsdk">AggregatedState.Radio</a></dt>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/AggregatedState.RadioConfig.html#hashCode()">hashCode()</a></span> - Method in class com.facebook.openwifi.cloudsdk.<a href="com/facebook/openwifi/cloudsdk/AggregatedState.RadioConfig.html" title="class in com.facebook.openwifi.cloudsdk">AggregatedState.RadioConfig</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/ies/Country.CountryInfo.html#hashCode()">hashCode()</a></span> - Method in class com.facebook.openwifi.cloudsdk.ies.<a href="com/facebook/openwifi/cloudsdk/ies/Country.CountryInfo.html" title="class in com.facebook.openwifi.cloudsdk.ies">Country.CountryInfo</a></dt>
 <dd>&nbsp;</dd>
@@ -1675,7 +1698,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/models/ap/State.Interface.SSID.html#iface">iface</a></span> - Variable in class com.facebook.openwifi.cloudsdk.models.ap.<a href="com/facebook/openwifi/cloudsdk/models/ap/State.Interface.SSID.html" title="class in com.facebook.openwifi.cloudsdk.models.ap">State.Interface.SSID</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/AggregatedState.html#inactive">inactive</a></span> - Variable in class com.facebook.openwifi.cloudsdk.<a href="com/facebook/openwifi/cloudsdk/AggregatedState.html" title="class in com.facebook.openwifi.cloudsdk">AggregatedState</a></dt>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/AggregatedState.AssociationInfo.html#inactive">inactive</a></span> - Variable in class com.facebook.openwifi.cloudsdk.<a href="com/facebook/openwifi/cloudsdk/AggregatedState.AssociationInfo.html" title="class in com.facebook.openwifi.cloudsdk">AggregatedState.AssociationInfo</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/models/ap/State.Interface.SSID.Association.html#inactive">inactive</a></span> - Variable in class com.facebook.openwifi.cloudsdk.models.ap.<a href="com/facebook/openwifi/cloudsdk/models/ap/State.Interface.SSID.Association.html" title="class in com.facebook.openwifi.cloudsdk.models.ap">State.Interface.SSID.Association</a></dt>
 <dd>&nbsp;</dd>
@@ -2084,7 +2107,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Maximum acceptable tx dropped ratio (units are %)</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/AggregatedState.AggregatedRate.html#mcs">mcs</a></span> - Variable in class com.facebook.openwifi.cloudsdk.<a href="com/facebook/openwifi/cloudsdk/AggregatedState.AggregatedRate.html" title="class in com.facebook.openwifi.cloudsdk">AggregatedState.AggregatedRate</a></dt>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/AggregatedState.AssociationInfo.Rate.html#mcs">mcs</a></span> - Variable in class com.facebook.openwifi.cloudsdk.<a href="com/facebook/openwifi/cloudsdk/AggregatedState.AssociationInfo.Rate.html" title="class in com.facebook.openwifi.cloudsdk">AggregatedState.AssociationInfo.Rate</a></dt>
 <dd>
 <div class="block">Aggregated fields mcs</div>
 </dd>
@@ -2299,6 +2322,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/models/ap/State.Radio.html#noise">noise</a></span> - Variable in class com.facebook.openwifi.cloudsdk.models.ap.<a href="com/facebook/openwifi/cloudsdk/models/ap/State.Radio.html" title="class in com.facebook.openwifi.cloudsdk.models.ap">State.Radio</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/AggregatedState.AssociationInfo.html#noiseRadio">noiseRadio</a></span> - Variable in class com.facebook.openwifi.cloudsdk.<a href="com/facebook/openwifi/cloudsdk/AggregatedState.AssociationInfo.html" title="class in com.facebook.openwifi.cloudsdk">AggregatedState.AssociationInfo</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/ies/HTOperation.html#nongreenfieldHtStasPresent">nongreenfieldHtStasPresent</a></span> - Variable in class com.facebook.openwifi.cloudsdk.ies.<a href="com/facebook/openwifi/cloudsdk/ies/HTOperation.html" title="class in com.facebook.openwifi.cloudsdk.ies">HTOperation</a></dt>
 <dd>
 <div class="block">False if all HT STAs that are associated are HT-greenfield capable or all HT
@@ -2453,6 +2478,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Run RRM algorithms for the given zone.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/AggregatedState.RadioConfig.html#phy">phy</a></span> - Variable in class com.facebook.openwifi.cloudsdk.<a href="com/facebook/openwifi/cloudsdk/AggregatedState.RadioConfig.html" title="class in com.facebook.openwifi.cloudsdk">AggregatedState.RadioConfig</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/models/ap/State.Interface.SSID.html#phy">phy</a></span> - Variable in class com.facebook.openwifi.cloudsdk.models.ap.<a href="com/facebook/openwifi/cloudsdk/models/ap/State.Interface.SSID.html" title="class in com.facebook.openwifi.cloudsdk.models.ap">State.Interface.SSID</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/models/ap/State.Radio.html#phy">phy</a></span> - Variable in class com.facebook.openwifi.cloudsdk.models.ap.<a href="com/facebook/openwifi/cloudsdk/models/ap/State.Radio.html" title="class in com.facebook.openwifi.cloudsdk.models.ap">State.Radio</a></dt>
@@ -2585,14 +2612,18 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </a>
 <h2 class="title">R</h2>
 <dl>
-<dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/AggregatedState.html#radio">radio</a></span> - Variable in class com.facebook.openwifi.cloudsdk.<a href="com/facebook/openwifi/cloudsdk/AggregatedState.html" title="class in com.facebook.openwifi.cloudsdk">AggregatedState</a></dt>
-<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/models/ap/State.Interface.SSID.html#radio">radio</a></span> - Variable in class com.facebook.openwifi.cloudsdk.models.ap.<a href="com/facebook/openwifi/cloudsdk/models/ap/State.Interface.SSID.html" title="class in com.facebook.openwifi.cloudsdk.models.ap">State.Interface.SSID</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/models/ap/State.Radio.html#%3Cinit%3E()">Radio()</a></span> - Constructor for class com.facebook.openwifi.cloudsdk.models.ap.<a href="com/facebook/openwifi/cloudsdk/models/ap/State.Radio.html" title="class in com.facebook.openwifi.cloudsdk.models.ap">State.Radio</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/AggregatedState.Radio.html#%3Cinit%3E(int,int,int)">Radio(int, int, int)</a></span> - Constructor for class com.facebook.openwifi.cloudsdk.<a href="com/facebook/openwifi/cloudsdk/AggregatedState.Radio.html" title="class in com.facebook.openwifi.cloudsdk">AggregatedState.Radio</a></dt>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/AggregatedState.html#radioConfig">radioConfig</a></span> - Variable in class com.facebook.openwifi.cloudsdk.<a href="com/facebook/openwifi/cloudsdk/AggregatedState.html" title="class in com.facebook.openwifi.cloudsdk">AggregatedState</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/AggregatedState.RadioConfig.html#%3Cinit%3E(int,int,int)">RadioConfig(int, int, int)</a></span> - Constructor for class com.facebook.openwifi.cloudsdk.<a href="com/facebook/openwifi/cloudsdk/AggregatedState.RadioConfig.html" title="class in com.facebook.openwifi.cloudsdk">AggregatedState.RadioConfig</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/AggregatedState.RadioConfig.html#%3Cinit%3E(com.google.gson.JsonObject)">RadioConfig(JsonObject)</a></span> - Constructor for class com.facebook.openwifi.cloudsdk.<a href="com/facebook/openwifi/cloudsdk/AggregatedState.RadioConfig.html" title="class in com.facebook.openwifi.cloudsdk">AggregatedState.RadioConfig</a></dt>
+<dd>
+<div class="block">Constructor with args</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/models/ap/State.html#radios">radios</a></span> - Variable in class com.facebook.openwifi.cloudsdk.models.ap.<a href="com/facebook/openwifi/cloudsdk/models/ap/State.html" title="class in com.facebook.openwifi.cloudsdk.models.ap">State</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/facebook/openwifi/rrm/optimizers/channel/RandomChannelInitializer.html" title="class in com.facebook.openwifi.rrm.optimizers.channel"><span class="typeNameLink">RandomChannelInitializer</span></a> - Class in <a href="com/facebook/openwifi/rrm/optimizers/channel/package-summary.html">com.facebook.openwifi.rrm.optimizers.channel</a></dt>
@@ -2686,6 +2717,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Receive a new device config.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/AggregatedState.AssociationInfo.html#receiveMsRadio">receiveMsRadio</a></span> - Variable in class com.facebook.openwifi.cloudsdk.<a href="com/facebook/openwifi/cloudsdk/AggregatedState.AssociationInfo.html" title="class in com.facebook.openwifi.cloudsdk">AggregatedState.AssociationInfo</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/models/gw/StatisticsDetails.html#recorded">recorded</a></span> - Variable in class com.facebook.openwifi.cloudsdk.models.gw.<a href="com/facebook/openwifi/cloudsdk/models/gw/StatisticsDetails.html" title="class in com.facebook.openwifi.cloudsdk.models.gw">StatisticsDetails</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/models/gw/WebTokenResult.html#refresh_token">refresh_token</a></span> - Variable in class com.facebook.openwifi.cloudsdk.models.gw.<a href="com/facebook/openwifi/cloudsdk/models/gw/WebTokenResult.html" title="class in com.facebook.openwifi.cloudsdk.models.gw">WebTokenResult</a></dt>
@@ -2858,7 +2891,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifi/rrm/RRMConfig.ModuleConfig.RRMSchedulerParams.html#%3Cinit%3E()">RRMSchedulerParams()</a></span> - Constructor for class com.facebook.openwifi.rrm.<a href="com/facebook/openwifi/rrm/RRMConfig.ModuleConfig.RRMSchedulerParams.html" title="class in com.facebook.openwifi.rrm">RRMConfig.ModuleConfig.RRMSchedulerParams</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/AggregatedState.html#rssi">rssi</a></span> - Variable in class com.facebook.openwifi.cloudsdk.<a href="com/facebook/openwifi/cloudsdk/AggregatedState.html" title="class in com.facebook.openwifi.cloudsdk">AggregatedState</a></dt>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/AggregatedState.AssociationInfo.html#rssi">rssi</a></span> - Variable in class com.facebook.openwifi.cloudsdk.<a href="com/facebook/openwifi/cloudsdk/AggregatedState.AssociationInfo.html" title="class in com.facebook.openwifi.cloudsdk">AggregatedState.AssociationInfo</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/models/ap/State.Interface.SSID.Association.html#rssi">rssi</a></span> - Variable in class com.facebook.openwifi.cloudsdk.models.ap.<a href="com/facebook/openwifi/cloudsdk/models/ap/State.Interface.SSID.Association.html" title="class in com.facebook.openwifi.cloudsdk.models.ap">State.Interface.SSID.Association</a></dt>
 <dd>&nbsp;</dd>
@@ -2912,13 +2945,13 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/models/ap/State.Interface.SSID.Association.html#rx_rate">rx_rate</a></span> - Variable in class com.facebook.openwifi.cloudsdk.models.ap.<a href="com/facebook/openwifi/cloudsdk/models/ap/State.Interface.SSID.Association.html" title="class in com.facebook.openwifi.cloudsdk.models.ap">State.Interface.SSID.Association</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/AggregatedState.html#rxBytes">rxBytes</a></span> - Variable in class com.facebook.openwifi.cloudsdk.<a href="com/facebook/openwifi/cloudsdk/AggregatedState.html" title="class in com.facebook.openwifi.cloudsdk">AggregatedState</a></dt>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/AggregatedState.AssociationInfo.html#rxBytes">rxBytes</a></span> - Variable in class com.facebook.openwifi.cloudsdk.<a href="com/facebook/openwifi/cloudsdk/AggregatedState.AssociationInfo.html" title="class in com.facebook.openwifi.cloudsdk">AggregatedState.AssociationInfo</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/models/gw/DeviceWithStatus.html#rxBytes">rxBytes</a></span> - Variable in class com.facebook.openwifi.cloudsdk.models.gw.<a href="com/facebook/openwifi/cloudsdk/models/gw/DeviceWithStatus.html" title="class in com.facebook.openwifi.cloudsdk.models.gw">DeviceWithStatus</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/AggregatedState.html#rxPackets">rxPackets</a></span> - Variable in class com.facebook.openwifi.cloudsdk.<a href="com/facebook/openwifi/cloudsdk/AggregatedState.html" title="class in com.facebook.openwifi.cloudsdk">AggregatedState</a></dt>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/AggregatedState.AssociationInfo.html#rxPackets">rxPackets</a></span> - Variable in class com.facebook.openwifi.cloudsdk.<a href="com/facebook/openwifi/cloudsdk/AggregatedState.AssociationInfo.html" title="class in com.facebook.openwifi.cloudsdk">AggregatedState.AssociationInfo</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/AggregatedState.html#rxRate">rxRate</a></span> - Variable in class com.facebook.openwifi.cloudsdk.<a href="com/facebook/openwifi/cloudsdk/AggregatedState.html" title="class in com.facebook.openwifi.cloudsdk">AggregatedState</a></dt>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/AggregatedState.AssociationInfo.html#rxRate">rxRate</a></span> - Variable in class com.facebook.openwifi.cloudsdk.<a href="com/facebook/openwifi/cloudsdk/AggregatedState.AssociationInfo.html" title="class in com.facebook.openwifi.cloudsdk">AggregatedState.AssociationInfo</a></dt>
 <dd>&nbsp;</dd>
 </dl>
 <a id="I:S">
@@ -3159,6 +3192,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Maximum rounds of States to store per device
  (<code>MODELERPARAMS_STATEBUFFERSIZE</code>)</div>
 </dd>
+<dt><a href="com/facebook/openwifi/cloudsdk/StateInfo.html" title="class in com.facebook.openwifi.cloudsdk"><span class="typeNameLink">StateInfo</span></a> - Class in <a href="com/facebook/openwifi/cloudsdk/package-summary.html">com.facebook.openwifi.cloudsdk</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/StateInfo.html#%3Cinit%3E()">StateInfo()</a></span> - Constructor for class com.facebook.openwifi.cloudsdk.<a href="com/facebook/openwifi/cloudsdk/StateInfo.html" title="class in com.facebook.openwifi.cloudsdk">StateInfo</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/facebook/openwifi/rrm/mysql/StateRecord.html" title="class in com.facebook.openwifi.rrm.mysql"><span class="typeNameLink">StateRecord</span></a> - Class in <a href="com/facebook/openwifi/rrm/mysql/package-summary.html">com.facebook.openwifi.rrm.mysql</a></dt>
 <dd>
 <div class="block">Representation of a record in the "state" table.</div>
@@ -3299,6 +3336,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/models/gw/ScriptRequest.html#timeout">timeout</a></span> - Variable in class com.facebook.openwifi.cloudsdk.models.gw.<a href="com/facebook/openwifi/cloudsdk/models/gw/ScriptRequest.html" title="class in com.facebook.openwifi.cloudsdk.models.gw">ScriptRequest</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/AggregatedState.AssociationInfo.html#timestamp">timestamp</a></span> - Variable in class com.facebook.openwifi.cloudsdk.<a href="com/facebook/openwifi/cloudsdk/AggregatedState.AssociationInfo.html" title="class in com.facebook.openwifi.cloudsdk">AggregatedState.AssociationInfo</a></dt>
+<dd>
+<div class="block">unix time in ms</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/StateInfo.html#timestamp">timestamp</a></span> - Variable in class com.facebook.openwifi.cloudsdk.<a href="com/facebook/openwifi/cloudsdk/StateInfo.html" title="class in com.facebook.openwifi.cloudsdk">StateInfo</a></dt>
+<dd>
+<div class="block">Unix time in milliseconds (ms).</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifi/rrm/mysql/StateRecord.html#timestamp">timestamp</a></span> - Variable in class com.facebook.openwifi.rrm.mysql.<a href="com/facebook/openwifi/rrm/mysql/StateRecord.html" title="class in com.facebook.openwifi.rrm.mysql">StateRecord</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/kafka/UCentralKafkaConsumer.KafkaRecord.html#timestampMs">timestampMs</a></span> - Variable in class com.facebook.openwifi.cloudsdk.kafka.<a href="com/facebook/openwifi/cloudsdk/kafka/UCentralKafkaConsumer.KafkaRecord.html" title="class in com.facebook.openwifi.cloudsdk.kafka">UCentralKafkaConsumer.KafkaRecord</a></dt>
@@ -3355,6 +3400,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/models/ap/State.Radio.html#transmit_ms">transmit_ms</a></span> - Variable in class com.facebook.openwifi.cloudsdk.models.ap.<a href="com/facebook/openwifi/cloudsdk/models/ap/State.Radio.html" title="class in com.facebook.openwifi.cloudsdk.models.ap">State.Radio</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/AggregatedState.AssociationInfo.html#transmitMsRadio">transmitMsRadio</a></span> - Variable in class com.facebook.openwifi.cloudsdk.<a href="com/facebook/openwifi/cloudsdk/AggregatedState.AssociationInfo.html" title="class in com.facebook.openwifi.cloudsdk">AggregatedState.AssociationInfo</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/models/ap/WifiScanEntryResult.html#tsf">tsf</a></span> - Variable in class com.facebook.openwifi.cloudsdk.models.ap.<a href="com/facebook/openwifi/cloudsdk/models/ap/WifiScanEntryResult.html" title="class in com.facebook.openwifi.cloudsdk.models.ap">WifiScanEntryResult</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/models/ap/Capabilities.Phy.html#tx_ant">tx_ant</a></span> - Variable in class com.facebook.openwifi.cloudsdk.models.ap.<a href="com/facebook/openwifi/cloudsdk/models/ap/Capabilities.Phy.html" title="class in com.facebook.openwifi.cloudsdk.models.ap">Capabilities.Phy</a></dt>
@@ -3383,17 +3430,23 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/models/ap/State.Interface.SSID.Association.html#tx_retries">tx_retries</a></span> - Variable in class com.facebook.openwifi.cloudsdk.models.ap.<a href="com/facebook/openwifi/cloudsdk/models/ap/State.Interface.SSID.Association.html" title="class in com.facebook.openwifi.cloudsdk.models.ap">State.Interface.SSID.Association</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/AggregatedState.html#txBytes">txBytes</a></span> - Variable in class com.facebook.openwifi.cloudsdk.<a href="com/facebook/openwifi/cloudsdk/AggregatedState.html" title="class in com.facebook.openwifi.cloudsdk">AggregatedState</a></dt>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/AggregatedState.AssociationInfo.html#txBytes">txBytes</a></span> - Variable in class com.facebook.openwifi.cloudsdk.<a href="com/facebook/openwifi/cloudsdk/AggregatedState.AssociationInfo.html" title="class in com.facebook.openwifi.cloudsdk">AggregatedState.AssociationInfo</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/models/gw/DeviceWithStatus.html#txBytes">txBytes</a></span> - Variable in class com.facebook.openwifi.cloudsdk.models.gw.<a href="com/facebook/openwifi/cloudsdk/models/gw/DeviceWithStatus.html" title="class in com.facebook.openwifi.cloudsdk.models.gw">DeviceWithStatus</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/AggregatedState.html#txDuration">txDuration</a></span> - Variable in class com.facebook.openwifi.cloudsdk.<a href="com/facebook/openwifi/cloudsdk/AggregatedState.html" title="class in com.facebook.openwifi.cloudsdk">AggregatedState</a></dt>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/AggregatedState.AssociationInfo.html#txDroppedCounters">txDroppedCounters</a></span> - Variable in class com.facebook.openwifi.cloudsdk.<a href="com/facebook/openwifi/cloudsdk/AggregatedState.AssociationInfo.html" title="class in com.facebook.openwifi.cloudsdk">AggregatedState.AssociationInfo</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/AggregatedState.html#txFailed">txFailed</a></span> - Variable in class com.facebook.openwifi.cloudsdk.<a href="com/facebook/openwifi/cloudsdk/AggregatedState.html" title="class in com.facebook.openwifi.cloudsdk">AggregatedState</a></dt>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/AggregatedState.AssociationInfo.html#txDuration">txDuration</a></span> - Variable in class com.facebook.openwifi.cloudsdk.<a href="com/facebook/openwifi/cloudsdk/AggregatedState.AssociationInfo.html" title="class in com.facebook.openwifi.cloudsdk">AggregatedState.AssociationInfo</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/AggregatedState.html#txPackets">txPackets</a></span> - Variable in class com.facebook.openwifi.cloudsdk.<a href="com/facebook/openwifi/cloudsdk/AggregatedState.html" title="class in com.facebook.openwifi.cloudsdk">AggregatedState</a></dt>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/AggregatedState.AssociationInfo.html#txErrorsCounters">txErrorsCounters</a></span> - Variable in class com.facebook.openwifi.cloudsdk.<a href="com/facebook/openwifi/cloudsdk/AggregatedState.AssociationInfo.html" title="class in com.facebook.openwifi.cloudsdk">AggregatedState.AssociationInfo</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/AggregatedState.Radio.html#txPower">txPower</a></span> - Variable in class com.facebook.openwifi.cloudsdk.<a href="com/facebook/openwifi/cloudsdk/AggregatedState.Radio.html" title="class in com.facebook.openwifi.cloudsdk">AggregatedState.Radio</a></dt>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/AggregatedState.AssociationInfo.html#txFailed">txFailed</a></span> - Variable in class com.facebook.openwifi.cloudsdk.<a href="com/facebook/openwifi/cloudsdk/AggregatedState.AssociationInfo.html" title="class in com.facebook.openwifi.cloudsdk">AggregatedState.AssociationInfo</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/AggregatedState.AssociationInfo.html#txPackets">txPackets</a></span> - Variable in class com.facebook.openwifi.cloudsdk.<a href="com/facebook/openwifi/cloudsdk/AggregatedState.AssociationInfo.html" title="class in com.facebook.openwifi.cloudsdk">AggregatedState.AssociationInfo</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/AggregatedState.AssociationInfo.html#txPacketsCounters">txPacketsCounters</a></span> - Variable in class com.facebook.openwifi.cloudsdk.<a href="com/facebook/openwifi/cloudsdk/AggregatedState.AssociationInfo.html" title="class in com.facebook.openwifi.cloudsdk">AggregatedState.AssociationInfo</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/AggregatedState.RadioConfig.html#txPower">txPower</a></span> - Variable in class com.facebook.openwifi.cloudsdk.<a href="com/facebook/openwifi/cloudsdk/AggregatedState.RadioConfig.html" title="class in com.facebook.openwifi.cloudsdk">AggregatedState.RadioConfig</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifi/rrm/RRMAlgorithm.AlgorithmResult.html#txPowerMap">txPowerMap</a></span> - Variable in class com.facebook.openwifi.rrm.<a href="com/facebook/openwifi/rrm/RRMAlgorithm.AlgorithmResult.html" title="class in com.facebook.openwifi.rrm">RRMAlgorithm.AlgorithmResult</a></dt>
 <dd>
@@ -3409,9 +3462,9 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Constructor</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/AggregatedState.html#txRate">txRate</a></span> - Variable in class com.facebook.openwifi.cloudsdk.<a href="com/facebook/openwifi/cloudsdk/AggregatedState.html" title="class in com.facebook.openwifi.cloudsdk">AggregatedState</a></dt>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/AggregatedState.AssociationInfo.html#txRate">txRate</a></span> - Variable in class com.facebook.openwifi.cloudsdk.<a href="com/facebook/openwifi/cloudsdk/AggregatedState.AssociationInfo.html" title="class in com.facebook.openwifi.cloudsdk">AggregatedState.AssociationInfo</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/AggregatedState.html#txRetries">txRetries</a></span> - Variable in class com.facebook.openwifi.cloudsdk.<a href="com/facebook/openwifi/cloudsdk/AggregatedState.html" title="class in com.facebook.openwifi.cloudsdk">AggregatedState</a></dt>
+<dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/AggregatedState.AssociationInfo.html#txRetries">txRetries</a></span> - Variable in class com.facebook.openwifi.cloudsdk.<a href="com/facebook/openwifi/cloudsdk/AggregatedState.AssociationInfo.html" title="class in com.facebook.openwifi.cloudsdk">AggregatedState.AssociationInfo</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/facebook/openwifi/cloudsdk/models/gw/ScriptRequest.html#type">type</a></span> - Variable in class com.facebook.openwifi.cloudsdk.models.gw.<a href="com/facebook/openwifi/cloudsdk/models/gw/ScriptRequest.html" title="class in com.facebook.openwifi.cloudsdk.models.gw">ScriptRequest</a></dt>
 <dd>&nbsp;</dd>

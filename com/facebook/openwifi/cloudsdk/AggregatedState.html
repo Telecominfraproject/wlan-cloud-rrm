@@ -157,14 +157,15 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>static class&nbsp;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="AggregatedState.AggregatedRate.html" title="class in com.facebook.openwifi.cloudsdk">AggregatedState.AggregatedRate</a></span></code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="AggregatedState.AssociationInfo.html" title="class in com.facebook.openwifi.cloudsdk">AggregatedState.AssociationInfo</a></span></code></th>
 <td class="colLast">
-<div class="block">Rate information with aggregated fields.</div>
+<div class="block">Data model to keep raw data from <a href="models/ap/State.Interface.SSID.Association.html" title="class in com.facebook.openwifi.cloudsdk.models.ap"><code>State.Interface.SSID.Association</code></a>,
+ <a href="models/ap/State.Radio.html" title="class in com.facebook.openwifi.cloudsdk.models.ap"><code>State.Radio</code></a> and <a href="models/ap/State.Interface.Counters.html" title="class in com.facebook.openwifi.cloudsdk.models.ap"><code>State.Interface.Counters</code></a>.</div>
 </td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>static class&nbsp;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="AggregatedState.Radio.html" title="class in com.facebook.openwifi.cloudsdk">AggregatedState.Radio</a></span></code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="AggregatedState.RadioConfig.html" title="class in com.facebook.openwifi.cloudsdk">AggregatedState.RadioConfig</a></span></code></th>
 <td class="colLast">
 <div class="block">Radio information with channel, channel_width and tx_power.</div>
 </td>
@@ -188,88 +189,23 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr class="altColor">
-<td class="colFirst"><code>int</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#ackSignal">ackSignal</a></span></code></th>
+<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="AggregatedState.AssociationInfo.html" title="class in com.facebook.openwifi.cloudsdk">AggregatedState.AssociationInfo</a>&gt;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#associationInfoList">associationInfoList</a></span></code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
-<td class="colFirst"><code>int</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#ackSignalAvg">ackSignalAvg</a></span></code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="altColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#bssid">bssid</a></span></code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="rowColor">
-<td class="colFirst"><code>long</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#connected">connected</a></span></code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
 <tr class="altColor">
-<td class="colFirst"><code>long</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#inactive">inactive</a></span></code></th>
+<td class="colFirst"><code><a href="AggregatedState.RadioConfig.html" title="class in com.facebook.openwifi.cloudsdk">AggregatedState.RadioConfig</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#radioConfig">radioConfig</a></span></code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
-<td class="colFirst"><code><a href="AggregatedState.Radio.html" title="class in com.facebook.openwifi.cloudsdk">AggregatedState.Radio</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#radio">radio</a></span></code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Integer.html?is-external=true" title="class or interface in java.lang" class="externalLink">Integer</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#rssi">rssi</a></span></code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code>long</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#rxBytes">rxBytes</a></span></code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code>long</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#rxPackets">rxPackets</a></span></code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code><a href="AggregatedState.AggregatedRate.html" title="class in com.facebook.openwifi.cloudsdk">AggregatedState.AggregatedRate</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#rxRate">rxRate</a></span></code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="altColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#station">station</a></span></code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code>long</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#txBytes">txBytes</a></span></code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code>long</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#txDuration">txDuration</a></span></code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code>long</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#txFailed">txFailed</a></span></code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code>long</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#txPackets">txPackets</a></span></code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code><a href="AggregatedState.AggregatedRate.html" title="class in com.facebook.openwifi.cloudsdk">AggregatedState.AggregatedRate</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#txRate">txRate</a></span></code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code>long</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#txRetries">txRetries</a></span></code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 </table>
@@ -292,14 +228,16 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <tr class="altColor">
 <th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E()">AggregatedState</a></span>()</code></th>
 <td class="colLast">
-<div class="block">Constructor with no args</div>
+<div class="block">Constructor with no args.</div>
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(com.facebook.openwifi.cloudsdk.models.ap.State.Interface.SSID.Association,java.util.Map)">AggregatedState</a></span>&#8203;(<a href="models/ap/State.Interface.SSID.Association.html" title="class in com.facebook.openwifi.cloudsdk.models.ap">State.Interface.SSID.Association</a>&nbsp;association,
-               <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html?is-external=true" title="class or interface in java.util" class="externalLink">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>,&#8203;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Integer.html?is-external=true" title="class or interface in java.lang" class="externalLink">Integer</a>&gt;&nbsp;radioInfo)</code></th>
+<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(com.facebook.openwifi.cloudsdk.models.ap.State.Interface.SSID.Association,com.facebook.openwifi.cloudsdk.models.ap.State.Interface.Counters,com.google.gson.JsonObject,long)">AggregatedState</a></span>&#8203;(<a href="models/ap/State.Interface.SSID.Association.html" title="class in com.facebook.openwifi.cloudsdk.models.ap">State.Interface.SSID.Association</a>&nbsp;association,
+               <a href="models/ap/State.Interface.Counters.html" title="class in com.facebook.openwifi.cloudsdk.models.ap">State.Interface.Counters</a>&nbsp;counters,
+               com.google.gson.JsonObject&nbsp;radio,
+               long&nbsp;timestamp)</code></th>
 <td class="colLast">
-<div class="block">Construct from Association and radio</div>
+<div class="block">Construct from Association, Counters, Radio and time stamp</div>
 </td>
 </tr>
 </table>
@@ -376,139 +314,22 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <pre>public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> station</pre>
 </li>
 </ul>
-<a id="connected">
+<a id="radioConfig">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>connected</h4>
-<pre>public&nbsp;long connected</pre>
+<h4>radioConfig</h4>
+<pre>public&nbsp;<a href="AggregatedState.RadioConfig.html" title="class in com.facebook.openwifi.cloudsdk">AggregatedState.RadioConfig</a> radioConfig</pre>
 </li>
 </ul>
-<a id="inactive">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>inactive</h4>
-<pre>public&nbsp;long inactive</pre>
-</li>
-</ul>
-<a id="rssi">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>rssi</h4>
-<pre>public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Integer.html?is-external=true" title="class or interface in java.lang" class="externalLink">Integer</a>&gt; rssi</pre>
-</li>
-</ul>
-<a id="rxBytes">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>rxBytes</h4>
-<pre>public&nbsp;long rxBytes</pre>
-</li>
-</ul>
-<a id="rxPackets">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>rxPackets</h4>
-<pre>public&nbsp;long rxPackets</pre>
-</li>
-</ul>
-<a id="rxRate">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>rxRate</h4>
-<pre>public&nbsp;<a href="AggregatedState.AggregatedRate.html" title="class in com.facebook.openwifi.cloudsdk">AggregatedState.AggregatedRate</a> rxRate</pre>
-</li>
-</ul>
-<a id="txBytes">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>txBytes</h4>
-<pre>public&nbsp;long txBytes</pre>
-</li>
-</ul>
-<a id="txDuration">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>txDuration</h4>
-<pre>public&nbsp;long txDuration</pre>
-</li>
-</ul>
-<a id="txFailed">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>txFailed</h4>
-<pre>public&nbsp;long txFailed</pre>
-</li>
-</ul>
-<a id="txPackets">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>txPackets</h4>
-<pre>public&nbsp;long txPackets</pre>
-</li>
-</ul>
-<a id="txRate">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>txRate</h4>
-<pre>public&nbsp;<a href="AggregatedState.AggregatedRate.html" title="class in com.facebook.openwifi.cloudsdk">AggregatedState.AggregatedRate</a> txRate</pre>
-</li>
-</ul>
-<a id="txRetries">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>txRetries</h4>
-<pre>public&nbsp;long txRetries</pre>
-</li>
-</ul>
-<a id="ackSignal">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>ackSignal</h4>
-<pre>public&nbsp;int ackSignal</pre>
-</li>
-</ul>
-<a id="ackSignalAvg">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>ackSignalAvg</h4>
-<pre>public&nbsp;int ackSignalAvg</pre>
-</li>
-</ul>
-<a id="radio">
+<a id="associationInfoList">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
-<h4>radio</h4>
-<pre>public&nbsp;<a href="AggregatedState.Radio.html" title="class in com.facebook.openwifi.cloudsdk">AggregatedState.Radio</a> radio</pre>
+<h4>associationInfoList</h4>
+<pre>public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="AggregatedState.AssociationInfo.html" title="class in com.facebook.openwifi.cloudsdk">AggregatedState.AssociationInfo</a>&gt; associationInfoList</pre>
 </li>
 </ul>
 </li>
@@ -528,18 +349,20 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <li class="blockList">
 <h4>AggregatedState</h4>
 <pre>public&nbsp;AggregatedState()</pre>
-<div class="block">Constructor with no args</div>
+<div class="block">Constructor with no args. For test purpose.</div>
 </li>
 </ul>
-<a id="&lt;init&gt;(com.facebook.openwifi.cloudsdk.models.ap.State.Interface.SSID.Association,java.util.Map)">
+<a id="&lt;init&gt;(com.facebook.openwifi.cloudsdk.models.ap.State.Interface.SSID.Association,com.facebook.openwifi.cloudsdk.models.ap.State.Interface.Counters,com.google.gson.JsonObject,long)">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>AggregatedState</h4>
 <pre>public&nbsp;AggregatedState&#8203;(<a href="models/ap/State.Interface.SSID.Association.html" title="class in com.facebook.openwifi.cloudsdk.models.ap">State.Interface.SSID.Association</a>&nbsp;association,
-                       <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html?is-external=true" title="class or interface in java.util" class="externalLink">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>,&#8203;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Integer.html?is-external=true" title="class or interface in java.lang" class="externalLink">Integer</a>&gt;&nbsp;radioInfo)</pre>
-<div class="block">Construct from Association and radio</div>
+                       <a href="models/ap/State.Interface.Counters.html" title="class in com.facebook.openwifi.cloudsdk.models.ap">State.Interface.Counters</a>&nbsp;counters,
+                       com.google.gson.JsonObject&nbsp;radio,
+                       long&nbsp;timestamp)</pre>
+<div class="block">Construct from Association, Counters, Radio and time stamp</div>
 </li>
 </ul>
 </li>
