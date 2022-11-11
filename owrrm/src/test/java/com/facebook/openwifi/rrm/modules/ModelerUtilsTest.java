@@ -23,9 +23,8 @@ import java.util.Map;
 import org.junit.jupiter.api.Test;
 
 import com.facebook.openwifi.cloudsdk.AggregatedState;
-import com.facebook.openwifi.cloudsdk.WifiScanEntry;
 import com.facebook.openwifi.cloudsdk.StateInfo;
-import com.facebook.openwifi.cloudsdk.models.ap.State;
+import com.facebook.openwifi.cloudsdk.WifiScanEntry;
 import com.facebook.openwifi.rrm.aggregators.MeanAggregator;
 import com.facebook.openwifi.rrm.modules.Modeler.DataModel;
 import com.facebook.openwifi.rrm.optimizers.TestUtils;
@@ -629,7 +628,7 @@ public class ModelerUtilsTest {
 		ModelerUtils
 			.addStateToAggregation(bssidToAggregatedStates, toBeAggregated1);
 
-		List rssiList = new ArrayList<>();
+		List<Integer> rssiList = new ArrayList<>();
 		for (
 			AggregatedState.AssociationInfo associationInfo : bssidToAggregatedStates
 				.get(ModelerUtils.getBssidStationKeyPair(bssidA, stationA1))
@@ -789,7 +788,7 @@ public class ModelerUtilsTest {
 			new AggregatedState.RadioConfig(1, 80, 10)
 		);
 
-		List rssiList = new ArrayList<>();
+		List<Integer> rssiList = new ArrayList<>();
 		for (
 			AggregatedState.AssociationInfo associationInfo : aggregatedMap
 				.get(serialNumberA)

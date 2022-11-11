@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import com.facebook.openwifi.cloudsdk.models.ap.State;
 import com.facebook.openwifi.cloudsdk.models.ap.State.Interface.Counters;
 import com.facebook.openwifi.cloudsdk.models.ap.State.Interface.SSID.Association;
 import com.google.gson.JsonObject;

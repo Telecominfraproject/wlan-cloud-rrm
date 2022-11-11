@@ -15,6 +15,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.facebook.openwifi.cloudsdk.StateInfo;
 import com.facebook.openwifi.cloudsdk.UCentralConstants;
 import com.facebook.openwifi.cloudsdk.models.ap.Capabilities;
 import com.facebook.openwifi.cloudsdk.models.ap.State;
@@ -132,13 +133,13 @@ public class SingleAPBandSteering extends ClientSteeringOptimizer {
 		Map<String, Map<String, String>> apClientActionMap = new HashMap<>();
 		// iterate through every AP
 		for (
-			Map.Entry<String, List<State>> entry : model.latestStates
+			Map.Entry<String, List<StateInfo>> entry : model.latestStates
 				.entrySet()
 		) {
 			// get the latest state
 			// TODO window size (look at multiple states)
 			// TODO window percent (% of samples that must violate thresholds)
-			List<State> states = entry.getValue();
+			List<? extends State> states = entry.getValue();
 			if (states == null || states.isEmpty()) {
 				continue;
 			}
