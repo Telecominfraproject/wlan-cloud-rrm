@@ -12,8 +12,7 @@ import java.util.Objects;
 
 import com.google.gson.JsonObject;
 
-// NOTE: From what I can see it currently does not appear in the list of IEs,
-// although it's possible it'll be there in the future.
+// NOTE: Not validated (not seen on test devices)
 /**
  * This information element (IE) appears in wifiscan entries. It's called "BSS Average Access Delay" in
  * 802.11 specs (section 9.4.2.38). Refer to the specification for more details.

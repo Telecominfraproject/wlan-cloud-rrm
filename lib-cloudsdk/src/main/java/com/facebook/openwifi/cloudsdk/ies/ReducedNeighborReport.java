@@ -17,8 +17,7 @@ import com.facebook.openwifi.cloudsdk.IEUtils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-// NOTE: From what I can see it currently does not appear in the list of IEs,
-// although it's possible it'll be there in the future.
+// NOTE: Not validated (not seen on test devices)
 /**
  * This information element (IE) appears in wifiscan entries. It's called
  * "Reduced Neighbor Report" in 802.11 specs (section 9.4.2.170). Refer to the

@@ -10,14 +10,13 @@ package com.facebook.openwifi.cloudsdk.ies;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Objects;
 import java.util.List;
+import java.util.Objects;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-// NOTE: From what I can see it currently does not appear in the list of IEs,
-// although it's possible it'll be there in the future.
+// NOTE: Not validated (not seen on test devices)
 /**
  * This information element (IE) appears in wifiscan entries. It's called "20/40
  * BSS Intolerant Channel Report" in 802.11 specs (section 9.4.2.57). Refer to
