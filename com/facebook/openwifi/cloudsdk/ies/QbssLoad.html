@@ -26,7 +26,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":10,"i1":10,"i2":9,"i3":10};
+var data = {"i0":10,"i1":10,"i2":9};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -134,8 +134,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <pre>public class <span class="typeNameLabel">QbssLoad</span>
 extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a></pre>
 <div class="block">This information element (IE) appears in wifiscan entries. It is called
- "QBSS Load" in these entries, and just "BSS Load" in the 802.11
- specification. Refer to the specification for more details. Language in
+ "QBSS Load" in these entries, and just "BSS Load" in the 802.11 specification
+ (section 9.4.2.27). Refer to the specification for more details. Language in
  javadocs is taken from the specification.</div>
 </li>
 </ul>
@@ -158,36 +158,37 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr class="altColor">
-<td class="colFirst"><code>int</code></td>
+<td class="colFirst"><code>short</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#availableAdmissionCapacity">availableAdmissionCapacity</a></span></code></th>
 <td class="colLast">
-<div class="block">The Available Admission Capacity field contains an unsigned integer that
- specifies the remaining amount of medium time available via explicit
- admission control, in units of 32 miscrosecond/second.</div>
+<div class="block">Unsigned 16 bits - The Available Admission Capacity field contains an
+ unsigned integer that specifies the remaining amount of medium time
+ available via explicit admission control, in units of 32
+ miscrosecond/second.</div>
 </td>
 </tr>
 <tr class="rowColor">
-<td class="colFirst"><code>int</code></td>
+<td class="colFirst"><code>short</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#channelUtilization">channelUtilization</a></span></code></th>
 <td class="colLast">
-<div class="block">The Channel Utilization field is defined as the percentage of time,
- linearly scaled with 255 representing 100%, that the AP sensed the
+<div class="block">Unsigned 8 bits - The Channel Utilization field is defined as the percentage
+ of time, linearly scaled with 255 representing 100%, that the AP sensed the
  medium was busy, as indicated by either the physical or virtual carrier
  sense (CS) mechanism.</div>
 </td>
 </tr>
 <tr class="altColor">
-<td class="colFirst"><code>int</code></td>
+<td class="colFirst"><code>short</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#stationCount">stationCount</a></span></code></th>
 <td class="colLast">
-<div class="block">The total number of STAs currently associated with the BSS.</div>
+<div class="block">Unsigned 16 bits - The total number of STAs currently associated with the BSS.</div>
 </td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>static int</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#TYPE">TYPE</a></span></code></th>
 <td class="colLast">
-<div class="block">Defined in 802.11</div>
+<div class="block">Defined in 802.11 table 9-92</div>
 </td>
 </tr>
 </table>
@@ -208,9 +209,9 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr class="altColor">
-<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(int,int,int)">QbssLoad</a></span>&#8203;(int&nbsp;stationCount,
-        int&nbsp;channelUtilization,
-        int&nbsp;availableAdmissionCapacity)</code></th>
+<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(short,short,short)">QbssLoad</a></span>&#8203;(short&nbsp;stationCount,
+        short&nbsp;channelUtilization,
+        short&nbsp;availableAdmissionCapacity)</code></th>
 <td class="colLast">
 <div class="block">Constructor</div>
 </td>
@@ -250,18 +251,13 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <div class="block">Parse QbssLoad IE from appropriate Json object; return null if invalid.</div>
 </td>
 </tr>
-<tr id="i3" class="rowColor">
-<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#toString()">toString</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
 </table>
 <ul class="blockList">
 <li class="blockList"><a id="methods.inherited.from.class.java.lang.Object">
 <!--   -->
 </a>
 <h3>Methods inherited from class&nbsp;java.lang.<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a></h3>
-<code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true#clone()" title="class or interface in java.lang" class="externalLink">clone</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true#finalize()" title="class or interface in java.lang" class="externalLink">finalize</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true#getClass()" title="class or interface in java.lang" class="externalLink">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true#notify()" title="class or interface in java.lang" class="externalLink">notify</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true#notifyAll()" title="class or interface in java.lang" class="externalLink">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true#wait()" title="class or interface in java.lang" class="externalLink">wait</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true#wait(long)" title="class or interface in java.lang" class="externalLink">wait</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true#wait(long,int)" title="class or interface in java.lang" class="externalLink">wait</a></code></li>
+<code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true#clone()" title="class or interface in java.lang" class="externalLink">clone</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true#finalize()" title="class or interface in java.lang" class="externalLink">finalize</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true#getClass()" title="class or interface in java.lang" class="externalLink">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true#notify()" title="class or interface in java.lang" class="externalLink">notify</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true#notifyAll()" title="class or interface in java.lang" class="externalLink">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true#toString()" title="class or interface in java.lang" class="externalLink">toString</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true#wait()" title="class or interface in java.lang" class="externalLink">wait</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true#wait(long)" title="class or interface in java.lang" class="externalLink">wait</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true#wait(long,int)" title="class or interface in java.lang" class="externalLink">wait</a></code></li>
 </ul>
 </li>
 </ul>
@@ -286,7 +282,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <li class="blockList">
 <h4>TYPE</h4>
 <pre>public static final&nbsp;int TYPE</pre>
-<div class="block">Defined in 802.11</div>
+<div class="block">Defined in 802.11 table 9-92</div>
 <dl>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../../../../constant-values.html#com.facebook.openwifi.cloudsdk.ies.QbssLoad.TYPE">Constant Field Values</a></dd>
@@ -299,8 +295,8 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <ul class="blockList">
 <li class="blockList">
 <h4>stationCount</h4>
-<pre>public final&nbsp;int stationCount</pre>
-<div class="block">The total number of STAs currently associated with the BSS.</div>
+<pre>public final&nbsp;short stationCount</pre>
+<div class="block">Unsigned 16 bits - The total number of STAs currently associated with the BSS.</div>
 </li>
 </ul>
 <a id="channelUtilization">
@@ -309,9 +305,9 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <ul class="blockList">
 <li class="blockList">
 <h4>channelUtilization</h4>
-<pre>public final&nbsp;int channelUtilization</pre>
-<div class="block">The Channel Utilization field is defined as the percentage of time,
- linearly scaled with 255 representing 100%, that the AP sensed the
+<pre>public final&nbsp;short channelUtilization</pre>
+<div class="block">Unsigned 8 bits - The Channel Utilization field is defined as the percentage
+ of time, linearly scaled with 255 representing 100%, that the AP sensed the
  medium was busy, as indicated by either the physical or virtual carrier
  sense (CS) mechanism. When more than one channel is in use for the BSS,
  the Channel Utilization field value is calculated only for the primary
@@ -328,13 +324,13 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <ul class="blockListLast">
 <li class="blockList">
 <h4>availableAdmissionCapacity</h4>
-<pre>public final&nbsp;int availableAdmissionCapacity</pre>
-<div class="block">The Available Admission Capacity field contains an unsigned integer that
- specifies the remaining amount of medium time available via explicit
- admission control, in units of 32 miscrosecond/second. The field is
- helpful for roaming STAs to select an AP that is likely to accept future
- admission control requests, but it does not represent an assurance that
- the HC admits these requests.</div>
+<pre>public final&nbsp;short availableAdmissionCapacity</pre>
+<div class="block">Unsigned 16 bits - The Available Admission Capacity field contains an
+ unsigned integer that specifies the remaining amount of medium time
+ available via explicit admission control, in units of 32
+ miscrosecond/second. The field is helpful for roaming STAs to select an AP
+ that is likely to accept future admission control requests, but it does not
+ represent an assurance that the HC admits these requests.</div>
 </li>
 </ul>
 </li>
@@ -347,15 +343,15 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a id="&lt;init&gt;(int,int,int)">
+<a id="&lt;init&gt;(short,short,short)">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>QbssLoad</h4>
-<pre>public&nbsp;QbssLoad&#8203;(int&nbsp;stationCount,
-                int&nbsp;channelUtilization,
-                int&nbsp;availableAdmissionCapacity)</pre>
+<pre>public&nbsp;QbssLoad&#8203;(short&nbsp;stationCount,
+                short&nbsp;channelUtilization,
+                short&nbsp;availableAdmissionCapacity)</pre>
 <div class="block">Constructor</div>
 </li>
 </ul>
@@ -395,26 +391,13 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <a id="equals(java.lang.Object)">
 <!--   -->
 </a>
-<ul class="blockList">
+<ul class="blockListLast">
 <li class="blockList">
 <h4>equals</h4>
 <pre class="methodSignature">public&nbsp;boolean&nbsp;equals&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;obj)</pre>
 <dl>
 <dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
 <dd><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true#equals(java.lang.Object)" title="class or interface in java.lang" class="externalLink">equals</a></code>&nbsp;in class&nbsp;<code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a></code></dd>
-</dl>
-</li>
-</ul>
-<a id="toString()">
-<!--   -->
-</a>
-<ul class="blockListLast">
-<li class="blockList">
-<h4>toString</h4>
-<pre class="methodSignature">public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;toString()</pre>
-<dl>
-<dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
-<dd><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true#toString()" title="class or interface in java.lang" class="externalLink">toString</a></code>&nbsp;in class&nbsp;<code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a></code></dd>
 </dl>
 </li>
 </ul>
