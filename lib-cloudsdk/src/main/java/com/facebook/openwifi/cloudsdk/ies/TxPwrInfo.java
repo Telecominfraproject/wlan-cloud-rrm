@@ -10,35 +10,42 @@ package com.facebook.openwifi.cloudsdk.ies;
 
 import java.util.Objects;
 
-import com.google.gson.JsonElement;
+import com.facebook.openwifi.cloudsdk.IEUtils;
 import com.google.gson.JsonObject;
 
 /**
  * This information element (IE) appears in wifiscan entries. It is called
  * "Tx Pwr Info" in these entries, and "Transmit Power Envelope" in the 802.11
- * specification. Refer to the specification for more details. Language in
+ * specification (section 9.4.2.161). Refer to the specification for more details. Language in
  * javadocs is taken from the specification.
  */
 public class TxPwrInfo {
-
-	/** Defined in 802.11 */
+	/** Defined in 802.11 table 9-92 */
 	public static final int TYPE = 195;
 
-	/** Local maximum transmit power for 20 MHz. Required field. */
-	public final int localMaxTxPwrConstraint20MHz;
-	/** Local maximum transmit power for 40 MHz. Optional field. */
-	public final Integer localMaxTxPwrConstraint40MHz;
-	/** Local maximum transmit power for 80 MHz. Optional field. */
-	public final Integer localMaxTxPwrConstraint80MHz;
-	/** Local maximum transmit power for both 160 MHz and 80+80 MHz. Optional field. */
-	public final Integer localMaxTxPwrConstraint160MHz;
+	/**
+	 * Unsigned 8 bits - Local maximum transmit power for 20 MHz. Required field.
+	 */
+	public final Short localMaxTxPwrConstraint20MHz;
+	/**
+	 * Unsigned 8 bits - Local maximum transmit power for 40 MHz. Optional field.
+	 */
+	public final Short localMaxTxPwrConstraint40MHz;
+	/**
+	 * Unsigned 8 bits - Local maximum transmit power for 80 MHz. Optional field.
+	 */
+	public final Short localMaxTxPwrConstraint80MHz;
+	/**
+	 * Unsigned 8 bits - Local maximum transmit power for both 160 MHz and 80+80 MHz. Optional field.
+	 */
+	public final Short localMaxTxPwrConstraint160MHz;
 
 	/** Constructor */
 	public TxPwrInfo(
-		int localMaxTxPwrConstraint20MHz,
-		Integer localMaxTxPwrConstraint40MHz,
-		Integer localMaxTxPwrConstraint80MHz,
-		Integer localMaxTxPwrConstraint160MHz
+		short localMaxTxPwrConstraint20MHz,
+		Short localMaxTxPwrConstraint40MHz,
+		Short localMaxTxPwrConstraint80MHz,
+		Short localMaxTxPwrConstraint160MHz
 	) {
 		this.localMaxTxPwrConstraint20MHz = localMaxTxPwrConstraint20MHz;
 		this.localMaxTxPwrConstraint40MHz = localMaxTxPwrConstraint40MHz;
@@ -50,32 +57,30 @@ public class TxPwrInfo {
 	public static TxPwrInfo parse(JsonObject contents) {
 		JsonObject innerObj = contents.get("Tx Pwr Info").getAsJsonObject();
 		// required field
-		int localMaxTxPwrConstraint20MHz =
-			innerObj.get("Local Max Tx Pwr Constraint 20MHz").getAsInt();
+		short localMaxTxPwrConstraint20MHz =
+			innerObj.get("Local Max Tx Pwr Constraint 20MHz").getAsShort();
 		// optional field
-		Integer localMaxTxPwrConstraint40MHz =
-			parseOptionalField(innerObj, "Local Max Tx Pwr Constraint 40MHz");
-		Integer localMaxTxPwrConstraint80MHz =
-			parseOptionalField(innerObj, "Local Max Tx Pwr Constraint 80MHz");
-		Integer localMaxTxPwrConstraint160MHz =
-			parseOptionalField(innerObj, "Local Max Tx Pwr Constraint 160MHz");
+		Short localMaxTxPwrConstraint40MHz =
+			IEUtils.parseOptionalShortField(
+				innerObj,
+				"Local Max Tx Pwr Constraint 40MHz"
+			);
+		Short localMaxTxPwrConstraint80MHz =
+			IEUtils.parseOptionalShortField(
+				innerObj,
+				"Local Max Tx Pwr Constraint 40MHz"
+			);
+		Short localMaxTxPwrConstraint160MHz =
+			IEUtils.parseOptionalShortField(
+				innerObj,
+				"Local Max Tx Pwr Constraint 40MHz"
+			);
 		return new TxPwrInfo(
 			localMaxTxPwrConstraint20MHz,
 			localMaxTxPwrConstraint40MHz,
 			localMaxTxPwrConstraint80MHz,
 			localMaxTxPwrConstraint160MHz
 		);
-	}
-
-	private static Integer parseOptionalField(
-		JsonObject contents,
-		String fieldName
-	) {
-		JsonElement element = contents.get(fieldName);
-		if (element == null) {
-			return null;
-		}
-		return element.getAsInt();
 	}
 
 	@Override
@@ -107,14 +112,5 @@ public class TxPwrInfo {
 			localMaxTxPwrConstraint40MHz ==
 				other.localMaxTxPwrConstraint40MHz &&
 			localMaxTxPwrConstraint80MHz == other.localMaxTxPwrConstraint80MHz;
-	}
-
-	@Override
-	public String toString() {
-		return "TxPwrInfo [localMaxTxPwrConstraint20MHz=" +
-			localMaxTxPwrConstraint20MHz + ", localMaxTxPwrConstraint40MHz=" +
-			localMaxTxPwrConstraint40MHz + ", localMaxTxPwrConstraint80MHz=" +
-			localMaxTxPwrConstraint80MHz + ", localMaxTxPwrConstraint160MHz=" +
-			localMaxTxPwrConstraint160MHz + "]";
 	}
 }

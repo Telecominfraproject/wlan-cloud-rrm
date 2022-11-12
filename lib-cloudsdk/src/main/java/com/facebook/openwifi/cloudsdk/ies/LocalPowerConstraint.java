@@ -15,32 +15,31 @@ import com.google.gson.JsonObject;
 /**
  * This information element (IE) appears in wifiscan entries. It is called
  * "Local Power Constraint" in these entries, and just "Power Constraint" in
- * the 802.11 specification. Refer to the specification for more details.
+ * the 802.11 specification (section 9.4.2.13). Refer to the specification for more details.
  * Language in javadocs is taken from the specification.
  */
 public class LocalPowerConstraint {
-
-	/** Defined in 802.11 */
+	/** Defined in 802.11 table 9-92 */
 	public static final int TYPE = 32;
 
 	/**
-	 * Units are dB.
+	 * Unsigned 8 bits - units are dB.
 	 * <p>
 	 * The local maximum transmit power for a channel is defined as the maximum
 	 * transmit power level specified for the channel in the Country IE minus
 	 * this variable for the given channel.
 	 */
-	public final int localPowerConstraint;
+	public final short localPowerConstraint;
 
 	/** Constructor */
-	public LocalPowerConstraint(int localPowerConstraint) {
+	public LocalPowerConstraint(short localPowerConstraint) {
 		this.localPowerConstraint = localPowerConstraint;
 	}
 
 	/** Parse LocalPowerConstraint IE from appropriate Json object. */
 	public static LocalPowerConstraint parse(JsonObject contents) {
-		final int localPowerConstraint =
-			contents.get("Local Power Constraint").getAsInt();
+		final short localPowerConstraint =
+			contents.get("Local Power Constraint").getAsShort();
 		return new LocalPowerConstraint(localPowerConstraint);
 	}
 
@@ -62,11 +61,5 @@ public class LocalPowerConstraint {
 		}
 		LocalPowerConstraint other = (LocalPowerConstraint) obj;
 		return localPowerConstraint == other.localPowerConstraint;
-	}
-
-	@Override
-	public String toString() {
-		return "LocalPowerConstraint [localPowerConstraint=" +
-			localPowerConstraint + "]";
 	}
 }

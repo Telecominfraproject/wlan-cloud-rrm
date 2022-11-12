@@ -15,9 +15,12 @@ import org.apache.commons.codec.binary.Base64;
 
 /**
  * High Throughput (HT) Operation Element, which is potentially present in
- * wifiscan entries. Introduced in 802.11n (2009).
+ * wifiscan entries. Introduced in 802.11n (2009). Refer to the 802.11
+ * specification (section 9.4.2.56)).
  */
 public class HTOperation {
+	/** Defined in 802.11 table 9-92 */
+	public static final int TYPE = 61;
 
 	/** Channel number of the primary channel. */
 	public final byte primaryChannel;
