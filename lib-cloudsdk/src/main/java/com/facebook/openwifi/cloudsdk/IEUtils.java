@@ -19,7 +19,7 @@ public abstract class IEUtils {
 	 * Try to get a json object as a byte
 	 *
 	 * @param contents the JSON object to try to parse
-	 * @param fieldName
+	 * @param fieldName the field name
 	 * @return the field as a byte or null
 	 */
 	public static Byte parseOptionalByteField(
@@ -37,7 +37,7 @@ public abstract class IEUtils {
 	 * Try to get a json object as a short
 	 *
 	 * @param contents the JSON object to try to parse
-	 * @param fieldName
+	 * @param fieldName the field name
 	 * @return the field as a short or null
 	 */
 	public static Short parseOptionalShortField(
@@ -55,7 +55,7 @@ public abstract class IEUtils {
 	 * Try to get a json object as a int
 	 *
 	 * @param contents the JSON object to try to parse
-	 * @param fieldName
+	 * @param fieldName the field name
 	 * @return the field as a int or null
 	 */
 	public static Integer parseOptionalIntField(
@@ -73,7 +73,7 @@ public abstract class IEUtils {
 	 * Try to get a json object as a string
 	 *
 	 * @param contents the JSON object to try to parse
-	 * @param fieldName
+	 * @param fieldName the field name
 	 * @return the field as a string or null
 	 */
 	public static String parseOptionalStringField(

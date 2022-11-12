@@ -58,21 +58,21 @@ public class TxPwrInfo {
 		JsonObject innerObj = contents.get("Tx Pwr Info").getAsJsonObject();
 		// required field
 		short localMaxTxPwrConstraint20MHz =
-			contents.get("Local Max Tx Pwr Constraint 20MHz").getAsShort();
+			innerObj.get("Local Max Tx Pwr Constraint 20MHz").getAsShort();
 		// optional field
 		Short localMaxTxPwrConstraint40MHz =
 			IEUtils.parseOptionalShortField(
-				contents,
+				innerObj,
 				"Local Max Tx Pwr Constraint 40MHz"
 			);
 		Short localMaxTxPwrConstraint80MHz =
 			IEUtils.parseOptionalShortField(
-				contents,
+				innerObj,
 				"Local Max Tx Pwr Constraint 40MHz"
 			);
 		Short localMaxTxPwrConstraint160MHz =
 			IEUtils.parseOptionalShortField(
-				contents,
+				innerObj,
 				"Local Max Tx Pwr Constraint 40MHz"
 			);
 		return new TxPwrInfo(
