@@ -91,8 +91,8 @@ public class SingleAPBandSteering extends ClientSteeringOptimizer {
 		if ((arg = args.get("minRssiNon2G")) != null) {
 			minRssiNon2G = Short.parseShort(arg);
 		}
-		if ((arg = args.get("backoffTimeNs")) != null) {
-			backoffTimeNs = Short.parseShort(arg);
+		if ((arg = args.get("backoffTimeSec")) != null) {
+			backoffTimeNs = Long.parseLong(arg) * 1_000_000_000L;
 		}
 
 		return new SingleAPBandSteering(
