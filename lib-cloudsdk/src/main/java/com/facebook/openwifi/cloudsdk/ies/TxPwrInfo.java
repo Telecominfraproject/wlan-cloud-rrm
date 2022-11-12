@@ -10,7 +10,7 @@ package com.facebook.openwifi.cloudsdk.ies;
 
 import java.util.Objects;
 
-import com.facebook.openwifirrm.ucentral.IEUtils;
+import com.facebook.openwifi.cloudsdk.IEUtils;
 import com.google.gson.JsonObject;
 
 /**

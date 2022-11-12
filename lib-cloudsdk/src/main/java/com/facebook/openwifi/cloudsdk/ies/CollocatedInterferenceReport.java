@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package com.facebook.openwifirrm.ucentral.informationelement;
+package com.facebook.openwifi.cloudsdk.ies;
 
 import java.util.Objects;
 
