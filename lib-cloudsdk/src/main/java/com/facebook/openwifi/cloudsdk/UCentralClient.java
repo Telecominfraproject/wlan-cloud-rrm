@@ -690,6 +690,19 @@ public class UCentralClient {
 		try {
 			return gson.fromJson(response.getBody(), RRMDetails.class);
 		} catch (JsonSyntaxException e) {
+			// catch strings like "no", "inherit", "invalid" (???)
+			JSONObject respBody;
+			try {
+				respBody = new JSONObject(response.getBody());
+				respBody.getString("rrm");
+				logger.error(
+					"RRMDetails returned unexpected string body: {}",
+					respBody
+				);
+				return null;
+			} catch (JSONException e2) { /* ignore and fall through */}
+
+			// otherwise, log as a deserialization error
 			String errMsg = String.format(
 				"Failed to deserialize to RRMDetails: %s",
 				response.getBody()
