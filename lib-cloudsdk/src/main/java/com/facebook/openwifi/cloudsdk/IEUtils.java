@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package com.facebook.openwifirrm.ucentral;
+package com.facebook.openwifi.cloudsdk;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
