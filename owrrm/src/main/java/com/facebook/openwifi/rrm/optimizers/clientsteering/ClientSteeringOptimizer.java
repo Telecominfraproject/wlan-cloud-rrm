@@ -18,7 +18,7 @@ import com.facebook.openwifi.rrm.modules.Modeler.DataModel;
 public abstract class ClientSteeringOptimizer {
 	// TODO call upon triggers, not only via one-off or period runs
 
-	/** Represents client steering actions an AP Can take */
+	/** Represents client steering actions an AP can take */
 	public static enum CLIENT_STEERING_ACTIONS {
 		/** Steer from 2G to 5G/6G */
 		STEER_UP,

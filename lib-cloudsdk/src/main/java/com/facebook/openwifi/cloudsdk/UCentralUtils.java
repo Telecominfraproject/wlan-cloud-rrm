@@ -28,6 +28,7 @@ import org.slf4j.LoggerFactory;
 import com.facebook.openwifi.cloudsdk.ies.Country;
 import com.facebook.openwifi.cloudsdk.ies.LocalPowerConstraint;
 import com.facebook.openwifi.cloudsdk.ies.QbssLoad;
+import com.facebook.openwifi.cloudsdk.ies.RMEnabledCapabilities;
 import com.facebook.openwifi.cloudsdk.ies.TxPwrInfo;
 import com.facebook.openwifi.cloudsdk.models.ap.Capabilities;
 import com.facebook.openwifi.cloudsdk.models.ap.State;
@@ -171,6 +172,10 @@ public class UCentralUtils {
 					break;
 				case TxPwrInfo.TYPE:
 					ieContainer.txPwrInfo = TxPwrInfo.parse(contents);
+					break;
+				case RMEnabledCapabilities.TYPE:
+					ieContainer.rmEnabledCapabilities =
+						RMEnabledCapabilities.parse(contents);
 					break;
 				}
 			} catch (Exception e) {

@@ -70,6 +70,24 @@ public abstract class IEUtils {
 	}
 
 	/**
+	 * Try to get a json object as a int
+	 *
+	 * @param contents the JSON object to try to parse
+	 * @param fieldName the field name
+	 * @return the field as a int (0 if key not present)
+	 */
+	public static Integer parseIntField(
+		JsonObject contents,
+		String fieldName
+	) {
+		JsonElement element = contents.get(fieldName);
+		if (element == null) {
+			return 0;
+		}
+		return element.getAsInt();
+	}
+
+	/**
 	 * Try to get a json object as a string
 	 *
 	 * @param contents the JSON object to try to parse
@@ -85,5 +103,23 @@ public abstract class IEUtils {
 			return null;
 		}
 		return element.getAsString();
+	}
+
+	/**
+	 * Try to get a json object as a boolean when represented as a number (0, 1)
+	 *
+	 * @param contents the JSON object to try to parse
+	 * @param fieldName the field name
+	 * @return the field as a boolean (false if key not present)
+	 */
+	public static boolean parseBooleanNumberField(
+		JsonObject contents,
+		String fieldName
+	) {
+		JsonElement element = contents.get(fieldName);
+		if (element == null) {
+			return false;
+		}
+		return element.getAsInt() > 0;
 	}
 }
