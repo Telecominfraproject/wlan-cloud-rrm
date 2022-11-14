@@ -26,7 +26,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":9,"i1":9,"i2":9,"i3":9};
+var data = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9,"i5":9};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -176,6 +176,22 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr id="i0" class="altColor">
+<td class="colFirst"><code>static boolean</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#parseBooleanNumberField(com.google.gson.JsonObject,java.lang.String)">parseBooleanNumberField</a></span>&#8203;(com.google.gson.JsonObject&nbsp;contents,
+                       <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;fieldName)</code></th>
+<td class="colLast">
+<div class="block">Try to get a json object as a boolean when represented as a number (0, 1)</div>
+</td>
+</tr>
+<tr id="i1" class="rowColor">
+<td class="colFirst"><code>static <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Integer.html?is-external=true" title="class or interface in java.lang" class="externalLink">Integer</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#parseIntField(com.google.gson.JsonObject,java.lang.String)">parseIntField</a></span>&#8203;(com.google.gson.JsonObject&nbsp;contents,
+             <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;fieldName)</code></th>
+<td class="colLast">
+<div class="block">Try to get a json object as a int</div>
+</td>
+</tr>
+<tr id="i2" class="altColor">
 <td class="colFirst"><code>static <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Byte.html?is-external=true" title="class or interface in java.lang" class="externalLink">Byte</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#parseOptionalByteField(com.google.gson.JsonObject,java.lang.String)">parseOptionalByteField</a></span>&#8203;(com.google.gson.JsonObject&nbsp;contents,
                       <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;fieldName)</code></th>
@@ -183,7 +199,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <div class="block">Try to get a json object as a byte</div>
 </td>
 </tr>
-<tr id="i1" class="rowColor">
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code>static <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Integer.html?is-external=true" title="class or interface in java.lang" class="externalLink">Integer</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#parseOptionalIntField(com.google.gson.JsonObject,java.lang.String)">parseOptionalIntField</a></span>&#8203;(com.google.gson.JsonObject&nbsp;contents,
                      <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;fieldName)</code></th>
@@ -191,7 +207,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <div class="block">Try to get a json object as a int</div>
 </td>
 </tr>
-<tr id="i2" class="altColor">
+<tr id="i4" class="altColor">
 <td class="colFirst"><code>static <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Short.html?is-external=true" title="class or interface in java.lang" class="externalLink">Short</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#parseOptionalShortField(com.google.gson.JsonObject,java.lang.String)">parseOptionalShortField</a></span>&#8203;(com.google.gson.JsonObject&nbsp;contents,
                        <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;fieldName)</code></th>
@@ -199,7 +215,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <div class="block">Try to get a json object as a short</div>
 </td>
 </tr>
-<tr id="i3" class="rowColor">
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code>static <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#parseOptionalStringField(com.google.gson.JsonObject,java.lang.String)">parseOptionalStringField</a></span>&#8203;(com.google.gson.JsonObject&nbsp;contents,
                         <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;fieldName)</code></th>
@@ -304,10 +320,28 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 </dl>
 </li>
 </ul>
+<a id="parseIntField(com.google.gson.JsonObject,java.lang.String)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>parseIntField</h4>
+<pre class="methodSignature">public static&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Integer.html?is-external=true" title="class or interface in java.lang" class="externalLink">Integer</a>&nbsp;parseIntField&#8203;(com.google.gson.JsonObject&nbsp;contents,
+                                    <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;fieldName)</pre>
+<div class="block">Try to get a json object as a int</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>contents</code> - the JSON object to try to parse</dd>
+<dd><code>fieldName</code> - the field name</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the field as a int (0 if key not present)</dd>
+</dl>
+</li>
+</ul>
 <a id="parseOptionalStringField(com.google.gson.JsonObject,java.lang.String)">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>parseOptionalStringField</h4>
 <pre class="methodSignature">public static&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;parseOptionalStringField&#8203;(com.google.gson.JsonObject&nbsp;contents,
@@ -319,6 +353,24 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <dd><code>fieldName</code> - the field name</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the field as a string or null</dd>
+</dl>
+</li>
+</ul>
+<a id="parseBooleanNumberField(com.google.gson.JsonObject,java.lang.String)">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>parseBooleanNumberField</h4>
+<pre class="methodSignature">public static&nbsp;boolean&nbsp;parseBooleanNumberField&#8203;(com.google.gson.JsonObject&nbsp;contents,
+                                              <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;fieldName)</pre>
+<div class="block">Try to get a json object as a boolean when represented as a number (0, 1)</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>contents</code> - the JSON object to try to parse</dd>
+<dd><code>fieldName</code> - the field name</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the field as a boolean (false if key not present)</dd>
 </dl>
 </li>
 </ul>
