@@ -28,7 +28,11 @@ public abstract class ClientSteeringOptimizer {
 		DEAUTHENTICATE
 	}
 
-	/** 802.11 BTM reason codes (ex. for deauth) */
+	/**
+	 * 802.11 BTM reason codes (ex. for deauth).
+	 *
+	 * See IEEE Std 802.11-2016, 9.4.1.7, Table 9-45.
+	 */
 	public static class BTMReasonCode {
 		private BTMReasonCode() {}
 
@@ -67,6 +71,12 @@ public abstract class ClientSteeringOptimizer {
 		public static final int MESH_INVALID_GTK = 58;
 		public static final int MESH_INCONSISTENT_PARAMS = 59;
 		public static final int MESH_INVALID_SECURITY_CAP = 60;
+		public static final int MESH_PATH_ERROR_NO_PROXY_INFO = 61;
+		public static final int MESH_PATH_ERROR_NO_FORWARDING_INFO = 62;
+		public static final int MESH_PATH_ERROR_DEST_UNREACHABLE = 63;
+		public static final int MAC_ADDRESS_ALREADY_EXISTS_IN_MBSS = 64;
+		public static final int MESH_CHANNEL_SWITCH_REGULATORY_REQ = 65;
+		public static final int MESH_CHANNEL_SWITCH_UNSPECIFIED = 66;
 	}
 
 	/** The input data model. */
