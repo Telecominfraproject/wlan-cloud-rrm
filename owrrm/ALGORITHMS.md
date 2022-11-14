@@ -94,6 +94,30 @@ levels of these APs will be determined by the following steps:
 Parameters:
 * `mode`: "measure_ap_ap"
 * `coverageThreshold`: Coverage threshold between APs in dBm
-    * values:  int < 30 (default: -70)
+    * values: int < 30 (default: -70)
 * `nthSmallestRssi`: the nth smallest RSSI that is used for tx power calculation
     * values: int >= 0 (default: 0)
+
+## Client Steering
+`ClientSteeringOptimizer` and its subclasses implement client steering
+algorithms via 802.11k/v/r mechanisms, with the goal of moving clients to
+optimal APs and/or bands.
+
+**Client steering is a work in progress and NOT currently functional.**
+
+### `SingleAPBandSteering`
+This algorithm performs same-AP RRSI-based steering only, using a simple
+decision and backoff procedure.
+
+Parameters:
+* `mode`: "band"
+* `minRssi2G`: RSSI (dBm) below which a client on the 2G band should be kicked
+    * values: int < 30 (default: -87)
+* `maxRssi2G`: RSSI (dBm) above which a client on the 2G band should roam to
+   5G/6G
+    * values: int < 30 (default: -67)
+* `minRssiNon2G`: RSSI (dBm) below which a client on the 5G/6G band should roam
+  to 2G
+    * values: int < 30 (default: -82)
+* `backoffTimeSec`: Backoff time (seconds) for all APs and radios
+    * values: int >= 0 (default: 300)

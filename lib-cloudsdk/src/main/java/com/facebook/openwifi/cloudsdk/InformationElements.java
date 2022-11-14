@@ -13,38 +13,42 @@ import java.util.Objects;
 import com.facebook.openwifi.cloudsdk.ies.Country;
 import com.facebook.openwifi.cloudsdk.ies.LocalPowerConstraint;
 import com.facebook.openwifi.cloudsdk.ies.QbssLoad;
+import com.facebook.openwifi.cloudsdk.ies.RMEnabledCapabilities;
 import com.facebook.openwifi.cloudsdk.ies.TxPwrInfo;
 
 /** Wrapper class containing information elements */
 public final class InformationElements {
-
 	public Country country;
 	public QbssLoad qbssLoad;
 	public LocalPowerConstraint localPowerConstraint;
 	public TxPwrInfo txPwrInfo;
+	public RMEnabledCapabilities rmEnabledCapabilities;
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(country, localPowerConstraint, qbssLoad, txPwrInfo);
+		return Objects.hash(
+			country,
+			localPowerConstraint,
+			qbssLoad,
+			rmEnabledCapabilities,
+			txPwrInfo
+		);
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj) {
+		if (this == obj)
 			return true;
-		}
-		if (obj == null) {
+		if (obj == null)
 			return false;
-		}
-		if (getClass() != obj.getClass()) {
+		if (getClass() != obj.getClass())
 			return false;
-		}
 		InformationElements other = (InformationElements) obj;
-		return Objects.equals(country, other.country) && Objects.equals(
-			localPowerConstraint,
-			other.localPowerConstraint
-		) && Objects.equals(qbssLoad, other.qbssLoad) &&
+		return Objects.equals(country, other.country) &&
+			Objects.equals(localPowerConstraint, other.localPowerConstraint) &&
+			Objects.equals(qbssLoad, other.qbssLoad) &&
+			Objects
+				.equals(rmEnabledCapabilities, other.rmEnabledCapabilities) &&
 			Objects.equals(txPwrInfo, other.txPwrInfo);
 	}
-
 }

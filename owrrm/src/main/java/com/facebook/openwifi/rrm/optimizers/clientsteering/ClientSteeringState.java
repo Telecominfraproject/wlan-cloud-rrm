@@ -15,10 +15,6 @@ import java.util.concurrent.ConcurrentMap;
 
 /** Class to manage global client steering state */
 public class ClientSteeringState {
-
-	/** Default constructor */
-	public ClientSteeringState() {};
-
 	/**
 	 * Map from AP serial number to client MAC to time (JVM monotonic time in
 	 * ns) of the latest attempted client steering action. The {@code Long}

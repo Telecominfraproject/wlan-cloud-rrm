@@ -32,15 +32,14 @@ import com.google.gson.Gson;
  * 6G clients below a configurable RSSI threshold are asked to move to 2G.
  */
 public class SingleAPBandSteering extends ClientSteeringOptimizer {
-
-	/** The Gson instance. */
-	private static final Gson gson = new Gson();
-
 	private static final Logger logger =
 		LoggerFactory.getLogger(SingleAPBandSteering.class);
 
 	/** The RRM algorithm ID. */
 	public static final String ALGORITHM_ID = "band";
+
+	/** The Gson instance. */
+	private static final Gson gson = new Gson();
 
 	/**
 	 * RSSI (dBm) below which a client on 2G should be disconnected using
@@ -92,8 +91,8 @@ public class SingleAPBandSteering extends ClientSteeringOptimizer {
 		if ((arg = args.get("minRssiNon2G")) != null) {
 			minRssiNon2G = Short.parseShort(arg);
 		}
-		if ((arg = args.get("backoffTimeNs")) != null) {
-			backoffTimeNs = Short.parseShort(arg);
+		if ((arg = args.get("backoffTimeSec")) != null) {
+			backoffTimeNs = Long.parseLong(arg) * 1_000_000_000L;
 		}
 
 		return new SingleAPBandSteering(
@@ -139,6 +138,8 @@ public class SingleAPBandSteering extends ClientSteeringOptimizer {
 			// get the latest state
 			// TODO window size (look at multiple states)
 			// TODO window percent (% of samples that must violate thresholds)
+			// TODO also check wifiscan IEs to see if 11k beacon requests are supported/enabled
+			//      (RMEnabledCapabilities.beaconActiveMeasurementCapabilityEnabled)
 			List<? extends State> states = entry.getValue();
 			if (states == null || states.isEmpty()) {
 				continue;
@@ -207,7 +208,8 @@ public class SingleAPBandSteering extends ClientSteeringOptimizer {
 	 * @param serialNumber AP serial number
 	 * @param currentTimeNs JVM monotonic time in ns
 	 * @param dryRun if set, do not apply changes
-	 * @param apClientActionMap map from AP serial number to client MAC to client steering action name ({@link ClientSteeringOptimizer.CLIENT_STEERING_ACTIONS#name()})
+	 * @param apClientActionMap map from AP serial number to client MAC to client
+	 *                          steering action name ({@link ClientSteeringOptimizer.CLIENT_STEERING_ACTIONS})
 	 */
 	private void maybeAddApClientActionEntry(
 		State.Interface.SSID.Association assoc,
