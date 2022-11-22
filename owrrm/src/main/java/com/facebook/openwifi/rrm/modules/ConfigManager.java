@@ -8,7 +8,6 @@
 
 package com.facebook.openwifi.rrm.modules;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -47,9 +46,6 @@ public class ConfigManager implements Runnable {
 
 	/** Runtime per-device data. */
 	private class DeviceData {
-		/** Last received device config. */
-		public UCentralApConfiguration config;
-
 		/** Last config time (in monotonic ns). */
 		public Long lastConfigTimeNs;
 	}
@@ -183,7 +179,7 @@ public class ConfigManager implements Runnable {
 		long now = System.nanoTime();
 
 		// Apply any config updates locally
-		List<String> devicesNeedingUpdate = new ArrayList<>();
+		Map<String, String> devicesNeedingUpdate = new HashMap<>();
 		final long CONFIG_DEBOUNCE_INTERVAL_NS =
 			params.configDebounceIntervalSec * 1_000_000_000L;
 		Set<String> zonesToUpdateCopy = new HashSet<>(zonesToUpdate);
@@ -204,11 +200,12 @@ public class ConfigManager implements Runnable {
 				);
 				continue;
 			}
-			data.config = new UCentralApConfiguration(device.configuration);
+			UCentralApConfiguration config =
+				new UCentralApConfiguration(device.configuration);
 
 			// Call receive listeners
 			for (ConfigListener listener : configListeners.values()) {
-				listener.receiveDeviceConfig(device.serialNumber, data.config);
+				listener.receiveDeviceConfig(device.serialNumber, config);
 			}
 			// Check if there are requested updates for this zone
 			String deviceZone =
@@ -236,7 +233,7 @@ public class ConfigManager implements Runnable {
 			for (ConfigListener listener : configListeners.values()) {
 				boolean wasModified = listener.processDeviceConfig(
 					device.serialNumber,
-					data.config
+					config
 				);
 				if (wasModified) {
 					modified = true;
@@ -257,7 +254,8 @@ public class ConfigManager implements Runnable {
 					);
 					continue;
 				} else {
-					devicesNeedingUpdate.add(device.serialNumber);
+					devicesNeedingUpdate
+						.put(device.serialNumber, config.toString());
 				}
 			}
 		}
@@ -275,19 +273,26 @@ public class ConfigManager implements Runnable {
 				devicesNeedingUpdate.size()
 			);
 		} else {
+			// TODO: Replace with the newer owprov API to send only deltas, not
+			// the full configuration blobs:
+			//   PUT /configurationOverrides/{serialNumber}?source=owrrm
 			logger.info(
 				"Sending config to {} device(s): {}",
 				devicesNeedingUpdate.size(),
-				String.join(", ", devicesNeedingUpdate)
+				String.join(", ", devicesNeedingUpdate.keySet())
 			);
-			for (String serialNumber : devicesNeedingUpdate) {
+			for (
+				Map.Entry<String, String> entry : devicesNeedingUpdate
+					.entrySet()
+			) {
+				String serialNumber = entry.getKey();
 				DeviceData data = deviceDataMap.get(serialNumber);
 				logger.info(
 					"Device {}: sending new configuration...",
 					serialNumber
 				);
 				data.lastConfigTimeNs = System.nanoTime();
-				client.configure(serialNumber, data.config.toString());
+				client.configure(serialNumber, entry.getValue());
 			}
 		}
 	}
