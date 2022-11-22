@@ -8,13 +8,18 @@
 
 package com.facebook.openwifi.cloudsdk;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
+import com.facebook.openwifi.cloudsdk.models.ap.UCentralSchema;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 
 /**
  * Wrapper around uCentral AP configuration.
@@ -51,33 +56,33 @@ public class UCentralApConfiguration {
 		return config.getAsJsonArray("radios").size();
 	}
 
-	/** Return all info in the radio config (or an empty array if none). */
-	public JsonArray getRadioConfigList() {
-		if (!config.has("radios") || !config.get("radios").isJsonArray()) {
-			return new JsonArray();
+	/** Return all info in the radio config (or an empty list if none). */
+	public List<UCentralSchema.Radio> getRadioConfigList() {
+		if (config.has("radios") && config.get("radios").isJsonArray()) {
+			List<UCentralSchema.Radio> radios = new Gson().fromJson(
+				config.getAsJsonArray("radios"),
+				new TypeToken<ArrayList<UCentralSchema.Radio>>() {}.getType()
+			);
+			if (radios != null) {
+				return radios;
+			}
 		}
-		return config.getAsJsonArray("radios");
+		return Collections.emptyList();
 	}
 
 	/** Return all the operational bands of an AP (from the radio config) */
-	public Set<String> getRadioBandsSet(JsonArray radioConfigList) {
+	public Set<String> getRadioBandsSet(
+		List<UCentralSchema.Radio> radioConfigList
+	) {
 		Set<String> radioBandsSet = new HashSet<>();
 		if (radioConfigList == null) {
 			return radioBandsSet;
 		}
-		for (
-			int radioIndex = 0; radioIndex < radioConfigList.size();
-			radioIndex++
-		) {
-			JsonElement e = radioConfigList.get(radioIndex);
-			if (!e.isJsonObject()) {
+		for (UCentralSchema.Radio radio : radioConfigList) {
+			if (radio == null || radio.band == null) {
 				continue;
 			}
-			JsonObject radioObject = e.getAsJsonObject();
-			if (!radioObject.has("band")) {
-				continue;
-			}
-			radioBandsSet.add(radioObject.get("band").getAsString());
+			radioBandsSet.add(radio.band);
 		}
 		return radioBandsSet;
 	}

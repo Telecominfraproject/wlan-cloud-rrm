@@ -32,6 +32,7 @@ import com.facebook.openwifi.cloudsdk.ies.RMEnabledCapabilities;
 import com.facebook.openwifi.cloudsdk.ies.TxPwrInfo;
 import com.facebook.openwifi.cloudsdk.models.ap.Capabilities;
 import com.facebook.openwifi.cloudsdk.models.ap.State;
+import com.facebook.openwifi.cloudsdk.models.ap.UCentralSchema;
 import com.facebook.openwifi.cloudsdk.models.gw.CommandInfo;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -279,28 +280,20 @@ public class UCentralUtils {
 	 * Returns the results map
 	 */
 	public static Map<String, List<String>> getBandsMap(
-		Map<String, JsonArray> deviceStatus
+		Map<String, List<UCentralSchema.Radio>> deviceStatus
 	) {
 		Map<String, List<String>> bandsMap = new HashMap<>();
-
-		for (String serialNumber : deviceStatus.keySet()) {
-			JsonArray radioList =
-				deviceStatus.get(serialNumber).getAsJsonArray();
-			for (
-				int radioIndex = 0; radioIndex < radioList.size(); radioIndex++
-			) {
-				JsonElement e = radioList.get(radioIndex);
-				if (!e.isJsonObject()) {
-					return null;
-				}
-				JsonObject radioObject = e.getAsJsonObject();
-				String band = radioObject.get("band").getAsString();
+		for (
+			Map.Entry<String, List<UCentralSchema.Radio>> entry : deviceStatus
+				.entrySet()
+		) {
+			String serialNumber = entry.getKey();
+			for (UCentralSchema.Radio radio : entry.getValue()) {
 				bandsMap
-					.computeIfAbsent(band, k -> new ArrayList<>())
+					.computeIfAbsent(radio.band, k -> new ArrayList<>())
 					.add(serialNumber);
 			}
 		}
-
 		return bandsMap;
 	}
 
@@ -314,32 +307,25 @@ public class UCentralUtils {
 	 * @return the results map of {band, {device, list of available channels}}
 	 */
 	public static Map<String, Map<String, List<Integer>>> getDeviceAvailableChannels(
-		Map<String, JsonArray> deviceStatus,
+		Map<String, List<UCentralSchema.Radio>> deviceStatus,
 		Map<String, Map<String, Capabilities.Phy>> deviceCapabilities,
 		Map<String, List<Integer>> defaultAvailableChannels
 	) {
 		Map<String, Map<String, List<Integer>>> deviceAvailableChannels =
 			new HashMap<>();
 
-		for (String serialNumber : deviceStatus.keySet()) {
-			JsonArray radioList =
-				deviceStatus.get(serialNumber).getAsJsonArray();
-			for (
-				int radioIndex = 0; radioIndex < radioList.size(); radioIndex++
-			) {
-				JsonElement e = radioList.get(radioIndex);
-				if (!e.isJsonObject()) {
-					return null;
-				}
-				JsonObject radioObject = e.getAsJsonObject();
-				String band = radioObject.get("band").getAsString();
-
+		for (
+			Map.Entry<String, List<UCentralSchema.Radio>> entry : deviceStatus
+				.entrySet()
+		) {
+			String serialNumber = entry.getKey();
+			for (UCentralSchema.Radio radio : entry.getValue()) {
 				Map<String, Capabilities.Phy> capabilitiesPhyMap =
 					deviceCapabilities.get(serialNumber);
 				List<Integer> availableChannels = new ArrayList<>();
 				if (capabilitiesPhyMap == null) {
 					availableChannels
-						.addAll(defaultAvailableChannels.get(band));
+						.addAll(defaultAvailableChannels.get(radio.band));
 				} else {
 					Set<Entry<String, Capabilities.Phy>> entrySet =
 						capabilitiesPhyMap
@@ -347,7 +333,7 @@ public class UCentralUtils {
 					for (Map.Entry<String, Capabilities.Phy> f : entrySet) {
 						Capabilities.Phy phy = f.getValue();
 						String bandInsideObject = phy.band.toString();
-						if (bandInsideObject.equals(band)) {
+						if (bandInsideObject.equals(radio.band)) {
 							// (TODO) Remove the following dfsChannels code block
 							// when the DFS channels are available
 							Set<Integer> dfsChannels = new HashSet<>();
@@ -366,14 +352,16 @@ public class UCentralUtils {
 								}
 							} catch (Exception c) {
 								availableChannels
-									.addAll(defaultAvailableChannels.get(band));
+									.addAll(
+										defaultAvailableChannels.get(radio.band)
+									);
 							}
 						}
 					}
 				}
 
 				deviceAvailableChannels.computeIfAbsent(
-					band,
+					radio.band,
 					k -> new HashMap<>()
 				)
 					.put(

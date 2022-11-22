@@ -21,14 +21,15 @@ import java.util.concurrent.LinkedBlockingQueue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.facebook.openwifi.cloudsdk.StateInfo;
 import com.facebook.openwifi.cloudsdk.UCentralApConfiguration;
 import com.facebook.openwifi.cloudsdk.UCentralClient;
 import com.facebook.openwifi.cloudsdk.UCentralUtils;
 import com.facebook.openwifi.cloudsdk.WifiScanEntry;
-import com.facebook.openwifi.cloudsdk.StateInfo;
 import com.facebook.openwifi.cloudsdk.kafka.UCentralKafkaConsumer;
 import com.facebook.openwifi.cloudsdk.kafka.UCentralKafkaConsumer.KafkaRecord;
 import com.facebook.openwifi.cloudsdk.models.ap.Capabilities;
+import com.facebook.openwifi.cloudsdk.models.ap.UCentralSchema;
 import com.facebook.openwifi.cloudsdk.models.gw.DeviceCapabilities;
 import com.facebook.openwifi.cloudsdk.models.gw.DeviceWithStatus;
 import com.facebook.openwifi.cloudsdk.models.gw.ServiceEvent;
@@ -38,7 +39,6 @@ import com.facebook.openwifi.rrm.DeviceDataManager;
 import com.facebook.openwifi.rrm.RRMConfig.ModuleConfig.ModelerParams;
 import com.facebook.openwifi.rrm.Utils;
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 
@@ -100,7 +100,7 @@ public class Modeler implements Runnable {
 			new ConcurrentHashMap<>();
 
 		/** List of radio info per device. */
-		public Map<String, JsonArray> latestDeviceStatusRadios =
+		public Map<String, List<UCentralSchema.Radio>> latestDeviceStatusRadios =
 			new ConcurrentHashMap<>();
 
 		/** List of capabilities per device. */
@@ -406,10 +406,11 @@ public class Modeler implements Runnable {
 		UCentralApConfiguration config
 	) {
 		// Get old vs new radios info and store the new radios info
-		JsonArray newRadioList = config.getRadioConfigList();
+		List<UCentralSchema.Radio> newRadioList = config.getRadioConfigList();
 		Set<String> newRadioBandsSet = config.getRadioBandsSet(newRadioList);
-		JsonArray oldRadioList = dataModel.latestDeviceStatusRadios
-			.put(serialNumber, newRadioList);
+		List<UCentralSchema.Radio> oldRadioList =
+			dataModel.latestDeviceStatusRadios
+				.put(serialNumber, newRadioList);
 		Set<String> oldRadioBandsSet = config.getRadioBandsSet(oldRadioList);
 
 		// Print info only when there are any updates
