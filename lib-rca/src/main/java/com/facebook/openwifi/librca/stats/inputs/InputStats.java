@@ -8,32 +8,35 @@
 
 package com.facebook.openwifi.librca.stats.inputs;
 
-/** Input Data Model */
+/**
+ * Input data model.
+ *
+ * TODO: very incomplete
+  */
 public class InputStats {
-    /** Radio parameters */
-    public static class Radio {
-        public long active_ms;
-        public long busy_ms;
-        public int channel;
-        public String channel_width;
-        public long noise;
-        public String phy;
-        public long receive_ms;
-        public long transmit_ms;
-        public int tx_power;
-    }
+	/** Radio parameters */
+	public static class Radio {
+		public long active_ms;
+		public long busy_ms;
+		public int channel;
+		public String channel_width;
+		public long noise;
+		public String phy;
+		public long receive_ms;
+		public long transmit_ms;
+		public int tx_power;
+	}
+
 	public static class SSID {
 		public static class Association {
-			/** Modulation and Coding Scheme */
 			public static class Rate {
 				public long bitrate;
 				public int chwidth;
 				public int mcs;
 			}
-			// bssid of the AP radio
-			public String bssid;
-			// client MAC
-			public String station;
+
+			public String bssid; // bssid of the AP radio
+			public String station; // client MAC
 			public long connected;
 			public long inactive;
 			public int rssi;
@@ -50,11 +53,12 @@ public class InputStats {
 			public int ack_signal;
 			public int ack_signal_avg;
 		}
+
 		public Association[] associations;
 		public Radio radio;
 	}
 
-    /** Counters are for the wireless interface as a whole. */
+	/** Counters are for the wireless interface as a whole */
 	public static class Counters {
 		public long rx_bytes;
 		public long rx_packets;
@@ -69,6 +73,6 @@ public class InputStats {
 	public SSID[] ssids;
 	public Counters counters;
 
-	// Unix time in milliseconds.
+	/** Unix time in milliseconds */
 	public long timestamp;
 }

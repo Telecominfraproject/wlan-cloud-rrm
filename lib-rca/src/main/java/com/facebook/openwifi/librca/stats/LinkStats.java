@@ -11,7 +11,8 @@ package com.facebook.openwifi.librca.stats;
 import java.util.List;
 
 /**
- * Aggregation Statistics Model of InputStats. Aggregate by bssid, station and RadioConfig.
+ * Aggregation Statistics Model of InputStats.
+ * Aggregate by bssid, station and RadioConfig.
  */
 public class LinkStats {
 	public static class RadioConfig {
@@ -44,30 +45,31 @@ public class LinkStats {
 		public int ackSignal;
 		public int ackSignalAvg;
 
-		// The metrics below are from Interface the client was connected to
+		// The metrics below are from Interface the client was connected to.
 		public long txPacketsCounters;
 		public long txErrorsCounters;
 		public long txDroppedCounters;
 
 		// The metrics below are from the radio the client was associated to.
-		// These counters are for the wireless interface as a whole.
 		public long activeMsRadio;
 		public long busyMsRadio;
 		public long noiseRadio;
 		public long receiveMsRadio;
 		public long transmitMsRadio;
 
-		// Unix time in milliseconds
+		/** Unix time in milliseconds */
 		public long timestamp;
 	}
 
-	// bssid of the AP radio
+	/** BSSID of the AP radio */
 	public String bssid;
 
-	// client MAC
+	/** Client MAC */
 	public String station;
 
-	// radio configuration parameters
+	/** Radio configuration parameters */
 	public RadioConfig radioConfig;
-	List<AssociationInfo> associationInfoList;
+
+	/** Association list */
+	public List<AssociationInfo> associationInfoList;
 }

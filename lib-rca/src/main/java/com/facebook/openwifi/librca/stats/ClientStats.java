@@ -10,11 +10,14 @@ package com.facebook.openwifi.librca.stats;
 
 import java.util.List;
 
-/** Aggregated statistics for each client. Maily handle KPI and metric calculations */
+/**
+ * Aggregated statistics for each client.
+ * Mainly handle KPI and metric calculations.
+ */
 public class ClientStats {
-	/** client MAC */
-	String station;
+	/** Client MAC */
+	public String station;
 
-	/** LinkStats that are of the same station(client). */
-	List<LinkStats> connections;
+	/** LinkStats that are of the same station(client) */
+	public List<LinkStats> connections;
 }
