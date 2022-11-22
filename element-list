@@ -7,6 +7,8 @@ com.facebook.openwifi.cloudsdk.models.prov
 com.facebook.openwifi.cloudsdk.models.prov.rrm
 com.facebook.openwifi.librca
 com.facebook.openwifi.librca.inputs
+com.facebook.openwifi.librca.stats
+com.facebook.openwifi.librca.stats.inputs
 com.facebook.openwifi.rrm
 com.facebook.openwifi.rrm.aggregators
 com.facebook.openwifi.rrm.modules
