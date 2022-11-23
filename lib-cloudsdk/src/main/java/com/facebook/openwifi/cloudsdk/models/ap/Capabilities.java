@@ -8,11 +8,16 @@
 
 package com.facebook.openwifi.cloudsdk.models.ap;
 
-import java.util.Map;
 import java.util.List;
+import java.util.Map;
 
 import com.google.gson.annotations.SerializedName;
 
+/**
+ * AP capabilities schema.
+ *
+ * @see <a href="https://github.com/Telecominfraproject/wlan-ucentral-schema/blob/main/system/capabilities.uc">capabilities.uc</a>
+ */
 public class Capabilities {
 	public String compatible;
 	public String model;
