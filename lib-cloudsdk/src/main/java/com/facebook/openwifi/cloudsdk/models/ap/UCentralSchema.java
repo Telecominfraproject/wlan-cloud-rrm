@@ -13,6 +13,11 @@ import java.util.List;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.annotations.SerializedName;
 
+/**
+ * AP configuration schema.
+ *
+ * @see <a href="https://github.com/Telecominfraproject/wlan-ucentral-schema/blob/main/schema/ucentral.yml">ucentral.yml</a>
+ */
 public class UCentralSchema {
 	public static class Radio {
 		public String band;

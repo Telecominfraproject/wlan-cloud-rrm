@@ -10,10 +10,15 @@ package com.facebook.openwifi.cloudsdk.models.ap;
 
 import java.util.Objects;
 
+import com.facebook.openwifi.cloudsdk.WifiScanEntry;
+
 /**
- * Represents a single entry in wifi scan results.
- * ies[] array is not stored directly, but parsed into WifiScanEntry fields
+ * Wi-Fi scan result schema.
+ * <p>
+ * Note that the {@code ies[]} array is not stored here, but parsed into
+ * {@link WifiScanEntry#ieContainer}.
  *
+ * @see <a href="https://github.com/Telecominfraproject/wlan-ucentral-schema/blob/main/command/cmd_wifiscan.uc">cmd_wifiscan.uc</a>
  */
 public class WifiScanEntryResult {
 	public int channel;

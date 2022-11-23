@@ -11,6 +11,11 @@ package com.facebook.openwifi.cloudsdk.models.ap;
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
 
+/**
+ * AP statistics/telemetry schema.
+ *
+ * @see <a href="https://github.com/Telecominfraproject/wlan-ucentral-schema/blob/main/state/state.yml">state.yml</a>
+ */
 public class State {
 	public static class Interface {
 		public static class Client {
