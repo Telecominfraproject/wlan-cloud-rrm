@@ -13,6 +13,7 @@ com.facebook.openwifi.rrm
 com.facebook.openwifi.rrm.aggregators
 com.facebook.openwifi.rrm.modules
 com.facebook.openwifi.rrm.mysql
+com.facebook.openwifi.rrm.optimizers
 com.facebook.openwifi.rrm.optimizers.channel
 com.facebook.openwifi.rrm.optimizers.clientsteering
 com.facebook.openwifi.rrm.optimizers.tpc
